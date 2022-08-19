@@ -1,0 +1,63 @@
+import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from "@nestjs/websockets";
+import { Socket } from "socket.io";
+
+interface IUserJoin {
+    name: string,
+    room: string
+}
+
+interface IMessage {
+    name: string,
+    room: string,
+    message: string,
+    date: string
+}
+
+@WebSocketGateway(4001, { cors: '*:*'})
+export class ChatGateway {
+    @WebSocketServer()
+    server;
+
+    @SubscribeMessage('connect')
+    handleConnect(@MessageBody() data: string): void {
+        this.server.emit('connect', data);
+    }
+
+    @SubscribeMessage('join')
+    async handleEvent(@MessageBody() data: IUserJoin, @ConnectedSocket() client: Socket): Promise<void>  {
+        client.join(data.room);
+        
+        client.data.name = data.name;
+
+        this.server.emit('joinFromServer', data);
+        const sockets = await this.server.in(data.room).fetchSockets()
+
+        let users = [];
+        for (const socket of sockets) {
+            users.push({id: socket.id, name: socket.data.name, room: data.room});
+        }
+
+        this.server.in(data.room).emit('usersConnected', users);
+    }
+
+    @SubscribeMessage('leave')
+    async handleLeave(@MessageBody() data: IUserJoin, @ConnectedSocket() client: Socket): Promise<void> {
+        client.leave(data.room);
+        this.server.emit('leaveFromServer', data);
+
+        const sockets = await this.server.in(data.room).fetchSockets()
+
+        let users = [];
+        for (const socket of sockets) {
+            users.push({id: socket.id, name: socket.data.name, room: data.room});
+        }
+
+        this.server.in(data.room).emit('usersConnected', users);
+    }
+
+    @SubscribeMessage('message')
+    handleMessage(@MessageBody() data: IMessage, @ConnectedSocket() client: Socket): void {
+        this.server.in(data.room).emit('messageFromServer', data);
+    }
+
+}

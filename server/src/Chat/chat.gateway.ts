@@ -23,11 +23,26 @@ export class ChatGateway {
         this.server.emit('connect', data);
     }
 
+    @SubscribeMessage('disconnect')
+    async handleDisconnect(@ConnectedSocket() client: Socket) : Promise<void> {
+        const sockets = await this.server.in(client.data.room).fetchSockets()
+
+        let users = [];
+        for (const socket of sockets) {
+            users.push({id: socket.id, name: socket.data.name, room: client.data.room});
+        }
+       
+        this.server.in(client.data.room).emit('usersConnected', users);
+
+        client.data.room = "";
+    }
+
     @SubscribeMessage('join')
     async handleEvent(@MessageBody() data: IUserJoin, @ConnectedSocket() client: Socket): Promise<void>  {
         client.join(data.room);
         
         client.data.name = data.name;
+        client.data.room = data.room;
 
         this.server.emit('joinFromServer', data);
         const sockets = await this.server.in(data.room).fetchSockets()
@@ -43,6 +58,9 @@ export class ChatGateway {
     @SubscribeMessage('leave')
     async handleLeave(@MessageBody() data: IUserJoin, @ConnectedSocket() client: Socket): Promise<void> {
         client.leave(data.room);
+
+        client.data.room = "";
+
         this.server.emit('leaveFromServer', data);
 
         const sockets = await this.server.in(data.room).fetchSockets()

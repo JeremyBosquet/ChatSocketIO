@@ -6,6 +6,7 @@ import SendMessage from './Components/SendMessage/SendMessage';
 import LeaveRoom from './Components/LeaveRoom/LeaveRoom';
 
 interface Imessage {
+  id: string;
   name: string;
   message: string;
   room: string;
@@ -37,7 +38,6 @@ function App() {
     });
 
     socket?.on('usersConnected', (users: Iuser[]) => {
-      console.log(users);
       setUsers(users);
     });
   }, [socket, messages]);
@@ -45,10 +45,10 @@ function App() {
   return (
     <div>
       {/* Form to join a chat room */}
-      { !joined ? <FormChat socket={socket} name={name} room={room} setName={setName} setRoom={setRoom} setJoined={setJoined}/> : null }
+      { !joined ? <FormChat socket={socket} name={name} room={room} setName={setName} setRoom={setRoom} setJoined={setJoined} setMessages={setMessages}/> : null }
 
       {/* Users connected */}
-      {joined && users.length > 0 ? <h3>User(s) connected:</h3> : null}
+      {joined && users?.length > 0 ? <h3>User(s) connected:</h3> : null}
       { 
         joined && users?.map((user: Iuser) => {
           return <div key={Math.random()}>{user.name}</div>
@@ -61,7 +61,7 @@ function App() {
 
       {/* Print messages */}
       {messages.map((message : Imessage) => ( 
-        <ChatMessage name={message.name} message={message.message} room={message.room} date={message.date}/>
+        <ChatMessage key={message.id}  name={message.name} message={message.message} room={message.room} date={message.date}/>
       ))}
 
     </div>

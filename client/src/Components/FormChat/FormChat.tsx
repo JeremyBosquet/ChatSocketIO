@@ -1,4 +1,5 @@
 import { Socket } from 'socket.io-client';
+import axios from 'axios';
 import './FormChat.scss';
 
 interface props {
@@ -8,11 +9,12 @@ interface props {
   setName : any;
   setRoom : any; 
   setJoined: any;
+  setMessages: any;
 }
 
 function FormChat(props : props) {
 
-  const handleSubmit = (e : any) => {
+  const handleSubmit = async (e : any) => {
     e.preventDefault(); // Cancel the form submit event 
 
     if (props.name === "" || props.room === "") { // Check if the name and room are not empty
@@ -28,6 +30,11 @@ function FormChat(props : props) {
     } );
 
     props.setJoined(true); // Set the joined room state to true
+    const messages = await axios.get(`http://localhost:4000/api/chat/messages/` + props.room);
+
+    if (messages?.data) {
+      props.setMessages(messages.data)
+    }
   }
 
 

@@ -53,7 +53,7 @@ function HomePage() {
         joined && users?.map((user: Iuser) => {
           return <div key={Math.random()}>{user.name}</div>
         })
-      }
+      } 
       {/* Form to send message */}
       { joined ? ( <SendMessage socket={socket} name={name} room={room}/> ) : ( null ) }
 

@@ -11,7 +11,7 @@ interface Iuser {
     role: string;
 }
 
-@Entity()
+@Entity({name: "channels"})
 export class Channel {
 
     @PrimaryGeneratedColumn('uuid')

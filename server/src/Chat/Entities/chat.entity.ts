@@ -5,7 +5,7 @@ import {
     CreateDateColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity({name: "messages"})
 export class Chat {
 
     @PrimaryGeneratedColumn('uuid')

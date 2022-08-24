@@ -9,16 +9,21 @@ export class ChatController {
     ) {}
 
     @Post('user')
-    async createUser(@Res() res, @Body() body, @Param() params) {
-        console.log(body);
+    async createUser(@Res() res, @Body() body) {
         const user = await this.chatService.createUser(body.user);
         res.json(user);
     }
 
     @Post('channel')
-    async createChannel(@Res() res, @Param() params) {
-        const channel = await this.chatService.createChannel(params.channel);
+    async createChannel(@Res() res, @Body() body) {
+        const channel = await this.chatService.createChannel(body.channel);
         res.json(channel);
+    }
+
+    @Get('channel')
+    async getChannels(@Res() res) {
+        const channels = await this.chatService.getChannels();
+        res.json(channels);
     }
 
     @Get('messages')

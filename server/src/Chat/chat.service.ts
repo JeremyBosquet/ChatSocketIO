@@ -9,10 +9,10 @@ import { User } from "./Entities/user.entity";
 export class ChatService {
     constructor(
         @InjectRepository(Chat) private chatRepository: Repository<Chat>, 
-        @InjectRepository(Chat) private channelRepository: Repository<Channel>, 
-        @InjectRepository(Chat) private userRepository: Repository<User>, 
+        @InjectRepository(Channel) private channelRepository: Repository<Channel>, 
+        @InjectRepository(User) private userRepository: Repository<User>, 
       ) {}
-    
+
       async createMessage(chat: Chat): Promise<Chat> {
         return await this.chatRepository.save(chat);
       }

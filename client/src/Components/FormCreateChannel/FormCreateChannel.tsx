@@ -14,29 +14,37 @@ interface props {
 
 function FormCreateChannel(props : props) {
   const [channelName, setChannelName] = useState<string>("");
-  const [visibility, setVisibility] = useState<string>("");
+  const [visibility, setVisibility] = useState<string>("public");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
   function checkVisibility(visibility : string) {
     if (visibility === "public" || visibility === "private" || visibility === "protected")
-    {
+      return (true);
+    else {
       setError("Error: channel's visibility can only be (public, private or protected).");
       return (false);
     }
-    return (true);
+    
   }
 
-  // function checkPassword(password: string) {
-
-  // }
+  function checkPassword(password: string) {
+    if (visibility === "protected")
+    {
+      if (password.length < 8)
+      {
+        setError("Error: password require minimum 8 characters.");
+        return (false);
+      }
+    }
+    return (true);
+  }
 
   const changeVisibility = (e : any) => {
     setPassword("");
     setVisibility(e.target.value);
   }
-
 
   const handleSubmit = async (e : any) => {
     e.preventDefault(); // Cancel the form submit event 
@@ -50,18 +58,21 @@ function FormCreateChannel(props : props) {
       return ;
     }
 
+    if (!checkPassword(password)) // check password force
+      return ;
+
     if (!checkVisibility(visibility)) // Check channel's visibility is valid
       return ;
 
-    const users = [
+    const defaultUsers = [
       {
         id: props.user.id,
         name: props.user.name,
         role: "owner"
       }
     ]
-
-    axios.post('channel', { name: channelName, owner: props.user.name, visibility: visibility, password: password, users: users })
+  
+    axios.post('http://localhost:4000/api/chat/channel', { name: channelName, owner: props.user, visibility: visibility, password: password, users: defaultUsers })
     .then((res : any) => {
         if (res.data ) {
         setSuccess("Success: channel " + channelName + " is created.");
@@ -70,7 +81,7 @@ function FormCreateChannel(props : props) {
     }
     ).catch((error : any) => {
         if (error) {
-          setError("Error: please retry later.")
+          setError("Error: please retry later. (" + error +")")
         }
       }
     )
@@ -82,13 +93,13 @@ function FormCreateChannel(props : props) {
           <input className="FormCreateChannelInput" type="text" value={channelName} onChange={e => setChannelName(e.target.value)} placeholder="Channel's name"></input>
           <select className="FormCreateChannelSelect" name="visibility" value={visibility} onChange={changeVisibility}>
             <option value="public">Public</option>
-            <option value="protected" selected>Protected by password</option>
+            <option value="protected">Protected by password</option>
             <option value="private">Private</option>
           </select>
           {visibility === "protected" ? (
             <input className="FormCreateChannelSelect" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Channel's password"></input>
           ) : null}
-          <button className="FormCreateChannelButtom" type="submit">Join chat</button>
+          <button className="FormCreateChannelButtom" type="submit">Create channel</button>
         </form>
         <div>
           { error ? <p>{error}</p> : null }

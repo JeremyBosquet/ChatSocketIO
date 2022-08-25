@@ -17,7 +17,16 @@ export class ChatController {
 
     @Post('channel')
     async createChannel(@Res() res, @Body() body) {
-        const channel : IcreateChannel = await this.chatService.createChannel(body.channel);
+        if (body?.password)
+            body.password = body.password; // need bcrypt encryption
+
+        if (body?.users)
+            body.users = JSON.stringify(body.users);
+        
+        if (body?.user)
+            body.user = JSON.stringify(body.user);
+        
+        const channel : IcreateChannel = await this.chatService.createChannel(body);
         res.json(channel);
     }
 

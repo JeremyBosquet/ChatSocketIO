@@ -4,6 +4,7 @@ import io, { Socket } from 'socket.io-client';
 import ChatMessage from '../../Components/ChatMessage/ChatMessage';
 import SendMessage from '../../Components/SendMessage/SendMessage';
 import LeaveRoom from '../../Components/LeaveRoom/LeaveRoom';
+import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
 
 interface Imessage {
   id: string;
@@ -63,6 +64,8 @@ function HomePage() {
       {messages.map((message : Imessage) => ( 
         <ChatMessage key={message.id}  name={message.name} message={message.message} room={message.room} date={message.date}/>
       ))}
+
+      <FormCreateChannel socket={socket} user={{id: "an id", name: "Test"}} />
 
     </div>
   );

@@ -4,12 +4,8 @@ import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
 } from 'typeorm';
+import { IChannelUser } from '../Interfaces/User';
 
-interface Iuser {
-    id: string;
-    name: string;
-    role: string;
-}
 
 @Entity({name: "channels"})
 export class Channel {
@@ -21,7 +17,7 @@ export class Channel {
     name: string;
 
     @Column({type: 'simple-array'})
-    owner: Iuser; // Iuser
+    owner: IChannelUser; // Iuser
 
     @Column()
     visibility: string;
@@ -30,7 +26,7 @@ export class Channel {
     password: string; // mp/room
 
     @Column({type: 'simple-array'})
-    users: Iuser[];
+    users: IChannelUser[];
 
     @CreateDateColumn()
     createdAt: Date;

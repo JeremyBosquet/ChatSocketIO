@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { AppService } from '../app.service';
 import { ChatService } from './chat.service';
+import { IcreateChannel } from './Interfaces/Channels';
 
 @Controller('api/chat')
 export class ChatController {
@@ -16,7 +17,7 @@ export class ChatController {
 
     @Post('channel')
     async createChannel(@Res() res, @Body() body) {
-        const channel = await this.chatService.createChannel(body.channel);
+        const channel : IcreateChannel = await this.chatService.createChannel(body.channel);
         res.json(channel);
     }
 

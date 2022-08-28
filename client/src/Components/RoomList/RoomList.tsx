@@ -1,6 +1,5 @@
 import { Socket } from 'socket.io-client';
 import axios from 'axios';
-import './FormChat.scss';
 
 interface props {
   socket : Socket | undefined;

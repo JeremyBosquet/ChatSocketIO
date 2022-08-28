@@ -29,7 +29,7 @@ function HomePage() {
   const [joined, setJoined] = useState<boolean>(false);
 
   useEffect(() => { // Connect to the socket
-    const newSocket = io('http://localhost:4001');
+    const newSocket = io('http://localhost:5001');
     setSocket(newSocket);
   }, []);
 

@@ -41,5 +41,8 @@ export class ChatService {
         console.log("Hola: ", user);
         return await this.userRepository.save(user);
       }
+      async getUsers(): Promise<User[]> {
+        return await this.userRepository.find();
+      }
     
 }

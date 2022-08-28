@@ -38,4 +38,9 @@ export class ChatController {
         const messages = await this.chatService.getMessageFromRoom(params.room);
         res.json(messages);
     }
+    @Get('getUsers')
+    async getUsers(@Res() res) {
+        const channels = await this.chatService.getUsers();
+        res.json(channels);
+    }
 }

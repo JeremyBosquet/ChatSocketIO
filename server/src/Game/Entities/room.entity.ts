@@ -6,7 +6,6 @@ import {
 } from 'typeorm';
 import { IPlayers } from '../Interfaces/Players';
 
-
 @Entity({name: "rooms"})
 export class Room {
 

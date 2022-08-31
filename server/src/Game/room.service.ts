@@ -39,4 +39,8 @@ export class RoomService {
         room.nbPlayers++;
         return await this.roomRepository.save(room);
       } 
+      // save room
+      async save(room: Room): Promise<Room>{
+        return await this.roomRepository.save(room);
+      }
 }

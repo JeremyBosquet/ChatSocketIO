@@ -5,6 +5,7 @@ import ChatMessage from '../../Components/ChatMessage/ChatMessage';
 import SendMessage from '../../Components/SendMessage/SendMessage';
 import LeaveRoom from '../../Components/LeaveRoom/LeaveRoom';
 import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
+import axios from 'axios';
 
 interface Imessage {
   id: string;
@@ -43,6 +44,12 @@ function HomePage() {
     });
   }, [socket, messages]);
 
+  const getChannelInfos = async (e: any) => {
+    const channelInfos = await axios.get("http://localhost:4000/api/chat/channel/?id=" + e.target.value);
+
+    console.log(channelInfos.data);
+  }
+
   return (
     <div>
       {/* Form to join a chat room */}
@@ -64,9 +71,8 @@ function HomePage() {
       {messages.map((message : Imessage) => ( 
         <ChatMessage key={message.id}  name={message.name} message={message.message} room={message.room} date={message.date}/>
       ))}
-
-      <FormCreateChannel socket={socket} user={{id: "an id", name: "Test"}} />
-
+            
+      <input onChange={getChannelInfos}></input>
     </div>
   );
 }

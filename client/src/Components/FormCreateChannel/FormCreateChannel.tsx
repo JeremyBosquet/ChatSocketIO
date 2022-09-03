@@ -4,12 +4,12 @@ import { useState } from 'react';
 
 interface Iuser {
   id: string,
-  name: string
 }
 
 interface props {
   socket : Socket | undefined;
   user : Iuser;
+  setChannels: any;
 }
 
 function FormCreateChannel(props : props) {
@@ -67,16 +67,30 @@ function FormCreateChannel(props : props) {
     const defaultUsers = [
       {
         id: props.user.id,
-        name: props.user.name,
         role: "owner"
       }
     ]
-  
+
     axios.post('http://localhost:4000/api/chat/channel', { name: channelName, owner: props.user, visibility: visibility, password: password, users: defaultUsers })
     .then((res : any) => {
         if (res.data ) {
         setSuccess("Success: channel " + channelName + " is created.");
         props.socket?.emit('channelCreated');
+
+        const getUsersChannel = async (userId: any) => {
+          await axios.get("http://localhost:4000/api/chat/channels/user/" + userId)
+          .then((res) => {
+              if (res)
+                  props.setChannels(res.data);
+          })
+        }
+
+        getUsersChannel(props.user.id);
+        
+        //Reset form
+        setChannelName("");
+        setVisibility("public");
+        setPassword("");
       }
     }
     ).catch((error : any) => {
@@ -101,10 +115,12 @@ function FormCreateChannel(props : props) {
           ) : null}
           <button className="FormCreateChannelButtom" type="submit">Create channel</button>
         </form>
+
         <div>
           { error ? <p>{error}</p> : null }
           { success ? <p>{success}</p> : null }
         </div>
+
       </div>
   );
 }

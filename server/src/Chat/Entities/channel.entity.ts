@@ -6,7 +6,6 @@ import {
 } from 'typeorm';
 import { IChannelUser } from '../Interfaces/User';
 
-
 @Entity({name: "channels"})
 export class Channel {
 
@@ -16,7 +15,7 @@ export class Channel {
     @Column()
     name: string;
 
-    @Column({type: 'simple-array'})
+    @Column({type: 'jsonb'})
     owner: IChannelUser; // Iuser
 
     @Column()
@@ -25,8 +24,8 @@ export class Channel {
     @Column({nullable: true})
     password: string; // mp/room
 
-    @Column({type: 'simple-array'})
-    users: IChannelUser[];
+    @Column({type: 'jsonb'})
+    users: any;
 
     @CreateDateColumn()
     createdAt: Date;

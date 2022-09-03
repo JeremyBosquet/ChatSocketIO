@@ -5,5 +5,5 @@ export interface IcreateChannel {
     owner: IChannelUser,
     visibility: string,
     password: string,
-    users: IChannelUser[]
+    users: string
 }

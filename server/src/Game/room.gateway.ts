@@ -116,4 +116,9 @@ export class RoomGateway {
             console.log("playerMove -", data);
         }
     }
+    @SubscribeMessage('ballMove')
+    async handleBallMove(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
+        const room = await this.roomService.getRoom(client.data?.roomId);
+        this.server.to('room-' + room?.id).emit('ballMovement', data);
+    }
 }

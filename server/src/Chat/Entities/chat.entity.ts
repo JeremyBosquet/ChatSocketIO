@@ -12,13 +12,13 @@ export class Chat {
     id: number;
 
     @Column()
-    name: string;
+    userId: string;
 
     @Column()
     message: string;
 
     @Column()
-    room: string;
+    channelId: string;
 
     @Column()
     date: string;

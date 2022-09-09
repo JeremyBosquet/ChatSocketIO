@@ -3,6 +3,7 @@ import { AppService } from '../app.service';
 import { ChatService } from './chat.service';
 import { User } from './Entities/user.entity';
 import { IcreateChannel } from './Interfaces/Channels';
+import * as bcrypt from 'bcrypt';
 
 @Controller('api/chat')
 export class ChatController {
@@ -24,8 +25,12 @@ export class ChatController {
 
     @Post('channel')
     async createChannel(@Res() res, @Body() body) {
+        async function passwordHash(password) {
+            return await bcrypt.hash(password, 10);
+        }
+
         if (body?.password)
-            body.password = body.password; // need bcrypt encryption
+            body.password = await passwordHash(body.password); // need bcrypt encryption
 
         const channel : IcreateChannel = await this.chatService.createChannel(body);
         res.json(channel);
@@ -33,6 +38,10 @@ export class ChatController {
 
     @Post('channel/join')
     async joinChannel(@Res() res, @Body() body) {
+        async function passwordHash(password) {
+            return await bcrypt.hash(password, 10);
+        }
+        
         const checkIfUserAlreadyIn = (channel: any) => {
             const containsUser = channel.users.filter(user => user.id === body.userId);
             if (Object.keys(containsUser).length == 0)
@@ -42,15 +51,15 @@ export class ChatController {
 
         if (body?.channel?.id && body?.userId)
         {
-            if (body?.password)
-                body.password = body.password; // need bcrypt encryption and compare password
-    
             const channel = await this.chatService.getBrutChannel(body.channel.id);
             if (channel)
             {
                 if (channel.visibility === "protected")
-                    if (!channel?.password || channel?.password !== body?.password)
-                        return res.status(HttpStatus.NOT_FOUND).json({message: "Channel not found"});
+                {
+                    const result = await bcrypt.compare(body.password, channel.password);
+                    if (!channel?.password || result === false)
+                        return res.status(HttpStatus.FORBIDDEN).json({message: "Password is wrong"});
+                }
 
                 let user = {"id": body.userId, "role": "default"}
                 if (channel.users)
@@ -100,9 +109,9 @@ export class ChatController {
         return res.status(HttpStatus.BAD_REQUEST).json({message: "Bad request"});
     }
 
-    @Get('channel') //Get channel by id
-    async getChannel(@Res() res, @Body() body) {
-        const channels = await this.chatService.getChannel(body.id);
+    @Get('channel/:id') //Get channel by id
+    async getChannel(@Res() res, @Param() param) {
+        const channels = await this.chatService.getChannel(param.id);
         res.json(channels);
     }
 
@@ -124,9 +133,9 @@ export class ChatController {
         res.json(channels);
     }
 
-    @Get('channels/users') // Get users in channel
-    async getChannelsWhereUsers(@Body() body, @Res() res) {
-        const channels = await this.chatService.getUsersInfosInChannel(body.id);
+    @Get('channels/users/:channelId') // Get users in channel
+    async getChannelsWhereUsers(@Param() param, @Res() res) {
+        const channels = await this.chatService.getUsersInfosInChannel(param.channelId);
         res.json(channels);
     }
 

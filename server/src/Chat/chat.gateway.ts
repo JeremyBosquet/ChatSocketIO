@@ -4,8 +4,8 @@ import { Chat } from "./Entities/chat.entity";
 import { ChatService } from "./chat.service";
 
 interface IUserJoin {
-    name: string,
-    room: string
+    channelId: string
+    userId: string,
 }
 
 interface IMessage {
@@ -34,54 +34,81 @@ export class ChatGateway {
 
         let users = [];
         for (const socket of sockets) {
-            users.push({id: socket.id, name: socket.data.name, room: client.data.room});
+            users.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
         }
        
         this.server.in(client.data.room).emit('usersConnected', users);
 
-        client.data.room = "";
+        client.data.channelId = "";
+        client.data.userId = "";
+        client.data.name = "";
     }
 
     @SubscribeMessage('join')
     async handleEvent(@MessageBody() data: IUserJoin, @ConnectedSocket() client: Socket): Promise<void>  {
-        client.join(data.room);
+        client.join(data.channelId);
         
-        client.data.name = data.name;
-        client.data.room = data.room;
+        client.data.userId = data.userId;
+        client.data.name = (await this.chatService.getUser(data.userId)).name;
+        client.data.channelId = data.channelId;
 
         this.server.emit('joinFromServer', data);
-        const sockets = await this.server.in(data.room).fetchSockets()
+        const sockets = await this.server.in(data.channelId).fetchSockets()
 
         let users = [];
         for (const socket of sockets) {
-            users.push({id: socket.id, name: socket.data.name, room: data.room});
+            users.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
         }
 
-        this.server.in(data.room).emit('usersConnected', users);
+        this.server.in(data.channelId).emit('usersConnected', users);
     }
 
     @SubscribeMessage('leave')
     async handleLeave(@MessageBody() data: IUserJoin, @ConnectedSocket() client: Socket): Promise<void> {
-        client.leave(data.room);
+        client.leave(data.channelId);
 
-        client.data.room = "";
+        client.data.channelId = "";
 
         this.server.emit('leaveFromServer', data);
 
-        const sockets = await this.server.in(data.room).fetchSockets()
+        const sockets = await this.server.in(data.channelId).fetchSockets()
 
         let users = [];
         for (const socket of sockets) {
-            users.push({id: socket.id, name: socket.data.name, room: data.room});
+            users.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
         }
 
-        this.server.in(data.room).emit('usersConnected', users);
+        this.server.in(data.channelId).emit('usersConnected', users);
+    }
+
+    @SubscribeMessage('leavePermanant')
+    async handleLeavePermanant(@MessageBody() data: IUserJoin, @ConnectedSocket() client: Socket): Promise<void> {
+        
+        if (client.data?.channelId === data.channelId) {
+            client.leave(data.channelId);
+            client.data.channelId = "";
+            const sockets = await this.server.in(data.channelId).fetchSockets()
+
+            let users = [];
+            for (const socket of sockets) {
+                users.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
+            }
+
+            this.server.in(data.channelId).emit('usersConnected', users);
+        }
+
+        this.server.in(data.channelId).emit('updateAllPlayers', await this.chatService.getUsersInfosInChannel(data.channelId));
+    }
+
+    @SubscribeMessage('joinPermanent')
+    async handleJoinPermanant(@MessageBody() data: {channelId: string}): Promise<void> {
+        this.server.in(data.channelId).emit('updateAllPlayers', await this.chatService.getUsersInfosInChannel(data.channelId));
     }
 
     @SubscribeMessage('message')
     async handleMessage(@MessageBody() data: Chat, @ConnectedSocket() client: Socket): Promise<void> {
         await this.chatService.createMessage(data);
-        this.server.in(data.room).emit('messageFromServer', data);
+        this.server.in(data.channelId).emit('messageFromServer', data);
     }
 
 }

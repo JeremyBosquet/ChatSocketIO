@@ -1,0 +1,38 @@
+.ChatChannel {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    border-radius: 10px;
+    width: 100%;
+
+    .messages {
+        overflow: scroll;
+        height: 350px;
+    }
+}
+
+.playersList {
+    width: 400px;
+    border: 2px solid black;
+    background-color: #1B1F3B;
+    height: min-content;
+    margin-left: 30px;
+    
+    h2 {
+        text-align: center;
+        color: white;
+    }
+
+    .player {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        align-items: center;
+        text-align: center;
+        width: auto;
+        background-color: #454ADE;
+        border-bottom: 1px solid black;
+        color: white;
+        font-size: 20px;
+    }
+}

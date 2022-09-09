@@ -22,8 +22,8 @@ export class ChatService {
         return await this.chatRepository.find();
       }
     
-      async getMessageFromRoom(room: string): Promise<Chat[]> {
-        return await (await this.chatRepository.find()).filter(message => message.room === room);
+      async getMessageFromRoom(channelId: string): Promise<Chat[]> {
+        return await (await this.chatRepository.find()).filter(message => message.channelId === channelId);
       }
 
       async createChannel(channel: Channel): Promise<Channel> {
@@ -31,10 +31,10 @@ export class ChatService {
       }
     
       async getChannel(channelId : string): Promise<any> {
-        let channelInfos = [];
-        channelInfos.push(await this.channelRepository.findOneBy({id: channelId}));
-        if (channelInfos[0])
-          channelInfos[0].users = await this.getUsersInfosInChannel(channelId);
+        let channelInfos;
+        channelInfos = await this.channelRepository.findOneBy({id: channelId});
+        if (channelInfos)
+          channelInfos.users = await this.getUsersInfosInChannel(channelId);
         return channelInfos
       }
 
@@ -82,13 +82,15 @@ export class ChatService {
         const channel = await this.channelRepository.findOneBy({id: channelId});
 
         let users = [];
-        for (const user of channel.users) {
-          let userInfos : any = await this.getUser(user.id);
-          if (userInfos)
-          {
-            userInfos["role"] = user.role;
+        if (channel?.users) {
+          for (const user of channel.users) {
+            let userInfos : any = await this.getUser(user.id);
+            if (userInfos)
+            {
+              userInfos["role"] = user.role;
+            }
+            users.push(userInfos);
           }
-          users.push(userInfos);
         }
 
         return users;

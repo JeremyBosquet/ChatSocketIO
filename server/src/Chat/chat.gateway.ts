@@ -30,14 +30,14 @@ export class ChatGateway {
 
     @SubscribeMessage('disconnect')
     async handleDisconnect(@ConnectedSocket() client: Socket) : Promise<void> {
-        const sockets = await this.server.in(client.data.room).fetchSockets()
+        const sockets = await this.server.in(client.data.channelId).fetchSockets()
 
         let users = [];
         for (const socket of sockets) {
             users.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
         }
        
-        this.server.in(client.data.room).emit('usersConnected', users);
+        this.server.in(client.data.channelId).emit('usersConnected', users);
 
         client.data.channelId = "";
         client.data.userId = "";

@@ -22,7 +22,7 @@ function ChatMessage(props : props) {
     }
     getUsername();
     //eslint-disable-next-line
-  }, [])
+  }, [props.users])
 
   return (
       <div key={props.message.id} className={props.message.userId === props.userId ? "message sender" : "message"}>

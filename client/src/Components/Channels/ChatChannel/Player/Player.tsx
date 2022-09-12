@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Iuser, IuserDb } from "../interfaces/users";
+import './Player.scss';
 
 interface props {
     user: IuserDb;
@@ -28,7 +29,7 @@ function Player(props : props) {
 
   return (
     <div className='player' key={Math.random()}>
-      <p>{props.user?.name} - {connected ? <span>Online</span> : <span>Offline</span>}</p>
+      <p>{props.user?.name} - {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p>
       <div>
           <button>Add friend</button>
           <button>Block</button>

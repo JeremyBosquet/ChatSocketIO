@@ -1,12 +1,12 @@
 .message {
-    background-color: #0084FF;
-    padding: 1px 10px;
+    background-color: #ECECEC;
+    padding: 0px 10px;
     margin: 3px;
     border-radius: 10px;
     min-width: 150px;
     max-width: 70%;
     width: fit-content;
-    color: white;
+    color: black;
     animation: visible 0.2s;
 
     .messageUser {
@@ -32,5 +32,6 @@
 .sender {
     align-self: flex-end;
     text-align: right;
-    background-color: #454ADE;
+    background-color: #00A4F8;
+    color: white;
 }

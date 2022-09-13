@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Chat } from './Chat/Entities/chat.entity';
 import { ChatModule } from './Chat/chat.module';
 import { Channel } from './Chat/Entities/channel.entity';
 import { User } from './Chat/Entities/user.entity';
@@ -15,10 +14,10 @@ import { User } from './Chat/Entities/user.entity';
       username: 'jeremy',
       password: 'jeremy',
       database: 'chat',
-      entities: [Chat, Channel, User],
+      entities: [Channel, User],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Chat, Channel, User]),
+    TypeOrmModule.forFeature([Channel, User]),
     ChatModule,
   ],
   controllers: [AppController],

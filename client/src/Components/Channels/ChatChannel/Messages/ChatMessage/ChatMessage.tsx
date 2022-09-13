@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Imessage } from "../../interfaces/messages";
 import { IuserDb } from "../../interfaces/users";
@@ -18,6 +19,10 @@ function ChatMessage(props : props) {
       let username = "";
       if (userFinded?.name)
         username = userFinded.name;
+      else {
+        const user = await axios.get(`http://localhost:4000/api/user/` + props.message.userId);
+        username = user?.data.name;
+      }
       setUser(username);
     }
     getUsername();

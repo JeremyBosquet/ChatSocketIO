@@ -82,7 +82,7 @@ function ChatChannel(props: props) {
           <h2>Players</h2>
           <div className='messages'>
             {users?.map((user : any) => ( 
-              <Player key={user.id} user={user} usersConnected={usersConnected}/>
+              <Player key={user.id} users={users} user={user} usersConnected={usersConnected}/>
             ))}
           </div>
       </div>

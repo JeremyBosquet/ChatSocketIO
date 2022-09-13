@@ -23,9 +23,12 @@ export class Channel {
 
     @Column({nullable: true})
     password: string; // mp/room
-
+    
     @Column({type: 'jsonb'})
     users: any;
+    
+    @Column({type: 'jsonb'})
+    messages: any;
 
     @CreateDateColumn()
     createdAt: Date;

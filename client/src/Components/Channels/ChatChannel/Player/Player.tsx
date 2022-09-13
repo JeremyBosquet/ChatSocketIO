@@ -3,6 +3,7 @@ import { Iuser, IuserDb } from "../interfaces/users";
 import './Player.scss';
 
 interface props {
+    users: IuserDb[];
     user: IuserDb;
     usersConnected: Iuser[];
 }
@@ -13,7 +14,6 @@ function Player(props : props) {
   useEffect(() => {
     async function isConnected(user: IuserDb) {
       let userFinded = await props.usersConnected.find(userConnected => userConnected.userId === user.id);
-      console.log("userFinded", userFinded);
       if (userFinded)
       {
         setConnected(true);
@@ -29,7 +29,7 @@ function Player(props : props) {
 
   return (
     <div className='player' key={Math.random()}>
-      <p>{props.user?.name} - {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p>
+      <p>{props.user?.name} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p>
       <div>
           <button>Add friend</button>
           <button>Block</button>

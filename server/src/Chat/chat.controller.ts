@@ -139,12 +139,6 @@ export class ChatController {
         res.json(channels);
     }
 
-    @Get('messages')
-    async getMessages(@Res() res) {
-        const messages = await this.chatService.getMessages();
-        res.json(messages);
-    }
-
     @Get('messages/:room')
     async getMessagesFromRoom(@Res() res, @Param() params) {
         const messages = await this.chatService.getMessageFromRoom(params.room);

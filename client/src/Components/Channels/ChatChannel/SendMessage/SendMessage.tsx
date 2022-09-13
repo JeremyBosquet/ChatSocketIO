@@ -12,7 +12,7 @@ function SendMessage(props : props) {
 
     const handleSubmit = (e : any) => {
         e.preventDefault();
-        props.socket?.emit('message', { userId: props.user.id, message: message, channelId: props.channelId, date: new Date().getHours() + ":" + new Date().getMinutes() });
+        props.socket?.emit('message', { userId: props.user.id, message: message, channelId: props.channelId });
         setMessage("");
     }
 

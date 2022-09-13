@@ -1,18 +1,11 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from "@nestjs/websockets";
 import { Socket } from "socket.io";
-import { Chat } from "./Entities/chat.entity";
 import { ChatService } from "./chat.service";
+import { IChat, IChatReceive } from "./Interfaces/Chat";
 
 interface IUserJoin {
     channelId: string
     userId: string,
-}
-
-interface IMessage {
-    name: string,
-    room: string,
-    message: string,
-    date: string
 }
 
 @WebSocketGateway(4001, { cors: '*:*'})
@@ -106,8 +99,14 @@ export class ChatGateway {
     }
 
     @SubscribeMessage('message')
-    async handleMessage(@MessageBody() data: Chat, @ConnectedSocket() client: Socket): Promise<void> {
-        await this.chatService.createMessage(data);
+    async handleMessage(@MessageBody() data: IChatReceive, @ConnectedSocket() client: Socket): Promise<void> {
+        let chat : IChat = {
+            id: data.id,
+            userId: data.userId,
+            message: data.message,
+            createdAt: data.createdAt
+        }
+        await this.chatService.createMessage(chat, data.channelId);
         this.server.in(data.channelId).emit('messageFromServer', data);
     }
 

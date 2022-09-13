@@ -71,7 +71,7 @@ function FormCreateChannel(props : props) {
       }
     ]
 
-    axios.post('http://localhost:4000/api/chat/channel', { name: channelName, owner: props.user, visibility: visibility, password: password, users: defaultUsers })
+    axios.post('http://localhost:4000/api/chat/channel', { name: channelName, owner: props.user, visibility: visibility, password: password, users: defaultUsers, messages: [] })
     .then((res : any) => {
         if (res.data ) {
         setSuccess("Success: channel " + channelName + " is created.");

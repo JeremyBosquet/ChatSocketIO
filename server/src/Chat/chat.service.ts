@@ -3,27 +3,27 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { userInfo } from "os";
 import { Repository } from "typeorm";
 import { Channel } from "./Entities/channel.entity";
-import { Chat } from "./Entities/chat.entity";
+// import { Chat } from "./Entities/chat.entity";
 import { User } from "./Entities/user.entity";
+import { IChat } from "./Interfaces/Chat";
 
 @Injectable()
 export class ChatService {
     constructor(
-        @InjectRepository(Chat) private chatRepository: Repository<Chat>, 
         @InjectRepository(Channel) private channelRepository: Repository<Channel>, 
         @InjectRepository(User) private userRepository: Repository<User>, 
       ) {}
 
-      async createMessage(chat: Chat): Promise<Chat> {
-        return await this.chatRepository.save(chat);
+      async createMessage(chat: IChat, channelId: string): Promise<void> {
+        const channel = await this.channelRepository.findOneBy({id: channelId});
+        if (channel) {
+          channel.messages.push(chat);
+          await this.channelRepository.update(channelId, channel);
+        }
       }
 
-      async getMessages(): Promise<Chat[]> {
-        return await this.chatRepository.find();
-      }
-    
-      async getMessageFromRoom(channelId: string): Promise<Chat[]> {
-        return await (await this.chatRepository.find()).filter(message => message.channelId === channelId);
+      async getMessageFromRoom(channelId: string): Promise<IChat[]> {
+        return (await this.channelRepository.findOneBy({id: channelId}))?.messages;
       }
 
       async createChannel(channel: Channel): Promise<Channel> {

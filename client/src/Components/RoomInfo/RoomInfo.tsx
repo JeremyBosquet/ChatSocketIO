@@ -5,6 +5,14 @@ interface props {
   nbPlayers: number;
   status: string;
   createdAt: string;
+  settings: ISettings;
+}
+
+interface ISettings{
+  defaultSpeed: number;
+  boardWidth: number;
+  boardHeight: number;
+  ballRadius: number;
 }
 
 function RoomInfo(props : props) {

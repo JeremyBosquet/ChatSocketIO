@@ -10,6 +10,7 @@
     "@types/node": "^16.11.49",
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
+    "@use-it/event-listener": "^0.1.7",
     "axios": "^0.27.2",
     "konva": "^8.3.11",
     "react": "^18.2.0",

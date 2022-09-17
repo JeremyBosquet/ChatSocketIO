@@ -13,7 +13,13 @@ function FormCreateRoom(props : props) {
   const [Status, setStatus] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
+  const [defaultSpeed, setDefaultSpeed] = useState<number>(0.2);
+  const [defaultDirection, setdefaultDirection] = useState<number>(Math.random() * 2 * Math.PI);
+  const [boardWidth, setBoardWidth] = useState<number>(0.015);
+  const [boardHeight, setBoardHeight] = useState<number>(0.20);
+  const [ballRadius, setBallRadius] = useState<number>(0.020);
 
+  
   const handleSubmit = async (e : any) => {
     e.preventDefault(); // Cancel the form submit event 
     setSuccess("");
@@ -24,7 +30,7 @@ function FormCreateRoom(props : props) {
       return ;
     }
     console.log(e.target.name.value)
-    axios.post(`http://localhost:5000/api/room/createRoom`, { name: roomName, nbPlayers: NbPlayers, owner: Owner, status: Status })
+    axios.post(`http://localhost:5000/api/room/createRoom`, { name: roomName, nbPlayers: NbPlayers, owner: Owner, status: Status, settings:  { defaultSpeed: defaultSpeed, defaultDirection: defaultDirection, boardWidth: boardWidth, boardHeight: boardHeight, ballRadius: ballRadius }})
     .then(res => {
       console.log("success");
       props.socket?.emit('roomCreated');
@@ -53,7 +59,26 @@ function FormCreateRoom(props : props) {
             <label htmlFor="Status">Status </label>
             <input type="text" id="Owner" name="name" onChange={(e) => setStatus(e.target.value)} />
           </div>
-
+          <div className="ChannelRoomFormInput-DefaultSpeed">
+            <label htmlFor="DefaultSpeed">DefaultSpeed </label>
+            <input defaultValue={defaultSpeed} type="number" id="DefaultSpeed" name="name" onChange={(e) => setDefaultSpeed(e.target.valueAsNumber)} />
+          </div>
+          <div className="ChannelRoomFormInput-DefaultSpeed">
+            <label htmlFor="defaultDirection">defaultDirection </label>
+            <input defaultValue={defaultDirection} type="number" id="DefaultDirection" name="name" onChange={(e) => setdefaultDirection(e.target.valueAsNumber)} />
+          </div>
+          <div className="ChannelRoomFormInput-BoardWidth">
+            <label htmlFor="BoardWidth">BoardWidth </label>
+            <input defaultValue={boardWidth} type="number" id="BoardWidth" name="name" onChange={(e) => setBoardWidth(e.target.valueAsNumber)} />
+          </div>
+          <div className="ChannelRoomFormInput-BoardHeight">
+            <label htmlFor="BoardHeight">BoardHeight </label>
+            <input defaultValue={boardHeight} type="number" id="BoardHeight" name="name" onChange={(e) => setBoardHeight(e.target.valueAsNumber)} />
+          </div>
+          <div className="ChannelRoomFormInput-BallRadius">
+            <label htmlFor="BallRadius">BallRadius </label>
+            <input defaultValue={ballRadius} type="number" id="BallRadius" name="name" onChange={(e) => setBallRadius(e.target.valueAsNumber)} />
+          </div>
           <button className="FormCreateRoomButtom" type="submit">Create Room</button>
         </form>
         <div>

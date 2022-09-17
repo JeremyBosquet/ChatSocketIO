@@ -11,8 +11,16 @@ interface Irooms {
   nbPlayers: number;
   status: string;
   createdAt: string;
+  settings: ISettings;
 }
 
+interface ISettings{
+  defaultSpeed: number;
+  defaultDirection: number;
+  boardWidth: number;
+  boardHeight: number;
+  ballRadius: number;
+}
 
 function GameMainPage() {
   const [socket, setSocket] = useState<Socket>();
@@ -40,7 +48,7 @@ function GameMainPage() {
     <div>
       Rooms : <br/>
       {rooms.map((room : Irooms) => (
-        <RoomInfo key={room.id} id={room.id} owner={room.owner} status={room.status} nbPlayers={room.nbPlayers} name={room.name} createdAt={room.createdAt}/>
+        <RoomInfo key={room.id} id={room.id} owner={room.owner} status={room.status} nbPlayers={room.nbPlayers} name={room.name} createdAt={room.createdAt} settings={room.settings}/>
       ))}
       <button onClick={getRooms}>Click me</button>
       <FormCreateRoom socket={socket}/>

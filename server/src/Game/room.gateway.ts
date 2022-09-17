@@ -18,11 +18,11 @@ interface Iready {
     playerName: string;
 }
 
+const intervalList = [];
 @WebSocketGateway(5002, { cors: '*:*'})
 export class RoomGateway {
 
     constructor(private roomService: RoomService) {}
-
     @WebSocketServer()
     server;
 
@@ -32,6 +32,56 @@ export class RoomGateway {
         this.server.emit('roomCreated', rooms);
     }
 
+    async gameLoop(roomTMP : any) : Promise<void> {
+        const room = await this.roomService.getRoom(roomTMP.id);
+        const settings = room.settings;
+        if (room?.id)
+        {
+            if (room.status === "paused")
+            {
+                //A gerer differement surement
+                console.log("gameLoop - paused");
+                this.roomService.removeFromID(room.id);
+                clearInterval(intervalList[room.id]);
+            }
+            else if (room.status === "waiting")
+            {
+                console.log("gameLoop - waiting, let's play");
+                room.status = "playing";
+                this.server.in('room-' + room.id).emit('gameStart', room);
+                this.roomService.save(room);
+            }
+            else if (room.status === "playing")
+            {
+                console.log("gameLoop - playing");
+                const ball = room.ball;
+                console.log("settings : ", settings);
+                if (ball.x < 0 || ball.x > 100)
+                {
+                    room.status = "waiting";
+                    clearInterval(intervalList[room.id]);
+                    // Dire que un des deux a perdu
+                    // Et reboot la manche si y reste des tours
+                }
+                else if ((ball.y + ((settings.ballRadius * 100) / 2)) < 0 || (ball.y - ((settings.ballRadius * 100) / 2)) < 0 || (ball.y + ((settings.ballRadius * 100) / 2)) > 100 ||  (ball.y - ((settings.ballRadius * 100) / 2)) > 100)
+                {
+                    ball.direction = -ball.direction;
+                    // Ajouter aleatoire pour la direction
+                    ball.x += ball.speed * Math.cos(ball.direction);
+                    ball.y += ball.speed * Math.sin(ball.direction);
+                }
+                else
+                {
+                    ball.x += ball.speed * Math.cos(ball.direction);
+                    ball.y += ball.speed * Math.sin(ball.direction);
+                }
+                room.ball = ball;
+                this.server.in('room-' + room.id).emit('ballMovement', ball);
+                await this.roomService.save(room);
+            }
+        }
+
+    }
     @SubscribeMessage('iAmReady')
     async playerReady(@ConnectedSocket() client: Socket, @MessageBody() data: Iready): Promise<void> {
         const room = await this.roomService.getRoom(data.roomId);
@@ -44,6 +94,7 @@ export class RoomGateway {
                 //console.log("errorRoomIsFull -", room.id, room.nbPlayers);
                 client.join('room-' + room.id);
                 this.server.to(client.id).emit('errorRoomIsFull', client.data?.playerId);
+                //Spectateur ici
                 //this.server.to('room-' + room.id).emit('errorRoomIsFull', error);
             }
             else if (error.message === "Player already in a room")
@@ -66,9 +117,14 @@ export class RoomGateway {
                 client.data.roomId = data.roomId;
                 client.data.playerId = data.playerId;
                 console.log("I sent a playerReady -", room.id, room.nbPlayers, "in room-" + room.id);
-                if (room.playerA?.id && room.playerB?.id)
-                    room.status = "playing";
-                // Lance un qui va tout faire fonctionner
+                if (room.playerA?.id && room.playerB?.id && room.status != "playing")
+                {
+                    //room.status = "playing";
+                    //intervalList[room.id] = setInterval(this.gameLoop, 100, room);
+                    intervalList[room.id] = setInterval(() => this.gameLoop(room), 100);
+                }
+                  // Lance un qui va tout faire fonctionner
+                //clearInterval(intervalList[room.id]);
                 this.roomService.save(room);
                 this.server.in('room-' + room.id).emit('playerReady', room);
             }
@@ -83,9 +139,9 @@ export class RoomGateway {
             const room = await this.roomService.getRoom(client.data.roomId);
             if (room?.id !== null  && room?.nbPlayers !== null)
             {
-                if (room.playerA?.id == client.data.playerId)
+                if (room?.playerA?.id == client.data.playerId)
                     room.playerA = null;
-                else if (room.playerB?.id == client.data.playerId)
+                else if (room?.playerB?.id == client.data.playerId)
                     room.playerB = null;
                 else
                 {
@@ -94,10 +150,12 @@ export class RoomGateway {
                 }
                 room.nbPlayers--;
                 this.server.to('room-' + room.id).emit('playerDisconnected', room);
-                room.status = "paused";
+                room.status = "waiting"; // remove that
                 console.log("disconnect -", room.id, room.nbPlayers);
-                //Update room
-                await this.roomService.save(room);
+                clearInterval(intervalList[room.id]);
+                this.roomService.save(room); // remove that
+                // to active
+                //await this.roomService.removeFromID(room.id);
             }
         }   
     }
@@ -108,8 +166,18 @@ export class RoomGateway {
             const room = await this.roomService.getRoom(client.data?.roomId);
             if (room?.status === "playing" && data?.id && data?.x && data?.y)
             {
-                
+                if ("playerA" === data.id)
+                {
+                    room.playerA.x = data.x;
+                    room.playerA.y = data.y;
+                }
+                else if ("playerB"=== data.id)
+                {
+                    room.playerB.x = data.x;
+                    room.playerB.y = data.y;
+                }
                 this.server.to('room-' + room?.id).emit('playerMovement', data);
+                await this.roomService.save(room);
             }
             else
                 console.log("action not allowed -", room?.id, room?.status);

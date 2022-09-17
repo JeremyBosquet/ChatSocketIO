@@ -3,4 +3,6 @@ export interface IPlayers {
     name: string;
     score: number;
     status: string;
+    x: number;
+    y: number;
 }

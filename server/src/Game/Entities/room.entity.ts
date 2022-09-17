@@ -4,7 +4,9 @@ import {
     PrimaryGeneratedColumn,
     CreateDateColumn,
 } from 'typeorm';
+import { IBall } from '../Interfaces/Ball';
 import { IPlayers } from '../Interfaces/Players';
+import { ISettings } from '../Interfaces/Settings';
 
 @Entity({name: "rooms"})
 export class Room {
@@ -29,6 +31,12 @@ export class Room {
 
     @Column({nullable: true, type: 'jsonb'})
     playerB: IPlayers;
+
+    @Column({nullable: true, type: 'jsonb'})
+    ball: IBall;
+
+    @Column({nullable: true, type: 'jsonb'})
+    settings: ISettings;
 
     @CreateDateColumn()
     createdAt: Date;

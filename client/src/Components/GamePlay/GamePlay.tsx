@@ -153,6 +153,11 @@ function GamePlay(props: props) {
   }, [playerA, playerB, width, height, boardWidth, boardHeight, props.room, props.playerName]);
   useEffect(() => {
     props.socket?.on("ballMovement", (ball: any) => {
+      /*ballRef.current?.to({
+        x: ((ball.x / 100) * width),
+        y: ((ball.y / 100) * height),
+        duration: 0.1
+      });*/
       setBall({ id: "ball", x: width * (ball.x / 100), y: height * (ball.y / 100)});
     });
   }, [ball, height, width]);

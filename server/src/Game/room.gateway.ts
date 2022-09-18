@@ -56,16 +56,31 @@ export class RoomGateway {
                 console.log("gameLoop - playing");
                 const ball = room.ball;
                 console.log("settings : ", settings);
-                if (ball.x < 0 || ball.x > 100)
+                if (ball.x + (settings.ballRadius * 100) < 0 || ball.x + (settings.ballRadius * 100) > 100)
                 {
                     room.status = "waiting";
                     clearInterval(intervalList[room.id]);
                     // Dire que un des deux a perdu
                     // Et reboot la manche si y reste des tours
                 }
-                else if ((ball.y + ((settings.ballRadius * 100) / 2)) < 0 || (ball.y - ((settings.ballRadius * 100) / 2)) < 0 || (ball.y + ((settings.ballRadius * 100) / 2)) > 100 ||  (ball.y - ((settings.ballRadius * 100) / 2)) > 100)
+                else if ((ball.y + (settings.ballRadius * 100)) < 0 || (ball.y - (settings.ballRadius * 100)) < 0 || (ball.y + (settings.ballRadius * 100)) > 100 ||  (ball.y - (settings.ballRadius * 100)) > 100)
                 {
                     ball.direction = -ball.direction;
+                    // Ajouter aleatoire pour la direction
+                    ball.x += ball.speed * Math.cos(ball.direction);
+                    ball.y += ball.speed * Math.sin(ball.direction);
+                }
+                else if (ball.x - (settings.ballRadius * 100) < (room.playerA.x + (settings.boardWidth * 100)) && ball.x - (settings.ballRadius * 100) > (room.playerA.x) && ball.y + (settings.ballRadius * 100) > room.playerA.y && ball.y - (settings.ballRadius * 100) < room.playerA.y + (settings.boardHeight * 100))
+                { // La collision est un peu trop a droite a voir apres
+                    ball.direction = Math.PI - ball.direction;
+                    // Ajouter aleatoire pour la direction
+                    ball.x += ball.speed * Math.cos(ball.direction);
+                    ball.y += ball.speed * Math.sin(ball.direction);
+                }
+                else if (ball.x + (settings.ballRadius * 100) > (room.playerB.x) && ball.x + (settings.ballRadius * 100) < (room.playerB.x + (settings.boardWidth * 100)) && ball.y + (settings.ballRadius * 100) > room.playerB.y && ball.y - (settings.ballRadius * 100) < room.playerB.y + (settings.boardHeight * 100))
+                { 
+                    console.log ("collision");
+                    ball.direction = Math.PI - ball.direction;
                     // Ajouter aleatoire pour la direction
                     ball.x += ball.speed * Math.cos(ball.direction);
                     ball.y += ball.speed * Math.sin(ball.direction);

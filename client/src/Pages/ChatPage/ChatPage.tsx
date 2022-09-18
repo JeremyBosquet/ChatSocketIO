@@ -7,7 +7,7 @@ function ChatPage() {
 	const [socket, setSocket] = useState<Socket>();
 	// const user : {id: string} = ({id: "72e86254-9a03-46c9-9232-e86e203a2de7"})
 	const [mode, setMode] = useState<string>("channels");
-	const [selectedChannel, setSelectedChannel] = useState<string>("");
+	// const [selectedChannel, setSelectedChannel] = useState<string>("");
 	
 	const [user, setUser] = useState<{id: string}>({id: ""});
 	const [logged, setLogged] = useState<boolean>(false);
@@ -47,7 +47,8 @@ function ChatPage() {
 						<button className={mode === "dm" ? "selectedButton" : null + ' selectButton'} onClick={e => changeMode("dm")}>Private Messages</button>
 						{
 							mode === "channels" ?
-								<Channels socket={socket} user={user} setSelectedChannel={setSelectedChannel} selectedChannel={selectedChannel}/>
+								<Channels socket={socket} user={user}/>
+								// <Channels socket={socket} user={user} setSelectedChannel={setSelectedChannel} selectedChannel={selectedChannel}/>
 							:
 								<div>DM</div>
 						}

@@ -1,3 +1,4 @@
+import { Menu, MenuButton } from "@szhsin/react-menu";
 import { useEffect, useState } from "react";
 import { Iuser, IuserDb } from "../interfaces/users";
 import './Player.scss';
@@ -5,6 +6,7 @@ import './Player.scss';
 interface props {
     users: IuserDb[];
     user: IuserDb;
+    me: string;
     usersConnected: Iuser[];
 }
 
@@ -27,13 +29,19 @@ function Player(props : props) {
     //eslint-disable-next-line
   }, [props.usersConnected])
 
+  // 
   return (
     <div className='player' key={Math.random()}>
-      <p>{props.user?.name} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p>
-      <div>
-          <button>Add friend</button>
-          <button>Block</button>
-      </div>
+      <p>{props.user?.name} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p> 
+      {
+        props.user?.id === props.me ?
+          null :
+          <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 
+            <button>Profile</button>
+            <button>Block</button>
+            <button>Add friend</button>
+          </Menu>
+      }
     </div>
   );
 }

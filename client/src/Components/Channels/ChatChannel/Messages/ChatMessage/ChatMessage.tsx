@@ -19,9 +19,10 @@ function ChatMessage(props : props) {
       let username = "";
       if (userFinded?.name)
         username = userFinded.name;
-      else {
-        const user = await axios.get(`http://localhost:4000/api/user/` + props.message.userId);
-        username = user?.data.name;
+      else
+      {
+        const user = await axios.get(`http://localhost:4000/api/chat/user/` + props.message.userId);
+        username = user.data.name;
       }
       setUser(username);
     }
@@ -30,7 +31,7 @@ function ChatMessage(props : props) {
   }, [props.users])
 
   return (
-      <div key={props.message.id} className={props.message.userId === props.userId ? "message sender" : "message"}>
+      <div className={props.message.userId === props.userId ? "message sender" : "message"}>
         <p className="messageUser">{user}</p>
         <p className="messageContent">{props.message.message}</p>
       </div>

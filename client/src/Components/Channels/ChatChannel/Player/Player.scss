@@ -9,6 +9,45 @@
     border-bottom: 1px solid black;
     color: white;
     font-size: 20px;
+
+    .szh-menu-button {
+        background: none;
+        border: none;
+        font-size: 30px;
+        cursor: pointer;
+        color: white;
+        justify-content: flex-start;
+    }
+    
+    .szh-menu {
+        background: none;
+        border: none;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .szh-menu-container {
+        position: fixed !important;
+    }
+
+    .playerActions {
+        
+        button {
+            cursor: pointer;
+            display: block;
+            width: 150px;
+            border: none;
+            background-color: #454ADE;
+            color: white;
+            font-size: 20px;
+            padding: 10px;
+
+            &:hover {
+                transition-duration: 0.2s;
+                background-color: #2d41da;
+            }
+        }
+    }
 }
 
 .connected {

@@ -6,12 +6,14 @@ import Channel from './Channel/Channel';
 import Search from './Search/Search';
 import './Channels.scss';
 import ChatChannel from './ChatChannel/ChatChannel';
+import { useSelector } from 'react-redux';
+import { getSelectedChannel } from '../../Redux/chatSlice';
 
 interface props {
     socket: Socket | undefined;
     user: {id: string};
-    setSelectedChannel: any;
-    selectedChannel: string;
+    // setSelectedChannel: any;
+    // selectedChannel: string;
 }
 
 function Channels(props: props) {
@@ -20,6 +22,8 @@ function Channels(props: props) {
     const [init, setInit] = useState<boolean>(false);
     const [channels, setChannels] = useState<[]>([]);
     const [channelsFind, setChannelsFind] = useState<[]>([]);
+
+    const selectedChannel = useSelector(getSelectedChannel);
     
     useEffect(() => {
         const getUsersChannel = async (userId: any) => {
@@ -47,20 +51,40 @@ function Channels(props: props) {
                 <div className='channelInfo'>
                     <h2>Your channels</h2>
                     {channels.map((channel) => (
-                        <Channel key={channel["id"]} socket={props.socket} user={{id: props.user.id}} channel={channel} setChannels={setChannels} setSearchChannel={setSearchChannel} setSelectedChannel={props.setSelectedChannel} selectedChannel={props.selectedChannel} foundChannel={false}/>
+                        <Channel key={channel["id"]} socket={props.socket} user={{id: props.user.id}} channel={channel} setChannels={setChannels} setSearchChannel={setSearchChannel} foundChannel={false}/>
+                        // <Channel key={channel["id"]} socket={props.socket} user={{id: props.user.id}} channel={channel} setChannels={setChannels} setSearchChannel={setSearchChannel} setSelectedChannel={props.setSelectedChannel} selectedChannel={props.selectedChannel} foundChannel={false}/>
                     ))}
                 </div>
                 :
                 <div className='channelInfo'>
                     <h2>Channel(s) found</h2>
                     {channelsFind.map((channel) => (
-                        <Channel key={channel["id"]} socket={props.socket} user={{id: props.user.id}} channel={channel} setChannels={setChannels} setSearchChannel={setSearchChannel} setSelectedChannel={props.setSelectedChannel} selectedChannel={props.selectedChannel} foundChannel={true}/>
+                        // <Channel key={channel["id"]} socket={props.socket} user={{id: props.user.id}} channel={channel} setChannels={setChannels} setSearchChannel={setSearchChannel} setSelectedChannel={props.setSelectedChannel} selectedChannel={props.selectedChannel} foundChannel={true}/>
+                        <Channel key={channel["id"]} socket={props.socket} user={{id: props.user.id}} channel={channel} setChannels={setChannels} setSearchChannel={setSearchChannel} foundChannel={true}/>
                     ))}
                 </div>
+                // <div className='channelInfo'>
+                //     <h2>Your channels</h2>
+                //     {channels.map((channel) => (
+                //         <Channel key={channel["id"]} socket={props.socket} user={{id: props.user.id}} channel={channel} setChannels={setChannels} setSearchChannel={setSearchChannel} setSelectedChannel={props.setSelectedChannel} selectedChannel={props.selectedChannel} foundChannel={false}/>
+                //     ))}
+                // </div>
+                // :
+                // <div className='channelInfo'>
+                //     <h2>Channel(s) found</h2>
+                //     {channelsFind.map((channel) => (
+                //         <Channel key={channel["id"]} socket={props.socket} user={{id: props.user.id}} channel={channel} setChannels={setChannels} setSearchChannel={setSearchChannel} setSelectedChannel={props.setSelectedChannel} selectedChannel={props.selectedChannel} foundChannel={true}/>
+                //     ))}
+                // </div>
             }
             <div className='channelChat'>
-                { props.selectedChannel !== "" ? 
+                {/* { props.selectedChannel !== "" ? 
                     <ChatChannel socket={props.socket} user={{id: props.user.id}} selectedChannel={props.selectedChannel} />
+                        :
+                    <p>Select a channel</p>
+                } */}
+                { selectedChannel !== "" ? 
+                    <ChatChannel socket={props.socket} user={{id: props.user.id}} selectedChannel={selectedChannel} />
                         :
                     <p>Select a channel</p>
                 }

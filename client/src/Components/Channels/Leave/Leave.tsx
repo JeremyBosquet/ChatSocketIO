@@ -1,5 +1,7 @@
 import { Socket } from 'socket.io-client';
-import axios from 'axios';;
+import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
+import { getSelectedChannel, setSelectedChannel } from '../../../Redux/chatSlice';
 
 interface props {
     socket: Socket | undefined;
@@ -7,11 +9,13 @@ interface props {
     user: {id: string};
     setChannels: any;
     setSearchChannel: any;
-    selectedChannel: string;
-    setSelectedChannel: any;
+    // selectedChannel: string;
+    // setSelectedChannel: any;
 }
 
 function Leave(props: props) {
+    const selectedChannel = useSelector(getSelectedChannel);
+    const dispatch = useDispatch()
 
     const handleLeave = async (id: string) => {
         const getUsersChannel = async (userId: any) => {
@@ -27,8 +31,10 @@ function Leave(props: props) {
             getUsersChannel(props.user.id);
             props.socket?.emit('leavePermanant', { userId: props.user.id, channelId: id });
             props.setSearchChannel("");
-            if (props.selectedChannel === id)
-                props.setSelectedChannel("");
+            // if (props.selectedChannel === id)
+            //     props.setSelectedChannel("");
+            if (selectedChannel === id)
+                dispatch(setSelectedChannel(id));
         })
     }
     

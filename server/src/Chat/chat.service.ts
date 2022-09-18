@@ -3,7 +3,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { userInfo } from "os";
 import { Repository } from "typeorm";
 import { Channel } from "./Entities/channel.entity";
-// import { Chat } from "./Entities/chat.entity";
 import { User } from "./Entities/user.entity";
 import { IChat } from "./Interfaces/Chat";
 
@@ -97,7 +96,7 @@ export class ChatService {
       }
 
 
-      async updateChannelWithNewUser(channelId: string, data: Channel): Promise<any> {
+      async updateChannel(channelId: string, data: Channel): Promise<any> {
         return await this.channelRepository.update(channelId, data);
       }
 

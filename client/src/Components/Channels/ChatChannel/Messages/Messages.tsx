@@ -10,11 +10,10 @@ interface props {
 }
 
 function Messages(props : props) {
-
   return (
     <div className='messages'>
       {props.messages.map((message : Imessage) => ( 
-        <ChatMessage message={message} users={props.users} userId={props.userId}/>
+        <ChatMessage key={Math.random()} message={message} users={props.users} userId={props.userId}/>
       ))}
     </div>
   );

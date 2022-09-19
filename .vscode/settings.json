@@ -1,0 +1,24 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "localhost",
+            "database": "chat",
+            "username": "jeremy",
+            "password": "jeremy"
+        },
+        {
+            "previewLimit": 50,
+            "server": "45.147.97.2",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "jeremy",
+            "database": "adonis",
+            "username": "transcendance",
+            "password": "adonis"
+        }
+    ]
+}

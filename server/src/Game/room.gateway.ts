@@ -53,13 +53,15 @@ export class RoomGateway {
             }
             else if (room.status === "playing")
             {
-                console.log("gameLoop - playing");
                 const ball = room.ball;
-                console.log("settings : ", settings);
                 if (ball.x + (settings.ballRadius * 100) < 0 || ball.x + (settings.ballRadius * 100) > 100)
                 {
-                    room.status = "waiting";
-                    clearInterval(intervalList[room.id]);
+                    //room.status = "waiting";
+                    //clearInterval(intervalList[room.id]);
+                    ball.direction = Math.PI - ball.direction;
+                    ball.x += ball.speed * Math.cos(ball.direction);
+                    ball.y += ball.speed * Math.sin(ball.direction);
+
                     // Dire que un des deux a perdu
                     // Et reboot la manche si y reste des tours
                 }

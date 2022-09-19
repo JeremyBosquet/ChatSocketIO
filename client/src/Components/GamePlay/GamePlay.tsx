@@ -152,13 +152,12 @@ function GamePlay(props: props) {
     });
   }, [playerA, playerB, width, height, boardWidth, boardHeight, props.room, props.playerName]);
   useEffect(() => {
-    props.socket?.on("ballMovement", (ball: any) => {
+    props.socket?.on("ballMovement", (_ball: any) => {
+      //setBall({ id: "ball", x: ((_ball.x / 100) * width), y: ((_ball.y / 100) * height)});
       /*ballRef.current?.to({
-        x: ((ball.x / 100) * width),
-        y: ((ball.y / 100) * height),
-        duration: 0.1
+        x: ((_ball.x / 100) * width),
+        y: ((_ball.y / 100) * height),
       });*/
-      setBall({ id: "ball", x: width * (ball.x / 100), y: height * (ball.y / 100)});
     });
   }, [ball, height, width]);
 
@@ -166,6 +165,13 @@ function GamePlay(props: props) {
     <div>
       <p>Game :</p>
       <GameBoard socket={props.socket} room={props.room} />
+            <button onClick={() => {
+              console.log("Hey");
+              ballRef.current?.to({
+                vx: 10,
+                vy: Math.random() - 2,
+              });
+            }}>Velocity</button>
       <div id="gameMainCanvas">
         <Stage width={width} height={height} className="gameMainCanvas">
           <Layer >

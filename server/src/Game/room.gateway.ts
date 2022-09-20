@@ -138,7 +138,7 @@ export class RoomGateway {
                 {
                     //room.status = "playing";
                     //intervalList[room.id] = setInterval(this.gameLoop, 100, room);
-                    intervalList[room.id] = setInterval(() => this.gameLoop(room), 100);
+                    intervalList[room.id] = setInterval(() => this.gameLoop(room), 200);
                 }
                   // Lance un qui va tout faire fonctionner
                 //clearInterval(intervalList[room.id]);

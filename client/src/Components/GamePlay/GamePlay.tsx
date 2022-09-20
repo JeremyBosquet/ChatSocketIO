@@ -88,6 +88,7 @@ function GamePlay(props: props) {
   const playerARef = useRef<Konva.Rect>(null);
   const playerBRef = useRef<Konva.Rect>(null);
   const ballRef = useRef<Konva.Circle>(null);
+  const [animationActive, setanimationActive] = useState<boolean>(false);
 
   const mousemove = useCallback((e: any) => {
     const _player = { id: "", x: 0, y: 0 };
@@ -153,25 +154,25 @@ function GamePlay(props: props) {
   }, [playerA, playerB, width, height, boardWidth, boardHeight, props.room, props.playerName]);
   useEffect(() => {
     props.socket?.on("ballMovement", (_ball: any) => {
-      //setBall({ id: "ball", x: ((_ball.x / 100) * width), y: ((_ball.y / 100) * height)});
-      /*ballRef.current?.to({
+      if (animationActive)
+        return;
+      setanimationActive(true);
+      ballRef.current?.to({
         x: ((_ball.x / 100) * width),
         y: ((_ball.y / 100) * height),
-      });*/
+        duration: 1,
+        onFinish: () => {
+          setanimationActive(false);
+          //setBall({ id: "ball", x: ((_ball.x / 100) * width), y: ((_ball.y / 100) * height)});
+        }
+      });
     });
-  }, [ball, height, width]);
+  }, [ball, height, width, animationActive]);
 
   return (
     <div>
       <p>Game :</p>
       <GameBoard socket={props.socket} room={props.room} />
-            <button onClick={() => {
-              console.log("Hey");
-              ballRef.current?.to({
-                vx: 10,
-                vy: Math.random() - 2,
-              });
-            }}>Velocity</button>
       <div id="gameMainCanvas">
         <Stage width={width} height={height} className="gameMainCanvas">
           <Layer >

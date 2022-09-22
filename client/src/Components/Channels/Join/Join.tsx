@@ -36,7 +36,7 @@ function Join(props: props) {
             })
         }
     
-        await axios.post("http://localhost:4000/api/chat/channel/join", {"channel": {id: id}, "userId": props.user.id, "password": password})
+        await axios.post("http://localhost:4000/api/chat/channel/join", {"channelId": id, "userId": props.user.id, "password": password})
         .then((res) => {
             getUsersChannel(props.user.id);
             props.socket?.emit('joinPermanent', { channelId: id });

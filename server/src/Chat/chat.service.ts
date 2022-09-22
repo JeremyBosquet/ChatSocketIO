@@ -21,7 +21,7 @@ export class ChatService {
         }
       }
 
-      async getMessageFromRoom(channelId: string): Promise<IChat[]> {
+      async getMessageFromChannel(channelId: string): Promise<IChat[]> {
         return (await this.channelRepository.findOneBy({id: channelId}))?.messages;
       }
 

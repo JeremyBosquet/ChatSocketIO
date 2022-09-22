@@ -9,8 +9,6 @@ interface props {
     user: {id: string};
     setChannels: any;
     setSearchChannel: any;
-    // selectedChannel: string;
-    // setSelectedChannel: any;
 }
 
 function Leave(props: props) {
@@ -26,15 +24,13 @@ function Leave(props: props) {
             })
         }
     
-        await axios.post("http://localhost:4000/api/chat/channel/leave", {"channel": {id: id}, "userId": props.user.id})
+        await axios.post("http://localhost:4000/api/chat/channel/leave", {"channelId": id, "userId": props.user.id})
         .then((res) => {
             getUsersChannel(props.user.id);
             props.socket?.emit('leavePermanant', { userId: props.user.id, channelId: id });
             props.setSearchChannel("");
-            // if (props.selectedChannel === id)
-            //     props.setSelectedChannel("");
             if (selectedChannel === id)
-                dispatch(setSelectedChannel(id));
+                dispatch(setSelectedChannel(""));
         })
     }
     

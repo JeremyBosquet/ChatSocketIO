@@ -7,16 +7,19 @@ import {
 } from 'typeorm';
 
 @Entity({name: "users"})
-export class User {
+export class UserModel {
 
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+    uuid: string;
 
     @Column()
     username: string;
 
     @Column()
     image: string;
+
+	@Column()
+	id : number;
 
     @CreateDateColumn()
     createdAt: Date;

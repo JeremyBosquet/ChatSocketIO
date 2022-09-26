@@ -5,9 +5,11 @@ export class CreateUserDto {
   @MinLength(3)
   username: string;
 
-  id: number;
+  uuid: string;
 
   image: string;
 
   createdAt: Date;
+
+  id: number;
 }

@@ -5,6 +5,8 @@ import { AppModule } from './app.module';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { HttpExceptionFilter } from './http-exception.filter';
+import * as cookieParser from 'cookie-parser'
+const cors = require('cors');
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -16,11 +18,13 @@ async function bootstrap() {
   app.setViewEngine('ejs');
 
   app.use(
-    session({ resave: false, saveUninitialized: false, secret: '!Seoul' }),
+    session({ resave: false, saveUninitialized: false, secret: '!hulahoop69' }),
   );
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(cookieParser());
 
+  app.use(cors({credentials:true, origin : "http://45.147.97.2:3000"}));
   await app.listen(5000);
 }
 bootstrap();

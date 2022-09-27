@@ -22,6 +22,7 @@ interface ISettings{
   ballRadius: number;
 }
 
+
 function GameMainPage() {
   const [socket, setSocket] = useState<Socket>();
   const [rooms, setRooms] = useState<Irooms[]>([]);
@@ -30,7 +31,7 @@ function GameMainPage() {
     const messages = await axios.get(`http://localhost:5000/api/room/getRooms`);
 
     if (messages?.data) {
-      setRooms(messages.data)
+      setRooms(messages.data);
     }
   }
   useEffect(() => { // Connect to the socket
@@ -46,14 +47,18 @@ function GameMainPage() {
   }, [socket]);
   return (
     <div>
-      Rooms : <br/>
+      
       {rooms.map((room : Irooms) => (
         <RoomInfo key={room.id} id={room.id} owner={room.owner} status={room.status} nbPlayers={room.nbPlayers} name={room.name} createdAt={room.createdAt} settings={room.settings}/>
       ))}
       <button onClick={getRooms}>Click me</button>
-      <FormCreateRoom socket={socket}/>
     </div>
   );
 }
 
 export default GameMainPage;
+/*
+dev :
+
+      <FormCreateRoom socket={socket}/>
+*/

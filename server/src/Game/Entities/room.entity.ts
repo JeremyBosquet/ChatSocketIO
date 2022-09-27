@@ -38,6 +38,6 @@ export class Room {
     @Column({nullable: true, type: 'jsonb'})
     settings: ISettings;
 
-    @CreateDateColumn()
-    createdAt: Date;
+    //@CreateDateColumn()
+    //createdAt: Date;
 }

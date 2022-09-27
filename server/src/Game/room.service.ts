@@ -14,8 +14,8 @@ export class RoomService {
         list[i].playerB = null;
         list[i].nbPlayers = 0;
         list[i].status = "waiting";
-        await this.roomRepository.save(list[i]);
-        //await this.roomRepository.remove(list[i]);
+        //await this.roomRepository.save(list[i]);
+        await this.roomRepository.remove(list[i]);
       }
       console.log("done");
 
@@ -41,10 +41,10 @@ export class RoomService {
         await this.roomRepository.delete(roomId);
       }
       async addPlayer(room: Room, playerId: string, playerName: string): Promise<Room> {
-        console.log("addPlayer -", room.id, room.nbPlayers, playerId, playerName);
+        //console.log("addPlayer -", room.id, room.nbPlayers, playerId, playerName);
         
-        console.log("playerA: ", room.playerA);
-        console.log("playerB: ", room.playerB);
+        //console.log("playerA: ", room.playerA);
+        //console.log("playerB: ", room.playerB);
 
         if (room.playerA !== null && room.playerA.id === playerId)
           throw new Error("Player already in a room");
@@ -60,7 +60,7 @@ export class RoomService {
           throw new Error("Room is full or we are fucked");
         room.nbPlayers++;
         return await this.roomRepository.save(room);
-      } 
+      }
       // save room
       async save(room: Room): Promise<Room>{
         return await this.roomRepository.save(room);

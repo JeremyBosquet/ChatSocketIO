@@ -12,7 +12,7 @@ function App() {
 		<Router>
 			<Routes>
 				<Route path="/" element={<HomePage />}></Route>
-				<Route path="/game/" element={<GameMainPage />}></Route>
+				<Route path="/game/" element={<GamePlayingPage />}></Route>
 				<Route path="/game/:id" element={<GamePlayingPage />}></Route>
 				<Route path="*" element={<div>Page not found</div>}></Route>
 			</Routes>

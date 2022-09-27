@@ -7,6 +7,7 @@ import { Stage, Layer, Rect, Circle, Text } from 'react-konva';
 import Konva from "konva";
 import { getFCP } from "web-vitals";
 import useEventListener from "@use-it/event-listener";
+import { json } from "stream/consumers";
 
 interface props {
   socket: Socket | undefined;
@@ -89,7 +90,7 @@ function GamePlay(props: props) {
   const playerBRef = useRef<Konva.Rect>(null);
   const ballRef = useRef<Konva.Circle>(null);
   const [animationActive, setanimationActive] = useState<boolean>(false);
-
+  
   const mousemove = useCallback((e: any) => {
     const _player = { id: "", x: 0, y: 0 };
     if (props.room?.playerA.name === props.playerName) {
@@ -154,7 +155,7 @@ function GamePlay(props: props) {
   }, [playerA, playerB, width, height, boardWidth, boardHeight, props.room, props.playerName]);
   useEffect(() => {
     props.socket?.on("ballMovement", (_ball: any) => {
-      if (animationActive)
+      /*if (animationActive)
         return;
       setanimationActive(true);
       ballRef.current?.to({
@@ -165,7 +166,7 @@ function GamePlay(props: props) {
           setanimationActive(false);
           //setBall({ id: "ball", x: ((_ball.x / 100) * width), y: ((_ball.y / 100) * height)});
         }
-      });
+      });*/
     });
   }, [ball, height, width, animationActive]);
 
@@ -174,7 +175,14 @@ function GamePlay(props: props) {
       <p>Game :</p>
       <GameBoard socket={props.socket} room={props.room} />
       <div id="gameMainCanvas">
-        <Stage width={width} height={height} className="gameMainCanvas">
+        
+      </div>
+    </div>
+  );
+}
+
+export default GamePlay;
+/*<Stage width={width} height={height} className="gameMainCanvas">
           <Layer >
             <Text text="Game : ?" />
             <Rect width={9000} height={8000} x={0} y={0} fill="gray" />
@@ -182,10 +190,4 @@ function GamePlay(props: props) {
             {<Rect ref={playerBRef} x={playerB.x} y={playerB.y} width={boardWidth} height={boardHeight} fill="green" />}
             {<Circle ref={ballRef} draggable x={ball.x} y={ball.y} radius={ballRadius} fill="red" />}
           </Layer>
-        </Stage>
-      </div>
-    </div>
-  );
-}
-
-export default GamePlay;
+        </Stage>*/

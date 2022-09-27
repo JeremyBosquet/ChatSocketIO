@@ -75,7 +75,7 @@ function GamePlayingPage() {
           return;
         }
       }
-      window.location.href = '/game/';
+      //window.location.href = '/game/';
     }
   }
   const getUsers = async (e: any) => {
@@ -101,7 +101,7 @@ function GamePlayingPage() {
     if (socket) {
       socket.on('errorRoomIsFull', (id: string) => {
         console.log("errorRoomIsFull", id);
-        window.location.href = '/game/';
+        //window.location.href = '/game/';
         //Spectator here
       }
       );

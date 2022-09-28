@@ -8,6 +8,11 @@ import { IBall } from '../Interfaces/Ball';
 import { IPlayers } from '../Interfaces/Players';
 import { ISettings } from '../Interfaces/Settings';
 
+interface IConfiguration{
+    difficulty: string;
+    background: string;
+}
+
 @Entity({name: "rooms"})
 export class Room {
 
@@ -38,6 +43,11 @@ export class Room {
     @Column({nullable: true, type: 'jsonb'})
     settings: ISettings;
 
+    @Column({nullable: true, type: 'jsonb'})
+    configurationA: IConfiguration;
+
+    @Column({nullable: true, type: 'jsonb'})
+    configurationB: IConfiguration;
     //@CreateDateColumn()
     //createdAt: Date;
 }

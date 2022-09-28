@@ -13,6 +13,7 @@ interface Irooms {
     nbPlayers: number;
     status: string;
     createdAt: string;
+
 }
 
 interface Iready {
@@ -148,7 +149,7 @@ export class RoomGateway {
             const rooms = await this.roomService.getRooms();
             if (rooms.length == 0) {
                 console.log("new Room");
-                const newRoom = { id: uuidv4(), name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI } };
+                const newRoom = { id: uuidv4(), configurationA: null, configurationB: null, name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI } };
                 await this.roomService.save(newRoom);
                 const room = await this.roomService.getRoom(newRoom.id);
                 await client.join('room-' + newRoom.id);
@@ -170,7 +171,7 @@ export class RoomGateway {
                         }
                         else if (room.nbPlayers == 1 && room?.playerA?.id != data?.id && room?.playerB?.id != data?.id) {
                             // join room
-                            client.join('room-' + room.id);
+                            await client.join('room-' + room.id);
                             client.data.roomId = room.id;
                             client.data.playerId = data.id;
                             // Passer la game en configuration
@@ -191,7 +192,7 @@ export class RoomGateway {
                         else {
                             // create room
                             console.log("new Room, because all full");
-                            const newRoom = { id: uuidv4(), name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI } };
+                            const newRoom = { id: uuidv4(), configurationA: null, configurationB: null , name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI } };
                             await this.roomService.save(newRoom);
                             const _room = await this.roomService.getRoom(newRoom.id);
                         // console.log("ou crash ici : ");
@@ -227,6 +228,9 @@ export class RoomGateway {
             }
             room.nbPlayers--;
             this.server.to('room-' + room.id).emit('playerDisconnected', room);
+            client.data.roomId = null;
+            client.data.playerId = null;
+
             client.leave('room-' + room.id);
             if (room.status == "configuring"){
                 console.log("configuring");
@@ -244,6 +248,7 @@ export class RoomGateway {
 
     @SubscribeMessage('disconnect')
     async handleDisconnect(@ConnectedSocket() client: Socket): Promise<void> {
+        // gerer le cas ou le joueur deco pendant la configuration
         if (client.data.roomId !== undefined) {
             const room = await this.roomService.getRoom(client.data.roomId);
             if (room && room?.id && room?.nbPlayers !== null) {
@@ -293,5 +298,21 @@ export class RoomGateway {
     async handleBallMove(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
         const room = await this.roomService.getRoom(client.data?.roomId);
         this.server.to('room-' + room?.id).emit('ballMovement', data);
+    }
+
+    @SubscribeMessage('updateConfirugation')
+    async updateConfirugation(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
+        const room = await this.roomService.getRoom(client.data?.roomId);
+        console.log("Action information", room?.id, room?.status, client.data);
+        if (room && room?.status === "configuring") {
+            if (data?.difficulty && room.playerA?.id === client.data?.playerId)
+                room.configurationA = data.difficulty;
+            if (data?.difficulty && room.playerB?.id === client.data?.playerId)
+                room.configurationB = data.difficulty;
+            await this.roomService.save(room);
+            this.server.in('room-' + room?.id).emit('configurationUpdated', room);
+        }
+        else
+            console.log("action not allowed -", room?.id, room?.status);
     }
 }

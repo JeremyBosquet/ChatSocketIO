@@ -149,7 +149,7 @@ export class RoomGateway {
             const rooms = await this.roomService.getRooms();
             if (rooms.length == 0) {
                 console.log("new Room");
-                const newRoom = { id: uuidv4(), configurationA: null, configurationB: null, name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI } };
+                const newRoom = { id: uuidv4(), configurationA: null, configurationB: null, name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI, background: null } };
                 await this.roomService.save(newRoom);
                 const room = await this.roomService.getRoom(newRoom.id);
                 await client.join('room-' + newRoom.id);
@@ -192,7 +192,7 @@ export class RoomGateway {
                         else {
                             // create room
                             console.log("new Room, because all full");
-                            const newRoom = { id: uuidv4(), configurationA: null, configurationB: null , name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI } };
+                            const newRoom = { id: uuidv4(), configurationA: null, configurationB: null , name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI, background: null } };
                             await this.roomService.save(newRoom);
                             const _room = await this.roomService.getRoom(newRoom.id);
                         // console.log("ou crash ici : ");
@@ -230,7 +230,8 @@ export class RoomGateway {
             this.server.to('room-' + room.id).emit('playerDisconnected', room);
             client.data.roomId = null;
             client.data.playerId = null;
-
+            room.configurationA = null;
+            room.configurationB = null;
             client.leave('room-' + room.id);
             if (room.status == "configuring"){
                 console.log("configuring");
@@ -261,11 +262,21 @@ export class RoomGateway {
                     console.log("error - player not found - (Call tnard car c la merde ou spectateur)");
                     return;
                 }
+                if (room.status == "configuring"){
+                    room.status = "waiting";
+                    this.server.in('room-' + room.id).emit('playerLeave');
+                }
+                client.data.roomId = null;
+                client.data.playerId = null;
+                client.leave('room-' + room.id);
+                room.configurationA = null;
+                room.configurationB = null;
                 room.nbPlayers--;
                 this.server.to('room-' + room.id).emit('playerDisconnected', room);
                 room.status = "waiting"; // remove that
                 //console.log("disconnect -", room.id, room.nbPlayers);
-                clearInterval(intervalList[room.id]);
+                if (intervalList[room.id])
+                    clearInterval(intervalList[room.id]);
                 this.roomService.save(room); // remove that
                 if (room.nbPlayers == 0)
                     this.roomService.removeFromID(room.id);
@@ -303,14 +314,76 @@ export class RoomGateway {
     @SubscribeMessage('updateConfirugation')
     async updateConfirugation(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
         const room = await this.roomService.getRoom(client.data?.roomId);
-        console.log("Action information", room?.id, room?.status, client.data);
         if (room && room?.status === "configuring") {
-            if (data?.difficulty && room.playerA?.id === client.data?.playerId)
-                room.configurationA = data.difficulty;
-            if (data?.difficulty && room.playerB?.id === client.data?.playerId)
-                room.configurationB = data.difficulty;
-            await this.roomService.save(room);
-            this.server.in('room-' + room?.id).emit('configurationUpdated', room);
+            if (room.playerA?.id === client.data?.playerId)
+            {
+                console.log("updateConfirugationA - difficulty", data);
+                room.configurationA = data;
+            }
+            if (room.playerB?.id === client.data?.playerId)
+            {
+                console.log("updateConfirugationB - difficulty", data);
+                room.configurationB = data;
+            }
+            const _room = await this.roomService.save(room);
+            this.server.in('room-' + room?.id).emit('configurationUpdated', _room);
+        }
+        else
+            console.log("action not allowed -", room?.id, room?.status);
+    }
+
+    @SubscribeMessage('confirmConfiguration')
+    async confirmConfiguration(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
+        const room = await this.roomService.getRoom(client.data?.roomId);
+        if (room && room?.status === "configuring") {
+            if (room.playerA?.id === client.data?.playerId)
+            {
+                console.log("updateConfirugationA - difficulty", data);
+                room.configurationA = data;
+                room.configurationA.confirmed = true;
+            }
+            if (room.playerB?.id === client.data?.playerId)
+            {
+                console.log("updateConfirugationB - difficulty", data);
+                room.configurationB = data;
+                room.configurationB.confirmed = true;
+            }
+            const _room = await this.roomService.save(room);
+            if (_room.configurationA?.confirmed && _room.configurationB?.confirmed)
+            {
+                console.log("start game");
+                const random = Math.floor(Math.random() * 2);
+                if (random === 0)
+                {
+                    if (_room.configurationA.difficulty === "easy")
+                        _room.settings.defaultSpeed = 1;
+                    else if (_room.configurationA.difficulty === "medium")
+                        _room.settings.defaultSpeed = 2;
+                    else if (_room.configurationA.difficulty === "hard")
+                        _room.settings.defaultSpeed = 3;
+                    _room.settings.background = _room.configurationA.background;
+                }
+                else
+                {
+                    if (_room.configurationB.difficulty === "easy")
+                        _room.settings.defaultSpeed = 1;
+                    else if (_room.configurationB.difficulty === "medium")
+                        _room.settings.defaultSpeed = 2;
+                    else if (_room.configurationB.difficulty === "hard")
+                        _room.settings.defaultSpeed = 3;
+                    _room.settings.background = _room.configurationB.background;
+                }
+                _room.settings.defaultDirection = Math.random() * Math.PI * 2;
+                _room.settings.ballRadius = 1;
+                _room.settings.boardWidth = 1;
+                _room.settings.boardHeight = 10;
+                _room.status = "playing";
+                intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 1000 / 60);
+                await this.roomService.save(_room)
+                this.server.in('room-' + _room?.id).emit('gameStart', _room);
+                this.server.in('room-' + _room?.id).emit('playerReady', _room);
+            }
+            this.server.in('room-' + _room?.id).emit('configurationUpdated', _room);
         }
         else
             console.log("action not allowed -", room?.id, room?.status);

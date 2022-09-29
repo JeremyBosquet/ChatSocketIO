@@ -36,6 +36,13 @@ interface IRoom {
   playerB: IPlayer;
   ball: IBall;
   settings: ISettings;
+  configurationA : IConfiguration;
+  configurationB: IConfiguration;
+}
+
+interface IConfiguration{
+  difficulty: string;
+  background: string;
 }
 
 interface ISettings{
@@ -44,6 +51,7 @@ interface ISettings{
   boardWidth: number;
   boardHeight: number;
   ballRadius: number;
+  background: string;
 }
 
 interface ICanvasBoard {
@@ -175,7 +183,15 @@ function GamePlay(props: props) {
       <p>Game :</p>
       <GameBoard socket={props.socket} room={props.room} />
       <div id="gameMainCanvas">
-        
+      <Stage width={width} height={height} className="gameMainCanvas">
+          <Layer >
+            <Text text="Game : ?" />
+            <Rect width={9000} height={8000} x={0} y={0} fill="gray" />
+            {<Rect ref={playerARef} x={playerA.x} y={playerA.y} width={boardWidth} height={boardHeight} fill="blue" />}
+            {<Rect ref={playerBRef} x={playerB.x} y={playerB.y} width={boardWidth} height={boardHeight} fill="green" />}
+            {<Circle ref={ballRef} draggable x={ball.x} y={ball.y} radius={ballRadius} fill="red" />}
+          </Layer>
+        </Stage>
       </div>
     </div>
   );

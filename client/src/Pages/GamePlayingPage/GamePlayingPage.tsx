@@ -46,6 +46,14 @@ interface IRoom {
   playerB: IPlayer;
   ball: IBall;
   settings: ISettings;
+  configurationA : IConfiguration;
+  configurationB: IConfiguration;
+}
+
+interface IConfiguration{
+  difficulty: string;
+  background: string;
+  confirmed: boolean;
 }
 
 interface ISettings{
@@ -54,6 +62,7 @@ interface ISettings{
   boardWidth: number;
   boardHeight: number;
   ballRadius: number;
+  background: string;
 }
 
 function GamePlayingPage() {
@@ -116,6 +125,7 @@ function GamePlayingPage() {
       socket.on('gameStart', (data: IRoom) => {
         setRoom(data);
         setPlaying(true);
+        setReady(false);
       }
       );
       socket.on('playerDisconnected', (data: IRoom) => {
@@ -134,7 +144,7 @@ function GamePlayingPage() {
   }, [socket, ready, playing, room]);
   return (
     <div>
-      {!ready ? (<GameReady users={users} socket={socket} setReady={setReady} setPlayerId={setPlayerId} setPlayerName={setPlayerName} />) : null}
+      {!ready && !playing ? (<GameReady users={users} socket={socket} setReady={setReady} setPlayerId={setPlayerId} setPlayerName={setPlayerName} />) : null}
       {ready ? (<div> Waiting for another player </div>) : null}
       <p>{ready && !playing ? "PlayerA : " + room?.playerA?.name : null}</p>
       <p>{ready && !playing ? "PlayerB : " + room?.playerB?.name : null}</p>

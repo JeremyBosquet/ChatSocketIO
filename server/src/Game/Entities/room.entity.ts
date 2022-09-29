@@ -11,6 +11,7 @@ import { ISettings } from '../Interfaces/Settings';
 interface IConfiguration{
     difficulty: string;
     background: string;
+    confirmed: boolean;
 }
 
 @Entity({name: "rooms"})

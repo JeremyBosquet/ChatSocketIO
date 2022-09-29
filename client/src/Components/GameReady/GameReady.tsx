@@ -42,21 +42,18 @@ interface IRoom {
   configurationB: IConfiguration;
 }
 
-interface IConfiguration{
-  difficulty: string;
-  background: string;
-}
-
 interface ISettings{
   defaultSpeed: number;
   defaultDirection: number;
   boardWidth: number;
   boardHeight: number;
   ballRadius: number;
+  background: string;
 }
 interface IConfiguration{
   difficulty: string;
   background: string;
+  confirmed: boolean;
 }
 interface ICanvasBoard {
   x: number;
@@ -89,14 +86,15 @@ function GameReady(props : props) {
   const [configuringDisplay, setConfiguringDisplay] = useState<boolean>(false);
   const [settings, setSettings] = useState<IConfiguration>();
   const [settingsBis, setSettingsBis] = useState<IConfiguration>();
+ // const [propsOn, setPropsOn] = useState<boolean>(false);
   useEffect(() => {
     if (searching && !tmpUserBoolean) {
       setTmpUserBoolean(true);
       const tmp = {name: props.users.find(user => user.id === User)?.name, id: User};
       setTmpUser(tmp);
-      console.log("say searching", tmp);
+      //console.log("say searching", tmp);
       props.socket?.on("searching-" + User, (data : IRoom) => {
-        console.log("receive searching", data);
+        //console.log("receive searching", data);
         setSearchingDisplay(true);
         setRoom(data);
       });
@@ -104,30 +102,31 @@ function GameReady(props : props) {
       
     }
   }, [searching, tmpUser, tmpUserBoolean]);
-
-  useEffect(() => {
-    props.socket?.on("configuring", (data : IRoom) => {
-      console.log("receive configuring", data);
-      setSearchingDisplay(false);
-      setConfiguringDisplay(true);
-    });
-    props.socket?.on("configurationUpdated", (data : IRoom) => {
-      console.log("receive configurationUpdated");
-      if (data.playerA.id === User)
-        setSettingsBis(data.configurationB);
-      else
-        setSettingsBis(data.configurationA);
-    });
-  });
-  useEffect(() => {
-    props.socket?.on("playerLeave", (any) => {
-      console.log("receive cancelSearching");
-      setSearchingDisplay(true);
-      setSearching(true);
-      setTmpUserBoolean(true);
-      setConfiguringDisplay(false);
-    });
-  });
+  //useEffect(() => {
+    //if (!propsOn) {
+    //  //console.log("propsOn");
+      //setPropsOn(true);
+      props.socket?.on("configuring", (data : IRoom) => {
+        //console.log("receive configuring", data);
+        setSearchingDisplay(false);
+        setConfiguringDisplay(true);
+      });
+      props.socket?.on("configurationUpdated", (data : IRoom) => {
+        //console.log("receive configurationUpdated", data.configurationB, data.configurationA);
+        if (data.playerA.id === User)
+          setSettingsBis(data.configurationB);
+        else
+          setSettingsBis(data.configurationA);
+      });
+      props.socket?.on("playerLeave", (any) => {
+        //console.log("receive cancelSearching");
+        setSearchingDisplay(true);
+        setSearching(true);
+        setTmpUserBoolean(true);
+        setConfiguringDisplay(false);
+      });
+   // }
+  //}, [propsOn, props.socket, User, searchingDisplay, configuringDisplay, searching, tmpUserBoolean, settingsBis, settings, room, tmpUser, error, success]);
 
   function handleReady() {
     if (!User)
@@ -139,16 +138,6 @@ function GameReady(props : props) {
     else
       props.setPlayerName("");
     setSearching(true);
-  }
-  function updateConfiguration(e : any)
-  {
-    const tmp = settings;
-    if (tmp?.background)
-      tmp.background = e.target.value;
-    if (tmp?.difficulty)
-      tmp.difficulty = e.target.value;
-    setSettings(tmp);
-    props.socket?.emit("updateConfirugation", {tmpUser, settings});
   }
   return (
     <div>
@@ -181,24 +170,40 @@ function GameReady(props : props) {
         <p>Configuring the game...</p>
         <div className="ChannelRoomFormInput-Difficulty">
           <label htmlFor="Difficulty">Difficulty </label>
-          <select defaultValue="undefined" id="Difficulty" onChange={(e) => updateConfiguration(e)}>
+          <select defaultValue="undefined" id="Difficulty" onChange={(e) => {
+            if (e.target.value === "undefined")
+              return;
+            if (settings)
+              setSettings({...settings, difficulty: e.target.value});
+            else
+              setSettings({difficulty: e.target.value, background: "", confirmed: false});
+            props.socket?.emit("updateConfirugation", {difficulty: e.target.value, background: settings?.background, confirmed: false});
+          }}>
             <option key="undefined" disabled value="undefined">Select a difficulty</option>
-            <option key="easy" value="1">Easy</option>
-            <option key="medium" value="2">Medium</option>
-            <option key="hard" value="3">Hard</option>
+            <option key="easy" value="easy">Easy</option>
+            <option key="medium" value="medium">Medium</option>
+            <option key="hard" value="hard">Hard</option>
           </select>
         </div>
         <div className="ChannelRoomFormInput-Background">
           <label htmlFor="Background">Background </label>
-          <select defaultValue="undefined" id="Background" onChange={(e) => updateConfiguration(e)}>
+          <select defaultValue="undefined" id="Background" onChange={(e) => {
+            if (e.target.value === "undefined")
+              return;
+            if (settings)
+              setSettings({...settings, background: e.target.value});
+            else
+              setSettings({difficulty: "", background: e.target.value, confirmed: false});
+            props.socket?.emit("updateConfirugation", {difficulty: settings?.difficulty, background: e.target.value, confirmed: false});
+          }}>
             <option key="undefined" disabled value="undefined">Select a background</option>
-            <option key="1" value="1">Background 1</option>
-            <option key="2" value="2">Background 2</option>
+            <option key="background1" value="background1">Background 1</option>
+            <option key="background2" value="background2">Background 2</option>
           </select>
         </div>
 
         <button onClick={() => {
-          props.socket?.emit("cancelSearching", {tmpUser, room});
+          props.socket?.emit("cancelSearching", room);
           setSearchingDisplay(false);
           setSearching(false);
           setTmpUserBoolean(false);
@@ -206,8 +211,11 @@ function GameReady(props : props) {
           setConfiguringDisplay(false);
         }/*Cancel search*/}>Cancel</button>
         <button onClick={() => {
-          props.socket?.emit("confirmConfiguration", {tmpUser, settings});
-          props.setReady(true);
+          if (settings?.difficulty && settings?.background && settings?.confirmed === false)
+          {
+            setSettings({...settings, confirmed: true});
+            props.socket?.emit("confirmConfiguration", settings);
+          }
         }/*Cancel search*/}>Ready</button>
       </div>
       <div>
@@ -216,6 +224,11 @@ function GameReady(props : props) {
           <label htmlFor="Difficulty">Difficulty </label>
           {settingsBis?.difficulty ? (<p>{settingsBis.difficulty}</p>) : (<p>Not set</p>)}
         </div>
+        <div className="ChannelRoomFormInput-Background">
+          <label htmlFor="Difficulty">Background </label>
+          {settingsBis?.background ? (<p>{settingsBis.background}</p>) : (<p>Not set</p>)}
+        </div>
+        Ready : {settingsBis?.confirmed ? (<p>Yes</p>) : (<p>No</p>)}
       </div>
       </div>) : (null)}
         <div>

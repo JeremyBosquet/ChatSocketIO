@@ -4,4 +4,5 @@ export interface ISettings {
     boardWidth: number;
     boardHeight: number;
     ballRadius: number;
+    background: string;
 }

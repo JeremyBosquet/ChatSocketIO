@@ -1,12 +1,13 @@
 import { Socket } from 'socket.io-client';
 import axios from 'axios';import { useState } from 'react';
+import { getUser } from '../../../Redux/authSlice';
+import { useSelector } from 'react-redux';
 ;
 
 interface props {
     socket: Socket | undefined;
     channelId: string;
     channelVisibility: string;
-    user: {id: string};
     setChannels: any;
     setSearchChannel: any;
 }
@@ -14,6 +15,8 @@ interface props {
 function Join(props: props) {
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string>("");
+
+    const user = useSelector(getUser);
 
     const handleJoin = async (id: string) => {
         setError("");
@@ -36,9 +39,9 @@ function Join(props: props) {
             })
         }
     
-        await axios.post("http://localhost:4000/api/chat/channel/join", {"channelId": id, "userId": props.user.id, "password": password})
+        await axios.post("http://localhost:4000/api/chat/channel/join", {"channelId": id, "userId": user.id, "password": password})
         .then((res) => {
-            getUsersChannel(props.user.id);
+            getUsersChannel(user.id);
             props.socket?.emit('joinPermanent', { channelId: id });
             props.setSearchChannel("");
         }).catch((err) => {

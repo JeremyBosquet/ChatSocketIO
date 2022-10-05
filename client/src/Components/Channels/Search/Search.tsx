@@ -1,22 +1,24 @@
 import { Socket } from 'socket.io-client';
-import axios from 'axios';;
+import axios from 'axios';import { getUser } from '../../../Redux/authSlice';
+import { useSelector } from 'react-redux';
+;
 
 interface props {
     socket: Socket | undefined;
     searchChannel: string;
-    user: {id: string};
     setChannels: any;
     setSearchChannel: any;
     setChannelsFind: any;
 }
 
 function Search(props: props) {
+    const user = useSelector(getUser);
 
     const handleSearch = async (e: any) => {
         props.setSearchChannel(e.target.value);
 
         const getUsersChannel = async (e: any) => {
-            await axios.get("http://localhost:4000/api/chat/channels/user/" + props.user.id)
+            await axios.get("http://localhost:4000/api/chat/channels/user/" + user.id)
             .then((res) => {
                 if (res)
                     props.setChannels(res.data);
@@ -24,9 +26,9 @@ function Search(props: props) {
         }
 
         if (e.target.value === "")
-            getUsersChannel(props.user.id)
+            getUsersChannel(user.id)
         else {
-            await axios.get("http://localhost:4000/api/chat/channels/byname/" + e.target.value + "/" + props.user.id)
+            await axios.get("http://localhost:4000/api/chat/channels/byname/" + e.target.value + "/" + user.id)
             .then((res) => {
                 if (res)
                     props.setChannelsFind(res.data);

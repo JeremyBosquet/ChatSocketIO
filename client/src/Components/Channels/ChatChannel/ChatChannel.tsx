@@ -7,11 +7,12 @@ import Player from './Player/Player';
 import Messages from './Messages/Messages';
 import { Imessage } from './interfaces/messages';
 import './ChatChannel.scss'
+import { useSelector } from 'react-redux';
+import { getSelectedChannel } from '../../../Redux/chatSlice';
+import { getUser } from '../../../Redux/authSlice';
 
 interface props {
     socket: Socket | undefined;
-    user: {id: string};
-    selectedChannel: string;
 }
 
 interface Ichannel {
@@ -26,30 +27,34 @@ function ChatChannel(props: props) {
   const [usersConnected, setUsersConnected] = useState<Iuser[]>([]);
   const [channel, setChannel] = useState<Ichannel>();
 
+  const selectedChannel = useSelector(getSelectedChannel);
+  const user = useSelector(getUser);
+
+
   useEffect(() => {
     setMessages([]);
 
     const getMessages = async () => {
-      const messages = await axios.get(`http://localhost:4000/api/chat/messages/` + props.selectedChannel);
+      const messages = await axios.get(`http://localhost:4000/api/chat/messages/` + selectedChannel);
 
       if (messages?.data)
         setMessages(messages.data);
     }
 
-    if (props.selectedChannel !== "")
+    if (selectedChannel !== "")
     {
-      props.socket?.emit("join", {channelId: props.selectedChannel, userId: props.user.id});
+      props.socket?.emit("join", {channelId: selectedChannel, userId: user.id});
       getMessages();
     }
 
     const getChannel = async () => {
-      const channel = (await axios.get(`http://localhost:4000/api/chat/channel/` + props.selectedChannel)).data;
+      const channel = (await axios.get(`http://localhost:4000/api/chat/channel/` + selectedChannel)).data;
       setChannel(channel);
       setUsers(channel.users);
     }
 
     getChannel();
-  }, [props.socket, props.selectedChannel, props.user.id])
+  }, [props.socket, selectedChannel, user.id])
 
   useEffect(() => { // Event listener from socket server
     props.socket?.on('messageFromServer', (message: Imessage) => {
@@ -73,16 +78,16 @@ function ChatChannel(props: props) {
             {channel?.name ? <h2>{channel.name}</h2> : <h2>Select a channel</h2>}
           </div>
           {/* Print messages */}
-          <Messages userId={props.user.id} messages={messages} users={users}/>
+          <Messages userId={user.id} messages={messages} users={users}/>
           <div className='sendMessage'>
-              <SendMessage socket={props.socket} channelId={props.selectedChannel} user={props.user}/>
+              <SendMessage socket={props.socket} channelId={selectedChannel} user={user}/>
           </div>
       </div>
       <div className='playersList'>
           <h2>Players</h2>
           <div className='messages'>
             {users?.map((user : any) => ( 
-              <Player key={user.id} me={props.user.id} users={users} user={user} usersConnected={usersConnected}/>
+              <Player key={user.id} me={user.id} users={users} user={user} usersConnected={usersConnected}/>
             ))}
           </div>
       </div>

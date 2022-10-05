@@ -1,5 +1,7 @@
 import { Menu, MenuButton } from "@szhsin/react-menu";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { getUser } from "../../../../Redux/authSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
 import './Player.scss';
 
@@ -12,7 +14,9 @@ interface props {
 
 function Player(props : props) {
   const [connected, setConnected] = useState<boolean>(false);
+  const me = useSelector(getUser);
 
+  console.log(me)
   useEffect(() => {
     async function isConnected(user: IuserDb) {
       let userFinded = await props.usersConnected.find(userConnected => userConnected.userId === user.id);
@@ -29,18 +33,27 @@ function Player(props : props) {
     //eslint-disable-next-line
   }, [props.usersConnected])
 
+  
   // 
   return (
     <div className='player' key={Math.random()}>
       <p>{props.user?.name} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p> 
       {
         props.user?.id === props.me ?
-          null :
-          <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 
-            <button>Profile</button>
-            <button>Block</button>
-            <button>Add friend</button>
-          </Menu>
+        null :
+        <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 
+              {(props.user.role !== 'admin' && props.user.role !== 'owner') ?
+                  <>
+                    <button>Kick</button>
+                    <button>Ban</button>
+                    <button>Mute</button>
+                  </>
+                : null
+              }
+              <button>Profile</button>
+              <button>Block</button>
+              <button>Add friend</button>
+            </Menu>
       }
     </div>
   );

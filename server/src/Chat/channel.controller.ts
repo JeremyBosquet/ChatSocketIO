@@ -163,7 +163,7 @@ export class ChannelController {
         res.json(channels);
     }
 
-    @Get('messages/:channelId')
+    @Get('messages/:channelId') // Get messages from 
     async getMessagesFromChannel(@Param(ValidationPipe) params: ChannelIdDTO, @Res() res) {
         const messages = await this.chatService.getMessageFromChannel(params.channelId);
         res.json(messages);

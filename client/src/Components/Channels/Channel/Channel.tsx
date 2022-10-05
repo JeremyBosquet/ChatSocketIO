@@ -5,19 +5,18 @@ import { Menu, MenuButton } from '@szhsin/react-menu';
 import { useSelector, useDispatch } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
 import { getSelectedChannel, setSelectedChannel } from '../../../Redux/chatSlice';
+import { getUser } from '../../../Redux/authSlice';
 
 interface props {
     socket: Socket | undefined;
-    user: {id: string};
     channel: any;
     setChannels: any;
     setSearchChannel: any;
     foundChannel: boolean;
-    // selectedChannel: string;
-    // setSelectedChannel: any;
 }
 
 function Channel(props: props) {
+  const user = useSelector(getUser);
   const selectedChannel = useSelector(getSelectedChannel);
   const dispatch = useDispatch()
 
@@ -28,7 +27,7 @@ function Channel(props: props) {
   
   const handleSelectChannel = (id: string) => {
     if (!props.foundChannel && selectedChannel !== "" && selectedChannel !== id)
-      props.socket?.emit('leave', { userId: props.user.id, channelId: selectedChannel });
+      props.socket?.emit('leave', { userId: user.id, channelId: selectedChannel });
     if (!props.foundChannel)
       dispatch(setSelectedChannel(id));
       // props.setSelectedChannel(id);
@@ -41,11 +40,11 @@ function Channel(props: props) {
                 <p>{props.channel["name"]} - {props.channel["visibility"]}</p>
                 <p>{formatedDate(props.channel["createdAt"])}</p>
                 { props.foundChannel ? 
-                  <Join socket={props.socket} channelId={props.channel["id"]} channelVisibility={props.channel["visibility"]} user={props.user} setChannels={props.setChannels} setSearchChannel={props.setSearchChannel} />
+                  <Join socket={props.socket} channelId={props.channel["id"]} channelVisibility={props.channel["visibility"]} setChannels={props.setChannels} setSearchChannel={props.setSearchChannel} />
                   :
                   <Menu menuButton={<MenuButton>+</MenuButton>}>
-                    {/* <Leave socket={props.socket} channelId={props.channel["id"]} user={{id: props.user.id}} setChannels={props.setChannels} setSearchChannel={props.setSearchChannel} setSelectedChannel={props.setSelectedChannel} selectedChannel={props.selectedChannel}/> */}
-                    <Leave socket={props.socket} channelId={props.channel["id"]} user={{id: props.user.id}} setChannels={props.setChannels} setSearchChannel={props.setSearchChannel} />
+                    {/* <Leave socket={props.socket} channelId={props.channel["id"]} user={{id: user.id}} setChannels={props.setChannels} setSearchChannel={props.setSearchChannel} setSelectedChannel={props.setSelectedChannel} selectedChannel={props.selectedChannel}/> */}
+                    <Leave socket={props.socket} channelId={props.channel["id"]} setChannels={props.setChannels} setSearchChannel={props.setSearchChannel} />
                   </Menu>
                 }
             <hr></hr>

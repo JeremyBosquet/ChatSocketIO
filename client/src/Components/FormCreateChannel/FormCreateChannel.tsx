@@ -1,14 +1,11 @@
 import { Socket } from 'socket.io-client';
 import axios from 'axios';
 import { useState } from 'react';
-
-interface Iuser {
-  id: string,
-}
+import { getUser } from '../../Redux/authSlice';
+import { useSelector } from 'react-redux';
 
 interface props {
   socket : Socket | undefined;
-  user : Iuser;
   setChannels: any;
 }
 
@@ -18,6 +15,8 @@ function FormCreateChannel(props : props) {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
+
+  const user = useSelector(getUser);
 
   function checkVisibility(visibility : string) {
     if (visibility === "public" || visibility === "private" || visibility === "protected")
@@ -66,12 +65,12 @@ function FormCreateChannel(props : props) {
 
     const defaultUsers = [
       {
-        id: props.user.id,
+        id: user.id,
         role: "owner"
       }
     ]
 
-    axios.post('http://localhost:4000/api/chat/channel', { name: channelName, owner: props.user, visibility: visibility, password: password, users: defaultUsers, messages: [] })
+    axios.post('http://localhost:4000/api/chat/channel', { name: channelName, owner: user, visibility: visibility, password: password, users: defaultUsers, messages: [] })
     .then((res : any) => {
         if (res.data ) {
         setSuccess("Success: channel " + channelName + " is created.");
@@ -85,7 +84,7 @@ function FormCreateChannel(props : props) {
           })
         }
 
-        getUsersChannel(props.user.id);
+        getUsersChannel(user.id);
         
         //Reset form
         setChannelName("");

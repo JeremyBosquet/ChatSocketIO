@@ -39,6 +39,7 @@ export class RoomGateway {
     async gameLoop(roomTMP: any): Promise<void> {
         const room = await this.roomService.getRoom(roomTMP.id);
         const settings = room.settings;
+        console.log("gameLoop");
         if (room?.id) {
             if (room.status === "paused") {
                 //A gerer differement surement
@@ -88,7 +89,7 @@ export class RoomGateway {
                     ball.y += ball.speed * Math.sin(ball.direction);
                 }
                 room.ball = ball;
-                this.server.in('room-' + room.id).emit('ballMovement', ball);
+                this.server.in('room-' + room.id).emit('ballMovement', room);
                 await this.roomService.save(room);
             }
         }
@@ -286,9 +287,12 @@ export class RoomGateway {
     }
     @SubscribeMessage('playerMove')
     async handleMove(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
+        console.log("playerMove", client.data, data);
         if (client.data?.roomId) {
             const room = await this.roomService.getRoom(client.data?.roomId);
-            if (room?.status === "playing" && data?.id && data?.x && data?.y) {
+            console.log("room : ", room.id, room?.status, data?.id, data?.x, data?.y);
+            if (room && room?.status === "playing" && data?.id && data?.x && data?.y) {
+                console.log("allo ?");
                 if ("playerA" === data.id) {
                     room.playerA.x = data.x;
                     room.playerA.y = data.y;
@@ -297,8 +301,8 @@ export class RoomGateway {
                     room.playerB.x = data.x;
                     room.playerB.y = data.y;
                 }
-                this.server.to('room-' + room?.id).emit('playerMovement', data);
-                await this.roomService.save(room);
+                const _room = await this.roomService.save(room);
+                this.server.to('room-' + room?.id).emit('playerMovement', _room);
             }
             else
                 console.log("action not allowed -", room?.id, room?.status);
@@ -377,8 +381,9 @@ export class RoomGateway {
                 _room.settings.ballRadius = 1;
                 _room.settings.boardWidth = 1;
                 _room.settings.boardHeight = 10;
+                _room.ball.speed = _room.settings.defaultSpeed;
                 _room.status = "playing";
-                intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 1000 / 60);
+                intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 1000);
                 await this.roomService.save(_room)
                 this.server.in('room-' + _room?.id).emit('gameStart', _room);
                 this.server.in('room-' + _room?.id).emit('playerReady', _room);

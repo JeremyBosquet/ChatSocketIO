@@ -49,14 +49,14 @@ function Channels(props: props) {
                 <div className='channelInfo'>
                     <h2>Your channels</h2>
                     {channels.map((channel) => (
-                        <Channel key={channel["id"]} socket={props.socket} channel={channel} setChannels={setChannels} setSearchChannel={setSearchChannel} foundChannel={false}/>
+                        <Channel key={channel["id"]} socket={props.socket} channel={channel} channels={channels} setChannels={setChannels} setSearchChannel={setSearchChannel} foundChannel={false}/>
                     ))}
                 </div>
                 :
                 <div className='channelInfo'>
                     <h2>Channel(s) found</h2>
                     {channelsFind.map((channel) => (
-                        <Channel key={channel["id"]} socket={props.socket} channel={channel} setChannels={setChannels} setSearchChannel={setSearchChannel} foundChannel={true}/>
+                        <Channel key={channel["id"]} socket={props.socket} channel={channel} channels={channels} setChannels={setChannels} setSearchChannel={setSearchChannel} foundChannel={true}/>
                     ))}
                 </div>
             }

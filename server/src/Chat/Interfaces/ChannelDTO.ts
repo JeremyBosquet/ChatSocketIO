@@ -4,9 +4,15 @@ import { IsUUID, IsNotEmpty, MinLength, MaxLength, IsDateString } from 'class-va
 export class editChannelPasswordDTO {
     @IsUUID()
     channelId: string;
+
+    @IsUUID()
+    userId: string;
     
     @IsNotEmpty()
     removePassword: boolean;
+
+    @IsNotEmpty()
+    newVisibility: string;
     
     newPassword: string;
     oldPassword: string | undefined;

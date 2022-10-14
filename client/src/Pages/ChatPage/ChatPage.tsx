@@ -55,7 +55,6 @@ function ChatPage() {
 						{
 							mode === "channels" ?
 								<Channels socket={socket} />
-								// <Channels socket={socket} user={user}/>
 							:
 								<div>DM</div>
 						}

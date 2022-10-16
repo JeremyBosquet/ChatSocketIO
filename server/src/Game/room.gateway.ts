@@ -55,9 +55,11 @@ export class RoomGateway {
             }
             else if (room.status === "playing") {
                 const ball = room.ball;
-                if (ball.x + (settings.ballRadius * 100) < 0 || ball.x + (settings.ballRadius * 100) > 100) {
+                console.log("gameLoop - playing", settings);
+                if (ball.x + (settings.ballRadius ) < 0 || ball.x + (settings.ballRadius ) > 100) {
                     //room.status = "waiting";
                     //clearInterval(intervalList[room.id]);
+                    console.log("gameLoop - ball out of bounds",ball.x, settings.ballRadius , ball.x + (settings.ballRadius ),  ball.x + (settings.ballRadius ));
                     ball.direction = Math.PI - ball.direction;
                     ball.x += ball.speed * Math.cos(ball.direction);
                     ball.y += ball.speed * Math.sin(ball.direction);
@@ -65,19 +67,21 @@ export class RoomGateway {
                     // Dire que un des deux a perdu
                     // Et reboot la manche si y reste des tours
                 }
-                else if ((ball.y + (settings.ballRadius * 100)) < 0 || (ball.y - (settings.ballRadius * 100)) < 0 || (ball.y + (settings.ballRadius * 100)) > 100 || (ball.y - (settings.ballRadius * 100)) > 100) {
+                else if ((ball.y + (settings.ballRadius )) < 0 || (ball.y - (settings.ballRadius )) < 0 || (ball.y + (settings.ballRadius )) > 100 || (ball.y - (settings.ballRadius )) > 100) {
                     ball.direction = -ball.direction;
                     // Ajouter aleatoire pour la direction
+                    console.log("gameLoop - ball hit a wall");
                     ball.x += ball.speed * Math.cos(ball.direction);
-                    ball.y += ball.speed * Math.sin(ball.direction);
+                    ball.y += ball.speed * Math.sin(ball.direction);   
                 }
-                else if (ball.x - (settings.ballRadius * 100) < (room.playerA.x + (settings.boardWidth * 100)) && ball.x - (settings.ballRadius * 100) > (room.playerA.x) && ball.y + (settings.ballRadius * 100) > room.playerA.y && ball.y - (settings.ballRadius * 100) < room.playerA.y + (settings.boardHeight * 100)) { // La collision est un peu trop a droite a voir apres
+                else if (ball.x - (settings.ballRadius ) < (room.playerA.x + (settings.boardWidth * 100)) && ball.x - (settings.ballRadius ) > (room.playerA.x) && ball.y + (settings.ballRadius ) > room.playerA.y && ball.y - (settings.ballRadius ) < room.playerA.y + (settings.boardHeight * 100)) { // La collision est un peu trop a droite a voir apres
                     ball.direction = Math.PI - ball.direction;
                     // Ajouter aleatoire pour la direction
+                    console.log("gameLoop - ball hit player A");
                     ball.x += ball.speed * Math.cos(ball.direction);
                     ball.y += ball.speed * Math.sin(ball.direction);
                 }
-                else if (ball.x + (settings.ballRadius * 100) > (room.playerB.x) && ball.x + (settings.ballRadius * 100) < (room.playerB.x + (settings.boardWidth * 100)) && ball.y + (settings.ballRadius * 100) > room.playerB.y && ball.y - (settings.ballRadius * 100) < room.playerB.y + (settings.boardHeight * 100)) {
+                else if (ball.x + (settings.ballRadius ) > (room.playerB.x) && ball.x + (settings.ballRadius ) < (room.playerB.x + (settings.boardWidth * 100)) && ball.y + (settings.ballRadius ) > room.playerB.y && ball.y - (settings.ballRadius ) < room.playerB.y + (settings.boardHeight * 100)) {
                     console.log("collision");
                     ball.direction = Math.PI - ball.direction;
                     // Ajouter aleatoire pour la direction
@@ -85,10 +89,12 @@ export class RoomGateway {
                     ball.y += ball.speed * Math.sin(ball.direction);
                 }
                 else {
+                    console.log("gameLoop - ball moving");
                     ball.x += ball.speed * Math.cos(ball.direction);
                     ball.y += ball.speed * Math.sin(ball.direction);
                 }
                 room.ball = ball;
+                console.log("ball :", ball);
                 this.server.in('room-' + room.id).emit('ballMovement', room);
                 await this.roomService.save(room);
             }
@@ -287,12 +293,10 @@ export class RoomGateway {
     }
     @SubscribeMessage('playerMove')
     async handleMove(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
-        console.log("playerMove", client.data, data);
         if (client.data?.roomId) {
             const room = await this.roomService.getRoom(client.data?.roomId);
-            console.log("room : ", room.id, room?.status, data?.id, data?.x, data?.y);
-            if (room && room?.status === "playing" && data?.id && data?.x && data?.y) {
-                console.log("allo ?");
+            console.log("room emit received", Math.random());
+            if (room && room?.status === "playing" && data?.id && data?.x != undefined && data?.y) {
                 if ("playerA" === data.id) {
                     room.playerA.x = data.x;
                     room.playerA.y = data.y;
@@ -306,7 +310,6 @@ export class RoomGateway {
             }
             else
                 console.log("action not allowed -", room?.id, room?.status);
-            //console.log("playerMove -", data);
         }
     }
     @SubscribeMessage('ballMove')
@@ -383,7 +386,11 @@ export class RoomGateway {
                 _room.settings.boardHeight = 10;
                 _room.ball.speed = _room.settings.defaultSpeed;
                 _room.status = "playing";
-                intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 1000);
+                _room.playerA.x = 0;
+                _room.playerA.y = 50;
+                _room.playerB.x = 0;
+                _room.playerB.y = 50;
+                intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 250);
                 await this.roomService.save(_room)
                 this.server.in('room-' + _room?.id).emit('gameStart', _room);
                 this.server.in('room-' + _room?.id).emit('playerReady', _room);

@@ -1,15 +1,43 @@
-import {IsNotEmpty, MinLength} from 'class-validator';
+import {IsBoolean, IsNotEmpty, IsString, MinLength} from 'class-validator';
+import { Expose } from 'class-transformer';
 
-export class CreateUserDto {
-  @IsNotEmpty()
-  @MinLength(3)
-  username: string;
+export class SendUserDto {
+	@IsNotEmpty()
+	@IsString()
+	@Expose()
+	username: string;
 
-  uuid: string;
+	@IsNotEmpty()
+	@IsString()
+	@Expose()
+	trueUsername: string;
 
-  image: string;
+	@IsNotEmpty()
+	@IsString()
+	@Expose()
+	uuid: string;
 
-  createdAt: Date;
+	@IsNotEmpty()
+	@IsString()
+	@Expose()
+	image: string;
 
-  id: number;
+	@IsNotEmpty()
+	@Expose()
+	id: number;
+
+	@IsNotEmpty()
+	@IsBoolean()
+	@Expose()
+	isTwoFactorAuthenticationEnabled: boolean;
+
+	@IsNotEmpty()
+	@IsBoolean()
+	@Expose()
+	isSecondFactorAuthenticated: boolean;
+
+	@IsNotEmpty()
+	@IsBoolean()
+	@Expose()
+	isLoggedIn : boolean;
 }

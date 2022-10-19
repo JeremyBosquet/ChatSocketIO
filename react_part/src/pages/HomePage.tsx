@@ -1,53 +1,92 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-
-interface IUser {
-
-    id: number;
-    username: string;
-    image: string;
-    createdAt: Date;
-}
+import { useNavigate } from "react-router-dom"
+// import { useDispatch, useSelector } from 'react-redux';
+// import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 
 function HomePage() {
-	const [user, setUser] = useState<IUser>();
-	const GetUser = async () => {
-		axios.defaults.withCredentials = true
-		axios.get(`http://45.147.97.2:5000/users`, {withCredentials: true}).then(res => {
-      console.log("success", res);
-    }).catch(err => {
-      console.log(err);
-    })
-		// console.log(user);
-		// if (user?.data) {
-		// 	setUser(user.data);
-		//   }
+	let navigate = useNavigate();
+	//const [user, setUser] = useState<any>();
+	let booleffect = false;
+
+	// const IsLoggedIn = useSelector(getLogged);
+	// const IsTwoAuthConnected = useSelector(getConnected);
+	// const IsTwoAuthActivated = useSelector(getActivated);
+	// const User = useSelector(getUser);
+	// const dispatch = useDispatch();
+
+	
+	const [User, setUser] = useState<any>();
+	const [IsLoggedIn, setLogged] = useState<boolean>();
+	const [IsTwoAuthActivated, setActivated] = useState<boolean>();
+	const [IsTwoAuthConnected, setConnected] = useState<boolean>();
+
+	async function GetLoggedInfoAndUser()
+	{
+		if (localStorage.getItem('token'))
+		{
+			await axios.get(`http://45.147.97.2:5000/user/getLoggedInfo`, {
+					headers: ({
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					})
+				}).then((res) => {
+					setLogged(res.data.IsLoggedIn);
+					setActivated(res.data.isTwoFactorAuthenticationEnabled);
+					setConnected(res.data.isSecondFactorAuthenticated);
+				}).catch((err) => {
+					console.log(err.message);
+					setUser("{}");	
+				});
+				await axios.get(`http://45.147.97.2:5000/user`, {
+					headers: ({
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					})
+				}).then((res) => {
+					setUser(JSON.stringify(res.data.User));
+				}).catch((err) => {
+					console.log(err.message);
+					setUser("{}");	
+				});
+		}
 	}
+
 	useEffect(() => {
-		GetUser()},[]
-	);
+		if (!booleffect)
+		{
+			GetLoggedInfoAndUser();
+			booleffect = true;
+		}
+	}, []);
 	return (
 		<div>
-		<head>
-			<title>Passport-42 Example</title>
-			<link rel="stylesheet" href="/stylesheets/style.css" />
-		</head>
-		<body>
 		{
-			typeof user === 'undefined' ?
-				<p>
-				<a href="/">Home</a> |
-				<a href="/login">Log In</a>
-				</p>
+			(User) ?
+			(
+				<div>
+				{
+					User === "{}" ?
+					(
+						<div>
+							<button onClick={() => navigate("/login")}> login </button>
+						</div>
+					)
+
+					:
+						<div>
+							<button onClick={() => navigate("/profile")}> Profile </button>
+							<button onClick={() => navigate("/parameters")}> Parameters </button>
+							<button onClick={() => navigate("/logout")}> Logout </button>
+						</div>
+				}
+				</div>
+			)
 
 			:
 
-				<p>
-				<a href="/">Home</a> | <a href="/profile">Profile</a> |
-				<a href="/users">Users</a> | <a href="/logout">Log Out</a>
-				</p>
+			<div>
+				<button onClick={() => navigate("/login")}> login </button>
+			</div>
 		}
-		</body>
 		</div>
 	)
 }

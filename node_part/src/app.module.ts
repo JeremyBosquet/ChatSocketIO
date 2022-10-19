@@ -8,12 +8,14 @@ import { UserModel } from './typeorm/user.entity';
 import entities from './typeorm';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { join } from 'path/posix';
 import { string } from 'joi';
 import { UsersService } from './users/users.service';
 import { AppService } from './app.service';
-
+import { JwtStrategy } from './login/jwt.strategy';
+import { twoAuthModule } from './2auth/twoFactorAuthentication.module';
+import { JwtTwoFactorStrategy } from './2auth/auth.strategy';
 
 @Module({
   imports: [
@@ -37,18 +39,21 @@ import { AppService } from './app.service';
 	JwtModule.registerAsync({
 		imports: [ConfigModule],
 		useFactory: async (configService: ConfigService) => ({
-			secret: configService.get('JWT_SECRET'),
-			signOptions: { expiresIn: '1d' },
+			secret: configService.get('JWT_SECRET') ,
 		}),
 		inject: [ConfigService],
 	}),
+	ServeStaticModule.forRoot({
+		rootPath: join(__dirname, '..', 'src/uploads/avatar'),
+	  }),
 	LoginModule,
 	UsersModule,
 	HttpModule,
-	UsersModule,
+	twoAuthModule,
   ],
   controllers: [AppController],
-  providers: [UsersService, AppService],
+  providers: [UsersService, AppService, JwtStrategy, JwtTwoFactorStrategy],
+//   exports: [AppService],
 })
 
 export class AppModule {}

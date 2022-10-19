@@ -41,7 +41,7 @@ function Parameters() {
 	{
 		if (localStorage.getItem('token'))
 		{
-			await axios.get(`http://localhost:5000/user/getLoggedInfo`, {
+			await axios.get(`http://45.147.97.2:5000/user/getLoggedInfo`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -55,7 +55,7 @@ function Parameters() {
 					console.log(err.message);
 					setUser("{}");	
 				});
-				await axios.get(`http://localhost:5000/user`, {
+				await axios.get(`http://45.147.97.2:5000/user`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -77,7 +77,7 @@ function Parameters() {
 
 	const DeactivatedTwoAuth = async (event : any) => {
 		event.preventDefault();
-		await axios.post(`http://localhost:5000/2fa/turn-off`, {twoFactorAuthenticationCode :  authCode}, {
+		await axios.post(`http://45.147.97.2:5000/2fa/turn-off`, {twoFactorAuthenticationCode :  authCode}, {
 			headers: ({
 				Authorization: 'Bearer ' + token
 			}),		
@@ -93,7 +93,7 @@ function Parameters() {
 	const ChangeUsername = async (event : any) => {
 		event.preventDefault();
 		console.log(changename);
-		await axios.post(`http://localhost:5000/user/changeUsername`, {newName : changename}, {
+		await axios.post(`http://45.147.97.2:5000/user/changeUsername`, {newName : changename}, {
 			headers: ({
 				Authorization: 'Bearer ' + token
 			}),
@@ -115,7 +115,7 @@ function Parameters() {
 		console.log(data.get('file'));
 		await axios({
 			method : "post",
-			url : `http://localhost:5000/user/changeAvatar`,
+			url : `http://45.147.97.2:5000/user/changeAvatar`,
 			data : data,
 			headers: {Authorization: 'Bearer ' + token,
 			'Content-Type': 'multipart/form-data' },
@@ -132,7 +132,7 @@ function Parameters() {
 
 	const GetQrCode = async (event : any) => {
 		event.preventDefault();
-		await axios.post(`http://localhost:5000/2fa/generate`, {},{
+		await axios.post(`http://45.147.97.2:5000/2fa/generate`, {},{
 			headers: ({
 				Authorization: 'Bearer ' + token
 			}),
@@ -148,7 +148,7 @@ function Parameters() {
 
 	const ActivateTwoAuth = async (event : any) => {
 		event.preventDefault();
-		await axios.post(`http://localhost:5000/2fa/turn-on`, {twoFactorAuthenticationCode :  authCode},{
+		await axios.post(`http://45.147.97.2:5000/2fa/turn-on`, {twoFactorAuthenticationCode :  authCode},{
 			headers: ({
 				Authorization: 'Bearer ' + token
 			})
@@ -162,7 +162,7 @@ function Parameters() {
 			return ;
 		});
 
-		await axios.post(`http://localhost:5000/2fa/authenticate`, {twoFactorAuthenticationCode :  authCode},{
+		await axios.post(`http://45.147.97.2:5000/2fa/authenticate`, {twoFactorAuthenticationCode :  authCode},{
 			headers: ({
 				Authorization: 'Bearer ' + token
 			})

@@ -2,17 +2,17 @@
     "sqltools.connections": [
         {
             "previewLimit": 50,
-            "server": "localhost",
+            "server": "45.147.97.2",
             "port": 5432,
             "driver": "PostgreSQL",
-            "name": "localhost",
+            "name": "45.147.97.2",
             "database": "chat",
             "username": "jeremy",
             "password": "jeremy"
         },
         {
             "previewLimit": 50,
-            "server": "localhost",
+            "server": "45.147.97.2",
             "port": 5432,
             "driver": "PostgreSQL",
             "name": "jeremy",

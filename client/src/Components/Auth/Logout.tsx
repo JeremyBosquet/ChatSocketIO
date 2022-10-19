@@ -25,7 +25,7 @@ function Logout() {
 	{
 		if (localStorage.getItem('token'))
 		{
-			await axios.get(`http://localhost:5000/user/getLoggedInfo`, {
+			await axios.get(`http://45.147.97.2:5000/user/getLoggedInfo`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -42,7 +42,7 @@ function Logout() {
 
 	async function CallLogout () {
 		const token = localStorage.getItem('token');
-			await axios.get(`http://localhost:5000/logout`, {
+			await axios.get(`http://45.147.97.2:5000/logout`, {
 				headers: ({
 					Authorization: 'Bearer ' + token
 				})

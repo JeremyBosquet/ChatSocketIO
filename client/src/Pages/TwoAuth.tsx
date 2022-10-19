@@ -32,7 +32,7 @@ function TwoAuth() {
 	{
 		if (localStorage.getItem('token'))
 		{
-			await axios.get(`http://localhost:5000/user/getLoggedInfo`, {
+			await axios.get(`http://45.147.97.2:5000/user/getLoggedInfo`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -60,7 +60,7 @@ function TwoAuth() {
 
 	const LogTwoAuth = async (event : any) => {
 		event.preventDefault();
-		await axios.post(`http://localhost:5000/2fa/authenticate`, {twoFactorAuthenticationCode :  authCode},{
+		await axios.post(`http://45.147.97.2:5000/2fa/authenticate`, {twoFactorAuthenticationCode :  authCode},{
 			headers: ({
 				Authorization: 'Bearer ' + token
 			})
@@ -75,7 +75,7 @@ function TwoAuth() {
 		});
 		if (IsTwoAuthConnected)
 		{
-			await axios.get(`http://localhost:5000/user`, {
+			await axios.get(`http://45.147.97.2:5000/user`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})

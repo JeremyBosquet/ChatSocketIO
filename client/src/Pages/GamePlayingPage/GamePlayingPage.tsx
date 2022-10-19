@@ -76,7 +76,7 @@ function GamePlayingPage() {
   const params = useParams();
 
   const checkRooms = async (e: any) => {
-    const messages = await axios.get(`http://localhost:5000/api/room/getRooms`);
+    const messages = await axios.get(`http://45.147.97.2:5000/api/room/getRooms`);
 
     if (messages?.data) {
       for (let i = 0; i < messages.data.length; i++) {
@@ -101,7 +101,7 @@ function GamePlayingPage() {
     }
   }
   useEffect(() => { // Connect to the socket
-    const newSocket = io('http://localhost:5002');
+    const newSocket = io('http://45.147.97.2:5002');
     setSocket(newSocket);
     checkRooms(null);
     getUsers(null);

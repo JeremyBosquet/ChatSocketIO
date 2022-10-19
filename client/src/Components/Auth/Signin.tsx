@@ -10,7 +10,7 @@ function SignIn() {
 	let booleffect = false;
   
 	async function handleSubmit () {
-	  const {data} = await axios.get(`http://localhost:5000/login`)
+	  const {data} = await axios.get(`http://45.147.97.2:5000/login`)
 		window.location.assign(data);
 	}
 	useEffect(() => {

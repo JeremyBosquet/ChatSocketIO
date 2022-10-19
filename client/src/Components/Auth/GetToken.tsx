@@ -30,7 +30,7 @@ function GetToken() {
 	{
 		if (localStorage.getItem('token'))
 		{
-			axios.get(`http://localhost:5000/user/getLoggedInfo`, {
+			axios.get(`http://45.147.97.2:5000/user/getLoggedInfo`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -55,7 +55,7 @@ function GetToken() {
 
 	async function NotActivated() {
 		console.log('Bearer ' + localStorage.getItem('token'));
-			await axios.get(`http://localhost:5000/user`, {
+			await axios.get(`http://45.147.97.2:5000/user`, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
@@ -72,7 +72,7 @@ function GetToken() {
 		const queryParams = new URLSearchParams(window.location.search);
 		const code = queryParams.get('code');
 		console.log(code);
-		axios.get(`http://localhost:5000/login/42/return/` + code).then((res) => {
+		axios.get(`http://45.147.97.2:5000/login/42/return/` + code).then((res) => {
 			if (res.data)
 			{
 				localStorage.setItem('token', res.data.token);
@@ -89,7 +89,7 @@ function GetToken() {
 		// if (!IsTwoAuthActivated)
 		// {
 		// 	console.log('Bearer ' + localStorage.getItem('token'));
-		// 	await axios.get(`http://localhost:5000/user`, {
+		// 	await axios.get(`http://45.147.97.2:5000/user`, {
 		// 		headers: ({
 		// 			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		// 		})

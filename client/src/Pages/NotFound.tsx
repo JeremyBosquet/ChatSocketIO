@@ -27,7 +27,7 @@ function NotFound() {
 	{
 		if (localStorage.getItem('token'))
 		{
-			await axios.get(`http://localhost:5000/user/getLoggedInfo`, {
+			await axios.get(`http://45.147.97.2:5000/user/getLoggedInfo`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -39,7 +39,7 @@ function NotFound() {
 					console.log(err.message);
 					setUser("{}");	
 				});
-				await axios.get(`http://localhost:5000/user`, {
+				await axios.get(`http://45.147.97.2:5000/user`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})

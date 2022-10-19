@@ -9,13 +9,18 @@ export class RoomService {
       console.log("Clear database in progress :");
       const list = await this.roomRepository.find()
       for (let i = 0; i < list.length; i++) {
-        console.log("Clearing room", list[i].id);
-        list[i].playerA = null;
-        list[i].playerB = null;
-        list[i].nbPlayers = 0;
-        list[i].status = "waiting";
-        //await this.roomRepository.save(list[i]);
-        await this.roomRepository.remove(list[i]);
+        if (list[i].status != "finished")
+        {
+          console.log("Clearing room", list[i].id);
+          list[i].playerA = null;
+          list[i].playerB = null;
+          list[i].nbPlayers = 0;
+          list[i].status = "waiting";
+          //await this.roomRepository.save(list[i]);
+          await this.roomRepository.remove(list[i]);
+        }
+        else
+          console.log("Finished room", list[i].id);
       }
       console.log("done");
 

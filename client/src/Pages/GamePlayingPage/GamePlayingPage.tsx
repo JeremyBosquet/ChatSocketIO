@@ -46,17 +46,17 @@ interface IRoom {
   playerB: IPlayer;
   ball: IBall;
   settings: ISettings;
-  configurationA : IConfiguration;
+  configurationA: IConfiguration;
   configurationB: IConfiguration;
 }
 
-interface IConfiguration{
+interface IConfiguration {
   difficulty: string;
   background: string;
   confirmed: boolean;
 }
 
-interface ISettings{
+interface ISettings {
   defaultSpeed: number;
   defaultDirection: number;
   boardWidth: number;
@@ -140,8 +140,26 @@ function GamePlayingPage() {
         }
       }
       );
+      socket.on('gameEnd', (data: IRoom) => {
+        console.log("gameEnd", data);
+        setRoom(data);
+        setPlaying(false);
+        setReady(false);
+
+      });
+      socket.on('gameForceEnd', (data: IRoom) => {
+        console.log("gameForceEnd donc erreur 'sorry l'autre connard a crash'", data);
+        setRoom(data);
+        setPlaying(false);
+        setReady(false);
+      });
+      socket.on("roomUpdated", (data: IRoom) => {
+        console.log("roomUpdated", data);
+        setRoom(data);
+      });
     }
   }, [socket, ready, playing, room]);
+
   return (
     <div>
       {!ready && !playing ? (<GameReady users={users} socket={socket} setReady={setReady} setPlayerId={setPlayerId} setPlayerName={setPlayerName} />) : null}

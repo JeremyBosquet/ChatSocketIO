@@ -26,8 +26,8 @@ interface IRoom {
 function GameBoard(props : props) {
   return (
       <div>
-        PlayerA : {props.room?.playerA.name} <br/>
-        PlayerB : {props.room?.playerB.name} <br/>
+        PlayerA : {props.room?.playerA.name} - {props.room?.playerA.score} <br/>
+        PlayerB : {props.room?.playerB.name} - {props.room?.playerB.score} <br/>
       </div>
   );
 }

@@ -22,6 +22,8 @@ import { Channel } from './Chat/Entities/channel.entity';
 import { User } from './Chat/Entities/user.entity';
 import { RoomModule } from './Game/room.module';
 import { Room } from './Game/Entities/room.entity';
+import { RoomGateway } from './Game/room.gateway';
+import { RoomService } from './Game/room.service';
 
 @Module({
   imports: [
@@ -56,6 +58,8 @@ import { Room } from './Game/Entities/room.entity';
 	UsersModule,
 	HttpModule,
 	twoAuthModule,
+  ChatModule,
+  RoomModule,
   ],
   controllers: [AppController],
   providers: [UsersService, AppService, JwtStrategy, JwtTwoFactorStrategy],

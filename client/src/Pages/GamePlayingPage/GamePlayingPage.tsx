@@ -88,9 +88,15 @@ function GamePlayingPage() {
     }
   }
   const getUsers = async (e: any) => {
-    const messages = await axios.get(`http://localhost:5000/api/chat/getUsers`);
-    console.log(messages.data);
+    const messages = await axios.get(`http://45.147.97.2:5000/user`, {
+      headers: ({
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      })
+    }).catch((err) => {
+      console.log(err);
+    });
     if (messages?.data) {
+      console.log(messages.data);
       setUsers(messages.data)
     }
   }

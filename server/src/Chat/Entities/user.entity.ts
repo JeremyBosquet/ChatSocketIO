@@ -1,3 +1,4 @@
+import { UUIDVersion } from 'class-validator';
 import {
     Entity,
     Column,
@@ -5,19 +6,48 @@ import {
     CreateDateColumn,
 } from 'typeorm';
 
+import { Exclude, Expose } from 'class-transformer';
+
 @Entity({name: "users"})
 export class User {
 
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+	@Expose()
+    uuid: string;
 
     @Column()
-    name: string;
+	@Expose()
+    username: string;
+
+	@Column()
+	@Expose()
+    trueUsername: string;
 
     @Column()
+	@Expose()
     image: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
+	@Column()
+	@Expose()
+	id : number;
 
+	@Column()
+	@Exclude()
+	twoFactorAuthenticationSecret: string;
+
+	@Column({ default: false })
+	@Expose()
+    isSecondFactorAuthenticated: boolean;
+
+	@Column({ default: false })
+	@Expose()
+  	public isTwoFactorAuthenticationEnabled: boolean;
+
+	@Column({ default: false })
+	@Expose()
+	isLoggedIn : boolean;
+
+    @CreateDateColumn()
+	@Exclude()
+    createdAt: Date;
 }

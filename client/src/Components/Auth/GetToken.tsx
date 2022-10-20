@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { redirect, useNavigate, useLocation, useParams } from "react-router-dom"
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../../Redux/authSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 
 function GetToken() {
@@ -26,6 +28,58 @@ function GetToken() {
 	const [IsTwoAuthActivated, setActivated] = useState<boolean>(false);
 	const [IsTwoAuthConnected, setConnected] = useState<boolean>();
 
+	function createNotification (type : string, message : string){
+		switch (type) {
+		  case 'info':
+			  toast.info(message, {
+				  position: "top-right",
+				  autoClose: 3000,
+				  hideProgressBar: false,
+				  closeOnClick: true,
+				  pauseOnHover: true,
+				  draggable: true,
+				  progress: undefined,
+				  theme: "light",
+				  });
+			break;
+		  case 'success':
+			  toast.success(message, {
+				  position: "top-right",
+				  autoClose: 3000,
+				  hideProgressBar: false,
+				  closeOnClick: true,
+				  pauseOnHover: true,
+				  draggable: true,
+				  progress: undefined,
+				  theme: "light",
+				  });
+			break;
+		  case 'warning' :
+			  toast.warn(message, {
+				  position: "top-right",
+				  autoClose: 3000,
+				  hideProgressBar: false,
+				  closeOnClick: true,
+				  pauseOnHover: true,
+				  draggable: true,
+				  progress: undefined,
+				  theme: "light",
+				  });
+			break;
+		  case 'error':
+			  toast.error(message, {
+				  position: "top-right",
+				  autoClose: 3000,
+				  hideProgressBar: false,
+				  closeOnClick: true,
+				  pauseOnHover: true,
+				  draggable: true,
+				  progress: undefined,
+				  theme: "light",
+				  });
+		  break;
+		};
+  	}
 	function GetLoggedInfo()
 	{
 		if (localStorage.getItem('token'))
@@ -62,6 +116,7 @@ function GetToken() {
 			}).then((res) => {
 				setUser(JSON.stringify(res.data.User));
 				console.log(res.data.message);
+				createNotification('success', 'User connected');
 				navigate("/");
 			}).catch((err) => {
 				console.log(err.message);

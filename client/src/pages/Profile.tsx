@@ -3,6 +3,9 @@ import { useEffect, useRef, useState } from 'react';
 import SignIn from '../Components/Auth/Signin';
 import { redirect, useNavigate, useLocation } from "react-router-dom";
 import './Profile.scss';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
+
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 
@@ -11,7 +14,7 @@ function Profile() {
 	let booleffect = false;
 	const token = localStorage.getItem('token');
 
-	const booleffect2 = useRef<boolean>(true);
+	const [booleffect2, setbooleffect2] = useState<boolean>(true);
 	const firstrender = useRef<boolean>(true);
 
 	// const IsTwoAuthConnected = useSelector(getConnected);
@@ -24,6 +27,59 @@ function Profile() {
 	const [IsLoggedIn, setLogged] = useState<boolean>();
 	const [IsTwoAuthActivated, setActivated] = useState<boolean>();
 	const [IsTwoAuthConnected, setConnected] = useState<boolean>();
+
+	function createNotification (type : string, message : string){
+		switch (type) {
+		  case 'info':
+			  toast.info(message, {
+				  position: "top-right",
+				  autoClose: 3000,
+				  hideProgressBar: false,
+				  closeOnClick: true,
+				  pauseOnHover: true,
+				  draggable: true,
+				  progress: undefined,
+				  theme: "light",
+				  });
+			break;
+		  case 'success':
+			  toast.success(message, {
+				  position: "top-right",
+				  autoClose: 3000,
+				  hideProgressBar: false,
+				  closeOnClick: true,
+				  pauseOnHover: true,
+				  draggable: true,
+				  progress: undefined,
+				  theme: "light",
+				  });
+			break;
+		  case 'warning' :
+			  toast.warn(message, {
+				  position: "top-right",
+				  autoClose: 3000,
+				  hideProgressBar: false,
+				  closeOnClick: true,
+				  pauseOnHover: true,
+				  draggable: true,
+				  progress: undefined,
+				  theme: "light",
+				  });
+			break;
+		  case 'error':
+			  toast.error(message, {
+				  position: "top-right",
+				  autoClose: 3000,
+				  hideProgressBar: false,
+				  closeOnClick: true,
+				  pauseOnHover: true,
+				  draggable: true,
+				  progress: undefined,
+				  theme: "light",
+				  });
+		  break;
+		};
+  	}
 
 	async function GetLoggedInfoAndUser()
 	{
@@ -50,10 +106,13 @@ function Profile() {
 					console.log(res.data.User)
 				}).catch((err) => {
 					console.log(err.message);
-					setUser("{}");	
+					setUser("{}");
+					createNotification('error', 'User not found');
 				});
 		}
-		booleffect2.current = false;
+		else
+			createNotification('error', 'User not found');
+		setbooleffect2(false);
 	}
 	useEffect(() : any => {
 		if (!booleffect)
@@ -66,7 +125,7 @@ function Profile() {
 		<div className='profilePage'>
 			<div className='container'>
 			{
-				!(booleffect2.current) ?
+				!(booleffect2) ?
 				(	
 					<div className='container'>
 					{
@@ -77,7 +136,6 @@ function Profile() {
 								User === "{}" ?
 								(
 									<div className='userNotFound'>
-										<p> User not found </p>
 										<button onClick={() => navigate("/")}> Home </button>
 									</div>
 								)
@@ -97,14 +155,15 @@ function Profile() {
 						:
 
 						<div className='userNotFound'>
-							<p> User not found </p>
 							<button onClick={() => navigate("/")}> Home </button>
 						</div>
 					}
 					</div>
 				)
 				:
+				<div>
 					<p> Loading .... </p>
+				</div>
 			}
 			</div>
 		</div>

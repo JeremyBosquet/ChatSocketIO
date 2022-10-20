@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { redirect, useNavigate, useLocation, useParams } from "react-router-dom"
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../../Redux/authSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function Logout() {
 	let navigate = useNavigate();
@@ -20,6 +22,59 @@ function Logout() {
 	const [IsLoggedIn, setLogged] = useState<boolean>();
 	const [IsTwoAuthActivated, setActivated] = useState<boolean>();
 	const [IsTwoAuthConnected, setConnected] = useState<boolean>();
+
+	function createNotification (type : string, message : string){
+		switch (type) {
+		case 'info':
+			toast.info(message, {
+				position: "top-right",
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+				});
+			break;
+		case 'success':
+			toast.success(message, {
+				position: "top-right",
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+				});
+			break;
+		case 'warning' :
+			toast.warn(message, {
+				position: "top-right",
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+				});
+			break;
+		case 'error':
+			toast.error(message, {
+				position: "top-right",
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+				progress: undefined,
+				theme: "light",
+				});
+		break;
+		};
+	}
 
 	async function GetLoggedInfo()
 	{
@@ -50,9 +105,11 @@ function Logout() {
 				GetLoggedInfo();
 				setUser("{}");
 				localStorage.clear();
+				createNotification('success', 'User disconnected');
 				navigate("/");
 			}).catch((err) => {
-				//navigate("/");
+				createNotification('error', "couldn't disconnect user");
+				navigate("/");
 			});
 	}
 	useEffect(() => {

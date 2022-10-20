@@ -7,9 +7,6 @@ export class editChannelPasswordDTO {
 
     @IsUUID()
     userId: string;
-    
-    @IsNotEmpty()
-    removePassword: boolean;
 
     @IsNotEmpty()
     newVisibility: string;

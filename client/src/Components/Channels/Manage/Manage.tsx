@@ -26,10 +26,21 @@ function Manage(props: props) {
   const [password, setPassword] = useState<string>("");
   const [oldPassword, setOldPassword] = useState<string>("");
 
+  const [error, setError] = useState<string>("");
+
   const handleChange = async () => {
-    if (visibility === "protected" && props.channel.visibility === "protected")
-      if (!oldPassword)
+    if (props.channel.visibility === "protected"){
+      if (!oldPassword){
+        setError("Error: You must enter the old password");
         return ;
+      } 
+    }
+    if (visibility === "protected"){
+      if (!password) {
+        setError("Error: You must enter a password");
+        return ;
+      }
+    }
 
     const removePassword = (visibility === "public") ? true : false;
 
@@ -44,46 +55,59 @@ function Manage(props: props) {
       let channels = props.channels;
       props.channel.visibility = visibility;
       channels[props.channels.find((channel: any) => channel.id === props.channel.id)] = props.channel;
-    }).catch(err => console.log(err));
+      props.setToggleMenu(false);
+      props.setManageMode(false);
+    }).catch(err =>         setError("Error: " + err.response.data.message));
+  }
 
+  const handleClose = () => {
     props.setToggleMenu(false);
     props.setManageMode(false);
   }
 
   return (
-    <div className='manageChannel' style={{zIndex: 999}}>
-      <div>
-        <h3>Manage channel</h3>
-      </div>
-      <div style={
-        { display: 'flex',
-          flexDirection: 'column',}
-      }>
-        <p>Change visibility</p>
-        <label>Private</label>
-        <input type="radio" name="Private" value="private" checked={visibility === 'private'} onChange={e => setVisibility("private")}/>
-        <label>Protected</label>
-        <input type="radio" name="Protected" value="protected" checked={visibility === 'protected'} onChange={e => setVisibility("protected")}/>
-        <label>Public</label>
-        <input type="radio" name="Public" value="public" checked={visibility === 'public'} onChange={e => setVisibility("public")}/>
-      </div>
-      {
-        visibility === "protected" ?
-        <div>
-            <p>Change password</p>
-            { props.channel.visibility === "protected" ? 
-              <>
-                <input name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)}></input>
-                <input name="password" type="text" placeholder='New password' value={password} onChange={e => setPassword(e.target.value)}></input>
-              </>
-              :
-                <input name="password" type="text" placeholder='New password' value={password} onChange={e => setPassword(e.target.value)}></input>
-            }
+    <div className="manageChannel">
+      <div className="manageContainer" >
+        <div className="manageChannelInfos">
+          <h3>Manage channel</h3>
+          <span onClick={handleClose}>X</span>
+        </div>
+        <div className="manageVisibilityChoice">
+          <p>Change visibility</p>
+          <div className="manageVisibilityItem" onClick={e => setVisibility("private")}>
+            <input type="checkbox" name="Private" value="private" checked={visibility === "private"}/>
+            <label>Private</label>
           </div>
-        :
-        null
-      }
-      <button onClick={handleChange} >Change</button>
+          <div className="manageVisibilityItem" onClick={e => setVisibility("protected")}>
+            <input type='checkbox' name="Protected" value="protected" checked={visibility === "protected"} />
+            <label>Protected</label>
+          </div>
+          <div className="manageVisibilityItem" onClick={e => setVisibility("public")}>
+            <input type="checkbox" name="Public" value="public" checked={visibility === "public"} />
+            <label>Public</label>
+          </div>
+        </div>
+        { props.channel.visibility === "protected" && visibility !== "protected" ? 
+          <div>
+            <p>Old password</p>
+            <input className="manageChangePasswordButton" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)}></input>
+          </div>
+          : null }
+        {
+          visibility === "protected" ?
+          <div className='manageChangePassword'>
+            <p>Change password</p>
+              { props.channel.visibility === "protected" ? 
+              <input className="manageChangePasswordButton" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)}></input>
+              : null }
+              <input className="manageChangePasswordButton" name="password" type="text" placeholder='New password' value={password} onChange={e => setPassword(e.target.value)}></input>
+            </div>
+          :
+          null
+        }
+        { error ? <p>{error}</p> : null }
+        <button className="manageChangeButton" onClick={handleChange}>Change</button>
+      </div>
     </div>
   );
 }

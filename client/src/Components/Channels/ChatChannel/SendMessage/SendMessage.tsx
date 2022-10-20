@@ -12,6 +12,8 @@ function SendMessage(props : props) {
 
     const handleSubmit = (e : any) => {
         e.preventDefault();
+        if (message === "")
+          return ;
         props.socket?.emit('message', { userId: props.user.id, message: message, channelId: props.channelId });
         setMessage("");
     }

@@ -113,7 +113,14 @@ export class ChannelController {
         if (channel.owner.id !== body.userId)
             return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
 
-        if (body.removePassword) {
+        if (channel.visibility === "protected")
+            if (await bcrypt.compare(body.oldPassword, channel.password) === false)
+                return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "Wrong password", error: "Forbidden"});
+
+        if (body.newVisibility !== "protected" && body.newVisibility !== "private" && body.newVisibility !== "public")
+            return res.status(HttpStatus.BAD_REQUEST).json({statusCode: HttpStatus.BAD_REQUEST, message: "Channel visibility is not valid", error: "Bad request"});
+
+        if (body.newVisibility === "public") {
             if (channel.visibility === "public")
                 return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Visibility already public"});
             channel.visibility = "public"
@@ -122,38 +129,36 @@ export class ChannelController {
             return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Visibility set to public"});
         }
         
-        if (body.newVisibility === "protected" || body.newVisibility === "private") {
-            if (body.newVisibility === "private") {
-                if (channel.visibility === "private")
-                    return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Visibility already private"});
-             
-                channel.visibility = "private";
-                channel.password = "";
-                await this.chatService.updateChannel(channel.id, channel);
-                return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Visibility set to private"});
-            } else if (body.newVisibility === "protected") {
-                if (!verifPassword(body.oldPassword))
-                {
-                    if (verifPassword(body.newPassword)) {
-                        channel.password = await passwordHash(body.newPassword);
-                        channel.visibility = "protected";
-                        await this.chatService.updateChannel(channel.id, channel);
-                        return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Visibility set to protected"});
-                    } else
-                        return res.status(HttpStatus.NO_CONTENT).json({statusCode: HttpStatus.NO_CONTENT, message: "New password is empty", error: "No content"});
-                } else if (await bcrypt.compare(body.oldPassword, channel.password))  {
-                    if (verifPassword(body.newPassword)) {
-                        channel.password = await passwordHash(body.newPassword);
-                        await this.chatService.updateChannel(channel.id, channel);
-                        return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Password updated"});
-                    } else
-                        return res.status(HttpStatus.NO_CONTENT).json({statusCode: HttpStatus.NO_CONTENT, message: "New password is empty", error: "No content"});
-                } else
-                    return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "Wrong password", error: "Forbidden"});
-            }
-        } else {
-            return res.status(HttpStatus.BAD_REQUEST).json({statusCode: HttpStatus.BAD_REQUEST, message: "Channel visibility is not valid", error: "Bad request"});
+        if (body.newVisibility === "private") {
+            if (channel.visibility === "private")
+                return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Visibility already private"});
+            
+            channel.visibility = "private";
+            channel.password = "";
+            await this.chatService.updateChannel(channel.id, channel);
+            return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Visibility set to private"});
         }
+        
+        if (body.newVisibility === "protected") {
+            if (!verifPassword(body.oldPassword)) {
+                if (verifPassword(body.newPassword)) {
+                    channel.password = await passwordHash(body.newPassword);
+                    channel.visibility = "protected";
+                    await this.chatService.updateChannel(channel.id, channel);
+                    return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Visibility set to protected"});
+                }
+                return res.status(HttpStatus.NO_CONTENT).json({statusCode: HttpStatus.NO_CONTENT, message: "New password is empty", error: "No content"});
+            } else if (await bcrypt.compare(body.oldPassword, channel.password))  {
+                if (verifPassword(body.newPassword)) {
+                    channel.password = await passwordHash(body.newPassword);
+                    await this.chatService.updateChannel(channel.id, channel);
+                    return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Password updated"});
+                }
+                return res.status(HttpStatus.NO_CONTENT).json({statusCode: HttpStatus.NO_CONTENT, message: "New password is empty", error: "No content"});
+            } else
+                return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "Wrong password", error: "Forbidden"});
+        }
+
         return res.status(HttpStatus.BAD_REQUEST).json({statusCode: HttpStatus.BAD_REQUEST, message: "Bad request", error: "Bad request"});
     }
 

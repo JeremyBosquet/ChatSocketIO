@@ -1,7 +1,6 @@
 import {Controller,
   Get,
   Redirect,
-  Render,
   Req,
   UseGuards,
   Res,
@@ -33,13 +32,6 @@ export class AppController {
   private readonly appService : AppService,
   private jwtService: JwtService) {}
 
-  // @Get()
-  // @Render('home')
-  // async home(@User() user : Profile , @Res() res: any) {
-  // 	if (user)
-  // 		return ((await this.userRepository.find({ where: { id: user.id} }))[0]);
-  // 	return ;
-  // }
 
   @Get('login')
   ft(){

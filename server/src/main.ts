@@ -5,7 +5,6 @@ import { join } from 'path';
 import { AppModule } from './app.module';
 import * as session from 'express-session';
 import * as passport from 'passport';
-import { HttpExceptionFilter } from './http-exception.filter';
 import * as cookieParser from 'cookie-parser';
 const multer = require("multer");
 
@@ -21,7 +20,6 @@ async function bootstrap() {
 	"optionsSuccessStatus": 204,
 	});
 
-  app.useGlobalFilters(new HttpExceptionFilter());
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));

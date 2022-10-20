@@ -5,8 +5,7 @@ import SignIn from '../Components/Auth/Signin';
 import { redirect, useNavigate, useLocation } from "react-router-dom"
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
-import { ToastContainer, toast } from 'react-toastify';
-import "react-toastify/dist/ReactToastify.css";
+import { createNotification } from '../Components/notif/Notif';
 
 
 function TwoAuth() {
@@ -30,59 +29,6 @@ function TwoAuth() {
 	const [IsLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 	const [IsTwoAuthActivated, setActivated] = useState<boolean>(false);
 	const [IsTwoAuthConnected, setConnected] = useState<boolean>(false);
-
-		function createNotification (type : string, message : string){
-			switch (type) {
-			case 'info':
-				toast.info(message, {
-					position: "top-right",
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					progress: undefined,
-					theme: "light",
-					});
-				break;
-			case 'success':
-				toast.success(message, {
-					position: "top-right",
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					progress: undefined,
-					theme: "light",
-					});
-				break;
-			case 'warning' :
-				toast.warn(message, {
-					position: "top-right",
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					progress: undefined,
-					theme: "light",
-					});
-				break;
-			case 'error':
-				toast.error(message, {
-					position: "top-right",
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					progress: undefined,
-					theme: "light",
-					});
-			break;
-			};
-	}
 
 	async function GetLoggedInfo()
 	{

@@ -19,7 +19,7 @@ export class AppService {
 	const findUser = (await this.userRepository.find({ where: { id: user.id} }));
 	if (findUser[0])
 	{
-		//console.log(user);
+		console.log(user);
 		this.userService.IsLoggedIn(user.id);
 		const payload = { id : user.id};
 		const token = this.jwtService.sign(payload)
@@ -32,7 +32,7 @@ export class AppService {
 		let User = await this.userRepository.find({where : {username : customUsername}})
 		while (User[0])
 		{
-			//console.log(await this.userRepository.find({where : {username : customUsername}}));
+			console.log(await this.userRepository.find({where : {username : customUsername}}));
 			customUsername += randomInt(9);
 			console.log(customUsername)
 			User = await this.userRepository.find({where : {username : customUsername}})

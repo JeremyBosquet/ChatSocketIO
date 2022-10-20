@@ -4,6 +4,7 @@ import SignIn from '../Components/Auth/Signin';
 import { redirect, useNavigate, useLocation } from "react-router-dom"
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
+import { createNotification } from '../Components/notif/Notif';
 
 
 function TwoAuth() {
@@ -66,12 +67,13 @@ function TwoAuth() {
 			})
 		}).then((res) => {
 			console.log(res.data.message);
-			setmessageCode(res.data.message);
+			createNotification('success', res.data.message);
+			//setmessageCode(res.data.message);
 			//GetLoggedInfo();
 			navigate("/");
 		}).catch((err) => {
 			console.log(err.response.data.message);
-			setmessageCode(err.response.data.message)
+			createNotification('error', err.response.data.message);
 		});
 		if (IsTwoAuthConnected)
 		{

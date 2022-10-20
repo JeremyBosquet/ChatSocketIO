@@ -156,14 +156,14 @@ export class RoomGateway {
         }
         catch (error) {
             if (error.message === "Room is full") {
-                //console.log("errorRoomIsFull -", room.id, room.nbPlayers);
+                console.log("errorRoomIsFull -", room.id, room.nbPlayers);
                 client.join('room-' + room.id);
                 this.server.to(client.id).emit('errorRoomIsFull', client.data?.playerId);
                 //Spectateur ici
                 //this.server.to('room-' + room.id).emit('errorRoomIsFull', error);
             }
             else if (error.message === "Player already in a room") {
-                //console.log("errorPlayerAlreadyInRoom -", room.id, room.nbPlayers);
+                console.log("errorPlayerAlreadyInRoom -", room.id, room.nbPlayers);
                 client.join('room-' + room.id);
                 this.server.in('room-' + room.id).emit('playerReady', room);
                 // a gerer ptetre differement, faut surement kick l'ancien mais comment idk.
@@ -174,12 +174,12 @@ export class RoomGateway {
         finally {
             const room = await this.roomService.getRoom(data.roomId);
             if (room?.id !== null && room?.nbPlayers !== null) {
-                //console.log("finally -", room.id, room.nbPlayers);
+                console.log("finally -", room.id, room.nbPlayers);
                 await client.join('room-' + room.id);
-                //console.log("rooms : ", client.rooms);
+                console.log("rooms : ", client.rooms);
                 client.data.roomId = data.roomId;
                 client.data.playerId = data.playerId;
-                //console.log("I sent a playerReady -", room.id, room.nbPlayers, "in room-" + room.id);
+                console.log("I sent a playerReady -", room.id, room.nbPlayers, "in room-" + room.id);
                 if (room.playerA?.id && room.playerB?.id && room.status != "playing") {
                     //room.status = "playing";
                     //intervalList[room.id] = setInterval(this.gameLoop, 100, room);
@@ -208,7 +208,7 @@ export class RoomGateway {
                 await client.join('room-' + newRoom.id);
                 client.data.roomId = newRoom.id;
                 client.data.playerId = data.id;
-                //console.log("crash ici : ", room);
+                console.log("crash ici : ", room);
                 await this.roomService.addPlayer(room, data?.id, data?.name);
                 await this.server.in('room-' + newRoom.id).emit('searching-' + data.id, room);
             }
@@ -306,7 +306,7 @@ export class RoomGateway {
         if (client.data.roomId !== undefined) {
             const room = await this.roomService.getRoom(client.data.roomId);
             if (room && room?.id && room?.nbPlayers !== null) {
-                //console.log(client.data.playerId, client.data.roomId, room.playerA?.id, room.playerB?.id);
+                console.log(client.data.playerId, client.data.roomId, room.playerA?.id, room.playerB?.id);
                 if (room?.playerA?.id == client.data.playerId)
                     room.playerA = null;
                 else if (room?.playerB?.id == client.data.playerId)
@@ -334,7 +334,7 @@ export class RoomGateway {
                 }
                 else {
                     room.status = "waiting"; // remove that
-                    //console.log("disconnect -", room.id, room.nbPlayers);
+                    console.log("disconnect -", room.id, room.nbPlayers);
                     if (intervalList[room.id])
                         clearInterval(intervalList[room.id]);
                     this.roomService.save(room); // remove that
@@ -348,7 +348,7 @@ export class RoomGateway {
     async handleMove(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
         if (client.data?.roomId) {
             const room = await this.roomService.getRoom(client.data?.roomId);
-            console.log("room emit received", Math.random());
+            //console.log("room emit received", Math.random());
             if (room && room?.status === "playing" && data?.id && data?.x != undefined && data?.y) {
                 if ("playerA" === data.id) {
                     room.playerA.x = data.x;
@@ -374,6 +374,7 @@ export class RoomGateway {
     @SubscribeMessage('updateConfirugation')
     async updateConfirugation(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
         const room = await this.roomService.getRoom(client.data?.roomId);
+        console.log("socket id : ", client.id);
         if (room && room?.status === "configuring") {
             if (room.playerA?.id === client.data?.playerId) {
                 console.log("updateConfirugationA - difficulty", data);

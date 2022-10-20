@@ -2,8 +2,7 @@ import axios from 'axios';
 import React from 'react';
 import { useEffect, useState } from 'react';
 import { redirect, useNavigate, useLocation, useParams } from "react-router-dom"
-// import { useDispatch, useSelector } from 'react-redux';
-// import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../../Redux/authSlice';
+import { createNotification } from '../notif/Notif';
 
 function Logout() {
 	let navigate = useNavigate();
@@ -50,9 +49,11 @@ function Logout() {
 				GetLoggedInfo();
 				setUser("{}");
 				localStorage.clear();
+				createNotification('success', 'User disconnected');
 				navigate("/");
 			}).catch((err) => {
-				//navigate("/");
+				createNotification('error', "couldn't disconnect user");
+				navigate("/");
 			});
 	}
 	useEffect(() => {

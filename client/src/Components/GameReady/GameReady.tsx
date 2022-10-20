@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 /*
@@ -8,7 +9,6 @@ interface props {
   setReady: (ready: boolean) => void;
   setPlayerId: (playerId: string) => void;
   setPlayerName: (playerName: string) => void;
-  users: IUsers[];
 }
 
 interface IUsers {
@@ -87,39 +87,42 @@ function GameReady(props: props) {
   const [settings, setSettings] = useState<IConfiguration>();
   const [settingsBis, setSettingsBis] = useState<IConfiguration>();
   // const [propsOn, setPropsOn] = useState<boolean>(false);
+
+  
+  
   useEffect(() => {
     if (searching && !tmpUserBoolean) {
+      
       setTmpUserBoolean(true);
-      const tmp = { name: props.users.find(user => user.id === User)?.name, id: User };
-      setTmpUser(tmp);
-      console.log("say searching", tmp);
-      props.socket?.on("searching-" + User, (data: IRoom) => {
-        //console.log("receive searching", data);
+      console.log("hey");
+      console.log("say searching", tmpUser);
+      props.socket?.on("searching-" + tmpUser.id, (data: IRoom) => {
+        console.log("receive searching", data);
         setSearchingDisplay(true);
         setRoom(data);
       });
-      props.socket?.emit("searching", tmp);
+      props.socket?.emit("searching", tmpUser);
 
     }
   }, [searching, tmpUser, tmpUserBoolean]);
   //useEffect(() => {
   //if (!propsOn) {
-  //  //console.log("propsOn");
+  //  console.log("propsOn");
   //setPropsOn(true);
   props.socket?.on("configuring", (data: IRoom) => {
-    //console.log("receive configuring", data);
+    console.log("receive configuring", data);
     setSearchingDisplay(false);
     setConfiguringDisplay(true);
   });
   props.socket?.on("configurationUpdated", (data: IRoom) => {
-    //console.log("receive configurationUpdated", data.configurationB, data.configurationA);
-    if (data.playerA.id === User)
+    console.log("receive configurationUpdated", data.configurationB, data.configurationA, data.playerA, data.playerB, tmpUser, data);
+    if (data.playerA?.id === tmpUser?.id)
       setSettingsBis(data.configurationB);
     else
       setSettingsBis(data.configurationA);
   });
   props.socket?.on("playerLeave", (any) => {
-    //console.log("receive cancelSearching");
+    console.log("receive cancelSearching");
     setSearchingDisplay(true);
     setSearching(true);
     setTmpUserBoolean(true);
@@ -128,30 +131,33 @@ function GameReady(props: props) {
   // }
   //}, [propsOn, props.socket, User, searchingDisplay, configuringDisplay, searching, tmpUserBoolean, settingsBis, settings, room, tmpUser, error, success]);
  
-  function handleReady() {
-    if (!User)
-      return;
-
-    props.setPlayerId(User);
-    const result = props.users.find(user => user.id === User)?.name;
-    if (result)
-      props.setPlayerName(result);
-    else
-      props.setPlayerName("");
+  const getUser = async () => {
+    const messages = await axios.get(`http://45.147.97.2:5000/user`, {
+      headers: ({
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      })
+    }).catch((err) => {
+      console.log(err);
+    });
+    if (messages?.data && messages.data?.User) {
+      console.log(messages.data.User, { id: messages.data.User.id, name: messages.data.User.username });
+      setTmpUser({ id: messages.data.User.uuid, name: messages.data.User.username });
+    }
+  }
+  useEffect(() => {
+    getUser();
+  }, []);
+  async function handleReady() {
+    console.log("hey");
+    console.log("hey", tmpUser);
+    props.setPlayerId(tmpUser.id);
+    props.setPlayerName(tmpUser.name);
     setSearching(true);
   }
   return (
     <div>
       {!searchingDisplay && !configuringDisplay ? (<div>
-        Select an account : <br /> {/*Ready main action*/}
         <button onClick={handleReady}>Search for a game</button>
-        <select defaultValue="undefined" id="playerId" onChange={(e) => setUser(e.target.value)}>
-          <option key="undefined" disabled value="undefined">Select a player</option>
-          {props.users.map((user: IUsers) => {
-            return <option key={user.id} value={user.id}>{user.name}</option>
-          }
-          )}
-        </select>
       </div>) : (null)}
       {searchingDisplay ? (
         <div>
@@ -162,7 +168,7 @@ function GameReady(props: props) {
             setConfiguringDisplay(false);
             setSearching(false);
             setTmpUserBoolean(false);
-            setTmpUser(null);
+            
           }/*Cancel search*/}>Cancel</button>
         </div>) : (null)}
       {configuringDisplay ? (
@@ -209,7 +215,7 @@ function GameReady(props: props) {
               setSearchingDisplay(false);
               setSearching(false);
               setTmpUserBoolean(false);
-              setTmpUser(null);
+              
               setConfiguringDisplay(false);
             }/*Cancel search*/}>Cancel</button>
             <button onClick={() => {

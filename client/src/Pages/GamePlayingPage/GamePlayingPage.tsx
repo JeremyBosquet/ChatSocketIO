@@ -72,12 +72,11 @@ function GamePlayingPage() {
   const [playerId, setPlayerId] = useState<string>('');
   const [playerName, setPlayerName] = useState<string>('');
   const [room, setRoom] = useState<IRoom>();
-  const [users, setUsers] = useState<IUsers[]>([]); // List of users in the server (temporary)
   const params = useParams();
 
   const checkRooms = async (e: any) => {
     const messages = await axios.get(`http://45.147.97.2:5000/api/room/getRooms`);
-
+    //To delete
     if (messages?.data) {
       for (let i = 0; i < messages.data.length; i++) {
         if (messages.data[i].id === params.id) {
@@ -87,24 +86,11 @@ function GamePlayingPage() {
       //window.location.href = '/game/';
     }
   }
-  const getUsers = async (e: any) => {
-    const messages = await axios.get(`http://45.147.97.2:5000/user`, {
-      headers: ({
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      })
-    }).catch((err) => {
-      console.log(err);
-    });
-    if (messages?.data) {
-      console.log(messages.data);
-      setUsers(messages.data)
-    }
-  }
+
   useEffect(() => { // Connect to the socket
     const newSocket = io('http://45.147.97.2:5002');
     setSocket(newSocket);
     checkRooms(null);
-    getUsers(null);
   }, []);
   useEffect(() => {
     if (ready) {
@@ -168,7 +154,7 @@ function GamePlayingPage() {
 
   return (
     <div>
-      {!ready && !playing ? (<GameReady users={users} socket={socket} setReady={setReady} setPlayerId={setPlayerId} setPlayerName={setPlayerName} />) : null}
+      {!ready && !playing ? (<GameReady socket={socket} setReady={setReady} setPlayerId={setPlayerId} setPlayerName={setPlayerName} />) : null}
       {ready ? (<div> Waiting for another player </div>) : null}
       <p>{ready && !playing ? "PlayerA : " + room?.playerA?.name : null}</p>
       <p>{ready && !playing ? "PlayerB : " + room?.playerB?.name : null}</p>

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { redirect, useNavigate, useLocation, useParams } from "react-router-dom"
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../../Redux/authSlice';
+import { createNotification } from '../notif/Notif';
 
 
 function GetToken() {
@@ -62,6 +63,7 @@ function GetToken() {
 			}).then((res) => {
 				setUser(JSON.stringify(res.data.User));
 				console.log(res.data.message);
+				createNotification('success', 'User connected');
 				navigate("/");
 			}).catch((err) => {
 				console.log(err.message);

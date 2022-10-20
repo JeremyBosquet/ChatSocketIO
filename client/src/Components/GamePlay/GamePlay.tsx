@@ -149,7 +149,7 @@ function GamePlay(props: props) {
   useEffect(() => { // Check car le resize ne met pas a jour les var du useEffect
     props.socket?.removeListener('playerMovement');
     props.socket?.on("playerMovement", (room: IRoom) => {
-      //console.log("playerMovement", props.playerId);
+      console.log("playerMovement", props.playerId);
       if (room.playerB.id === props.playerId) {
         setPlayerA({...playerA, id: "playerA", x: 5, y: (room.playerA.y / 100) * windowsHeight, percentY: room.playerA.y});
       } else {

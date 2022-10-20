@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import SignIn from '../Components/Auth/Signin';
 import { redirect, useNavigate, useLocation } from "react-router-dom";
 import './Profile.scss';
+import { createNotification } from '../Components/notif/Notif';
+
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 
@@ -11,7 +13,7 @@ function Profile() {
 	let booleffect = false;
 	const token = localStorage.getItem('token');
 
-	const booleffect2 = useRef<boolean>(true);
+	const [booleffect2, setbooleffect2] = useState<boolean>(true);
 	const firstrender = useRef<boolean>(true);
 
 	// const IsTwoAuthConnected = useSelector(getConnected);
@@ -50,10 +52,13 @@ function Profile() {
 					console.log(res.data.User)
 				}).catch((err) => {
 					console.log(err.message);
-					setUser("{}");	
+					setUser("{}");
+					createNotification('error', 'User not found');
 				});
 		}
-		booleffect2.current = false;
+		else
+			createNotification('error', 'User not found');
+		setbooleffect2(false);
 	}
 	useEffect(() : any => {
 		if (!booleffect)
@@ -66,7 +71,7 @@ function Profile() {
 		<div className='profilePage'>
 			<div className='container'>
 			{
-				!(booleffect2.current) ?
+				!(booleffect2) ?
 				(	
 					<div className='container'>
 					{
@@ -77,7 +82,6 @@ function Profile() {
 								User === "{}" ?
 								(
 									<div className='userNotFound'>
-										<p> User not found </p>
 										<button onClick={() => navigate("/")}> Home </button>
 									</div>
 								)
@@ -97,14 +101,15 @@ function Profile() {
 						:
 
 						<div className='userNotFound'>
-							<p> User not found </p>
 							<button onClick={() => navigate("/")}> Home </button>
 						</div>
 					}
 					</div>
 				)
 				:
+				<div>
 					<p> Loading .... </p>
+				</div>
 			}
 			</div>
 		</div>

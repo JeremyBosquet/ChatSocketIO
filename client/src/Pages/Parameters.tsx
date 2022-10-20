@@ -5,6 +5,10 @@ import { redirect, useNavigate, useLocation } from "react-router-dom"
 //import { userInfo } from 'os';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
+// import {NotificationContainer, NotificationManager} from 'react-notification';
+// import { ToastContainer, toast } from 'react-toastify';
+// import "react-toastify/dist/ReactToastify.css";
+import { createNotification } from '../Components/notif/Notif';
 
 
 function Parameters() {
@@ -14,16 +18,11 @@ function Parameters() {
 	const [changeavatar, setChangeavatar] = useState<any>();
 
 	const [QrCode, setQrCode] = useState<Blob>();
-	const [TurnedOff, setTurnedOff] = useState<boolean>();
+	const [TurnedOff, setTurnedOff] = useState<boolean>(false);
 	const [authCode, setAuthCode] = useState<string>();
-	const [messageImg, setMessageImg] = useState<string>();
-	const [messageAvatar, setMessageAvatar] = useState<string>();
-	const [messageQrCode, setmessageQrCode] = useState<string>();
-	const [messageCode, setmessageCode] = useState<string>();
-	const [MessageDeactivate, setMessageDeactivate] = useState<string>();
 	const token = localStorage.getItem('token');
 
-	const booleffect2 = useRef<boolean>(true);
+	const [booleffect2, setbooleffect2] = useState<boolean>(true);
 	const firstrender = useRef<boolean>(true);
 
 	// const IsLoggedIn = useSelector(getLogged);
@@ -67,7 +66,9 @@ function Parameters() {
 					setUser("{}");	
 				});
 		}
-		booleffect2.current = false;
+		else
+			createNotification('error', 'User not found');
+		setbooleffect2(false);
 	}
 
 	function setOfAuthStatus()
@@ -84,11 +85,13 @@ function Parameters() {
 		}).then((res) => {
 			console.log(res.data.message);
 			GetLoggedInfoAndUser()
-			setMessageDeactivate("two auth auth succefully deactivated");
+			createNotification('success', 'two auth auth succefully deactivated');
 		}).catch((err) => {
 			console.log(err.message);
-			setMessageDeactivate(err.response.data.message);
+
+			createNotification('error', err.response.data.message);
 		});
+		setTurnedOff(false);
 	}
 	const ChangeUsername = async (event : any) => {
 		event.preventDefault();
@@ -101,10 +104,10 @@ function Parameters() {
 		}).then((res) => {
 			console.log(res.data.message);
 			GetLoggedInfoAndUser()
-			setMessageImg("Username succefuly changed");
+			createNotification('success', 'Username succefuly changed');
 		}).catch((err) => {
-			console.log(err);
-			setMessageImg(err.response.data.message);
+			console.log(err.response.statusText);
+			createNotification('error', err.response.statusText);
 		});
 	}
 	const ChangeAvatar = async (event : any) => {
@@ -123,10 +126,12 @@ function Parameters() {
 		}).then((res) => {
 			console.log(res.data.message);
 			GetLoggedInfoAndUser()
-			setMessageAvatar("Avatar succefuly changed");
+			createNotification('success', 'Avatar succefully changed');
+			//setMessageAvatar("Avatar succefuly changed");
 		}).catch((err) => {
-			console.log(err.response.data.message);
-			setMessageAvatar("");
+			console.log(err.response.statusText);
+			createNotification('error', err.response.statusText);
+			//setMessageAvatar("");
 		});
 	}
 
@@ -141,8 +146,8 @@ function Parameters() {
 		.then((res) => {
 			setQrCode(res.data)
 		}).catch((err) => {
-			console.log(err.response.data.message);
-			setmessageQrCode("Failed to get Qr Code");
+			console.log(err.response.statusText);
+			createNotification('error', err.response.statusText);
 		});
 	}
 
@@ -155,11 +160,10 @@ function Parameters() {
 		}).then((res) => {
 			console.log(res.data.message);
 			GetLoggedInfoAndUser()
-			setmessageCode(res.data.message);
+			//createNotification('success', res.data.message);
 		}).catch((err) => {
-			console.log(err.response.data.message);
-			setmessageCode(err.response.data.message)
-			return ;
+			// console.log(err.response.data.message);
+			// createNotification('error', err.response.data.message);
 		});
 
 		await axios.post(`http://45.147.97.2:5000/2fa/authenticate`, {twoFactorAuthenticationCode :  authCode},{
@@ -168,12 +172,11 @@ function Parameters() {
 			})
 		}).then((res) => {
 			console.log(res.data.message);
-			setmessageCode(res.data.message);
+			createNotification('success', res.data.message);
 			GetLoggedInfoAndUser()
 		}).catch((err) => {
 			console.log(err.response.data.message);
-			setmessageCode(err.response.data.message)
-			return ;
+			createNotification('error', err.response.data.message);
 		});
 	}
 
@@ -187,7 +190,7 @@ function Parameters() {
 	return (
 		<div>
 		{
-			!(booleffect2.current) ?
+			!(booleffect2) ?
 			(
 				<div>
 				{
@@ -212,7 +215,6 @@ function Parameters() {
 												<button type="submit">Submit</button>
 											</p>
 										</form>
-									<p > {messageImg} </p> 
 									<p> Current Avatar : 
 										<img src={JSON.parse(User).image} alt="user_img" width="96" height="64"/><br></br>
 									</p>
@@ -227,14 +229,12 @@ function Parameters() {
 												<button type="submit">Submit</button>
 											</p>
 										</form>
-									<p > {messageAvatar} </p>
 									<div>
 									{
-										!IsTwoAuthActivated ?
+										!IsTwoAuthActivated && !QrCode?
 										(
 											<div>
 												<button onClick={e => GetQrCode(e)}>Activate two auth login </button><br></br>
-												<p> {messageQrCode}</p>
 											</div>
 										)
 
@@ -262,7 +262,6 @@ function Parameters() {
 															<button type="submit">Submit</button>
 														</p>
 													</form>
-													<p > {messageCode} </p> 
 												</div>
 											)
 
@@ -291,7 +290,6 @@ function Parameters() {
 																		<button type="submit">Submit</button>
 																	</p>
 																</form>
-																<p > {MessageDeactivate} </p>
 															</div>
 														)
 
@@ -309,7 +307,6 @@ function Parameters() {
 							)
 							:
 								<div>
-									<p> User not found </p>
 									<button onClick={() => navigate("/")}> Home </button>
 								</div>
 						}
@@ -319,7 +316,6 @@ function Parameters() {
 
 					:
 					<div>
-						<p> User not found </p>
 						<button onClick={() => navigate("/")}> Home </button>
 					</div>
 

@@ -51,7 +51,7 @@ export class AppController {
     if (!param.code)
       return;
 
-    //console.log(param.code);
+    console.log(param.code);
 
     const r = await fetch(`https://api.intra.42.fr/oauth/token`, { 
       method: 'POST',
@@ -93,7 +93,7 @@ export class AppController {
 
     const user = await r2.json() as Profile;
 
-    //console.log(user);
+    console.log(user);
 
     if (user)
       return res.status(HttpStatus.OK).json({

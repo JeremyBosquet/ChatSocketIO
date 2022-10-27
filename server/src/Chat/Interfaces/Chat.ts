@@ -6,6 +6,13 @@ export interface IChatReceive {
     createdAt: Date
 }
 
+export interface IChatKick {
+    id: number,
+    userId: string,
+    message: string,
+    createdAt: Date
+}
+
 export interface IChat {
     id: number,
     userId: string,

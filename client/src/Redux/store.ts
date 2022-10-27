@@ -7,4 +7,7 @@ export default configureStore({
     chat: chatReducer,
     auth: authReducer,
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ 
+    serializableCheck: false 
+  }),
 })

@@ -17,11 +17,7 @@ interface Imessage {
 
 function HomePage() {
   const [socket, setSocket] = useState<Socket>();
-  // const [name, setName] = useState<string>("");
-  // const [room, setRoom] = useState<string>("");
   const [messages, setMessages] = useState<Imessage[]>([]);
-  // const [usersConnected, setUsersConnected] = useState<Iuser[]>([]);
-  // const [joined, setJoined] = useState<boolean>(false);
 
   useEffect(() => { // Connect to the socket
     const newSocket = io('http://localhost:4001');

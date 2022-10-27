@@ -1,26 +1,22 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Socket } from 'socket.io-client';
 import FormCreateChannel from '../FormCreateChannel/FormCreateChannel';
 import Channel from './Channel/Channel';
 import Search from './Search/Search';
 import './Channels.scss';
 import ChatChannel from './ChatChannel/ChatChannel';
-import { useSelector } from 'react-redux';
-import { getSelectedChannel } from '../../Redux/chatSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getChannels, getSelectedChannel, setChannels } from '../../Redux/chatSlice';
 import { getUser } from '../../Redux/authSlice';
 
-interface props {
-    socket: Socket | undefined;
-}
-
-function Channels(props: props) {
+function Channels() {
     const [searchChannel, setSearchChannel] = useState<string>("");
     const [init, setInit] = useState<boolean>(false);
-    const [channels, setChannels] = useState<[]>([]);
     const [channelsFind, setChannelsFind] = useState<[]>([]);
-    
+    const dispatch = useDispatch();
+
     const user = useSelector(getUser);
+    const channels = useSelector(getChannels);
     const selectedChannel = useSelector(getSelectedChannel);
     
     useEffect(() => {
@@ -28,7 +24,7 @@ function Channels(props: props) {
             await axios.get("http://localhost:4000/api/chat/channels/user/" + userId)
             .then((res) => {
                 if (res)
-                    setChannels(res.data);
+                    dispatch(setChannels(res.data));
                     setInit(true);
             })
         }
@@ -41,28 +37,28 @@ function Channels(props: props) {
     return (
     <div className='channels'>
         <div className='channelsOperations'>
-            <FormCreateChannel socket={props.socket} setChannels={setChannels}/>
-            <Search socket={props.socket} setChannels={setChannels} searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind}/>
+            <FormCreateChannel/>
+            <Search searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind}/>
         </div>
         <div className='channelInfos'>
             {searchChannel === "" ? 
                 <div className='channelInfo'>
                     <h2>Your channels</h2>
-                    {channels.map((channel) => (
-                        <Channel key={channel["id"]} socket={props.socket} channel={channel} channels={channels} setChannels={setChannels} setSearchChannel={setSearchChannel} foundChannel={false}/>
+                    {channels.map((channel : any) => (
+                        <Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={false}/>
                     ))}
                 </div>
                 :
                 <div className='channelInfo'>
                     <h2>Channel(s) found</h2>
                     {channelsFind.map((channel) => (
-                        <Channel key={channel["id"]} socket={props.socket} channel={channel} channels={channels} setChannels={setChannels} setSearchChannel={setSearchChannel} foundChannel={true}/>
+                        <Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={true}/>
                     ))}
                 </div>
             }
             <div className='channelChat'>
                 { selectedChannel !== "" ? 
-                    <ChatChannel socket={props.socket} />
+                    <ChatChannel />
                         :
                     <p>Select a channel</p>
                 }

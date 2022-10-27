@@ -1,18 +1,17 @@
-import { Socket } from 'socket.io-client';
 import axios from 'axios';import { getUser } from '../../../Redux/authSlice';
-import { useSelector } from 'react-redux';
-;
+import { useDispatch, useSelector } from 'react-redux';
+import { setChannels } from '../../../Redux/chatSlice';
 
 interface props {
-    socket: Socket | undefined;
     searchChannel: string;
-    setChannels: any;
     setSearchChannel: any;
     setChannelsFind: any;
 }
 
 function Search(props: props) {
     const user = useSelector(getUser);
+
+    const dispatch = useDispatch();
 
     const handleSearch = async (e: any) => {
         props.setSearchChannel(e.target.value);
@@ -21,7 +20,7 @@ function Search(props: props) {
             await axios.get("http://localhost:4000/api/chat/channels/user/" + user.id)
             .then((res) => {
                 if (res)
-                    props.setChannels(res.data);
+                    dispatch(setChannels(res.data));
             })
         }
 

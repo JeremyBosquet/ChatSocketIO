@@ -1,20 +1,16 @@
-import { Socket } from 'socket.io-client';
 import Join from '../Join/Join';
 import Leave from '../Leave/Leave';
-import { ControlledMenu, Menu, MenuButton } from '@szhsin/react-menu';
+import { ControlledMenu } from '@szhsin/react-menu';
 import { useSelector, useDispatch } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
-import { getSelectedChannel, setSelectedChannel } from '../../../Redux/chatSlice';
+import { getSelectedChannel, getSocket, setSelectedChannel } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
 import { useState } from 'react';
 import Manage from '../Manage/Manage';
 import { useRef } from 'react';
 
 interface props {
-    socket: Socket | undefined;
     channel: any;
-    channels: any;
-    setChannels: any;
     setSearchChannel: any;
     foundChannel: boolean;
 }
@@ -22,6 +18,7 @@ interface props {
 function Channel(props: props) {
   const ref = useRef(null);
   const user = useSelector(getUser);
+  const socket = useSelector(getSocket);
   const selectedChannel = useSelector(getSelectedChannel);
   const dispatch = useDispatch()
 
@@ -35,7 +32,7 @@ function Channel(props: props) {
   
   const handleSelectChannel = (id: string) => {
     if (!props.foundChannel && selectedChannel !== "" && selectedChannel !== id)
-      props.socket?.emit('leave', { userId: user.id, channelId: selectedChannel });
+      socket?.emit('leave', { userId: user.id, channelId: selectedChannel });
     if (!props.foundChannel)
       dispatch(setSelectedChannel(id));
   }
@@ -49,7 +46,7 @@ function Channel(props: props) {
     <>
     {
       manageMode ?
-        <Manage socket={props.socket} channel={props.channel} channels={props.channels} setChannels={props.setChannels} setToggleMenu={setToggleMenu} setManageMode={setManageMode}/>
+        <Manage channel={props.channel} setToggleMenu={setToggleMenu} setManageMode={setManageMode}/>
       : 
         null
     }
@@ -58,7 +55,7 @@ function Channel(props: props) {
                 <p>{props.channel["name"]} - {props.channel["visibility"]}</p>
                 <p>{formatedDate(props.channel["createdAt"])}</p>
                 { props.foundChannel ? 
-                  <Join socket={props.socket} channelId={props.channel["id"]} channelVisibility={props.channel["visibility"]} setChannels={props.setChannels} setSearchChannel={props.setSearchChannel} />
+                  <Join channelId={props.channel["id"]} channelVisibility={props.channel["visibility"]} setSearchChannel={props.setSearchChannel} />
                   :
                   <>
                     <button ref={ref} onClick={e => setToggleMenu(!toggleMenu)}>+</button>
@@ -67,7 +64,7 @@ function Channel(props: props) {
                       state={toggleMenu ? 'open' : 'closed'}
                     >
                       { isOwner() ? <button onClick={e => setManageMode(true)}>Manage channel</button> : null }
-                      <Leave socket={props.socket} channelId={props.channel["id"]} setChannels={props.setChannels} setSearchChannel={props.setSearchChannel} />
+                      <Leave channelId={props.channel["id"]} setSearchChannel={props.setSearchChannel} />
                     </ControlledMenu>
                   </>
                 }

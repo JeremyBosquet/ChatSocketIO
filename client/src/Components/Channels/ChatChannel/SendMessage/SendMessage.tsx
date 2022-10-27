@@ -1,20 +1,21 @@
 import { useState } from "react";
-import { Socket } from "socket.io-client";
+import { useSelector } from "react-redux";
+import { getSocket } from "../../../../Redux/chatSlice";
 
 interface props {
-    socket: Socket | undefined;
     channelId: string;
     user: {id: string};
 }
 
 function SendMessage(props : props) {
     const [message, setMessage] = useState<string>("");
+    const socket = useSelector(getSocket);
 
     const handleSubmit = (e : any) => {
         e.preventDefault();
         if (message === "")
           return ;
-        props.socket?.emit('message', { userId: props.user.id, message: message, channelId: props.channelId });
+        socket?.emit('message', { userId: props.user.id, message: message, channelId: props.channelId });
         setMessage("");
     }
 

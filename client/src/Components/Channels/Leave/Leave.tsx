@@ -1,18 +1,16 @@
-import { Socket } from 'socket.io-client';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { getSelectedChannel, setSelectedChannel } from '../../../Redux/chatSlice';
+import { getSelectedChannel, getSocket, setChannels, setSelectedChannel } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
 
 interface props {
-    socket: Socket | undefined;
     channelId: string;
-    setChannels: any;
     setSearchChannel: any;
 }
 
 function Leave(props: props) {
     const user = useSelector(getUser);
+    const socket = useSelector(getSocket);
     const selectedChannel = useSelector(getSelectedChannel);
     const dispatch = useDispatch()
 
@@ -21,14 +19,14 @@ function Leave(props: props) {
             await axios.get("http://localhost:4000/api/chat/channels/user/" + userId)
             .then((res) => {
                 if (res)
-                    props.setChannels(res.data);
+                    dispatch(setChannels(res.data));
             })
         }
     
         await axios.post("http://localhost:4000/api/chat/channel/leave", {"channelId": id, "userId": user.id})
         .then((res) => {
             getUsersChannel(user.id);
-            props.socket?.emit('leavePermanant', { userId: user.id, channelId: id });
+            socket?.emit('leavePermanant', { userId: user.id, channelId: id });
             props.setSearchChannel("");
             if (selectedChannel === id)
                 dispatch(setSelectedChannel(""));

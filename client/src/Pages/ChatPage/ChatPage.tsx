@@ -1,13 +1,14 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { io, Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
 import Channels from '../../Components/Channels/Channels';
 import { getLogged, getUser, setLogged, setUser } from '../../Redux/authSlice';
+import { setSocket } from '../../Redux/chatSlice';
 import './ChatPage.scss'
 
 function ChatPage() {
-	const [socket, setSocket] = useState<Socket>();
+	// const [socket, setSocket] = useState<Socket>();
 	const [mode, setMode] = useState<string>("channels");
 	
     const logged = useSelector(getLogged);
@@ -16,7 +17,8 @@ function ChatPage() {
 
 	useEffect(() => { // Connect to the socket
 		const newSocket = io('http://localhost:4001');
-		setSocket(newSocket);
+		dispatch(setSocket(newSocket));
+		//eslint-disable-next-line
 	}, []);
 
 	const changeMode = (newMode: string) => {
@@ -54,7 +56,7 @@ function ChatPage() {
 						<button className={mode === "dm" ? "selectedButton" : null + ' selectButton'} onClick={e => changeMode("dm")}>Private Messages</button>
 						{
 							mode === "channels" ?
-								<Channels socket={socket} />
+								<Channels />
 							:
 								<div>DM</div>
 						}

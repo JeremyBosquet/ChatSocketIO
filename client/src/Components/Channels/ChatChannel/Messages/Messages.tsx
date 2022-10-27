@@ -11,21 +11,20 @@ interface props {
 }
 
 function Messages(props : props) {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollTo({ behavior: "smooth" });
-  };  
+  const messageEl = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    scrollToBottom();
+    setTimeout(() => {
+      if (messageEl.current)
+        messageEl.current.scroll({top: messageEl.current.scrollHeight, behavior: 'auto'});
+    }, 1)
   }, [props.messages]);
 
   return (
-    <div className='messages'>
+    <div id="messages" className='messages' ref={messageEl}>
       {props.messages.map((message : Imessage) => ( 
         <ChatMessage key={Math.random()} message={message} users={props.users} userId={props.userId}/>
       ))}
-      <div ref={messagesEndRef} />
     </div>
   );
 }

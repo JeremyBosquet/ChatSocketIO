@@ -3,11 +3,13 @@
     flex-direction: column;
     border: 2px solid black;
     border-radius: 10px;
-    width: 70%;
+    min-width: 500px;
+    max-width: 500px;
+    height: 450px;
 
     .messages {
-        overflow: scroll;
-        height: 350px;
+        overflow-y: scroll;
+        height: auto;
     }
 }
 

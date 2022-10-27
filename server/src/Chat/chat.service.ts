@@ -112,4 +112,18 @@ export class ChatService {
         return await this.userRepository.findOneBy({id: userId});
       }
 
+      async getUserInChannel(userId: string, channelId: string): Promise<any> {
+        function containsPlayer(users : any) {
+          const containsUser = users.filter(user => user.id === userId);
+
+          if (Object.keys(containsUser).length == 0)
+            return false;
+          return true;
+        }
+
+        const channel = await this.channelRepository.findOneBy({id: channelId});
+        if (channel && containsPlayer(channel.users))
+          return channel.users.filter(user => user.id === userId)[0];
+        return null;
+      }
 }

@@ -1,21 +1,19 @@
-import { Socket } from 'socket.io-client';
 import axios from 'axios';
 import { useState } from 'react';
 import { getUser } from '../../Redux/authSlice';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getSocket, setChannels } from '../../Redux/chatSlice';
 
-interface props {
-  socket : Socket | undefined;
-  setChannels: any;
-}
-
-function FormCreateChannel(props : props) {
+function FormCreateChannel() {
   const [channelName, setChannelName] = useState<string>("");
   const [visibility, setVisibility] = useState<string>("public");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<string>("");
 
+  const dispatch = useDispatch();
+
+  const socket = useSelector(getSocket);
   const user = useSelector(getUser);
 
   function checkVisibility(visibility : string) {
@@ -74,13 +72,13 @@ function FormCreateChannel(props : props) {
     .then((res : any) => {
         if (res.data ) {
         setSuccess("Success: channel " + channelName + " is created.");
-        props.socket?.emit('channelCreated');
+        socket?.emit('channelCreated');
 
         const getUsersChannel = async (userId: any) => {
           await axios.get("http://localhost:4000/api/chat/channels/user/" + userId)
           .then((res) => {
               if (res)
-                  props.setChannels(res.data);
+                  dispatch(setChannels(res.data));
           })
         }
 

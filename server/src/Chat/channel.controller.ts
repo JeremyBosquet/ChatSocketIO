@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Res, ValidationPipe } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { ChannelIdDTO, ChannelsWhereUserDTO, CreateChannelDTO, editChannelPasswordDTO, JoinChannelDTO, LeaveChannelDTO, UserIdDTO } from './Interfaces/ChannelDTO';
+import { ChannelIdDTO, ChannelsWhereUserDTO, CreateChannelDTO, editChannelPasswordDTO, JoinChannelDTO, KickPlayerDTO, LeaveChannelDTO, UserIdDTO } from './Interfaces/ChannelDTO';
 import * as bcrypt from 'bcrypt';
 
 @Controller('api/chat')
@@ -190,5 +190,28 @@ export class ChannelController {
     async getMessagesFromChannel(@Param(ValidationPipe) params: ChannelIdDTO, @Res() res) {
         const messages = await this.chatService.getMessageFromChannel(params.channelId);
         res.json(messages);
+    }
+
+    @Post('channel/kick') //Kick player from channel
+    async kick(@Body(ValidationPipe) body: KickPlayerDTO, @Res() res) {
+        const channel = await this.chatService.getChannel(body.channelId);
+        if (!channel)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
+
+        const admin = await this.chatService.getUserInChannel(body.admin, body.channelId);
+        if (!admin)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+        if (admin.role === "default")
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+        
+        const userToKick = await this.chatService.getUserInChannel(body.target, body.channelId);
+        if (!userToKick)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+        
+        channel.users = channel.users.filter(user => user.id !== body.target);
+
+        await this.chatService.updateChannel(channel.id, channel);
+
+        return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "User kicked"});
     }
 }

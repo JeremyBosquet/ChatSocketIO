@@ -1,8 +1,9 @@
 import { Menu, MenuButton } from "@szhsin/react-menu";
-import userEvent from "@testing-library/user-event";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUser } from "../../../../Redux/authSlice";
+import { getSelectedChannel, getSocket } from "../../../../Redux/chatSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
 import './Player.scss';
 
@@ -14,6 +15,9 @@ interface props {
 
 function Player(props : props) {
   const [connected, setConnected] = useState<boolean>(false);
+
+  const socket = useSelector(getSocket);
+  const selectedChannel = useSelector(getSelectedChannel);
   const me = useSelector(getUser);
 
   useEffect(() => {
@@ -32,6 +36,20 @@ function Player(props : props) {
     //eslint-disable-next-line
   }, [props.usersConnected])
 
+  const handleKick = async (targetId: string) => {
+    console.log({channelId: selectedChannel,
+      target: targetId,
+      admin: me.id});
+    await axios.post(`http://localhost:4000/api/chat/channel/kick/`, {
+      channelId: selectedChannel,
+      target: targetId,
+      admin: me.id
+    }).then(res => {
+      socket?.emit("kick", {channelId: selectedChannel, target: targetId});
+    });
+    // console.log(res.data);
+  }
+
   return (
     <div className='player' key={Math.random()}>
       <p>{props.user?.name} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p> 
@@ -41,7 +59,7 @@ function Player(props : props) {
         <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 
               {(props.user.role !== 'admin' && props.user.role !== 'owner') ?
                   <>
-                    <button>Kick</button>
+                    <button onClick={e => handleKick(props.user.id)}>Kick</button>
                     <button>Ban</button>
                     <button>Mute</button>
                   </>

@@ -1,26 +1,20 @@
-import { Socket } from 'socket.io-client';
-import Join from '../Join/Join';
-import Leave from '../Leave/Leave';
-import { Menu, MenuButton } from '@szhsin/react-menu';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
-import { getSelectedChannel, setSelectedChannel } from '../../../Redux/chatSlice';
+import { getChannels } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
 import { useState } from 'react';
 import './Manage.scss';
 import axios from 'axios';
 
 interface props {
-    socket: Socket | undefined;
     channel: any;
-    channels: any;
     setToggleMenu: any;
     setManageMode: any;
-    setChannels: any;
 }
 
 function Manage(props: props) {
   const user = useSelector(getUser);
+  const userChannels = useSelector(getChannels);
 
   const [visibility, setVisibility] = useState<string>(props.channel.visibility); // or visibility
   const [password, setPassword] = useState<string>("");
@@ -52,12 +46,12 @@ function Manage(props: props) {
       newPassword: password,
       oldPassword: oldPassword
     }).then(res => {
-      let channels = props.channels;
+      let channels = userChannels;
       props.channel.visibility = visibility;
-      channels[props.channels.find((channel: any) => channel.id === props.channel.id)] = props.channel;
+      channels[userChannels.find((channel: any) => channel.id === props.channel.id)] = props.channel;
       props.setToggleMenu(false);
       props.setManageMode(false);
-    }).catch(err =>         setError("Error: " + err.response.data.message));
+    }).catch(err => setError("Error: " + err.response.data.message));
   }
 
   const handleClose = () => {

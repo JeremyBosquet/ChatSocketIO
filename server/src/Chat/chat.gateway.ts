@@ -110,4 +110,10 @@ export class ChatGateway {
         this.server.in(data.channelId).emit('messageFromServer', data);
     }
 
+    @SubscribeMessage('kick')
+    async kick(@MessageBody() data: {channelId: string, target: string}, @ConnectedSocket() client: Socket): Promise<void> {
+        this.server.in(data.channelId).emit('kickFromChannel', {target: data.target, channelId: data.channelId});
+        this.server.in(data.channelId).emit('updateAllPlayers', await this.chatService.getUsersInfosInChannel(data.channelId));
+    }
+
 }

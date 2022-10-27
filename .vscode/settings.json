@@ -1,24 +1,34 @@
 {
     "sqltools.connections": [
-        {
-            "previewLimit": 50,
-            "server": "45.147.97.2",
-            "port": 5432,
-            "driver": "PostgreSQL",
-            "name": "45.147.97.2",
-            "database": "chat",
-            "username": "jeremy",
-            "password": "jeremy"
-        },
-        {
-            "previewLimit": 50,
-            "server": "45.147.97.2",
-            "port": 5432,
-            "driver": "PostgreSQL",
-            "name": "jeremy",
-            "database": "adonis",
-            "username": "transcendance",
-            "password": "adonis"
-        }
-    ]
+		{
+			"previewLimit": 50,
+			"server": "90.66.192.148",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "90.66.192.148",
+			"database": "chat",
+			"username": "jeremy",
+			"password": "jeremy"
+		},
+		{
+			"previewLimit": 50,
+			"server": "90.66.192.148",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "jeremy",
+			"database": "adonis",
+			"username": "transcendance",
+			"password": "adonis"
+		},
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "test",
+			"database": "trantran",
+			"username": "jerem",
+			"password": "jerem"
+		}
+	]
 }

@@ -26,18 +26,26 @@ export class SendUserDto {
 	@Expose()
 	id: number;
 
-	@IsNotEmpty()
-	@IsBoolean()
-	@Expose()
-	isTwoFactorAuthenticationEnabled: boolean;
+	// @IsNotEmpty()
+	// @IsBoolean()
+	// @Expose()
+	// isTwoFactorAuthenticationEnabled: boolean;
 
-	@IsNotEmpty()
-	@IsBoolean()
-	@Expose()
-	isSecondFactorAuthenticated: boolean;
+	// @IsNotEmpty()
+	// @IsBoolean()
+	// @Expose()
+	// isSecondFactorAuthenticated: boolean;
 
 	@IsNotEmpty()
 	@IsBoolean()
 	@Expose()
 	isLoggedIn : boolean;
+}
+
+export class FriendsDto {
+
+	@IsNotEmpty()
+	@IsString()
+	@Expose()
+	uuid: string;
 }

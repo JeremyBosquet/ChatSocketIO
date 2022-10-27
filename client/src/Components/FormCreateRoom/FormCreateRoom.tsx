@@ -30,7 +30,7 @@ function FormCreateRoom(props : props) {
       return ;
     }
     console.log(e.target.name.value)
-    axios.post(`http://45.147.97.2:5000/api/room/createRoom`, { name: roomName, nbPlayers: NbPlayers, owner: Owner, status: Status, settings:  { defaultSpeed: defaultSpeed, defaultDirection: defaultDirection, boardWidth: boardWidth, boardHeight: boardHeight, ballRadius: ballRadius }})
+    axios.post(`http://90.66.192.148:7000/api/room/createRoom`, { name: roomName, nbPlayers: NbPlayers, owner: Owner, status: Status, settings:  { defaultSpeed: defaultSpeed, defaultDirection: defaultDirection, boardWidth: boardWidth, boardHeight: boardHeight, ballRadius: ballRadius }})
     .then(res => {
       console.log("success");
       props.socket?.emit('roomCreated');

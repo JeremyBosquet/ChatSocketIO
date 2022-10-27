@@ -8,9 +8,8 @@ import { UserModel } from './typeorm/user.entity';
 import entities from './typeorm';
 import { UsersModule } from './users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtModule } from '@nestjs/jwt';
 import { join } from 'path/posix';
-import { string } from 'joi';
 import { UsersService } from './users/users.service';
 import { AppService } from './app.service';
 import { JwtStrategy } from './login/jwt.strategy';
@@ -21,9 +20,7 @@ import { ChatModule } from './Chat/chat.module';
 import { Channel } from './Chat/Entities/channel.entity';
 import { User } from './Chat/Entities/user.entity';
 import { RoomModule } from './Game/room.module';
-import { Room } from './Game/Entities/room.entity';
-import { RoomGateway } from './Game/room.gateway';
-import { RoomService } from './Game/room.service';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [
@@ -38,7 +35,7 @@ import { RoomService } from './Game/room.service';
 			password: configService.get('DB_PASS'),
 			database: configService.get('DB_NAME'),
 			entities: entities,
-			synchronize: true,
+			synchronize: false,
 			
 		}),
 		inject: [ConfigService],
@@ -62,7 +59,7 @@ import { RoomService } from './Game/room.service';
   RoomModule,
   ],
   controllers: [AppController],
-  providers: [UsersService, AppService, JwtStrategy, JwtTwoFactorStrategy],
+  providers: [UsersService, AppService, JwtStrategy, JwtTwoFactorStrategy, AppGateway],
 //   exports: [AppService],
 })
 

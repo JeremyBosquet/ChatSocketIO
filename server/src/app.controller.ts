@@ -32,7 +32,10 @@ export class AppController {
   private readonly appService : AppService,
   private jwtService: JwtService) {}
 
-
+  @Get('status')
+  async status(@Req() req: any, @Res() res : any) {
+    return res.status(HttpStatus.OK).json({status: 'ok'});
+  }
   @Get('login')
   ft(){
     return (`https://api.intra.42.fr/oauth/authorize?client_id=${process.env.FORTYTWO_CLIENT_ID}&redirect_uri=${process.env.REDIRECT_URI}&response_type=code`);
@@ -85,7 +88,7 @@ export class AppController {
 
     const user = await r2.json() as Profile;
 
-    console.log(user);
+    //console.log(user);
 
     if (user)
       return res.status(HttpStatus.OK).json({
@@ -101,11 +104,11 @@ export class AppController {
     console.log('logout')
     //this.userService.clearDatabase();
     const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-    const User = await this.userService.findUserById(Jwt["id"]);
+    const User = await this.userService.findUserByUuid(Jwt["uuid"]);
     if (User)
     {
-      this.userService.IsntAuthenticated(User.id);
-      this.userService.IsntLoggedIn(User.id);
+      this.userService.IsntAuthenticated(User.uuid);
+      this.userService.IsntLoggedIn(User.uuid);
     }
     req.logOut(function(){return res.status(HttpStatus.OK).json({
       statusCode: HttpStatus.OK,

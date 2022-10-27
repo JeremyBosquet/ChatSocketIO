@@ -1,15 +1,8 @@
 import { useEffect, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
-import { useParams } from 'react-router-dom';
 import GameReady from '../../Components/GameReady/GameReady';
 import GamePlay from '../../Components/GamePlay/GamePlay';
-import axios from 'axios';
-
-/*interface Iready {
-  roomId: string;
-  playerId: string;
-  playerName: string;
-}*/
+import { createNotification } from '../../Components/notif/Notif';
 
 interface IPlayer {
   id: string;
@@ -18,14 +11,6 @@ interface IPlayer {
   status: string;
   x: number;
   y: number;
-}
-
-interface IUsers {
-  id: string;
-  name: string;
-  image: string;
-  createdAt: string;
-
 }
 
 interface IBall {
@@ -72,34 +57,22 @@ function GamePlayingPage() {
   const [playerId, setPlayerId] = useState<string>('');
   const [playerName, setPlayerName] = useState<string>('');
   const [room, setRoom] = useState<IRoom>();
-  const params = useParams();
-
-  const checkRooms = async (e: any) => {
-    const messages = await axios.get(`http://45.147.97.2:5000/api/room/getRooms`);
-    //To delete
-    if (messages?.data) {
-      for (let i = 0; i < messages.data.length; i++) {
-        if (messages.data[i].id === params.id) {
-          return;
-        }
-      }
-      //window.location.href = '/game/';
-    }
-  }
+  const [notification, setNotificaton] = useState<Boolean>(false);
 
   useEffect(() => { // Connect to the socket
-    const newSocket = io('http://45.147.97.2:5002');
+    const newSocket = io('http://90.66.192.148:7002');
     setSocket(newSocket);
-    checkRooms(null);
   }, []);
-  useEffect(() => {
-    if (ready) {
-      const ready = { roomId: params.id, playerId: playerId, playerName: playerName };
-      socket?.emit('iAmReady', ready);
-    }
-  }, [socket, ready, params.id]);
+
   useEffect(() => {
     if (socket) {
+      socket.removeListener('errorRoomIsFull');
+      socket.removeListener('playerReady');
+      socket.removeListener('gameStart');
+      socket.removeListener('playerDisconnected');
+      socket.removeListener('gameEnd');
+      socket.removeListener('gameForceEnd');
+      socket.removeListener('roomUpdated');
       socket.on('errorRoomIsFull', (id: string) => {
         console.log("errorRoomIsFull", id);
         //window.location.href = '/game/';
@@ -118,10 +91,14 @@ function GamePlayingPage() {
         setRoom(data);
         setPlaying(true);
         setReady(false);
+        setNotificaton(false);
       }
       );
       socket.on('playerDisconnected', (data: IRoom) => {
         if (ready) {
+          if (!notification)
+            createNotification("info", "L'autre connard a leave 2");
+          setNotificaton(true);
           console.log("aPlayerDisconnected : ", data);
           if (playing) {
             setPlaying(false);
@@ -134,6 +111,11 @@ function GamePlayingPage() {
       );
       socket.on('gameEnd', (data: IRoom) => {
         console.log("gameEnd", data);
+        if (data.playerA.score === 10 && !notification)
+          createNotification("success", "PlayerA a gagner");
+        else if (data.playerB.score === 10&& !notification)
+          createNotification("success", "PlayerB a gagner");
+        setNotificaton(true);
         setRoom(data);
         setPlaying(false);
         setReady(false);
@@ -141,6 +123,9 @@ function GamePlayingPage() {
       });
       socket.on('gameForceEnd', (data: IRoom) => {
         console.log("gameForceEnd donc erreur 'sorry l'autre connard a crash'", data);
+        if (!notification)
+          createNotification("info", "L'autre connard a leave 3");
+        setNotificaton(true);
         setRoom(data);
         setPlaying(false);
         setReady(false);
@@ -150,7 +135,7 @@ function GamePlayingPage() {
         setRoom(data);
       });
     }
-  }, [socket, ready, playing, room]);
+  }, [socket, ready, playing, room, notification]);
 
   return (
     <div>

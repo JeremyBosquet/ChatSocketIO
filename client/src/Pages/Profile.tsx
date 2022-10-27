@@ -31,7 +31,7 @@ function Profile() {
 	{
 		if (localStorage.getItem('token'))
 		{
-			await axios.get(`http://45.147.97.2:5000/user/getLoggedInfo`, {
+			await axios.get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -43,16 +43,16 @@ function Profile() {
 					console.log(err.message);	
 				});
 				
-				await axios.get(`http://45.147.97.2:5000/user`, {
+				await axios.get(`http://90.66.192.148:7000/user`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
 				}).then((res) => {
-					setUser(JSON.stringify(res.data.User));	
+					setUser(res.data.User);	
 					console.log(res.data.User)
 				}).catch((err) => {
 					console.log(err.message);
-					setUser("{}");
+					setUser(undefined);
 					createNotification('error', 'User not found');
 				});
 		}
@@ -79,7 +79,7 @@ function Profile() {
 						(
 							<div className='userProfile'>
 							{
-								User === "{}" ?
+								User === undefined ?
 								(
 									<div className='userNotFound'>
 										<button onClick={() => navigate("/")}> Home </button>
@@ -89,8 +89,8 @@ function Profile() {
 								:
 
 								<div className='userInfo'>
-									<p> Hello {JSON.parse(User)?.username} </p>
-									<img src={JSON.parse(User)?.image} alt="user_img" width="384" height="256"/><br></br>
+									<p> Hello {User?.username} </p>
+									<img src={User?.image} alt="user_img" width="384" height="256"/><br></br>
 									<button onClick={() => navigate("/")}> Home </button>
 									<button onClick={() => navigate("/logout")}> Logout </button>
 								</div>

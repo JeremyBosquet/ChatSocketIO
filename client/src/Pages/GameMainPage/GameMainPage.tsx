@@ -28,14 +28,14 @@ function GameMainPage() {
   const [rooms, setRooms] = useState<Irooms[]>([]);
 
   const getRooms = async (e : any) => {
-    const messages = await axios.get(`http://45.147.97.2:5000/api/room/getRooms`);
+    const messages = await axios.get(`http://90.66.192.148:7000/api/room/getRooms`);
 
     if (messages?.data) {
       setRooms(messages.data);
     }
   }
   useEffect(() => { // Connect to the socket
-    const newSocket = io('http://45.147.97.2:5002');
+    const newSocket = io('http://90.66.192.148:7002');
     setSocket(newSocket);
     getRooms(null);
     

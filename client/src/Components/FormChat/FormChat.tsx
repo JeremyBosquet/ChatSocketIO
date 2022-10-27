@@ -30,7 +30,7 @@ function FormChat(props : props) {
     } );
 
     props.setJoined(true); // Set the joined room state to true
-    const messages = await axios.get(`http://45.147.97.2:5000/api/chat/messages/` + props.room);
+    const messages = await axios.get(`http://90.66.192.148:7000/api/chat/messages/` + props.room);
 
     if (messages?.data) {
       props.setMessages(messages.data)

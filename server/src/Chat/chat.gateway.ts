@@ -15,7 +15,7 @@ interface IMessage {
     date: string
 }
 
-@WebSocketGateway(5001, { cors: '*:*'})
+@WebSocketGateway(7001, { cors: '*:*'})
 export class ChatGateway {
 
     constructor(private chatService: ChatService) {}

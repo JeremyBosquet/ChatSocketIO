@@ -34,10 +34,10 @@ import { JwtTwoFactorGuard } from './jwt-two-factor.guard';
 	@UseGuards(JwtAuthGuard)
 	async register(@Res() res: Response, @Req() req: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-		const User = await this.userService.findUserById(Jwt["id"]);
+		const User = await this.userService.findUserByUuid(Jwt["uuid"]);
 		if (User)
 		{
-			const { otpauthUrl } = await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(User.id ,User.trueUsername);
+			const { otpauthUrl } = await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(User.uuid ,User.trueUsername);
 			return this.twoFactorAuthenticationService.pipeQrCodeStream(res, otpauthUrl);
 		}
 		return res.status(HttpStatus.NOT_FOUND).json({
@@ -55,7 +55,7 @@ import { JwtTwoFactorGuard } from './jwt-two-factor.guard';
 	@UseGuards(JwtAuthGuard)
 	async turnOnTwoFactorAuthentication (@Req() req : any, @Body() body : string, @Res() res : any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-		const User = await this.userService.findUserById(Jwt["id"]);
+		const User = await this.userService.findUserByUuid(Jwt["uuid"]);
 		if (User)
 		{
 			console.log(body["twoFactorAuthenticationCode"]);
@@ -74,7 +74,7 @@ import { JwtTwoFactorGuard } from './jwt-two-factor.guard';
 					message: "two auth code not valid", 
 					error: "BAD_REQUEST"});
 			}
-			await this.userService.turnOnTwoFactorAuthentication(User.id);
+			await this.userService.turnOnTwoFactorAuthentication(User.uuid);
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
 				message : "succes"});
@@ -89,7 +89,7 @@ import { JwtTwoFactorGuard } from './jwt-two-factor.guard';
 	@UseGuards(JwtTwoFactorGuard)
 	async turnOffTwoFactorAuthentication (@Req() req : any, @Body() body : string, @Res() res : any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-		const User = await this.userService.findUserById(Jwt["id"]);
+		const User = await this.userService.findUserByUuid(Jwt["uuid"]);
 		if (User)
 		{
 			console.log(body["twoFactorAuthenticationCode"]);
@@ -108,7 +108,7 @@ import { JwtTwoFactorGuard } from './jwt-two-factor.guard';
 					message: "two auth code not valid", 
 					error: "BAD_REQUEST"});
 			}
-			await this.userService.turnOffTwoFactorAuthentication(User.id);
+			await this.userService.turnOffTwoFactorAuthentication(User.uuid);
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
 				message : "succes desac"});
@@ -123,7 +123,7 @@ import { JwtTwoFactorGuard } from './jwt-two-factor.guard';
 	@UseGuards(JwtAuthGuard)
 	async authenticate(@Req() req : any, @Body() body : string, @Res() res : any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-		const User = await this.userService.findUserById(Jwt["id"]);
+		const User = await this.userService.findUserByUuid(Jwt["uuid"]);
 		if (User)
 		{
 			if (!body["twoFactorAuthenticationCode"] || body["twoFactorAuthenticationCode"].length != 6)
@@ -144,7 +144,7 @@ import { JwtTwoFactorGuard } from './jwt-two-factor.guard';
 			// const accessTokenCookie = this.authenticationService.getCookieWithJwtAccessToken(User.id, true);
 		
 			// req.res.setHeader('Set-Cookie', [accessTokenCookie]);
-			await this.userService.IsAuthenticated(User.id);
+			await this.userService.IsAuthenticated(User.uuid);
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
 				message : "succes"});

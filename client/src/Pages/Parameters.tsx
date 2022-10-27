@@ -40,7 +40,7 @@ function Parameters() {
 	{
 		if (localStorage.getItem('token'))
 		{
-			await axios.get(`http://45.147.97.2:5000/user/getLoggedInfo`, {
+			await axios.get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -54,16 +54,16 @@ function Parameters() {
 					console.log(err.message);
 					setUser("{}");	
 				});
-				await axios.get(`http://45.147.97.2:5000/user`, {
+				await axios.get(`http://90.66.192.148:7000/user`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
 				}).then((res) => {
-					setUser(JSON.stringify(res.data.User));
+					setUser(res.data.User);
 					console.log(res.data.User);
 				}).catch((err) => {
 					console.log(err.message);
-					setUser("{}");	
+					setUser(undefined);	
 				});
 		}
 		else
@@ -78,7 +78,7 @@ function Parameters() {
 
 	const DeactivatedTwoAuth = async (event : any) => {
 		event.preventDefault();
-		await axios.post(`http://45.147.97.2:5000/2fa/turn-off`, {twoFactorAuthenticationCode :  authCode}, {
+		await axios.post(`http://90.66.192.148:7000/2fa/turn-off`, {twoFactorAuthenticationCode :  authCode}, {
 			headers: ({
 				Authorization: 'Bearer ' + token
 			}),		
@@ -96,7 +96,7 @@ function Parameters() {
 	const ChangeUsername = async (event : any) => {
 		event.preventDefault();
 		console.log(changename);
-		await axios.post(`http://45.147.97.2:5000/user/changeUsername`, {newName : changename}, {
+		await axios.post(`http://90.66.192.148:7000/user/changeUsername`, {newName : changename}, {
 			headers: ({
 				Authorization: 'Bearer ' + token
 			}),
@@ -118,7 +118,7 @@ function Parameters() {
 		console.log(data.get('file'));
 		await axios({
 			method : "post",
-			url : `http://45.147.97.2:5000/user/changeAvatar`,
+			url : `http://90.66.192.148:7000/user/changeAvatar`,
 			data : data,
 			headers: {Authorization: 'Bearer ' + token,
 			'Content-Type': 'multipart/form-data' },
@@ -137,7 +137,7 @@ function Parameters() {
 
 	const GetQrCode = async (event : any) => {
 		event.preventDefault();
-		await axios.post(`http://45.147.97.2:5000/2fa/generate`, {},{
+		await axios.post(`http://90.66.192.148:7000/2fa/generate`, {},{
 			headers: ({
 				Authorization: 'Bearer ' + token
 			}),
@@ -153,7 +153,7 @@ function Parameters() {
 
 	const ActivateTwoAuth = async (event : any) => {
 		event.preventDefault();
-		await axios.post(`http://45.147.97.2:5000/2fa/turn-on`, {twoFactorAuthenticationCode :  authCode},{
+		await axios.post(`http://90.66.192.148:7000/2fa/turn-on`, {twoFactorAuthenticationCode :  authCode},{
 			headers: ({
 				Authorization: 'Bearer ' + token
 			})
@@ -166,7 +166,7 @@ function Parameters() {
 			// createNotification('error', err.response.data.message);
 		});
 
-		await axios.post(`http://45.147.97.2:5000/2fa/authenticate`, {twoFactorAuthenticationCode :  authCode},{
+		await axios.post(`http://90.66.192.148:7000/2fa/authenticate`, {twoFactorAuthenticationCode :  authCode},{
 			headers: ({
 				Authorization: 'Bearer ' + token
 			})
@@ -198,10 +198,10 @@ function Parameters() {
 					(
 						<div>
 						{
-							!(User === "{}") ?
+							!(User === undefined) ?
 							(
 								<div>
-									<p> Current username : {JSON.parse(User).username} </p>
+									<p> Current username : {User.username} </p>
 										<form onSubmit={ChangeUsername}>
 											<p> New Username : &nbsp;
 												<input
@@ -216,7 +216,7 @@ function Parameters() {
 											</p>
 										</form>
 									<p> Current Avatar : 
-										<img src={JSON.parse(User).image} alt="user_img" width="96" height="64"/><br></br>
+										<img src={User.image} alt="user_img" width="96" height="64"/><br></br>
 									</p>
 									<form onSubmit={ChangeAvatar}>
 											<p> New Avatar : &nbsp;

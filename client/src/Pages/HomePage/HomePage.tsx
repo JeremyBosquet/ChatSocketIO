@@ -29,7 +29,7 @@ function HomePage() {
   const [joined, setJoined] = useState<boolean>(false);
 
   useEffect(() => { // Connect to the socket
-    const newSocket = io('http://45.147.97.2:5001');
+    const newSocket = io('http://90.66.192.148:7001');
     setSocket(newSocket);
   }, []);
 

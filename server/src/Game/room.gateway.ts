@@ -23,7 +23,7 @@ interface Iready {
 }
 
 const intervalList = [];
-@WebSocketGateway(5002, { cors: '*:*' })
+@WebSocketGateway(7002, { cors: '*:*' })
 export class RoomGateway {
 
     constructor(private roomService: RoomService) { }
@@ -82,52 +82,35 @@ export class RoomGateway {
                     // Et reboot la manche si y reste des tours
                 }
                 else {
+                    // Check collision with playerA and playerB
                     const playerA = room.playerA;
                     const playerB = room.playerB;
-                    const playerAHitbox = {
-                        x: playerA.x - (settings.boardWidth / 2),
-                        y: playerA.y - (settings.boardHeight / 2),
-                        width: settings.boardWidth,
-                        height: settings.boardHeight
-                    }
-                    const playerBHitbox = {
-                        x: playerB.x - (settings.boardWidth / 2),
-                        y: playerB.y - (settings.boardHeight / 2),
-                        width: settings.boardWidth,
-                        height: settings.boardHeight
-                    }
-                    const ballHitbox = {
-                        x: ball.x - (settings.ballRadius),
-                        y: ball.y - (settings.ballRadius),
-                        width: settings.ballRadius * 2,
-                        height: settings.ballRadius * 2
-                    }
-                    if (ballHitbox.x < playerAHitbox.x + playerAHitbox.width &&
-                        ballHitbox.x + ballHitbox.width > playerAHitbox.x &&
-                        ballHitbox.y < playerAHitbox.y + playerAHitbox.height &&
-                        ballHitbox.height + ballHitbox.y > playerAHitbox.y) {
-                        // collision detected!
-                        console.log("gameLoop - collision detected with playerA");
-                        //ball.direction = Math.atan2(ball.y - playerA.y, ball.x - playerA.x);
-                        ball.direction = Math.atan2(Math.sin(ball.direction), -Math.cos(ball.direction));
+                    const ball = room.ball;
+                    if (ball.x < playerA.x + settings.boardWidth && ball.y > playerA.y && ball.y < playerA.y + settings.boardHeight) {
+                        if (ball.x < playerA.x + settings.boardWidth)
+                            ball.x = playerA.x + settings.boardWidth;
+                        ball.direction = Math.PI - ball.direction;
                         ball.speed += 0.1;
                     }
-                    else if (ballHitbox.x < playerBHitbox.x + playerBHitbox.width &&
-                        ballHitbox.x + ballHitbox.width > playerBHitbox.x &&
-                        ballHitbox.y < playerBHitbox.y + playerBHitbox.height &&
-                        ballHitbox.height + ballHitbox.y > playerBHitbox.y) {
-                        // collision detected!
-                        console.log("gameLoop - collision detected with playerB");
-                        //ball.direction = Math.atan2(ball.y - playerB.y, ball.x - playerB.x);
-                        ball.direction = Math.atan2(Math.sin(ball.direction), -Math.cos(ball.direction));
+                    if (ball.x + settings.ballRadius * 2 > playerB.x && ball.y > playerB.y && ball.y < playerB.y + settings.boardHeight) {
+                        if (ball.x > playerB.x)
+                            ball.x = playerB.x - settings.ballRadius * 2;
+                        ball.direction = Math.PI - ball.direction;
                         ball.speed += 0.1;
                     }
-                    if (ball.y - (settings.ballRadius*2) < 0 || ball.y + (settings.ballRadius *2) > 100) {
-                        ball.direction = Math.atan2(-Math.sin(ball.direction), Math.cos(ball.direction));
+                    if (ball.y + (settings.ballRadius * 2) <= 0 || ball.y + (settings.ballRadius * 2) >= 100) {
+                        if (ball.y + (settings.ballRadius * 2) <= 0) {
+                            ball.y = 0 + (settings.ballRadius * 2);
+                        }
+                        else {
+                            ball.y = 100 - (settings.ballRadius * 2);
+                        }
+                        ball.direction = -ball.direction;
                     }
-                    // check collision with top and bottom
-                    ball.x += Math.cos(ball.direction) * ball.speed;
-                    ball.y += Math.sin(ball.direction) * ball.speed;
+                    ball.x += ball.speed * Math.cos(ball.direction);
+                    ball.y += ball.speed * Math.sin(ball.direction);
+                    room.ball = ball;
+                    await this.roomService.save(room);
                 }
 /*
                 if (ball.y + (settings.ballRadius) < 0) {
@@ -142,14 +125,16 @@ export class RoomGateway {
                 room.ball = ball;
                 console.log("ball :", ball);
                 this.server.in('room-' + room.id).emit('ballMovement', room);
+                room.lastActivity = Date.now();
                 await this.roomService.save(room);
             }
         }
 
     }
-    @SubscribeMessage('iAmReady')
+    /*@SubscribeMessage('iAmReady')
     async playerReady(@ConnectedSocket() client: Socket, @MessageBody() data: Iready): Promise<void> {
         const room = await this.roomService.getRoom(data.roomId);
+        console.log("uwu");
         try {
             await this.roomService.addPlayer(room, data.playerId, data.playerName);
             //this.server.emit('playerReady', room);
@@ -193,7 +178,7 @@ export class RoomGateway {
             else
                 console.log("error - room is undefined");
         }
-    }
+    }*/
 
     @SubscribeMessage('searching')
     async searching(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
@@ -202,7 +187,7 @@ export class RoomGateway {
             const rooms = await this.roomService.getRooms();
             if (rooms.length == 0) {
                 console.log("new Room");
-                const newRoom = { id: uuidv4(), configurationA: null, configurationB: null, name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI, background: null } };
+                const newRoom = { id: uuidv4(), configurationA: null, configurationB: null, name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI, background: null }, lastActivity: Date.now()};
                 await this.roomService.save(newRoom);
                 const room = await this.roomService.getRoom(newRoom.id);
                 await client.join('room-' + newRoom.id);
@@ -221,7 +206,7 @@ export class RoomGateway {
                         if (room.nbPlayers == 0) {
                             this.roomService.removeFromID(room.id);
                         }
-                        else if (room.nbPlayers == 1 && room?.playerA?.id != data?.id && room?.playerB?.id != data?.id) {
+                        else if (room.nbPlayers == 1 /*&& room?.playerA?.id != data?.id && room?.playerB?.id != data?.id*/) {
                             // join room
                             await client.join('room-' + room.id);
                             client.data.roomId = room.id;
@@ -229,24 +214,25 @@ export class RoomGateway {
                             // Passer la game en configuration
                             await this.server.in('room-' + room.id).emit('searching-' + data.id, room);
                             try {
-                                await this.roomService.addPlayer(room, data?.id, data?.name);
+                                await this.roomService.addPlayer(room, data?.id, data?.name); // re foutre la secu pour double joueur
                                 const _room = await this.roomService.getRoom(room.id);
                                 _room.status = "configuring";
                                 await this.server.in('room-' + room.id).emit('configuring', _room);
                                 await this.roomService.save(_room);
+                                roomFound = true;
+                                return;
                             }
                             catch (error) {
                                 //faut gerer les throw ici 
+                                console.log("player already in a room")
                             }
-                            roomFound = true;
-                            return;
                         }
                     }
                 }
                 if (!roomFound) {
                     // create room
                     console.log("new Room, because all full");
-                    const newRoom = { id: uuidv4(), configurationA: null, configurationB: null, name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI, background: null } };
+                    const newRoom = { id: uuidv4(), configurationA: null, configurationB: null, name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI, background: null }, lastActivity: Date.now() };
                     await this.roomService.save(newRoom);
                     const _room = await this.roomService.getRoom(newRoom.id);
                     // console.log("ou crash ici : ");
@@ -351,13 +337,14 @@ export class RoomGateway {
             //console.log("room emit received", Math.random());
             if (room && room?.status === "playing" && data?.id && data?.x != undefined && data?.y) {
                 if ("playerA" === data.id) {
-                    room.playerA.x = data.x;
+                    room.playerA.x = 15 - room.settings.boardWidth;
                     room.playerA.y = data.y;
                 }
                 else if ("playerB" === data.id) {
-                    room.playerB.x = data.x;
+                    room.playerB.x = 85 - room.settings.boardWidth;
                     room.playerB.y = data.y;
                 }
+                room.lastActivity = Date.now();
                 const _room = await this.roomService.save(room);
                 this.server.to('room-' + room?.id).emit('playerMovement', _room);
             }
@@ -384,6 +371,7 @@ export class RoomGateway {
                 console.log("updateConfirugationB - difficulty", data);
                 room.configurationB = data;
             }
+            room.lastActivity = Date.now();
             const _room = await this.roomService.save(room);
             this.server.in('room-' + room?.id).emit('configurationUpdated', _room);
         }
@@ -430,15 +418,16 @@ export class RoomGateway {
                 _room.settings.defaultDirection = Math.random() * Math.PI * 2;
                 _room.ball.direction = _room.settings.defaultDirection;
                 _room.settings.ballRadius = 1;
-                _room.settings.boardWidth = 1;
-                _room.settings.boardHeight = 10;
+                _room.settings.boardWidth = 2.5;
+                _room.settings.boardHeight = 15;
                 _room.ball.speed = _room.settings.defaultSpeed;
                 _room.status = "playing";
-                _room.playerA.x = 5;
+                _room.playerA.x = 15 - _room.settings.boardWidth;
                 _room.playerA.y = 50;
-                _room.playerB.x = 0;
+                _room.playerB.x = 15 - _room.settings.boardWidth;
                 _room.playerB.y = 50;
                 intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 250);
+                room.lastActivity = Date.now();
                 await this.roomService.save(_room)
                 this.server.in('room-' + _room?.id).emit('gameStart', _room);
                 this.server.in('room-' + _room?.id).emit('playerReady', _room);

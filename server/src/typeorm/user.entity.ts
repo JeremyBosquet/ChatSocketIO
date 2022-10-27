@@ -4,9 +4,17 @@ import {
     Column,
     PrimaryGeneratedColumn,
     CreateDateColumn,
+	OneToMany,
+	OneToOne,
+	JoinColumn,
 } from 'typeorm';
 
 import { Exclude, Expose } from 'class-transformer';
+
+export interface Ifriends
+{
+	uuid : string;
+}
 
 @Entity({name: "users"})
 export class UserModel {
@@ -31,7 +39,7 @@ export class UserModel {
 	@Expose()
 	id : number;
 
-	@Column()
+	@Column({nullable : true})
 	@Exclude()
 	twoFactorAuthenticationSecret: string;
 
@@ -50,4 +58,24 @@ export class UserModel {
     @CreateDateColumn()
 	@Exclude()
     createdAt: Date;
+
+	@Column({nullable : true, type: 'jsonb'})
+	@Exclude()
+    friendRequest : Ifriends[];
+
+	@Column({nullable : true, type: 'jsonb'})
+	@Exclude()
+    friendsNotacceptedYet : Ifriends[];
+
+	@Column({nullable : true, type: 'jsonb'})
+	@Exclude()
+    friends : Ifriends[];
+
+	@Column({nullable : true, type: 'jsonb'})
+	@Exclude()
+    blocked : Ifriends[];
+
+	@Column({nullable : true, type: 'jsonb'})
+	@Exclude()
+    blockedby : Ifriends[];
 }

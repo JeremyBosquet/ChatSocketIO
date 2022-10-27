@@ -7,7 +7,7 @@ import { UserModel } from "./user.entity";
 
 const entities = [UserModel, Chat, Channel, User, Room];
 
-export const secret = 's038-pwpppwpeok-dffMjfjriru44030423-edmmfvnvdmjrp4l4k';
+//export const secret = 's038-pwpppwpeok-dffMjfjriru44030423-edmmfvnvdmjrp4l4k';
 
 export {UserModel};
 export default entities;

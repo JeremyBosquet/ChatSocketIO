@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
+import { createNotification } from "../notif/Notif";
 /*
   Check if player search on another tab
 */
@@ -9,13 +10,6 @@ interface props {
   setReady: (ready: boolean) => void;
   setPlayerId: (playerId: string) => void;
   setPlayerName: (playerName: string) => void;
-}
-
-interface IUsers {
-  id: string;
-  name: string;
-  image: string;
-  createdAt: string;
 }
 
 interface IPlayer {
@@ -55,12 +49,6 @@ interface IConfiguration {
   background: string;
   confirmed: boolean;
 }
-interface ICanvasBoard {
-  x: number;
-  y: number;
-  id: string;
-}
-
 interface IBall {
   x: number;
   y: number;
@@ -68,16 +56,7 @@ interface IBall {
   direction: number;
 }
 
-interface ICanvasBall {
-  x: number;
-  y: number;
-  id: string;
-}
-
 function GameReady(props: props) {
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
-  const [User, setUser] = useState<string>("");
   const [searching, setSearching] = useState<boolean>(false);
   const [searchingDisplay, setSearchingDisplay] = useState<boolean>(false);
   const [room, setRoom] = useState<IRoom>();
@@ -86,6 +65,8 @@ function GameReady(props: props) {
   const [configuringDisplay, setConfiguringDisplay] = useState<boolean>(false);
   const [settings, setSettings] = useState<IConfiguration>();
   const [settingsBis, setSettingsBis] = useState<IConfiguration>();
+  const [notification, setNotificaton] = useState<Boolean>(false);
+
   // const [propsOn, setPropsOn] = useState<boolean>(false);
 
   
@@ -99,16 +80,23 @@ function GameReady(props: props) {
       props.socket?.on("searching-" + tmpUser.id, (data: IRoom) => {
         console.log("receive searching", data);
         setSearchingDisplay(true);
+
+        setNotificaton(false);
         setRoom(data);
       });
       props.socket?.emit("searching", tmpUser);
 
     }
-  }, [searching, tmpUser, tmpUserBoolean]);
+  }, [searching, tmpUser, tmpUserBoolean, props.socket]);
   //useEffect(() => {
   //if (!propsOn) {
   //  console.log("propsOn");
   //setPropsOn(true);
+  useEffect(() => {
+  props.socket?.removeListener("configuring");
+  props.socket?.removeListener("configurationUpdated");
+  props.socket?.removeListener("playerLeave");
+
   props.socket?.on("configuring", (data: IRoom) => {
     console.log("receive configuring", data);
     setSearchingDisplay(false);
@@ -123,16 +111,19 @@ function GameReady(props: props) {
   });
   props.socket?.on("playerLeave", (any) => {
     console.log("receive cancelSearching");
+      createNotification("info", "L'autre connard a leave 1");
+    setNotificaton(true);
     setSearchingDisplay(true);
     setSearching(true);
     setTmpUserBoolean(true);
     setConfiguringDisplay(false);
   });
+}, [notification, tmpUser, tmpUserBoolean, searching, searchingDisplay, configuringDisplay, props.socket]);
   // }
   //}, [propsOn, props.socket, User, searchingDisplay, configuringDisplay, searching, tmpUserBoolean, settingsBis, settings, room, tmpUser, error, success]);
  
   const getUser = async () => {
-    const messages = await axios.get(`http://45.147.97.2:5000/user`, {
+    const messages = await axios.get(`http://90.66.192.148:7000/user`, {
       headers: ({
         Authorization: 'Bearer ' + localStorage.getItem('token'),
       })
@@ -148,10 +139,10 @@ function GameReady(props: props) {
     getUser();
   }, []);
   async function handleReady() {
-    console.log("hey");
     console.log("hey", tmpUser);
     props.setPlayerId(tmpUser.id);
     props.setPlayerName(tmpUser.name);
+    setNotificaton(false);
     setSearching(true);
   }
   return (
@@ -239,8 +230,6 @@ function GameReady(props: props) {
           </div>
         </div>) : (null)}
       <div>
-        {error ? <p>{error}</p> : null}
-        {success ? <p>{success}</p> : null}
       </div>
     </div>
   );

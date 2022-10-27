@@ -21,12 +21,12 @@ export class TwoFactorAuthenticationService {
     })
   }
 
-  public async generateTwoFactorAuthenticationSecret(userId : number, trueUsername : string) {
+  public async generateTwoFactorAuthenticationSecret(userUuid : string, trueUsername : string) {
     const secret = authenticator.generateSecret();
  
     const otpauthUrl = authenticator.keyuri(trueUsername, this.configService.get('TWO_FACTOR_AUTHENTICATION_APP_NAME'), secret);
  
-    await this.usersService.setTwoFactorAuthenticationSecret(secret, userId);
+    await this.usersService.setTwoFactorAuthenticationSecret(secret, userUuid);
  
     return {
       secret,

@@ -9,7 +9,7 @@ import {
 export class AuthModel {
 
     @Column()
-    userId : number;
+    userUuid : string;
 
     @Column()
     isSecondFactorAuthenticated: boolean;

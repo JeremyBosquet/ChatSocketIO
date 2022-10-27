@@ -49,6 +49,8 @@ export class Room {
 
     @Column({nullable: true, type: 'jsonb'})
     configurationB: IConfiguration;
-    //@CreateDateColumn()
+
+    @Column({nullable: true, type: 'bigint'})
+    lastActivity: number;
     //createdAt: Date;
 }

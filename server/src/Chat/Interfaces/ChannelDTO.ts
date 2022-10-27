@@ -1,5 +1,5 @@
 import { IChannelUser } from "./User";
-import { IsUUID, IsNotEmpty, MinLength, MaxLength, IsDateString } from 'class-validator';
+import { IsUUID, IsNotEmpty, IsDateString } from 'class-validator';
 
 export class editChannelPasswordDTO {
     @IsUUID()
@@ -54,6 +54,9 @@ export class CreateChannelDTO {
     @IsNotEmpty()
     visibility: string;
 
+    mutes: any;
+    bans: any;
+
     password: string;
     users: string;
 }
@@ -86,6 +89,9 @@ export class BanPlayerDTO {
     
     @IsUUID()
     target: string;
+
+    @IsNotEmpty()
+    isPermanent: boolean;
 
     @IsDateString()
     time: string;

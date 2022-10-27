@@ -37,9 +37,6 @@ function Player(props : props) {
   }, [props.usersConnected])
 
   const handleKick = async (targetId: string) => {
-    console.log({channelId: selectedChannel,
-      target: targetId,
-      admin: me.id});
     await axios.post(`http://localhost:4000/api/chat/channel/kick/`, {
       channelId: selectedChannel,
       target: targetId,
@@ -47,7 +44,22 @@ function Player(props : props) {
     }).then(res => {
       socket?.emit("kick", {channelId: selectedChannel, target: targetId});
     });
-    // console.log(res.data);
+  }
+
+  const handleBan = async (targetId: string) => {
+    let duration = new Date().toISOString();
+    console.log(duration)
+    let permanent = false;
+
+    await axios.post(`http://localhost:4000/api/chat/channel/ban/`, {
+      channelId: selectedChannel,
+      target: targetId,
+      admin: me.id,
+      time: duration.toString(),
+      isPermanent: permanent
+    }).then(res => {
+      socket?.emit("kick", {channelId: selectedChannel, target: targetId});
+    });
   }
 
   return (
@@ -60,7 +72,7 @@ function Player(props : props) {
               {(props.user.role !== 'admin' && props.user.role !== 'owner') ?
                   <>
                     <button onClick={e => handleKick(props.user.id)}>Kick</button>
-                    <button>Ban</button>
+                    <button onClick={e => handleBan(props.user.id)}>Ban</button>
                     <button>Mute</button>
                   </>
                 : null

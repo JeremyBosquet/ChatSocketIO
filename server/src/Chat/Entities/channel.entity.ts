@@ -30,6 +30,12 @@ export class Channel {
     @Column({type: 'jsonb'})
     messages: any;
 
+    @Column({type: 'jsonb'})
+    mutes: any;
+
+    @Column({type: 'jsonb'})
+    bans: any;
+
     @CreateDateColumn()
     createdAt: Date;
 

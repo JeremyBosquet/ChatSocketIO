@@ -68,7 +68,7 @@ function FormCreateChannel() {
       }
     ]
 
-    axios.post('http://localhost:4000/api/chat/channel', { name: channelName, owner: user, visibility: visibility, password: password, users: defaultUsers, messages: [] })
+    axios.post('http://localhost:4000/api/chat/channel', { name: channelName, owner: user, visibility: visibility, password: password, users: defaultUsers, messages: [], mutes: [], bans: [] })
     .then((res : any) => {
         if (res.data ) {
         setSuccess("Success: channel " + channelName + " is created.");

@@ -53,45 +53,33 @@ function ChatChannel() {
     getChannel();
   }, [socket, selectedChannel, user.id])
 
-  useEffect(() => { // Event listener from socket server
+  const getUsersChannel = async (userId: any) => {
+    await axios.get("http://localhost:4000/api/chat/channels/user/" + userId)
+    .then((res) => {
+        if (res)
+          dispatch(setChannels(res.data));
+    })
+  }
 
-    const getUsersChannel = async (userId: any) => {
-      await axios.get("http://localhost:4000/api/chat/channels/user/" + userId)
-      .then((res) => {
-          if (res)
-            dispatch(setChannels(res.data));
-      })
-    }
+  socket?.on('messageFromServer', (message: Imessage) => {
+    setMessages([...messages, message]);
+  });
 
-    socket?.on('messageFromServer', (message: Imessage) => {
-      setMessages([...messages, message]);
-    });
+  socket?.on('usersConnected', (usersConnected: Iuser[]) => {
+    setUsersConnected(usersConnected);
+  });
 
-    socket?.on('usersConnected', (usersConnected: Iuser[]) => {
-      setUsersConnected(usersConnected);
-    });
+  socket?.on('updateAllPlayers', (usersDb: IuserDb[]) => {
+    setUsers(usersDb);
+  });
 
-    socket?.on('updateAllPlayers', (usersDb: IuserDb[]) => {
-      setUsers(usersDb);
-    });
-
-    socket?.on('kickFromChannel', (data: {target: string, channelId: string}) => {
-      if (data.target === user.id)
-      {
-        console.log("You have been kicked from the channel");
-        if (selectedChannel === data.channelId)
-        {
-          socket?.emit('leavePermanant', { userId: user.id, channelId: data.channelId });
-          getUsersChannel(user.id);
-          if (selectedChannel === data.channelId)
-              dispatch(setSelectedChannel(""));
-        }
-      }
-    });
-    // eslint-disable-next-line
-  }, [socket, messages]);
-
-
+  socket.on('kickFromChannel', (data: {target: string, channelId: string, message: string}) => {
+    socket?.emit('leavePermanant', { userId: user.id, channelId: data.channelId });
+    getUsersChannel(user.id);
+    if (selectedChannel === data.channelId)
+        dispatch(setSelectedChannel(""));
+    // use message to display a message to the user
+  });
   return (
     <>
       <div>

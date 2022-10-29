@@ -16,10 +16,16 @@ function ChatPage() {
     const dispatch = useDispatch();
 
 	useEffect(() => { // Connect to the socket
-		const newSocket = io('http://localhost:4001');
-		dispatch(setSocket(newSocket));
+		if (logged)
+		{
+			const newSocket = io('http://localhost:4001');
+			dispatch(setSocket(newSocket));
+			newSocket.on('connect', () => {
+				newSocket.emit("connected", {userId: user.id});
+			});
+		}
 		//eslint-disable-next-line
-	}, []);
+	}, [logged]);
 
 	const changeMode = (newMode: string) => {
 		if (newMode === mode)

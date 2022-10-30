@@ -1,10 +1,11 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
 import { getChannels } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
 import { useState } from 'react';
 import './Manage.scss';
 import axios from 'axios';
+import { setChannels } from '../../../Redux/chatSlice';
 
 interface props {
     channel: any;
@@ -19,6 +20,8 @@ function Manage(props: props) {
   const [visibility, setVisibility] = useState<string>(props.channel.visibility); // or visibility
   const [password, setPassword] = useState<string>("");
   const [oldPassword, setOldPassword] = useState<string>("");
+
+  const dispatch = useDispatch();
 
   const [error, setError] = useState<string>("");
 
@@ -47,11 +50,15 @@ function Manage(props: props) {
       oldPassword: oldPassword
     }).then(res => {
       let channels = userChannels;
-      props.channel.visibility = visibility;
-      channels[userChannels.find((channel: any) => channel.id === props.channel.id)] = props.channel;
+      const newChannel = {...props.channel, visibility: visibility};
+      const newChannels = channels.map((channel: any) => channel.id === props.channel.id ? newChannel : channel);
+      dispatch(setChannels(newChannels));
+      // channels[userChannels.find((channel: any) => channel.id === props.channel.id)] = newChannel;
       props.setToggleMenu(false);
       props.setManageMode(false);
-    }).catch(err => setError("Error: " + err.response.data.message));
+    }).catch(err => {
+      setError("Error: " + err)
+    });
   }
 
   const handleClose = () => {
@@ -68,16 +75,16 @@ function Manage(props: props) {
         </div>
         <div className="manageVisibilityChoice">
           <p>Change visibility</p>
-          <div className="manageVisibilityItem" onClick={e => setVisibility("private")}>
-            <input type="checkbox" name="Private" value="private" checked={visibility === "private"}/>
+          <div className="manageVisibilityItem" >
+            <input type="checkbox" name="Private" value="private" onChange={e => setVisibility("private")} checked={visibility === "private"}/>
             <label>Private</label>
           </div>
-          <div className="manageVisibilityItem" onClick={e => setVisibility("protected")}>
-            <input type='checkbox' name="Protected" value="protected" checked={visibility === "protected"} />
+          <div className="manageVisibilityItem" >
+            <input type='checkbox' name="Protected" value="protected" onChange={e => setVisibility("protected")} checked={visibility === "protected"} />
             <label>Protected</label>
           </div>
-          <div className="manageVisibilityItem" onClick={e => setVisibility("public")}>
-            <input type="checkbox" name="Public" value="public" checked={visibility === "public"} />
+          <div className="manageVisibilityItem">
+            <input type="checkbox" name="Public" value="public" onChange={e => setVisibility("public")} checked={visibility === "public"} />
             <label>Public</label>
           </div>
         </div>

@@ -15,6 +15,12 @@ export class AppGateway {
         return ;
     }
 
+	@SubscribeMessage('acceptFriend')
+    async acceptFriend(@MessageBody() data: any, @ConnectedSocket() client: any): Promise<WsResponse<any>> {
+        this.server.emit('friendAccepted', {uuid: data.uuid, username: ((await this.UsersService.findUserByUuid(data.myUUID)).username)});
+        return ;
+    }
+
 	@SubscribeMessage('CancelFriendAdd')
     async CancelFriendAdd(@MessageBody() data: any, @ConnectedSocket() client: any): Promise<WsResponse<any>> {
         this.server.emit('CancelFriend', {uuid: data.uuid, username: ((await this.UsersService.findUserByUuid(data.myUUID)).username)});

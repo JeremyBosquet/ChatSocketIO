@@ -15,6 +15,7 @@ import TwoAuth from "./Pages/TwoAuth";
 import GamePlayingPage from "./Pages/GamePlayingPage/GamePlayingPage";
 import axios from "axios";
 import Social from "./Pages/Social";
+import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 
 function App() {
 	const [APIStatus, setAPIStatus] = useState<boolean>(true);
@@ -49,7 +50,8 @@ function App() {
 					<Route path="/twoAuth" element={<TwoAuth />}></Route>
 					<Route path="/social" element={<Social />}></Route>
 					<Route path="/game/" element={<GamePlayingPage />}></Route>
-					<Route path="/game/:id" element={<GamePlayingPage />}></Route>
+					<Route path="/game/spectate" element={<GameSpectatePage />}></Route>
+					<Route path="/game/spectate/:roomId" element={<GameSpectatePage />}></Route>
 				</Routes>
 			) : (
 				<Routes>

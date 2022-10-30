@@ -39,6 +39,10 @@ export class RoomService {
     this.clearDatabase();
 
   }
+  
+  async getRoomSpectates(): Promise<Room[]> {
+    return await (await this.roomRepository.find()).filter(room => room.status == "playing");
+  }
   async getRooms(): Promise<Room[]> {
     return await this.roomRepository.find();
   }

@@ -55,8 +55,8 @@ export class RoomGateway {
             }
             else if (room.status === "playing") {
                 const ball = room.ball;
-                console.log("gameLoop - playing", settings);
-                if (ball.x + (settings.ballRadius) < 0 || ball.x + (settings.ballRadius) > 100) {
+                console.log("gameLoop - playing", room.playerA);
+                if (ball.x < 0 || ball.x + (settings.ballRadius) > 100) {
                     if (ball.x + (settings.ballRadius) < 0) {
                         room.playerB.score += 1;
                     }
@@ -64,6 +64,7 @@ export class RoomGateway {
                         room.playerA.score += 1;
                     }
                     if (room.playerA.score >= 10 || room.playerB.score >= 10) {
+                        this.server.emit('roomFinished', room);
                         room.status = "finished";
                         this.server.in('room-' + room.id).emit('gameEnd', room);
                         this.roomService.save(room);
@@ -86,42 +87,45 @@ export class RoomGateway {
                     const playerA = room.playerA;
                     const playerB = room.playerB;
                     const ball = room.ball;
-                    if (ball.x < playerA.x + settings.boardWidth && ball.y > playerA.y && ball.y < playerA.y + settings.boardHeight) {
-                        if (ball.x < playerA.x + settings.boardWidth)
-                            ball.x = playerA.x + settings.boardWidth;
-                        ball.direction = Math.PI - ball.direction;
-                        ball.speed += 0.1;
-                    }
-                    if (ball.x + settings.ballRadius * 2 > playerB.x && ball.y > playerB.y && ball.y < playerB.y + settings.boardHeight) {
-                        if (ball.x > playerB.x)
-                            ball.x = playerB.x - settings.ballRadius * 2;
-                        ball.direction = Math.PI - ball.direction;
-                        ball.speed += 0.1;
-                    }
-                    if (ball.y + (settings.ballRadius * 2) <= 0 || ball.y + (settings.ballRadius * 2) >= 100) {
-                        if (ball.y + (settings.ballRadius * 2) <= 0) {
-                            ball.y = 0 + (settings.ballRadius * 2);
+                    let speed = ball.speed;
+                    while (speed >= 0) {
+                        ball.x += (speed * 0.05) * Math.cos(ball.direction);
+                        ball.y += (speed * 0.05) * Math.sin(ball.direction);
+                        speed -= 0.1;
+                        if (ball.x + (settings.ballRadius) > playerA.x && ball.x - (settings.ballRadius) < playerA.x + settings.boardWidth && ball.y > playerA.y && ball.y < playerA.y + settings.boardHeight) {
+                            console.log("gameLoop - collision with playerA");
+                            //ball.x = playerA.x - settings.boardWidth;
+                            ball.direction = Math.PI - ball.direction;
+                            ball.x += (speed) * Math.cos(ball.direction);
+                            ball.y += (speed) * Math.sin(ball.direction);
+                            speed = -1;
+                            ball.speed += 0.15;
                         }
-                        else {
-                            ball.y = 100 - (settings.ballRadius * 2);
+                        if (ball.x - settings.ballRadius < playerB.x + settings.boardWidth && ball.x + settings.ballRadius > playerB.x && ball.y > playerB.y && ball.y < playerB.y + settings.boardHeight) {
+                            console.log("gameLoop - collision with playerB");
+                            //ball.x = playerB.x + settings.ballRadius;
+                            ball.direction = Math.PI - ball.direction;
+                            ball.x += (speed) * Math.cos(ball.direction);
+                            ball.y += (speed) * Math.sin(ball.direction);
+                            speed = -1;
+                            ball.speed += 0.15;
                         }
-                        ball.direction = -ball.direction;
+                        if (ball.y - (settings.ballRadius * 0.75) <= 0 || ball.y + (settings.ballRadius * 1.5) >= 100) {
+                            console.log("gameLoop - collision top or bottom");
+                            if (ball.y < 0) {
+                                ball.y = 0 + (settings.ballRadius);
+                            }
+                            else if (ball.y + (settings.ballRadius) > 100) {
+                                ball.y = 100 - (settings.ballRadius);
+                            }
+                            ball.direction = -ball.direction;
+                            ball.x += (speed) * Math.cos(ball.direction);
+                            ball.y += (speed) * Math.sin(ball.direction);
+                            speed = -1;
+                            ball.speed += 0.15;
+                        }
                     }
-                    ball.x += ball.speed * Math.cos(ball.direction);
-                    ball.y += ball.speed * Math.sin(ball.direction);
-                    room.ball = ball;
-                    await this.roomService.save(room);
                 }
-/*
-                if (ball.y + (settings.ballRadius) < 0) {
-                     ball.y = 0 + (settings.ballRadius);
-                     ball.direction = -ball.direction;
-                 }
-                 if (ball.y - (settings.ballRadius) > 100) {
-                     ball.y = 100 - (settings.ballRadius);
-                     ball.direction = -ball.direction;
-                 }*/
-
                 room.ball = ball;
                 console.log("ball :", ball);
                 this.server.in('room-' + room.id).emit('ballMovement', room);
@@ -169,7 +173,7 @@ export class RoomGateway {
                     //room.status = "playing";
                     //intervalList[room.id] = setInterval(this.gameLoop, 100, room);
                     intervalList[room.id] = setInterval(() => this.gameLoop(room), 200);
-                }
+                }x
                 // Lance un qui va tout faire fonctionner
                 //clearInterval(intervalList[room.id]);
                 this.roomService.save(room);
@@ -180,6 +184,25 @@ export class RoomGateway {
         }
     }*/
 
+    @SubscribeMessage('joinRoomSpectate')
+    async joinRoomSpectate(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
+        console.log("uwu");
+        if (data?.roomId) {
+            const room = await this.roomService.getRoom(data.roomId);
+            if (room) {
+                console.log("joinRoomSpectate -", room.id, room.nbPlayers);
+                await client.join('room-' + room.id);
+                console.log("rooms : ", client.rooms);
+                client.data.roomId = data.roomId;
+                client.data.playerId = data.playerId;
+                this.server.in('room-' + room.id).emit('gameInit', room);
+            }
+            else
+            {
+                this.server.in(client.id).emit('errorRoomNotFound', client.data?.playerId);
+            }
+        }
+    }
     @SubscribeMessage('searching')
     async searching(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
         console.log("call");
@@ -187,7 +210,7 @@ export class RoomGateway {
             const rooms = await this.roomService.getRooms();
             if (rooms.length == 0) {
                 console.log("new Room");
-                const newRoom = { id: uuidv4(), configurationA: null, configurationB: null, name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI, background: null }, lastActivity: Date.now()};
+                const newRoom = { id: uuidv4(), configurationA: null, configurationB: null, name: data?.name + "-room", nbPlayers: 0, owner: data?.id, playerA: null, playerB: null, status: "waiting", ball: { x: 50, y: 50, direction: 0, speed: 0.5 }, settings: { boardWidth: 1, boardHeight: 10, ballRadius: 1, defaultSpeed: 0.2, defaultDirection: Math.random() * 2 * Math.PI, background: null }, lastActivity: Date.now() };
                 await this.roomService.save(newRoom);
                 const room = await this.roomService.getRoom(newRoom.id);
                 await client.join('room-' + newRoom.id);
@@ -313,6 +336,7 @@ export class RoomGateway {
                 room.nbPlayers--;
                 this.server.to('room-' + room.id).emit('playerDisconnected', room);
                 if (room.status == "playing") {
+                    this.server.emit('roomFinished', room);
                     this.server.to('room-' + room.id).emit('gameForceEnd', room);
                     if (intervalList[room.id])
                         clearInterval(intervalList[room.id]);
@@ -337,11 +361,11 @@ export class RoomGateway {
             //console.log("room emit received", Math.random());
             if (room && room?.status === "playing" && data?.id && data?.x != undefined && data?.y) {
                 if ("playerA" === data.id) {
-                    room.playerA.x = 15 - room.settings.boardWidth;
+                    room.playerA.x = 15;
                     room.playerA.y = data.y;
                 }
                 else if ("playerB" === data.id) {
-                    room.playerB.x = 85 - room.settings.boardWidth;
+                    room.playerB.x = 85;
                     room.playerB.y = data.y;
                 }
                 room.lastActivity = Date.now();
@@ -355,7 +379,10 @@ export class RoomGateway {
     @SubscribeMessage('ballMove')
     async handleBallMove(@ConnectedSocket() client: Socket, @MessageBody() data: any): Promise<void> {
         const room = await this.roomService.getRoom(client.data?.roomId);
-        this.server.to('room-' + room?.id).emit('ballMovement', data);
+        room.ball.x = data.x;
+        room.ball.y = data.y;
+        console
+        await this.roomService.save(room);
     }
 
     @SubscribeMessage('updateConfirugation')
@@ -397,22 +424,23 @@ export class RoomGateway {
             if (_room.configurationA?.confirmed && _room.configurationB?.confirmed) {
                 console.log("start game");
                 const random = Math.floor(Math.random() * 2);
+                _room.settings.defaultSpeed = 3;
                 if (random === 0) {
                     if (_room.configurationA.difficulty === "easy")
                         _room.settings.defaultSpeed = 3;
                     else if (_room.configurationA.difficulty === "medium")
-                        _room.settings.defaultSpeed = 4;
+                        _room.settings.defaultSpeed = 4.5;
                     else if (_room.configurationA.difficulty === "hard")
-                        _room.settings.defaultSpeed = 5;
+                        _room.settings.defaultSpeed = 6;
                     _room.settings.background = _room.configurationA.background;
                 }
                 else {
                     if (_room.configurationB.difficulty === "easy")
                         _room.settings.defaultSpeed = 3;
                     else if (_room.configurationB.difficulty === "medium")
-                        _room.settings.defaultSpeed = 4;
+                        _room.settings.defaultSpeed = 4.5;
                     else if (_room.configurationB.difficulty === "hard")
-                        _room.settings.defaultSpeed = 5;
+                        _room.settings.defaultSpeed = 6;
                     _room.settings.background = _room.configurationB.background;
                 }
                 _room.settings.defaultDirection = Math.random() * Math.PI * 2;
@@ -422,10 +450,11 @@ export class RoomGateway {
                 _room.settings.boardHeight = 15;
                 _room.ball.speed = _room.settings.defaultSpeed;
                 _room.status = "playing";
-                _room.playerA.x = 15 - _room.settings.boardWidth;
+                _room.playerA.x = 15;
                 _room.playerA.y = 50;
-                _room.playerB.x = 15 - _room.settings.boardWidth;
+                _room.playerB.x = 85;
                 _room.playerB.y = 50;
+                this.server.emit('roomStarted', _room);
                 intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 250);
                 room.lastActivity = Date.now();
                 await this.roomService.save(_room)

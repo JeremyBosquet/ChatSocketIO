@@ -37,7 +37,7 @@ function HomePage() {
 			socket.removeAllListeners();
 			socket.on("newFriend", (data: any) => {
 				if (data.uuid === User.uuid && data?.username) {
-					createNotification("info", "New friend request You have a new friend request : " + data.username);
+					createNotification("info", "New friend request from: " + data.username);
 				}
 				axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
 				headers: ({
@@ -48,6 +48,27 @@ function HomePage() {
 					if (tab.length) {
 						setFriendRequest(tab.length);
 						//createNotification('success', "You have a new friend request");
+					}
+					else
+						setFriendRequest(0);
+					setCompt(tab.length);
+				}).catch((err) => {
+					console.log(err.message);
+					setFriendRequest(0);
+				});
+			});
+			socket.on("FriendAccepted", (data: any) => {
+				if (data.uuid === User.uuid && data?.username) {
+					createNotification("info", data.username + " accepted your friend request");
+				}
+				axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
+				headers: ({
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				})
+				}).then((res) => {
+					tab = res.data.ListFriendsRequest;
+					if (tab.length) {
+						setFriendRequest(tab.length);
 					}
 					else
 						setFriendRequest(0);
@@ -183,6 +204,7 @@ function HomePage() {
 										<button onClick={() => navigate("/parameters")}> Parameters </button>
 										<button onClick={() => navigate("/logout")}> Logout </button>
 										<button onClick={() => navigate("/game")}> Game </button>
+										<button onClick={() => navigate("/game/spectate")}> Spectate a game </button>
 										<div>
 											{
 												(friendRequest) ?

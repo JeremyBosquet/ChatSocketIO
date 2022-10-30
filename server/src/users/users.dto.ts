@@ -1,4 +1,4 @@
-import {IsBoolean, IsNotEmpty, IsString, MinLength} from 'class-validator';
+import {IsBoolean, IsNotEmpty, IsString, Length, minLength, MinLength} from 'class-validator';
 import { Expose } from 'class-transformer';
 
 export class SendUserDto {
@@ -48,4 +48,13 @@ export class FriendsDto {
 	@IsString()
 	@Expose()
 	uuid: string;
+}
+
+export class SearchDto {
+
+	@IsNotEmpty()
+	@IsString()
+	@Length(1, 12)
+	@Expose()
+	username: string;
 }

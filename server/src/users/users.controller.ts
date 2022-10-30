@@ -16,7 +16,7 @@ import {
 	UploadedFile,
 	UnsupportedMediaTypeException,
 	} from '@nestjs/common';
-	import { FriendsDto, SendUserDto } from './users.dto';
+	import { FriendsDto, SearchDto, SendUserDto } from './users.dto';
 	import { UsersService } from './users.service';
 	import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/login/guards/jwt-auth.guard';
@@ -73,28 +73,48 @@ let nameAvatar : string;
 	}
 
 	
-	@Get('SearchFriend')
+	@Get('SearchFriend/:username')
 	@UseGuards(JwtAuthGuard)
-	async SearchFriendByUsername(@Req() req: any , @Res() res : any, @Body() body : string) {
+	async SearchFriendByUsername(@Req() req: any , @Res() res : any, @Param(ValidationPipe) param : SearchDto) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
 		const User = await this.userService.findUserByUuid(Jwt["uuid"]);	
 		if (User)
 		{
-			const username = body["username"];
-			if (!body || !username || /^\s*$/.test(username) || username.length < 1 || username.length > 12)
-			{
-				return res.status(HttpStatus.BAD_REQUEST).json({
-					statusCode: HttpStatus.BAD_REQUEST, 
-					message: "Username is either too short , too long or made of only space char", 
-					error: "BAD_REQUEST"});
-			}
-			const find = await this.userService.findUserByUsername(username, User.uuid);
+			const find = await this.userService.findUserByUsername(param.username, User.uuid);
 			if (find)
 			{
 				return res.status(HttpStatus.OK).json({
 					statusCode: HttpStatus.OK,
 					message : "succes" ,
 					searchResult : find,
+				});
+			}
+			return res.status(HttpStatus.NO_CONTENT).json({
+				statusCode: HttpStatus.NO_CONTENT, 
+				message: "Friend not found", 
+				error: "NO_CONTENT"});
+
+		}
+		return res.status(HttpStatus.NOT_FOUND).json({
+			statusCode: HttpStatus.NOT_FOUND, 
+			message: "User not found", 
+			error: "NOT_FOUND"});
+	}
+
+	@Get('IsFriend/:uuid')
+	@UseGuards(JwtAuthGuard)
+	async IsFriendByUuid(@Req() req: any , @Res() res : any, @Param(ValidationPipe) param : FriendsDto) {
+		const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+		const User = await this.userService.findUserByUuid(Jwt["uuid"]);	
+		if (User)
+		{
+			const find = await this.userService.IsFriendByUuid(param.uuid, User.uuid);
+			if (find !== [])
+			{
+				return res.status(HttpStatus.OK).json({
+					statusCode: HttpStatus.OK,
+					message : "succes" ,
+					IsFriend : true,
 				});
 			}
 			return res.status(HttpStatus.NO_CONTENT).json({
@@ -136,6 +156,12 @@ let nameAvatar : string;
 							statusCode: HttpStatus.BAD_REQUEST,
 							message: "Already requested to be friend with this user",
 							error: "BAD_REQUEST"});
+					case 5 :
+						return res.status(HttpStatus.BAD_REQUEST).json({
+							statusCode: HttpStatus.BAD_REQUEST,
+							message: "You can't request to be friend with someone you blocked or someone who blocked you",
+							error: "BAD_REQUEST"});
+					case 3:
 					default :
 						return res.status(HttpStatus.OK).json({
 							statusCode: HttpStatus.OK,
@@ -402,10 +428,11 @@ let nameAvatar : string;
 		if (User)
 		{
 			const add = await this.userService.ListFriendsWithUuid(User.uuid);
+			const friends = await this.userService.GetProfilesWithUuidTab(add);
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
 				message : "succes",
-				friendList : add,
+				friendList : friends,
 			});
 
 		}
@@ -443,11 +470,13 @@ let nameAvatar : string;
 		const User = await this.userService.findUserByUuid(Jwt["uuid"]);
 		if (User)
 		{
-			const add = await this.userService.ListFriendsRequestWithUuid(User.uuid);
+			const uuidList = await this.userService.ListFriendsRequestWithUuid(User.uuid);
+			const usernameList = await this.userService.ListUsernameFriendsRequestWithUuid(User.uuid);
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
 				message : "succes",
-				ListFriendsRequest : add,
+				ListFriendsRequest : uuidList,
+				usernameList : usernameList
 			});
 
 		}

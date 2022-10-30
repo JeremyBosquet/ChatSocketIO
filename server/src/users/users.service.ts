@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Ifriends, UserModel } from '../typeorm/user.entity';
 import { Repository } from 'typeorm';
 import { FriendsDto, SendUserDto } from './users.dto';
-import { number } from 'joi';
+import { any, number } from 'joi';
 import { JwtService } from '@nestjs/jwt'
 import { plainToClass } from 'class-transformer';
+import { User } from 'src/login/user.decorator';
 
 @Injectable()
 export class UsersService {
@@ -57,7 +58,7 @@ export class UsersService {
     });
   }
       
-  async findUserByUuid(uuid : string) {
+  async findUserByUuid(uuid : string)  {
 	  const find = ((await this.userRepository.find()).filter(user => user.uuid === uuid))[0];
     return (find);
   }
@@ -66,7 +67,19 @@ export class UsersService {
 	const find = ((await this.userRepository.find()).filter(user => user.uuid === uuid))[0];
 	if (find)
 		return find.friends;
-	return null;
+	return ([]);
+  }
+
+  async GetProfilesWithUuidTab(listUuid : any[]) {
+	let user : any;
+	const tab : any[] = [];
+	for (let i = 0; i < listUuid.length; i++)
+	{
+		user = await this.findUserByUuid(listUuid[i].uuid)
+		if (user)
+			tab.push(user);
+	}
+	return tab;
   }
 
   async ListFriendsRequestedWithUuid(uuid : string) {
@@ -83,11 +96,33 @@ export class UsersService {
 	return null;
   }
 
+  async ListUsernameFriendsRequestWithUuid(uuid : string) {
+	const find = ((await this.userRepository.find()).filter(user => user.uuid === uuid))[0];
+	if (find)
+	{
+		let usernameList : any[] = [];
+		for (let i = 0; i < find.friendRequest.length; i++)
+		{
+			//const user : UserModel = await this.findUserByUuid(find.friendRequest[i].uuid);
+			usernameList.push(await this.findUserByUuid(find.friendRequest[i].uuid))
+		}
+		return usernameList;
+	}
+	return null;
+  }
+
   async ListBlockedWithUuid(uuid : string) {
 	const find = ((await this.userRepository.find()).filter(user => user.uuid === uuid))[0];
 	if (find)
 		return find.blocked;
 	return null;
+  }
+
+  async IsFriendByUuid(uuid : string, userUuid : string) {
+	const find = ((await this.userRepository.find()).filter(user => user.uuid === userUuid))[0];
+	if (find)
+		return (find.friends.filter(user => user.uuid === uuid));
+	return ([]);
   }
 
   async addUserByUuid(uuid: string, User : UserModel) {
@@ -96,6 +131,11 @@ export class UsersService {
 	{
 		if (uuid === User.uuid)
 			return (2)
+		if (((find.blocked).filter(user => user.uuid === User.uuid)).length || 
+		((find.blockedby).filter(user => user.uuid === User.uuid)).length ||
+		((User.blocked).filter(user => user.uuid === uuid)).length ||
+		((User.blockedby).filter(user => user.uuid === uuid)).length)
+			return (5);
 		if (User.friends)
 		{
 			for (let i = 0; User.friends[i] ; i++) {
@@ -457,18 +497,23 @@ export class UsersService {
 	}
 
   async findUserByUsername(username : string , UserUuid : string) {
-	const find = await this.userRepository.find();
-	let i : number = 0;
-	const tabsearch = [];
-	while (find[i])
-	{
-		if (find[i].username.includes(username))
-			if (!(find[i].uuid === UserUuid))
-				tabsearch.push(find[i].uuid)
-		i++;
+
+	function containsPlayer(oneUser : UserModel) {
+		if (oneUser.uuid === UserUuid)
+			return true;
+		return false;
+	  }
+	  
+
+	  const containsName = (user : UserModel, username : string) => {
+		if (user.username.includes(username))
+		  return true;
+		return false;
+	  }
+
+	  const find = await this.userRepository.find();
+	  return (find.filter(user => (containsName(user, username) && !containsPlayer(user)) === true));
 	}
-  	return (tabsearch);
-}
 
   async ChangeUsername(uuid : string, newName : string) {
 	const alreadyexist = await this.userRepository.find({where : {username : newName}});

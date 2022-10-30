@@ -12,6 +12,11 @@ export class RoomController {
         const channels = await this.roomService.getRooms();
         res.json(channels);
     }
+    @Get('getRoomSpectates')
+    async getRoomSpectates(@Res() res) {
+        const channels = await this.roomService.getRoomSpectates();
+        res.json(channels);
+    }
     @Post('createRoom')
     async createRoom(@Res() res, @Body() body) {
         const channels = await this.roomService.createRoom(body);

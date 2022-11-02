@@ -53,11 +53,10 @@ function Manage(props: props) {
       const newChannel = {...props.channel, visibility: visibility};
       const newChannels = channels.map((channel: any) => channel.id === props.channel.id ? newChannel : channel);
       dispatch(setChannels(newChannels));
-      // channels[userChannels.find((channel: any) => channel.id === props.channel.id)] = newChannel;
       props.setToggleMenu(false);
       props.setManageMode(false);
     }).catch(err => {
-      setError("Error: " + err)
+      setError("Error: " + err.response.data?.message);
     });
   }
 

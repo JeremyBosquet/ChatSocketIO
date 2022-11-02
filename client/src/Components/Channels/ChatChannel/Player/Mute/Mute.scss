@@ -1,4 +1,4 @@
-.banMenu {
+.muteMenu {
     z-index: 999;
     position: fixed;
     background-color: rgb(0, 0, 0, 0.6);
@@ -10,7 +10,7 @@
     top: 0;
     left: 0;
     
-    .banContainer {
+    .muteContainer {
         margin: 10px;
         padding: 20px;
         background-color: cornflowerblue;
@@ -20,7 +20,7 @@
         border-radius: 10px;
         height: 370px;
         
-        .banInfos {
+        .muteInfos {
             display: flex;
             justify-content: space-between;
             align-items: center;

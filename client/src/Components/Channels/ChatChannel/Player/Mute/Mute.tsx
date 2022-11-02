@@ -8,22 +8,34 @@ import DateTimePicker from 'react-datetime-picker';
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
-import './Ban.scss'
+import './Mute.scss'
 
 interface props {
     user: IuserDb;
+    mutedUsers: [];
 }
 
-function Ban(props : props) {
+function Mute(props : props) {
   const [value, onChange] = useState<Date>(new Date());
-  const socket = useSelector(getSocket);
   const selectedChannel = useSelector(getSelectedChannel);
   const me = useSelector(getUser);
+  const socket = useSelector(getSocket);
 
   const [time, setTime] = useState<string>("permanent");
-  const [banMenu, setBanMenu] = useState(false);
+  const [muteMenu, setMuteMenu] = useState(false);
 
-  const handleBan = async (targetId: string) => {
+  const handleMute = async (targetId: string) => {
+    if (isMuted()){
+      await axios.post(`http://localhost:4000/api/chat/channel/unmute/`, {
+        channelId: selectedChannel,
+        target: targetId,
+        admin: me.id,
+      }).then(res => {
+        socket.emit("mute", {channelId: selectedChannel, target: targetId});
+      });
+
+      return ;
+    }
     
     if (!value)
       onChange(new Date());
@@ -31,32 +43,38 @@ function Ban(props : props) {
     let permanent = time === "permanent" ? true : false;
     let duration = value?.toISOString();
 
-    await axios.post(`http://localhost:4000/api/chat/channel/ban/`, {
+    await axios.post(`http://localhost:4000/api/chat/channel/mute/`, {
       channelId: selectedChannel,
       target: targetId,
       admin: me.id,
       time: duration,
       isPermanent: permanent
     }).then(res => {
-      socket?.emit("kick", {channelId: selectedChannel, target: targetId, type: "ban"});
+      socket.emit("mute", {channelId: selectedChannel, target: targetId});
     });
   }
 
   const handleClose = () => {
-    setBanMenu(false);
+    setMuteMenu(false);
     // props.setManageMode(false);
+  }
+
+  const isMuted = () => {
+    if (props.mutedUsers.filter((user: any) => user.id === props.user.id).length > 0)
+      return true;
+    return false;
   }
 
   return (
     <>
-      { banMenu ?
-          <div className="banMenu">
-            <div className="banContainer">
-              <div className="banInfos">
-                <h3>Ban {props.user.name}</h3>
+      { muteMenu ?
+          <div className="muteMenu">
+            <div className="muteContainer">
+              <div className="muteInfos">
+                <h3>Mute {props.user.name}</h3>
                 <span onClick={handleClose}>X</span>
               </div>
-              <div className="banDuration">
+              <div className="muteDuration">
                 <h4>Duration</h4>
                 <form>
                   <input type="radio" name="permanent" value="permanent" onChange={e => setTime("permanent")} checked={time === "permanent"}/>
@@ -86,14 +104,19 @@ function Ban(props : props) {
                   required />
                   : null
               }
-              <button onClick={() => handleBan(props.user.id)}>Ban</button>
+              <button onClick={() => handleMute(props.user.id)}>Mute</button>
             </div>
           </div>
       : null
     }
-      <button className="actionButton" onClick={() => setBanMenu(!banMenu)}>Ban</button>
+      {
+        isMuted() ?
+          <button className="actionButton" onClick={() => handleMute(props.user.id)}>Unmute</button>
+        :
+          <button className="actionButton" onClick={() => setMuteMenu(!muteMenu)}>Mute</button>
+      }
     </>
   );
 }
 
-export default Ban;
+export default Mute;

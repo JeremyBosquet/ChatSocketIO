@@ -21,22 +21,45 @@ function ChatChannel() {
   const [users, setUsers] = useState<IuserDb[]>([]);
   const [usersConnected, setUsersConnected] = useState<Iuser[]>([]);
   const [channel, setChannel] = useState<Ichannel>();
-
+  const [mutedUsers, setMutedUsers] = useState<[]>([]);
+  
   const selectedChannel = useSelector(getSelectedChannel);
   const user = useSelector(getUser);
   const socket = useSelector(getSocket);
 
   const dispatch = useDispatch();
 
+  const getUsersChannel = async (userId: any) => {
+    await axios.get("http://localhost:4000/api/chat/channels/user/" + userId)
+    .then((res) => {
+        if (res)
+          dispatch(setChannels(res.data));
+    })
+  }
+
+  const getMessages = async () => {
+    await axios.get(`http://localhost:4000/api/chat/messages/` + selectedChannel + '/' + user.id)
+    .then(res => {
+      if (res.data)
+        setMessages(res.data);
+    }).catch(err => {
+      if (err.response.status === 401) {
+        dispatch(setSelectedChannel(""));
+      getUsersChannel(user.id);
+      }
+    });
+  }
+
+  const getMutedUsers = async () => {
+    await axios.get(`http://localhost:4000/api/chat/mutes/` + selectedChannel)
+    .then(res => {
+      if (res.data)
+        setMutedUsers(res.data);
+    });
+  }
+
   useEffect(() => {
     setMessages([]);
-
-    const getMessages = async () => {
-      const messages = await axios.get(`http://localhost:4000/api/chat/messages/` + selectedChannel);
-
-      if (messages?.data)
-        setMessages(messages.data);
-    }
 
     if (selectedChannel !== "")
     {
@@ -51,15 +74,11 @@ function ChatChannel() {
     }
 
     getChannel();
-  }, [socket, selectedChannel, user.id])
-
-  const getUsersChannel = async (userId: any) => {
-    await axios.get("http://localhost:4000/api/chat/channels/user/" + userId)
-    .then((res) => {
-        if (res)
-          dispatch(setChannels(res.data));
-    })
-  }
+    
+    if (selectedChannel && channel?.users.filter(user => user.id === user.id)[0]?.role === "admin" || "owner") {
+      getMutedUsers();
+    }
+  }, [selectedChannel])
 
   socket?.on('messageFromServer', (message: Imessage) => {
     setMessages([...messages, message]);
@@ -71,6 +90,11 @@ function ChatChannel() {
 
   socket?.on('updateAllPlayers', (usersDb: IuserDb[]) => {
     setUsers(usersDb);
+  });
+
+  socket?.on('updateMutes', (usersDb: []) => {
+    if (channel?.users.filter(user => user.id === user.id)[0]?.role === "admin" || "owner")
+      setMutedUsers(usersDb);
   });
 
   socket.on('kickFromChannel', (data: {target: string, channelId: string, message: string}) => {
@@ -98,7 +122,7 @@ function ChatChannel() {
           <h2>Players</h2>
           <div className='messages'>
             {users?.map((user : any) => ( 
-              <Player key={user.id} users={users} user={user} usersConnected={usersConnected}/>
+              <Player key={user.id} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers}/>
             ))}
           </div>
       </div>

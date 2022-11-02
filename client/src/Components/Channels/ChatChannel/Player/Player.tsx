@@ -5,12 +5,14 @@ import { getUser } from "../../../../Redux/authSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
 import Ban from "./Ban/Ban";
 import Kick from "./Kick/Kick";
+import Mute from "./Mute/Mute";
 import './Player.scss';
 
 interface props {
     users: IuserDb[];
     user: IuserDb;
     usersConnected: Iuser[];
+    mutedUsers: [];
 }
 
 function Player(props : props) {
@@ -42,9 +44,9 @@ function Player(props : props) {
         <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 
               {(props.user.role !== 'admin' && props.user.role !== 'owner') ?
                   <>
-                    <Ban user={props.user}/>
-                    <Kick user={props.user}/>
-                    <button className="actionButton">Mute</button>
+                    <Ban user={props.user} />
+                    <Kick user={props.user} />
+                    <Mute user={props.user} mutedUsers={props.mutedUsers}/>
                   </>
                 : null
               }

@@ -16,9 +16,11 @@ export class ChatGateway {
     @WebSocketServer()
     server;
 
-    @SubscribeMessage('connect')
-    handleConnect(@MessageBody() data: string): void {
-        this.server.emit('connect', data);
+    clients = [];
+
+    @SubscribeMessage('connected')
+    handleConnect(@MessageBody() data: {userId: string}, @ConnectedSocket() client: Socket): void {
+        this.clients.push({id: client.id, userId: data.userId});
     }
 
     @SubscribeMessage('disconnect')
@@ -32,6 +34,7 @@ export class ChatGateway {
        
         this.server.in(client.data.channelId).emit('usersConnected', users);
 
+        this.clients = this.clients.filter(c => c.id !== client.id);
         client.data.channelId = "";
         client.data.userId = "";
         client.data.name = "";
@@ -106,14 +109,25 @@ export class ChatGateway {
             message: data.message,
             createdAt: data.createdAt
         }
-        await this.chatService.createMessage(chat, data.channelId);
+        if (await this.chatService.userIsMuted(data.channelId, data.userId))
+            return;
+        if (await this.chatService.userIsInChannel(data.channelId, data.userId))
+            await this.chatService.createMessage(chat, data.channelId);
         this.server.in(data.channelId).emit('messageFromServer', data);
     }
 
     @SubscribeMessage('kick')
-    async kick(@MessageBody() data: {channelId: string, target: string}, @ConnectedSocket() client: Socket): Promise<void> {
-        this.server.in(data.channelId).emit('kickFromChannel', {target: data.target, channelId: data.channelId});
+    async kick(@MessageBody() data: {channelId: string, target: string, type: string}, @ConnectedSocket() client: Socket): Promise<void> {
+        const message = data.type === "kick" ? "You have been kicked from the channel" : "You have been banned from the channel";
+        const c = this.clients.filter(c => c.userId === data.target);
+        if (c.length > 0)
+            this.server.to(c[0].id).emit('kickFromChannel', {target: data.target, channelId: data.channelId, message: message});
         this.server.in(data.channelId).emit('updateAllPlayers', await this.chatService.getUsersInfosInChannel(data.channelId));
+    }
+
+    @SubscribeMessage('mute')
+    async mute(@MessageBody() data: {channelId: string, target: string}, @ConnectedSocket() client: Socket): Promise<void> {
+        this.server.in(data.channelId).emit('updateMutes', await this.chatService.getMutedUsers(data.channelId));
     }
 
 }

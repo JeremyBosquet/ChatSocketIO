@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Res, ValidationPipe } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { BanPlayerDTO, ChannelIdDTO, ChannelsWhereUserDTO, CreateChannelDTO, editChannelPasswordDTO, JoinChannelDTO, KickPlayerDTO, LeaveChannelDTO, UserIdDTO } from './Interfaces/ChannelDTO';
+import { BanPlayerDTO, ChannelIdDTO, ChannelsWhereUserDTO, CreateChannelDTO, editChannelPasswordDTO, GetMessagesDTO, JoinChannelDTO, KickPlayerDTO, LeaveChannelDTO, MutePlayerDTO, UnmutePlayerDTO, UserIdDTO } from './Interfaces/ChannelDTO';
 import * as bcrypt from 'bcrypt';
 
 @Controller('api/chat')
@@ -43,7 +43,7 @@ export class ChannelController {
                 {
                     const result = await bcrypt.compare(body.password, channel.password);
                     if (!channel?.password || result === false)
-                    return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "Wrong password", error: "Forbidden"});
+                        return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "Wrong password", error: "Forbidden"});
                 }
 
                 let user = {"id": body.userId, "role": "default"}
@@ -52,24 +52,19 @@ export class ChannelController {
                     if (checkIfUserAlreadyIn(channel) === true)
                         return res.status(HttpStatus.CONFLICT).json({statusCode: HttpStatus.CONFLICT, message: "You are already in channel", error: "Conflict"});
                         
-                        channel.users = [...channel.users, user];
-                    }
-                 
-                if (channel.bans.filter(ban => ban.id === body.userId).length > 0)
+                    channel.users = [...channel.users, user];
+                }
+                    
+                if (await this.chatService.userIsBanned(body.channelId, body.userId))
                 {
                     const ban = channel.bans.filter(ban => ban.id === body.userId)[0];
-
-                    if (ban && ban.permanent)
-                    return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "You are permanently banned from this channel", error: "Forbidden"});
-                    if (ban.time > new Date().toISOString())
-                        return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "You are banned from this channel", error: "Forbidden"});
-                    else if (!ban.permanent)
-                    {
-                        channel.bans = channel.bans.filter(ban => ban.id !== body.userId);
-                        await this.chatService.updateChannel(body.channelId, channel);
-                    }
+                    if (ban?.permanent)
+                        return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "You are permanently banned from this channel", error: "Forbidden"});
+                    if (ban?.time > new Date().toISOString())
+                        return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "You are banned from the channel until " + new Date(ban.time).toLocaleString(), error: "Forbidden"});
                 }
-                await this.chatService.updateChannel(body.channelId , channel);
+
+                await this.chatService.updateChannel(body.channelId , {users: channel.users});
                 return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "You have successfully join the channel"});
             }
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
@@ -201,9 +196,33 @@ export class ChannelController {
         res.json(channels);
     }
 
-    @Get('messages/:channelId') // Get messages from 
-    async getMessagesFromChannel(@Param(ValidationPipe) params: ChannelIdDTO, @Res() res) {
+    @Get('messages/:channelId/:userId') // Get messages from 
+    async getMessagesFromChannel(@Param(ValidationPipe) params: GetMessagesDTO, @Res() res) {
+        const checkUserIsIn = (channel: any) => {
+            const containsUser = channel.users.filter(user => user.id === params.userId);
+            if (Object.keys(containsUser).length == 0)
+                return false;
+            return true;
+        }
+
+        const channel = await this.chatService.getChannel(params.channelId);
+        if (!channel)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
+
+        if (!checkUserIsIn(channel))
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+        
         const messages = await this.chatService.getMessageFromChannel(params.channelId);
+        res.json(messages);
+    }
+
+    @Get('mutes/:channelId') // Get mutes from channel 
+    async getMutedUsers(@Param(ValidationPipe) params: ChannelIdDTO, @Res() res) {
+        const channel = await this.chatService.getChannel(params.channelId);
+        if (!channel)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
+        
+        const messages = await this.chatService.getMutedUsers(params.channelId);
         res.json(messages);
     }
 
@@ -231,7 +250,7 @@ export class ChannelController {
     }
 
     @Post('channel/ban') //Ban player from channel
-    async mute(@Body(ValidationPipe) body: BanPlayerDTO, @Res() res) {
+    async ban(@Body(ValidationPipe) body: BanPlayerDTO, @Res() res) {
         const channel = await this.chatService.getChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
@@ -255,4 +274,52 @@ export class ChannelController {
 
         return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "User banned" + (body.isPermanent ? " permanently" : "")});
     }
+    
+    @Post('channel/mute') //mute player from channel
+    async mute(@Body(ValidationPipe) body: MutePlayerDTO, @Res() res) {
+        const channel = await this.chatService.getChannel(body.channelId);
+        if (!channel)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
+
+        const admin = await this.chatService.getUserInChannel(body.admin, body.channelId);
+        if (!admin)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+        if (admin.role !== "admin" && admin.role !== "owner")
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+        
+        const userToMute = await this.chatService.getUserInChannel(body.target, body.channelId);
+        if (!userToMute)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+        
+        if (body.isPermanent)
+            body.time = "-1";
+        channel.mutes.push({id: body.target, time: body.time, permanent: body.isPermanent});
+
+        await this.chatService.updateChannel(channel.id, channel);
+
+        return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "User muted" + (body.isPermanent ? " permanently" : "")});
+    }
+
+    @Post('channel/unmute') //mute player from channel
+    async unmute(@Body(ValidationPipe) body: UnmutePlayerDTO, @Res() res) {
+        const channel = await this.chatService.getChannel(body.channelId);
+        if (!channel)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
+
+        const admin = await this.chatService.getUserInChannel(body.admin, body.channelId);
+        if (!admin)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+        if (admin.role !== "admin" && admin.role !== "owner")
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+        
+        const userToUnmute = await this.chatService.getUserInChannel(body.target, body.channelId);
+        if (!userToUnmute)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+
+        channel.mutes = channel.mutes.filter(user => user.id !== body.target);
+        await this.chatService.updateChannel(channel.id, channel);
+
+        return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "User unmuted"});
+    }
+
 }

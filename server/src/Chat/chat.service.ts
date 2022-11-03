@@ -96,7 +96,7 @@ export class ChatService {
       }
 
 
-      async updateChannel(channelId: string, data: Channel): Promise<any> {
+      async updateChannel(channelId: string, data: any): Promise<any> {
         return await this.channelRepository.update(channelId, data);
       }
 
@@ -124,6 +124,67 @@ export class ChatService {
         const channel = await this.channelRepository.findOneBy({id: channelId});
         if (channel && containsPlayer(channel.users))
           return channel.users.filter(user => user.id === userId)[0];
-        return null;
+        return [];
+      }
+
+      async getMutedUsers(channelId: string): Promise<any> {
+        const channel = await this.channelRepository.findOneBy({id: channelId});
+        if (channel)
+          return channel.mutes;
+        return [];
+      }
+
+      async userIsInChannel(channelId: string, userId: string): Promise<Boolean> {
+        const channel = await this.channelRepository.findOneBy({id: channelId});
+
+        const checkUserIsIn = async (channel: any) => {
+          const containsUser = await channel.users.filter(user => user.id === userId);
+          if (Object.keys(containsUser).length == 0)
+              return false;
+          return true;
+        }
+
+        return (channel && checkUserIsIn(channel));
+      }
+
+      
+      async userIsBanned(channelId: string, userId: string): Promise<Boolean> {
+        const channel = await this.channelRepository.findOneBy({id: channelId});
+        
+
+        console.log(new Date().toISOString());
+        if (channel?.bans.filter(ban => ban.id === userId).length > 0)
+        {
+          const ban = channel.bans.filter(ban => ban.id === userId)[0];
+          
+          if (ban && ban?.time < new Date().toISOString() && !ban.permanent)
+          {
+            channel.bans = channel.bans.filter(ban => ban.id !== userId);
+            await this.updateChannel(channelId, {bans: channel.bans});
+
+            return false;
+          }
+          return true;
+        }
+        return false;
+      }
+      
+      async userIsMuted(channelId: string, userId: string): Promise<Boolean> {
+        const channel = await this.channelRepository.findOneBy({id: channelId});
+
+        if (channel?.mutes.filter(mute => mute.id === userId).length > 0)
+        {
+          const mute = channel.mutes.filter(mute => mute.id === userId)[0];
+
+          if (mute && mute?.time < new Date().toISOString() && !mute.permanent)
+          {
+              channel.mutes = channel.mutes.filter(mute => mute.id !== userId);
+              await this.updateChannel(channelId, {mutes: channel.mutes});
+
+              return false;
+          }
+          return true;
+        }
+        return false;
       }
 }

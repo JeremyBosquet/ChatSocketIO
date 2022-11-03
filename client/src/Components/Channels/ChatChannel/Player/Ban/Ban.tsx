@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUser } from "../../../../../Redux/authSlice";
 import { getSelectedChannel, getSocket } from "../../../../../Redux/chatSlice";
@@ -29,7 +29,9 @@ function Ban(props : props) {
       onChange(new Date());
     
     let permanent = time === "permanent" ? true : false;
+    // const newDate = new Date(value.setHours(value.getHours() + 1));
     let duration = value?.toISOString();
+
 
     await axios.post(`http://localhost:4000/api/chat/channel/ban/`, {
       channelId: selectedChannel,
@@ -70,18 +72,19 @@ function Ban(props : props) {
                 <DateTimePicker 
                   disableClock={true} 
                   clearIcon={null} 
-                  format="dd/MM/y - h:mm" 
+                  format="dd/MM/y - h:mm a" 
                   dayPlaceholder="DD"
                   monthPlaceholder="MM"
                   yearPlaceholder="Y"
                   minutePlaceholder="Minute" 
                   hourPlaceholder="Hour"
                   closeWidgets={false}
-                  locale="fr" 
+                  locale="fr"
                   minDate={new Date()} 
                   onChange={onChange}
-                  value={value} 
+                  value={value}
                   
+
                   className="datePicker" 
                   required />
                   : null

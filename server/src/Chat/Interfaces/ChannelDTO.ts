@@ -44,6 +44,14 @@ export class UserIdDTO {
     userId: string;
 }
 
+export class GetMessagesDTO {
+    @IsUUID()
+    channelId: string;
+  
+    @IsUUID()
+    userId: string;
+}
+
 export class CreateChannelDTO {
     @IsNotEmpty()
     name: string;
@@ -95,6 +103,34 @@ export class BanPlayerDTO {
 
     @IsDateString()
     time: string;
+}
+
+export class MutePlayerDTO {
+    @IsUUID()
+    channelId: string;
+    
+    @IsUUID()
+    admin: string;
+    
+    @IsUUID()
+    target: string;
+
+    @IsNotEmpty()
+    isPermanent: boolean;
+
+    @IsDateString()
+    time: string;
+}
+
+export class UnmutePlayerDTO {
+    @IsUUID()
+    channelId: string;
+    
+    @IsUUID()
+    admin: string;
+    
+    @IsUUID()
+    target: string;
 }
 
 export interface IbanPlayer {

@@ -8,7 +8,7 @@ import { Imessage } from './interfaces/messages';
 import './ChatChannel.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { getSelectedChannel, getSocket, setChannels, setSelectedChannel } from '../../../Redux/chatSlice';
-import { getUser } from '../../../Redux/authSlice';
+import { getUser, setUser } from '../../../Redux/authSlice';
 
 interface Ichannel {
   id: string;
@@ -61,6 +61,8 @@ function ChatChannel() {
   useEffect(() => {
     setMessages([]);
 
+    console.log(messages)
+
     if (selectedChannel !== "")
     {
       socket?.emit("join", {channelId: selectedChannel, userId: user.id});
@@ -71,6 +73,7 @@ function ChatChannel() {
       const channel = (await axios.get(`http://localhost:4000/api/chat/channel/` + selectedChannel)).data;
       setChannel(channel);
       setUsers(channel.users);
+      dispatch(setUser({...user, role: channel.users.find((u: IuserDb) => u.id === user.id)?.role}));
     }
 
     getChannel();
@@ -79,31 +82,49 @@ function ChatChannel() {
       getMutedUsers();
     }
   }, [selectedChannel])
-
+  
   socket?.on('messageFromServer', (message: Imessage) => {
     setMessages([...messages, message]);
   });
-
+  
   socket?.on('usersConnected', (usersConnected: Iuser[]) => {
     setUsersConnected(usersConnected);
   });
-
+  
   socket?.on('updateAllPlayers', (usersDb: IuserDb[]) => {
     setUsers(usersDb);
   });
-
+  
   socket?.on('updateMutes', (usersDb: []) => {
     if (channel?.users.filter(user => user.id === user.id)[0]?.role === "admin" || "owner")
-      setMutedUsers(usersDb);
+    setMutedUsers(usersDb);
   });
-
+  
   socket.on('kickFromChannel', (data: {target: string, channelId: string, message: string}) => {
     socket?.emit('leavePermanant', { userId: user.id, channelId: data.channelId });
     getUsersChannel(user.id);
+    console.log({selectedChannel: selectedChannel, channelId: data.channelId});
     if (selectedChannel === data.channelId)
-        dispatch(setSelectedChannel(""));
+      dispatch(setSelectedChannel(""));
     // use message to display a message to the user
   });
+  
+  socket.on('adminFromServer', (data: {target: string, channelId: string, message: string, role: string}) => {
+    if (data.target === user.id) {
+      dispatch(setUser({...user, role: data.role}));
+      // use message to display a message to the user
+    }
+    if (selectedChannel === data.channelId) {
+      if (user?.role === "admin") {
+        setUsers(users.map((user: IuserDb) => {
+          if (user.id === data.target)
+            return {...user, role: data.role};
+
+          return user;
+        }));
+      }
+  }});
+
   return (
     <>
       <div>
@@ -112,7 +133,7 @@ function ChatChannel() {
               {channel?.name ? <h2>{channel.name}</h2> : <h2>Select a channel</h2>}
             </div>
             {/* Print messages */}
-            <Messages userId={user.id} messages={messages} users={users}/>
+            <Messages userId={user.id} messages={messages} users={users} setUsers={setUsers}/>
             <div className='sendMessage'>
                 <SendMessage channelId={selectedChannel} user={user}/>
             </div>
@@ -122,7 +143,9 @@ function ChatChannel() {
           <h2>Players</h2>
           <div className='messages'>
             {users?.map((user : any) => ( 
-              <Player key={user.id} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers}/>
+              user.print === undefined && user.print !== false ?
+                <Player key={user.id} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers}/>
+              : null
             ))}
           </div>
       </div>

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUser } from "../../../../Redux/authSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
+import Admin from "./Admin/Admin";
 import Ban from "./Ban/Ban";
 import Kick from "./Kick/Kick";
 import Mute from "./Mute/Mute";
@@ -10,6 +11,7 @@ import './Player.scss';
 
 interface props {
     users: IuserDb[];
+    setUsers: any;
     user: IuserDb;
     usersConnected: Iuser[];
     mutedUsers: [];
@@ -30,23 +32,31 @@ function Player(props : props) {
       setConnected(false);
       return (false);
     }
-
+    
     isConnected(props.user);
     //eslint-disable-next-line
   }, [props.usersConnected])
-
+  
   return (
     <div className='player' key={Math.random()}>
       <p>{props.user?.name} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p> 
       {
-        props.user?.id === me.id ?
-        null :
+        props.user?.id === me.id ? null :
         <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 
-              {(props.user.role !== 'admin' && props.user.role !== 'owner') ?
+              {(me.role === "admin" && 
+                props.user.role !== 'admin' && 
+                props.user.role !== 'owner') ?
                   <>
                     <Ban user={props.user} />
                     <Kick user={props.user} />
                     <Mute user={props.user} mutedUsers={props.mutedUsers}/>
+                  </>
+                : (me.role === "owner") ? 
+                  <>
+                    <Ban user={props.user} />
+                    <Kick user={props.user} />
+                    <Mute user={props.user} mutedUsers={props.mutedUsers}/>
+                    <Admin user={props.user} users={props.users} setUsers={props.setUsers}/>
                   </>
                 : null
               }

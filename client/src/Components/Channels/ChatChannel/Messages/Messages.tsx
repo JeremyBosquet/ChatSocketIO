@@ -8,6 +8,7 @@ interface props {
   userId: string;
   messages: Imessage[];
   users: IuserDb[];
+  setUsers: any;
 }
 
 function Messages(props : props) {
@@ -23,7 +24,7 @@ function Messages(props : props) {
   return (
     <div id="messages" className='messages' ref={messageEl}>
       {props.messages.map((message : Imessage) => ( 
-        <ChatMessage key={Math.random()} message={message} users={props.users} userId={props.userId}/>
+        <ChatMessage key={Math.random()} message={message} users={props.users} userId={props.userId} setUsers={props.setUsers}/>
       ))}
     </div>
   );

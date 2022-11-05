@@ -15,15 +15,27 @@ export class AppGateway {
         return ;
     }
 
+	@SubscribeMessage('removeOrBlock')
+    async removeOrBlock(@MessageBody() data: any, @ConnectedSocket() client: any): Promise<WsResponse<any>> {
+        this.server.emit('removedOrBlocked', {uuid: data.uuid, username: ((await this.UsersService.findUserByUuid(data.myUUID)).username)});
+        return ;
+    }
+
 	@SubscribeMessage('acceptFriend')
     async acceptFriend(@MessageBody() data: any, @ConnectedSocket() client: any): Promise<WsResponse<any>> {
-        this.server.emit('friendAccepted', {uuid: data.uuid, username: ((await this.UsersService.findUserByUuid(data.myUUID)).username)});
+        this.server.emit('friendAccepted', {uuid: data.uuid, username: ((await this.UsersService.findUserByUuid(data.myUUID)).username), friendUuid: data.myUUID});
         return ;
     }
 
 	@SubscribeMessage('CancelFriendAdd')
     async CancelFriendAdd(@MessageBody() data: any, @ConnectedSocket() client: any): Promise<WsResponse<any>> {
         this.server.emit('CancelFriend', {uuid: data.uuid, username: ((await this.UsersService.findUserByUuid(data.myUUID)).username)});
+        return ;
+    }
+
+	@SubscribeMessage('DeclineFriendAdd')
+    async DeclineFriendAdd(@MessageBody() data: any, @ConnectedSocket() client: any): Promise<WsResponse<any>> {
+        this.server.emit('DeclineFriend', {uuid: data.uuid, username: ((await this.UsersService.findUserByUuid(data.myUUID)).username)});
         return ;
     }
 }

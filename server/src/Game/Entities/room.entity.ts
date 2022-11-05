@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import {
     Entity,
     Column,
@@ -18,15 +19,19 @@ interface IConfiguration{
 export class Room {
 
     @PrimaryGeneratedColumn('uuid')
+	@Exclude()
     id: string;
 
     @Column()
+	@Exclude()
     name: string;
 
     @Column()
+	@Exclude()
     nbPlayers: number;
 
     @Column()
+	@Exclude()
     owner: string;
 
     @Column()
@@ -39,18 +44,23 @@ export class Room {
     playerB: IPlayers;
 
     @Column({nullable: true, type: 'jsonb'})
+	@Exclude()
     ball: IBall;
 
     @Column({nullable: true, type: 'jsonb'})
+	@Exclude()
     settings: ISettings;
 
     @Column({nullable: true, type: 'jsonb'})
+	@Exclude()
     configurationA: IConfiguration;
 
     @Column({nullable: true, type: 'jsonb'})
+	@Exclude()
     configurationB: IConfiguration;
 
     @Column({nullable: true, type: 'bigint'})
+	@Exclude()
     lastActivity: number;
     //createdAt: Date;
 }

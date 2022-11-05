@@ -22,4 +22,9 @@ export class RoomController {
         const channels = await this.roomService.createRoom(body);
         res.json(channels);
     }
+    @Get('getGameOfUser/:uuid')
+    async getGameOfUser(@Res() res, @Param('uuid') uuid) {
+        const channels = await this.roomService.getGameOfUser(uuid);
+        res.json(channels);
+    }
 }

@@ -1,0 +1,126 @@
+.profilePage {
+    display: flex;
+	justify-content: center;
+	background: linear-gradient(135deg, #fe0d29, #dfc60a);
+	position: absolute;
+	width: 100%;
+	height: 100%;
+
+	.container {
+		width : 100%;
+		.userProfile {
+			width : 100%;
+			#listParent{
+				::-webkit-scrollbar {
+					width: 15px;         /* width of the entire scrollbar */
+				  }
+				  
+				  ::-webkit-scrollbar-track {
+					background: #e27c00; 
+					border-radius: 10px;      /* color of the tracking area */
+				  }
+				  
+				  ::-webkit-scrollbar-thumb {
+					background-color: blue;    /* color of the scroll thumb */
+					border-radius: 10px;       /* roundness of the scroll thumb */
+					border: 3px solid #e27c00;/* creates padding around scroll thumb */
+				  }
+				// position : relative;
+				// align-items: center;
+				display: flex;
+				justify-content: center;
+				width : 100%;
+				height: auto;
+				bottom : 10px;
+			
+				#list{
+					margin-top : 20px;
+					margin-bottom: 20px;
+					height:110px;
+					align-items: center;
+					width:400px;
+					overflow:hidden;
+					overflow-y:scroll;
+				
+					li{
+						list-style-type: none;
+						padding-bottom: 10px;
+						font-size: 25px;
+					}
+
+					#green{
+						color :#2fbb00
+					}
+					
+					#red{
+						color :#bf0000
+					}
+				}
+			}
+				position : relative;
+				text-align: center;
+
+				img {
+					width: 500px;
+					height:500px;
+					object-fit: cover;
+					border-radius: 999px;
+				}
+
+				h1 {
+					padding-bottom: 20px;
+					position : relative;
+					text-align: center;
+					color : rgb(255, 255, 255);
+					font-family:Georgia, 'Times New Roman', Times, serif;
+				}
+
+				button {
+					margin-top: 20px;
+					margin-right: 4px;
+					padding: 3px 10px;
+					background: #e27c00;
+					color: #fff;
+					border: 0;
+					outline : none;
+					font-size : 30px;
+					border-radius : 4px;
+					cursor: pointer;
+					box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+					font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+				
+				}
+		}
+	}
+}
+
+@media screen and (max-width: 550px) {
+	.profilePage .container .userProfile img {
+		width : 75%;
+		height: 75%;
+	}
+}
+
+// @media screen and (max-width: 320px) {
+// 	.profilePage .container .userProfile img {
+// 		width : 75%;
+// 	}
+// }
+
+@media screen and (max-width: 125px) {
+	.profilePage .container .userProfile button {
+		width : 75%;
+		font-size: 100%;
+	}
+
+	.profilePage .container .userProfile h1 {
+		//width : 75%;
+		font-size: 100%;
+	}
+}
+
+@media screen and (max-height: 600px) {
+	.profilePage  {
+		height: max-content;
+	}
+}

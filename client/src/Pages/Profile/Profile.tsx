@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
-import SignIn from '../Components/Auth/Signin';
+import SignIn from '../../Components/Auth/Signin';
 import { redirect, useNavigate, useLocation } from "react-router-dom";
-import './Profile.scss';
-import { createNotification } from '../Components/notif/Notif';
+import { createNotification } from '../../Components/notif/Notif';
+import { whoWon } from '../../Components/Utils/whoWon';
 
+import "./Profile.scss";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 
@@ -14,6 +15,7 @@ function Profile() {
 	const token = localStorage.getItem('token');
 
 	const [booleffect2, setbooleffect2] = useState<boolean>(true);
+	const [historyList, SetHistoryList] = useState<any[]>([]);
 	const firstrender = useRef<boolean>(true);
 
 	// const IsTwoAuthConnected = useSelector(getConnected);
@@ -49,6 +51,16 @@ function Profile() {
 					})
 				}).then((res) => {
 					setUser(res.data.User);	
+					axios.get(`http://90.66.192.148:7000/api/room/getGameOfUser/` + res.data.User.uuid, {
+						headers: ({
+							Authorization: 'Bearer ' + token,
+						})
+						}).then((res) => {
+							if (res.data && res.data.length)
+								SetHistoryList(res.data)
+							else if (res.data)
+								SetHistoryList([]);
+						})
 					console.log(res.data.User)
 				}).catch((err) => {
 					console.log(err.message);
@@ -67,13 +79,14 @@ function Profile() {
 			booleffect = true;
 		}
 	},[]);
+
 	return (
 		<div className='profilePage'>
 			<div className='container'>
 			{
 				!(booleffect2) ?
 				(	
-					<div className='container'>
+					<div>
 					{
 						(User) ?
 						(
@@ -88,9 +101,42 @@ function Profile() {
 
 								:
 
-								<div className='userInfo'>
-									<p> Hello {User?.username} </p>
+								<div>
+									<h1> Hello {User?.username} </h1>
 									<img src={User?.image} alt="user_img" width="384" height="256"/><br></br>
+								<div id='listParent'>
+								{
+									
+									historyList.length ?
+									(
+										<div id='list'>
+										{
+											historyList.map((game, index) => (
+												<ul key={index} >
+													{whoWon(User.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
+													
+														<li> <span id='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+
+														:
+
+														<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+													}
+													<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+													<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+													<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+													<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+													<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+												</ul>
+											))
+										}
+										</div>
+									)
+
+									:
+
+									null
+								}
+								</div>
 									<button onClick={() => navigate("/")}> Home </button>
 									<button onClick={() => navigate("/logout")}> Logout </button>
 								</div>

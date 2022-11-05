@@ -11,7 +11,7 @@ import { redirect, useNavigate, useLocation } from "react-router-dom"
 import { createNotification } from '../Components/notif/Notif';
 
 
-function Parameters() {
+function Settings() {
 	let navigate = useNavigate();
 	let booleffect = false;
 	const [changename, setChangename] = useState<string>();
@@ -106,8 +106,8 @@ function Parameters() {
 			GetLoggedInfoAndUser()
 			createNotification('success', 'Username succefuly changed');
 		}).catch((err) => {
-			console.log(err.response.statusText);
-			createNotification('error', err.response.statusText);
+			//console.log(err.response.statusText);
+			createNotification('error', 'Username is either too short , too long or made of only space char');
 		});
 	}
 	const ChangeAvatar = async (event : any) => {
@@ -124,14 +124,17 @@ function Parameters() {
 			'Content-Type': 'multipart/form-data' },
 			
 		}).then((res) => {
+			console.log(res)
 			console.log(res.data.message);
 			GetLoggedInfoAndUser()
 			createNotification('success', 'Avatar succefully changed');
 			//setMessageAvatar("Avatar succefuly changed");
 		}).catch((err) => {
+			console.log(err)
 			console.log(err.response.statusText);
 			createNotification('error', err.response.statusText);
 			//setMessageAvatar("");
+		}).finally(() => {
 		});
 	}
 
@@ -209,8 +212,8 @@ function Parameters() {
 												id="name"
 												name="name"	
 												required
-												minLength={2}
-												maxLength={14}
+												minLength={1}
+												maxLength={16}
 												onChange={e => setChangename(e.target.value)}/>
 												<button type="submit">Submit</button>
 											</p>
@@ -329,4 +332,4 @@ function Parameters() {
 	)
 }
 
-export default Parameters;
+export default Settings;

@@ -72,12 +72,16 @@ export class UsersService {
 
   async GetProfilesWithUuidTab(listUuid : any[]) {
 	let user : any;
+	let userSend : any;
 	const tab : any[] = [];
 	for (let i = 0; i < listUuid.length; i++)
 	{
 		user = await this.findUserByUuid(listUuid[i].uuid)
 		if (user)
-			tab.push(user);
+		{
+			userSend = plainToClass(SendUserDto, user, {excludeExtraneousValues: true});
+			tab.push(userSend);
+		}
 	}
 	return tab;
   }
@@ -103,8 +107,7 @@ export class UsersService {
 		let usernameList : any[] = [];
 		for (let i = 0; i < find.friendRequest.length; i++)
 		{
-			//const user : UserModel = await this.findUserByUuid(find.friendRequest[i].uuid);
-			usernameList.push(await this.findUserByUuid(find.friendRequest[i].uuid))
+			usernameList.push(plainToClass(SendUserDto, (await this.findUserByUuid(find.friendRequest[i].uuid)), {excludeExtraneousValues: true}));
 		}
 		return usernameList;
 	}
@@ -122,7 +125,7 @@ export class UsersService {
 	const find = ((await this.userRepository.find()).filter(user => user.uuid === userUuid))[0];
 	if (find)
 		return (find.friends.filter(user => user.uuid === uuid));
-	return ([]);
+	return (null);
   }
 
   async addUserByUuid(uuid: string, User : UserModel) {
@@ -148,6 +151,13 @@ export class UsersService {
 			for (let i = 0; find.friendRequest[i] ; i++) {
 				if (find.friendRequest[i].uuid === User.uuid)
 					return (4);
+			}
+		}
+		if (find.friendsNotacceptedYet)
+		{
+			for (let i = 0; find.friendsNotacceptedYet[i] ; i++) {
+				if (find.friendsNotacceptedYet[i].uuid === User.uuid)
+					return (6);
 			}
 		}
 		let newList : Ifriends[] = [];
@@ -442,6 +452,50 @@ export class UsersService {
 							removeFriend = User.friendsNotacceptedYet;
 							removeFriend.splice(i, 1);
 							await this.userRepository.update(User.uuid, {friendsNotacceptedYet: removeFriend});
+						}
+						return (1);
+					}
+				}
+				return (3);
+			}
+			return (4);
+		}
+		return (0);
+	}
+
+	async refuseFriendAddByUuid(uuid: string, User : UserModel) {
+		const find = ((await this.userRepository.find()).filter(user => user.uuid === uuid))[0];
+		if (find)
+		{
+			if (uuid === User.uuid)
+				return (2)
+			if (User.friendRequest)
+			{
+				let i : number = 0;
+				for (i = 0; User.friendRequest[i] ; i++) {
+					if (User.friendRequest[i].uuid === uuid)
+					{
+						let removeFriend : Ifriends[] = [];
+						let verify : boolean = false
+						if (find.friendsNotacceptedYet)
+						{
+							for (let j = 0; find.friendsNotacceptedYet[j] ; j++) {
+								if (find.friendsNotacceptedYet[j].uuid === User.uuid)
+								{
+									removeFriend =find.friendsNotacceptedYet;
+									removeFriend.splice(j, 1);
+									verify = true;
+								}
+							}
+							if (verify)
+								await this.userRepository.update(uuid, {friendsNotacceptedYet: removeFriend});
+						}
+						removeFriend = [];
+						if (User.friendRequest)
+						{
+							removeFriend = User.friendRequest;
+							removeFriend.splice(i, 1);
+							await this.userRepository.update(User.uuid, {friendRequest: removeFriend});
 						}
 						return (1);
 					}

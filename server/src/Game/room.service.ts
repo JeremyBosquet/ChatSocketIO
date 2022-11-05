@@ -1,7 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { plainToClass } from "class-transformer";
 import { Repository } from "typeorm";
 import { Room } from "./Entities/room.entity";
+import { SendGameHistoryDto } from "./room.dto";
 
 @Injectable()
 export class RoomService {
@@ -81,5 +83,13 @@ export class RoomService {
   // save room
   async save(room: Room): Promise<Room> {
     return await this.roomRepository.save(room);
+  }
+  async getGameOfUser(uuid: string): Promise<Room[]> {
+    console.log("getGameOfUser", uuid);
+	const tab : Room[] = [];
+	const info = (await this.roomRepository.find()).filter(room => room.playerA !== null && room.status == "finished" && room.playerA.id === uuid || room.playerB !== null && room.playerB.id === uuid);
+    for (let i = 0; i < info.length; i++)
+		tab.push(plainToClass(SendGameHistoryDto, info[i] , {excludeExtraneousValues: true}));
+	return tab;
   }
 }

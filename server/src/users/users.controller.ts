@@ -109,7 +109,7 @@ let nameAvatar : string;
 		if (User)
 		{
 			const find = await this.userService.IsFriendByUuid(param.uuid, User.uuid);
-			if (find !== [])
+			if (find)
 			{
 				return res.status(HttpStatus.OK).json({
 					statusCode: HttpStatus.OK,
@@ -161,7 +161,11 @@ let nameAvatar : string;
 							statusCode: HttpStatus.BAD_REQUEST,
 							message: "You can't request to be friend with someone you blocked or someone who blocked you",
 							error: "BAD_REQUEST"});
-					case 3:
+					case 6 :
+						return res.status(HttpStatus.BAD_REQUEST).json({
+							statusCode: HttpStatus.BAD_REQUEST,
+							message: "You can't request to be friend with someone who already asked you as a friend",
+							error: "BAD_REQUEST"});
 					default :
 						return res.status(HttpStatus.OK).json({
 							statusCode: HttpStatus.OK,
@@ -316,6 +320,56 @@ let nameAvatar : string;
 			return res.status(HttpStatus.BAD_REQUEST).json({
 				statusCode: HttpStatus.BAD_REQUEST, 
 				message: "Couldn't cancel friend add", 
+				error: "BAD_REQUEST"});
+
+		}
+		if (!User)
+			return res.status(HttpStatus.NOT_FOUND).json({
+				statusCode: HttpStatus.NOT_FOUND, 
+				message: "User not found", 
+				error: "NOT_FOUND"});
+		return res.status(HttpStatus.BAD_REQUEST).json({
+			statusCode: HttpStatus.BAD_REQUEST, 
+			message: "uuid invalid or not found in body", 
+			error: "BAD_REQUEST"});
+	}
+
+	@Post('DeclineFriendAdd')
+	@UseGuards(JwtAuthGuard)
+	async refuseFriendAddByUuid(@Req() req: any , @Res() res : any, @Body() body : any) {
+		const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+		const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+		const RemoveUuid = body["uuid"];
+		if (User && RemoveUuid)
+		{
+			const remove = await this.userService.refuseFriendAddByUuid(RemoveUuid, User);
+			if (remove)
+			{
+				switch (remove) {
+				case 2 :
+					return res.status(HttpStatus.BAD_REQUEST).json({
+						statusCode: HttpStatus.BAD_REQUEST,
+						message: "You can't refuse to be your own friend, love yourself :)",
+						error: "BAD_REQUEST"});
+				case 3 :
+					return res.status(HttpStatus.BAD_REQUEST).json({
+						statusCode: HttpStatus.BAD_REQUEST,
+						message: "this user didn't request to be your friend",
+						error: "BAD_REQUEST"});
+				case 4 :
+					return res.status(HttpStatus.BAD_REQUEST).json({
+						statusCode: HttpStatus.BAD_REQUEST,
+						message: "Nobody requested to be your friend :(",
+						error: "BAD_REQUEST"});
+				default :
+					return res.status(HttpStatus.OK).json({
+						statusCode: HttpStatus.OK,
+						message : "succes",});
+				}
+			}
+			return res.status(HttpStatus.BAD_REQUEST).json({
+				statusCode: HttpStatus.BAD_REQUEST, 
+				message: "Couldn't refuse friend add", 
 				error: "BAD_REQUEST"});
 
 		}
@@ -509,13 +563,13 @@ let nameAvatar : string;
 	
 	@Post('changeUsername')
 	@UseGuards(JwtTwoFactorGuard)
-	async ChangeUsername(@Req() req: any , @Res() res : any, @Body() Name : string) {
+	async ChangeUsername(@Req() req: any , @Res() res : any, @Body() Name : SearchDto) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
 		const User = await this.userService.findUserByUuid(Jwt["uuid"]);	
 		if (User)
 		{
 			const newName = Name["newName"]
-			if (!Name || !newName || /^\s*$/.test(newName) || newName.length < 2 || newName.length > 12)
+			if (!Name || !newName || /^\s*$/.test(newName) || newName.length < 1 || newName.length > 16)
 			{
 				return res.status(HttpStatus.NOT_MODIFIED).json({
 					statusCode: HttpStatus.NOT_MODIFIED, 
@@ -567,7 +621,9 @@ let nameAvatar : string;
 	@Post('changeAvatar')
 	@UseGuards(JwtTwoFactorGuard)
 	@UseInterceptors(FileInterceptor('file', {
-		fileFilter: function fileFilter(req, file, cb) {
+		limits: {
+			fileSize: 1e6},
+		fileFilter: function fileFilter(req, file, cb,) {
 			if (file.mimetype !== 'image/jpg' && file.mimetype !== 'image/png' && file.mimetype !== 'image/jpeg') {
 				return cb(new UnsupportedMediaTypeException('No files other than jpg/png/jpeg are accepted'), false);
 			}
@@ -580,8 +636,6 @@ let nameAvatar : string;
                 cb(null, nameAvatar = Date().replace(/ /g,'') + type);
             }
         }),
-        limits: {
-			fileSize: 1e7},
     }))
 	async ChangeAvatar(@UploadedFile() file: Express.Multer.File, @Req() req: any , @Res() res : any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
@@ -628,7 +682,7 @@ let nameAvatar : string;
 			}
 			return res.status(HttpStatus.BAD_REQUEST).json({
 				statusCode: HttpStatus.BAD_REQUEST, 
-				message: "no user use this uuid", 
+				message: "no user uses this uuid", 
 				error: "BAD_REQUEST"});
 		}
 		if (!User)

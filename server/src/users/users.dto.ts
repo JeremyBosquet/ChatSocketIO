@@ -54,7 +54,7 @@ export class SearchDto {
 
 	@IsNotEmpty()
 	@IsString()
-	@Length(1, 12)
+	@Length(1, 16)
 	@Expose()
 	username: string;
 }

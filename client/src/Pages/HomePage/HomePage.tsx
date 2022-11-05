@@ -5,6 +5,7 @@ import ChatMessage from '../../Components/ChatMessage/ChatMessage';
 import SendMessage from '../../Components/SendMessage/SendMessage';
 import LeaveRoom from '../../Components/LeaveRoom/LeaveRoom';
 import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
+import React from 'react';
 
 interface Imessage {
   id: string;

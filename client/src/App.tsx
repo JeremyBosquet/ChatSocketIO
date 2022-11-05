@@ -16,6 +16,7 @@ import GamePlayingPage from "./Pages/GamePlayingPage/GamePlayingPage";
 import axios from "axios";
 import Social from "./Pages/Social/Social";
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
+import React from 'react';
 
 import './App.css'
 

@@ -1,3 +1,4 @@
+import React from 'react';
 interface IPlayers {
 	id: string;
 	name: string;

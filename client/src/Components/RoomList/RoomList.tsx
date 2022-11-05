@@ -1,5 +1,6 @@
 import { Socket } from 'socket.io-client';
 import axios from 'axios';
+import React from 'react';
 
 interface props {
   socket : Socket | undefined;

@@ -6,6 +6,7 @@ import { Stage, Layer, Rect, Circle, Text } from 'react-konva';
 import Konva from "konva";
 import useEventListener from "@use-it/event-listener";
 
+
 interface props {
   socket: Socket | undefined;
   room: IRoom | undefined;

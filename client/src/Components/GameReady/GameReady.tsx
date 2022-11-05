@@ -2,6 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { createNotification } from "../notif/Notif";
+import React from 'react';
+
 /*
   Check if player search on another tab
 */

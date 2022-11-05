@@ -3,6 +3,7 @@ import io, { Socket } from 'socket.io-client';
 import GameReady from '../../Components/GameReady/GameReady';
 import GamePlay from '../../Components/GamePlay/GamePlay';
 import { createNotification } from '../../Components/notif/Notif';
+import React from 'react';
 
 interface IPlayer {
   id: string;
@@ -144,6 +145,7 @@ function GamePlayingPage() {
       <p>{ready && !playing ? "PlayerA : " + room?.playerA?.name : null}</p>
       <p>{ready && !playing ? "PlayerB : " + room?.playerB?.name : null}</p>
       {playing ? (<GamePlay playerName={playerName} playerId={playerId} socket={socket} room={room} />) : null}
+      <GamePlay playerName={playerName} playerId={playerId} socket={socket} room={room} />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import SignIn from '../Components/Auth/Signin';
 import { redirect, useNavigate, useLocation } from "react-router-dom";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
+import React from 'react';
 
 
 function NotFound() {

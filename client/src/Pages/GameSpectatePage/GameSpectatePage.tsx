@@ -8,6 +8,7 @@ import RoomInfo from '../../Components/RoomInfo/RoomInfo';
 import RoomSpectateInfo from '../../Components/RoomSpectateInfo/RoomSpectateInfo';
 import { useNavigate, useParams } from 'react-router-dom';
 import GameSpectate from '../../Components/GameSpectate/GameSpectate';
+import React from 'react';
 
 interface IPlayer {
   id: string;

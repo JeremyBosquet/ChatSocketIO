@@ -3,6 +3,7 @@ import io, { Socket } from 'socket.io-client';
 import axios from 'axios';
 import RoomInfo from '../../Components/RoomInfo/RoomInfo';
 import FormCreateRoom from '../../Components/FormCreateRoom/FormCreateRoom';
+import React from 'react';
 
 interface Irooms {
   id: string;

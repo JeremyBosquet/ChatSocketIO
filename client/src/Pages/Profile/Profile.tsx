@@ -4,6 +4,7 @@ import SignIn from '../../Components/Auth/Signin';
 import { redirect, useNavigate, useLocation } from "react-router-dom";
 import { createNotification } from '../../Components/notif/Notif';
 import { whoWon } from '../../Components/Utils/whoWon';
+import React from 'react';
 
 import "./Profile.scss";
 // import { useDispatch, useSelector } from 'react-redux';

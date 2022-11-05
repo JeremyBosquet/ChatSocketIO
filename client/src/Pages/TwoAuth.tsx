@@ -5,6 +5,7 @@ import { redirect, useNavigate, useLocation } from "react-router-dom"
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 import { createNotification } from '../Components/notif/Notif';
+import React from 'react';
 
 
 function TwoAuth() {

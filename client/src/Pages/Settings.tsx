@@ -9,6 +9,7 @@ import { redirect, useNavigate, useLocation } from "react-router-dom"
 // import { ToastContainer, toast } from 'react-toastify';
 // import "react-toastify/dist/ReactToastify.css";
 import { createNotification } from '../Components/notif/Notif';
+import React from 'react';
 
 
 function Settings() {

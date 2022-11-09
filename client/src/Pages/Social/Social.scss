@@ -1,16 +1,6 @@
 .SocialPage {
-	// display: flex;
-	// justify-content: center;
-	// background: rgb(8, 0, 123);
-	// position: absolute;
 	width: 100%;
 	height: 100%;
-
-	// .container {
-	// 	display: flex;
-	// 	justify-content: center;
-	// }
-
 	.container#blur.active{
 		filter : blur(20px);
 		pointer-events: none;

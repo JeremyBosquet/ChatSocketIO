@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { createNotification } from "../notif/Notif";
-import React from 'react';
+import React from "react";
 import "./GameReady.scss";
 import { PacmanLoader, ScaleLoader } from "react-spinners";
 import NavBar from "../Nav/NavBar";
@@ -73,11 +73,8 @@ function GameReady(props: props) {
 
   // const [propsOn, setPropsOn] = useState<boolean>(false);
 
-  
-  
   useEffect(() => {
     if (searching && !tmpUserBoolean) {
-      
       setTmpUserBoolean(true);
       console.log("hey");
       console.log("say searching", tmpUser);
@@ -89,7 +86,6 @@ function GameReady(props: props) {
         setRoom(data);
       });
       props.socket?.emit("searching", tmpUser);
-
     }
   }, [searching, tmpUser, tmpUserBoolean, props.socket]);
   //useEffect(() => {
@@ -97,48 +93,70 @@ function GameReady(props: props) {
   //  console.log("propsOn");
   //setPropsOn(true);
   useEffect(() => {
-  props.socket?.removeListener("configuring");
-  props.socket?.removeListener("configurationUpdated");
-  props.socket?.removeListener("playerLeave");
+    props.socket?.removeListener("configuring");
+    props.socket?.removeListener("configurationUpdated");
+    props.socket?.removeListener("playerLeave");
 
-  props.socket?.on("configuring", (data: IRoom) => {
-    console.log("receive configuring", data);
-    setSearchingDisplay(false);
-    setConfiguringDisplay(true);
-  });
-  props.socket?.on("configurationUpdated", (data: IRoom) => {
-    console.log("receive configurationUpdated", data.configurationB, data.configurationA, data.playerA, data.playerB, tmpUser, data);
-    if (data.playerA?.id === tmpUser?.id)
-      setSettingsBis(data.configurationB);
-    else
-      setSettingsBis(data.configurationA);
-  });
-  props.socket?.on("playerLeave", (any) => {
-    console.log("receive cancelSearching");
+    props.socket?.on("configuring", (data: IRoom) => {
+      console.log("receive configuring", data);
+      setSearchingDisplay(false);
+      setConfiguringDisplay(true);
+    });
+    props.socket?.on("configurationUpdated", (data: IRoom) => {
+      console.log(
+        "receive configurationUpdated",
+        data.configurationB,
+        data.configurationA,
+        data.playerA,
+        data.playerB,
+        tmpUser,
+        data
+      );
+      if (data.playerA?.id === tmpUser?.id) setSettingsBis(data.configurationB);
+      else setSettingsBis(data.configurationA);
+    });
+    props.socket?.on("playerLeave", (any) => {
+      console.log("receive cancelSearching");
       createNotification("info", "L'autre connard a leave 1");
-    setNotificaton(true);
-    setSearchingDisplay(true);
-    setSearching(true);
-    setTmpUserBoolean(true);
-    setConfiguringDisplay(false);
-  });
-}, [notification, tmpUser, tmpUserBoolean, searching, searchingDisplay, configuringDisplay, props.socket]);
+      setNotificaton(true);
+      setSearchingDisplay(true);
+      setSearching(true);
+      setTmpUserBoolean(true);
+      setConfiguringDisplay(false);
+    });
+  }, [
+    notification,
+    tmpUser,
+    tmpUserBoolean,
+    searching,
+    searchingDisplay,
+    configuringDisplay,
+    props.socket,
+  ]);
   // }
   //}, [propsOn, props.socket, User, searchingDisplay, configuringDisplay, searching, tmpUserBoolean, settingsBis, settings, room, tmpUser, error, success]);
- 
+
   const getUser = async () => {
-    const messages = await axios.get(`http://90.66.192.148:7000/user`, {
-      headers: ({
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
+    const messages = await axios
+      .get(`http://90.66.192.148:7000/user`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
       })
-    }).catch((err) => {
-      console.log(err);
-    });
+      .catch((err) => {
+        console.log(err);
+      });
     if (messages?.data && messages.data?.User) {
-      console.log(messages.data.User, { id: messages.data.User.id, name: messages.data.User.username });
-      setTmpUser({ id: messages.data.User.uuid, name: messages.data.User.username });
+      console.log(messages.data.User, {
+        id: messages.data.User.id,
+        name: messages.data.User.username,
+      });
+      setTmpUser({
+        id: messages.data.User.uuid,
+        name: messages.data.User.username,
+      });
     }
-  }
+  };
   useEffect(() => {
     getUser();
   }, []);
@@ -151,98 +169,175 @@ function GameReady(props: props) {
   }
   return (
     <div>
-      {!searchingDisplay && !configuringDisplay ? (<div>
-        <button onClick={handleReady} className="play-button" >Search for a game</button>
-      </div>) : (null)}
+      {!searchingDisplay && !configuringDisplay ? (
+        <div>
+          <button onClick={handleReady} className="play-button">
+            Search for a game
+          </button>
+        </div>
+      ) : null}
       {searchingDisplay ? (
         <div>
-          <ScaleLoader className="loading-spinner"
+          <ScaleLoader
+            className="loading-spinner"
             color={"#123abc"}
             loading={true}
             height={65}
             speedMultiplier={0.75}
             width={10}
           />
-          {//<p className="waiting-text">Searching for a game...</p>
+          {
+            //<p className="waiting-text">Searching for a game...</p>
           }
-          <button onClick={() => {
-            props.socket?.emit("cancelSearching", { tmpUser, room });
-            setSearchingDisplay(false);
-            setConfiguringDisplay(false);
-            setSearching(false);
-            setTmpUserBoolean(false);
-            
-          }/*Cancel search*/} className="cancel-button">Cancel</button>
-        </div>) : (null)}
+          <button
+            onClick={
+              () => {
+                props.socket?.emit("cancelSearching", { tmpUser, room });
+                setSearchingDisplay(false);
+                setConfiguringDisplay(false);
+                setSearching(false);
+                setTmpUserBoolean(false);
+              } /*Cancel search*/
+            }
+            className="cancel-button"
+          >
+            Cancel
+          </button>
+        </div>
+      ) : null}
       {configuringDisplay ? (
         <div>
           <div className="game-config">
             <p>Configuring the game...</p>
             <div className="ChannelRoomFormInput-Difficulty">
               <label htmlFor="Difficulty">Difficulty </label>
-              <select className="game-config-select" defaultValue="undefined" id="Difficulty" onChange={(e) => {
-                if (e.target.value === "undefined")
-                  return;
-                if (settings)
-                  setSettings({ ...settings, difficulty: e.target.value });
-                else
-                  setSettings({ difficulty: e.target.value, background: "", confirmed: false });
-                props.socket?.emit("updateConfirugation", { difficulty: e.target.value, background: settings?.background, confirmed: false });
-              }}>
-                <option key="undefined" disabled value="undefined">Select a difficulty</option>
-                <option key="easy" value="easy">Easy</option>
-                <option key="medium" value="medium">Medium</option>
-                <option key="hard" value="hard">Hard</option>
+              <select
+                className="game-config-select"
+                defaultValue="undefined"
+                id="Difficulty"
+                onChange={(e) => {
+                  if (e.target.value === "undefined") return;
+                  if (settings)
+                    setSettings({ ...settings, difficulty: e.target.value });
+                  else
+                    setSettings({
+                      difficulty: e.target.value,
+                      background: "",
+                      confirmed: false,
+                    });
+                  props.socket?.emit("updateConfirugation", {
+                    difficulty: e.target.value,
+                    background: settings?.background,
+                    confirmed: false,
+                  });
+                }}
+              >
+                <option key="undefined" disabled value="undefined">
+                  Select a difficulty
+                </option>
+                <option key="easy" value="easy">
+                  Easy
+                </option>
+                <option key="medium" value="medium">
+                  Medium
+                </option>
+                <option key="hard" value="hard">
+                  Hard
+                </option>
               </select>
             </div>
             <div className="ChannelRoomFormInput-Background">
               <label htmlFor="Background">Background </label>
-              <select className="game-config-select" defaultValue="undefined" id="Background" onChange={(e) => {
-                if (e.target.value === "undefined")
-                  return;
-                if (settings)
-                  setSettings({ ...settings, background: e.target.value });
-                else
-                  setSettings({ difficulty: "", background: e.target.value, confirmed: false });
-                props.socket?.emit("updateConfirugation", { difficulty: settings?.difficulty, background: e.target.value, confirmed: false });
-              }}>
-                <option key="undefined" disabled value="undefined">Select a background</option>
-                <option key="background1" value="background1">Background 1</option>
-                <option key="background2" value="background2">Background 2</option>
+              <select
+                className="game-config-select"
+                defaultValue="undefined"
+                id="Background"
+                onChange={(e) => {
+                  if (e.target.value === "undefined") return;
+                  if (settings)
+                    setSettings({ ...settings, background: e.target.value });
+                  else
+                    setSettings({
+                      difficulty: "",
+                      background: e.target.value,
+                      confirmed: false,
+                    });
+                  props.socket?.emit("updateConfirugation", {
+                    difficulty: settings?.difficulty,
+                    background: e.target.value,
+                    confirmed: false,
+                  });
+                }}
+              >
+                <option key="undefined" disabled value="undefined">
+                  Select a background
+                </option>
+                <option key="background1" value="background1">
+                  Background 1
+                </option>
+                <option key="background2" value="background2">
+                  Background 2
+                </option>
               </select>
             </div>
 
-            <button className="game-config-button" onClick={() => {
-              console.log("cancel searching", tmpUser);
-              props.socket?.emit("cancelSearching", {tmpUser, room});
-              setSearchingDisplay(false);
-              setSearching(false);
-              setTmpUserBoolean(false);
-              
-              setConfiguringDisplay(false);
-            }/*Cancel search*/}>Cancel</button>
-            <button className="game-config-button" onClick={() => {
-              if (settings?.difficulty && settings?.background && settings?.confirmed === false) {
-                setSettings({ ...settings, confirmed: true });
-                props.socket?.emit("confirmConfiguration", settings);
+            <button
+              className="game-config-button"
+              onClick={
+                () => {
+                  console.log("cancel searching", tmpUser);
+                  props.socket?.emit("cancelSearching", { tmpUser, room });
+                  setSearchingDisplay(false);
+                  setSearching(false);
+                  setTmpUserBoolean(false);
+
+                  setConfiguringDisplay(false);
+                } /*Cancel search*/
               }
-            }/*Cancel search*/}>Ready</button>
+            >
+              Cancel
+            </button>
+            <button
+              className="game-config-button"
+              onClick={
+                () => {
+                  if (
+                    settings?.difficulty &&
+                    settings?.background &&
+                    settings?.confirmed === false
+                  ) {
+                    setSettings({ ...settings, confirmed: true });
+                    props.socket?.emit("confirmConfiguration", settings);
+                  }
+                } /*Cancel search*/
+              }
+            >
+              Ready
+            </button>
           </div>
           <div className="game-config-secondary">
             <p>Configuration of the other player</p>
             <div className="ChannelRoomFormInput-Difficulty">
               <label htmlFor="Difficulty">Difficulty </label>
-              {settingsBis?.difficulty ? (<p>{settingsBis.difficulty}</p>) : (<p>Not set</p>)}
+              {settingsBis?.difficulty ? (
+                <p>{settingsBis.difficulty}</p>
+              ) : (
+                <p>Not set</p>
+              )}
             </div>
             <div className="ChannelRoomFormInput-Background">
               <label htmlFor="Difficulty">Background </label>
-              {settingsBis?.background ? (<p>{settingsBis.background}</p>) : (<p>Not set</p>)}
+              {settingsBis?.background ? (
+                <p>{settingsBis.background}</p>
+              ) : (
+                <p>Not set</p>
+              )}
             </div>
-            Ready : {settingsBis?.confirmed ? (<p>Yes</p>) : (<p>No</p>)}
+            Ready : {settingsBis?.confirmed ? <p>Yes</p> : <p>No</p>}
           </div>
-        </div>) : (null)}
-      <div>
-      </div>
+        </div>
+      ) : null}
+      <div></div>
     </div>
   );
 }

@@ -1,87 +1,105 @@
-import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway, WebSocketServer, WsResponse } from "@nestjs/websockets";
-import { Socket } from "socket.io";
-import { Chat } from "./Entities/chat.entity";
-import { ChatService } from "./chat.service";
+import {
+  ConnectedSocket,
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+  WsResponse,
+} from '@nestjs/websockets';
+import { Socket } from 'socket.io';
+import { Chat } from './Entities/chat.entity';
+import { ChatService } from './chat.service';
 
 interface IUserJoin {
-    name: string,
-    room: string
+  name: string;
+  room: string;
 }
 
 interface IMessage {
-    name: string,
-    room: string,
-    message: string,
-    date: string
+  name: string;
+  room: string;
+  message: string;
+  date: string;
 }
 
-@WebSocketGateway(7001, { cors: '*:*'})
+@WebSocketGateway(7001, { cors: '*:*' })
 export class ChatGateway {
+  constructor(private chatService: ChatService) {}
 
-    constructor(private chatService: ChatService) {}
+  @WebSocketServer()
+  server;
 
-    @WebSocketServer()
-    server;
+  @SubscribeMessage('connect')
+  handleConnect(@MessageBody() data: string): void {
+    this.server.emit('connect', data);
+  }
 
-    @SubscribeMessage('connect')
-    handleConnect(@MessageBody() data: string): void {
-        this.server.emit('connect', data);
+  @SubscribeMessage('disconnect')
+  async handleDisconnect(@ConnectedSocket() client: Socket): Promise<void> {
+    const sockets = await this.server.in(client.data.room).fetchSockets();
+
+    let users = [];
+    for (const socket of sockets) {
+      users.push({
+        id: socket.id,
+        name: socket.data.name,
+        room: client.data.room,
+      });
     }
 
-    @SubscribeMessage('disconnect')
-    async handleDisconnect(@ConnectedSocket() client: Socket) : Promise<void> {
-        const sockets = await this.server.in(client.data.room).fetchSockets()
+    this.server.in(client.data.room).emit('usersConnected', users);
 
-        let users = [];
-        for (const socket of sockets) {
-            users.push({id: socket.id, name: socket.data.name, room: client.data.room});
-        }
-       
-        this.server.in(client.data.room).emit('usersConnected', users);
+    client.data.room = '';
+  }
 
-        client.data.room = "";
+  @SubscribeMessage('join')
+  async handleEvent(
+    @MessageBody() data: IUserJoin,
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    client.join(data.room);
+
+    client.data.name = data.name;
+    client.data.room = data.room;
+
+    this.server.emit('joinFromServer', data);
+    const sockets = await this.server.in(data.room).fetchSockets();
+
+    let users = [];
+    for (const socket of sockets) {
+      users.push({ id: socket.id, name: socket.data.name, room: data.room });
     }
 
-    @SubscribeMessage('join')
-    async handleEvent(@MessageBody() data: IUserJoin, @ConnectedSocket() client: Socket): Promise<void>  {
-        client.join(data.room);
-        
-        client.data.name = data.name;
-        client.data.room = data.room;
+    this.server.in(data.room).emit('usersConnected', users);
+  }
 
-        this.server.emit('joinFromServer', data);
-        const sockets = await this.server.in(data.room).fetchSockets()
+  @SubscribeMessage('leave')
+  async handleLeave(
+    @MessageBody() data: IUserJoin,
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    client.leave(data.room);
 
-        let users = [];
-        for (const socket of sockets) {
-            users.push({id: socket.id, name: socket.data.name, room: data.room});
-        }
+    client.data.room = '';
 
-        this.server.in(data.room).emit('usersConnected', users);
+    this.server.emit('leaveFromServer', data);
+
+    const sockets = await this.server.in(data.room).fetchSockets();
+
+    let users = [];
+    for (const socket of sockets) {
+      users.push({ id: socket.id, name: socket.data.name, room: data.room });
     }
 
-    @SubscribeMessage('leave')
-    async handleLeave(@MessageBody() data: IUserJoin, @ConnectedSocket() client: Socket): Promise<void> {
-        client.leave(data.room);
+    this.server.in(data.room).emit('usersConnected', users);
+  }
 
-        client.data.room = "";
-
-        this.server.emit('leaveFromServer', data);
-
-        const sockets = await this.server.in(data.room).fetchSockets()
-
-        let users = [];
-        for (const socket of sockets) {
-            users.push({id: socket.id, name: socket.data.name, room: data.room});
-        }
-
-        this.server.in(data.room).emit('usersConnected', users);
-    }
-
-    @SubscribeMessage('message')
-    async handleMessage(@MessageBody() data: Chat, @ConnectedSocket() client: Socket): Promise<void> {
-        await this.chatService.createMessage(data);
-        this.server.in(data.room).emit('messageFromServer', data);
-    }
-
+  @SubscribeMessage('message')
+  async handleMessage(
+    @MessageBody() data: Chat,
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    await this.chatService.createMessage(data);
+    this.server.in(data.room).emit('messageFromServer', data);
+  }
 }

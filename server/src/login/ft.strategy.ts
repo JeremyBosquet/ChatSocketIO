@@ -20,7 +20,7 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
     refreshToken: string,
     profile: Profile,
     cb: VerifyCallback,
-): Promise<any> {
+  ): Promise<any> {
     request.session.accessToken = accessToken;
     console.log('accessToken', accessToken, 'refreshToken', refreshToken);
     // console.log(request.session);
@@ -29,7 +29,7 @@ export class FtStrategy extends PassportStrategy(Strategy, '42') {
     // be associated with a user record in the application's database, which
     // allows for account linking and authentication with other identity
     // providers.
-	// console.log(request.session);
+    // console.log(request.session);
     return cb(null, profile);
   }
 }

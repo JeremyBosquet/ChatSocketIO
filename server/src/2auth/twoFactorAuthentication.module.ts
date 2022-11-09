@@ -11,9 +11,8 @@ import { UsersService } from 'src/users/users.service';
 import { JwtTwoFactorStrategy } from './auth.strategy';
 
 @Module({
-	imports: [TypeOrmModule.forFeature([UserModel]),],
-	controllers: [TwoFactorAuthenticationController],
-	providers:[TwoFactorAuthenticationService, UsersService, JwtService],
-  })
-  
-  export class twoAuthModule{}
+  imports: [TypeOrmModule.forFeature([UserModel])],
+  controllers: [TwoFactorAuthenticationController],
+  providers: [TwoFactorAuthenticationService, UsersService, JwtService],
+})
+export class twoAuthModule {}

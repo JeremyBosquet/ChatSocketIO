@@ -1,4 +1,5 @@
-import {Controller,
+import {
+  Controller,
   Get,
   Redirect,
   Req,
@@ -7,7 +8,8 @@ import {Controller,
   HttpStatus,
   Post,
   Query,
-  Param} from '@nestjs/common';
+  Param,
+} from '@nestjs/common';
 import { Profile } from 'passport-42';
 import { HttpService } from '@nestjs/axios';
 import { UsersService } from './users/users.service';
@@ -23,47 +25,48 @@ import { Response } from 'express';
 import { json } from 'stream/consumers';
 import { JwtTwoFactorGuard } from './2auth/jwt-two-factor.guard';
 
-
 @Controller()
 export class AppController {
-  constructor(private readonly httpService: HttpService,
-  @InjectRepository(UserModel) private readonly userRepository: Repository<UserModel>,
-  private readonly userService: UsersService ,
-  private readonly appService : AppService,
-  private jwtService: JwtService) {}
+  constructor(
+    private readonly httpService: HttpService,
+    @InjectRepository(UserModel)
+    private readonly userRepository: Repository<UserModel>,
+    private readonly userService: UsersService,
+    private readonly appService: AppService,
+    private jwtService: JwtService,
+  ) {}
 
   @Get('status')
-  async status(@Req() req: any, @Res() res : any) {
-    return res.status(HttpStatus.OK).json({status: 'ok'});
+  async status(@Req() req: any, @Res() res: any) {
+    return res.status(HttpStatus.OK).json({ status: 'ok' });
   }
   @Get('login')
-  ft(){
-    return (`https://api.intra.42.fr/oauth/authorize?client_id=${process.env.FORTYTWO_CLIENT_ID}&redirect_uri=${process.env.REDIRECT_URI}&response_type=code`);
+  ft() {
+    return `https://api.intra.42.fr/oauth/authorize?client_id=${process.env.FORTYTWO_CLIENT_ID}&redirect_uri=${process.env.REDIRECT_URI}&response_type=code`;
   }
 
   @Get('login/42/return/:code')
-  async logIn(@Param() param : any, @Res() res : any) {
-    if (!param.code)
-      return;
+  async logIn(@Param() param: any, @Res() res: any) {
+    if (!param.code) return;
 
     console.log(param.code);
 
-    const r = await fetch(`https://api.intra.42.fr/oauth/token`, { 
+    const r = await fetch(`https://api.intra.42.fr/oauth/token`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        "grant_type": 'authorization_code',
-        "client_id": process.env.FORTYTWO_CLIENT_ID,
-        "client_secret": process.env.FORTYTWO_CLIENT_SECRET,
-        "redirect_uri": process.env.REDIRECT_URI,
-        "code": param.code
-      })
+        grant_type: 'authorization_code',
+        client_id: process.env.FORTYTWO_CLIENT_ID,
+        client_secret: process.env.FORTYTWO_CLIENT_SECRET,
+        redirect_uri: process.env.REDIRECT_URI,
+        code: param.code,
+      }),
     });
 
     if (!r || !r.ok) {
-      console.error("failed to get token")
+      console.error('failed to get token');
     }
 
     const json_data = await r.json();
@@ -72,21 +75,22 @@ export class AppController {
 
     if (!('access_token' in json_data))
       return res.status(HttpStatus.FORBIDDEN).json({
-        statusCode: HttpStatus.FORBIDDEN, 
-        message: "failed to get token", 
-        error: "FORBIDDEN"});
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'failed to get token',
+        error: 'FORBIDDEN',
+      });
 
-    const r2 = await fetch(`https://api.intra.42.fr/v2/me`, { 
+    const r2 = await fetch(`https://api.intra.42.fr/v2/me`, {
       headers: {
-        'Authorization': `Bearer ${json_data.access_token}`
-      }
+        Authorization: `Bearer ${json_data.access_token}`,
+      },
     });
 
     if (!r2 || !r2.ok) {
       console.error(r2);
     }
 
-    const user = await r2.json() as Profile;
+    const user = (await r2.json()) as Profile;
 
     //console.log(user);
 
@@ -94,25 +98,34 @@ export class AppController {
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         token: await this.appService.logIn(user),
-        message : "succes" },);
-    return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "invalid token", error: "FORBIDDEN"});
+        message: 'succes',
+      });
+    return res
+      .status(HttpStatus.FORBIDDEN)
+      .json({
+        statusCode: HttpStatus.FORBIDDEN,
+        message: 'invalid token',
+        error: 'FORBIDDEN',
+      });
   }
-  
+
   @Get('logout')
   @UseGuards(JwtTwoFactorGuard)
-  async logOut(@Req() req: any, @Res() res : any) {
-    console.log('logout')
+  async logOut(@Req() req: any, @Res() res: any) {
+    console.log('logout');
     //this.userService.clearDatabase();
-    const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-    const User = await this.userService.findUserByUuid(Jwt["uuid"]);
-    if (User)
-    {
+    const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
+    const User = await this.userService.findUserByUuid(Jwt['uuid']);
+    if (User) {
       this.userService.IsntAuthenticated(User.uuid);
       this.userService.IsntLoggedIn(User.uuid);
     }
-    req.logOut(function(){return res.status(HttpStatus.OK).json({
-      statusCode: HttpStatus.OK,
-      message : "succes"});});
+    req.logOut(function () {
+      return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
+        message: 'succes',
+      });
+    });
   }
 
   // @Get('users/myUser')

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import FormChat from '../../Components/FormChat/FormChat';
-import io, { Socket } from 'socket.io-client';
-import ChatMessage from '../../Components/ChatMessage/ChatMessage';
-import SendMessage from '../../Components/SendMessage/SendMessage';
-import LeaveRoom from '../../Components/LeaveRoom/LeaveRoom';
-import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
-import React from 'react';
+import { useEffect, useState } from "react";
+import FormChat from "../../Components/FormChat/FormChat";
+import io, { Socket } from "socket.io-client";
+import ChatMessage from "../../Components/ChatMessage/ChatMessage";
+import SendMessage from "../../Components/SendMessage/SendMessage";
+import LeaveRoom from "../../Components/LeaveRoom/LeaveRoom";
+import FormCreateChannel from "../../Components/FormCreateChannel/FormCreateChannel";
+import React from "react";
 
 interface Imessage {
   id: string;
@@ -29,17 +29,19 @@ function HomePage() {
   const [users, setUsers] = useState<Iuser[]>([]);
   const [joined, setJoined] = useState<boolean>(false);
 
-  useEffect(() => { // Connect to the socket
-    const newSocket = io('http://90.66.192.148:7001');
+  useEffect(() => {
+    // Connect to the socket
+    const newSocket = io("http://90.66.192.148:7001");
     setSocket(newSocket);
   }, []);
 
-  useEffect(() => { // Event listener from socket server
-    socket?.on('messageFromServer', (message: Imessage) => {
+  useEffect(() => {
+    // Event listener from socket server
+    socket?.on("messageFromServer", (message: Imessage) => {
       setMessages([...messages, message]);
     });
 
-    socket?.on('usersConnected', (users: Iuser[]) => {
+    socket?.on("usersConnected", (users: Iuser[]) => {
       setUsers(users);
     });
   }, [socket, messages]);
@@ -47,27 +49,51 @@ function HomePage() {
   return (
     <div>
       {/* Form to join a chat room */}
-      { !joined ? <FormChat socket={socket} name={name} room={room} setName={setName} setRoom={setRoom} setJoined={setJoined} setMessages={setMessages}/> : null }
+      {!joined ? (
+        <FormChat
+          socket={socket}
+          name={name}
+          room={room}
+          setName={setName}
+          setRoom={setRoom}
+          setJoined={setJoined}
+          setMessages={setMessages}
+        />
+      ) : null}
 
       {/* Users connected */}
       {joined && users?.length > 0 ? <h3>User(s) connected:</h3> : null}
-      { 
-        joined && users?.map((user: Iuser) => {
-          return <div key={Math.random()}>{user.name}</div>
-        })
-      } 
+      {joined &&
+        users?.map((user: Iuser) => {
+          return <div key={Math.random()}>{user.name}</div>;
+        })}
       {/* Form to send message */}
-      { joined ? ( <SendMessage socket={socket} name={name} room={room}/> ) : ( null ) }
+      {joined ? <SendMessage socket={socket} name={name} room={room} /> : null}
 
-      { joined ? ( <LeaveRoom socket={socket} name={name} room={room} setJoined={setJoined} setRoom={setRoom} setMessages={setMessages} setUsers={setUsers}/> ) : ( null ) }
+      {joined ? (
+        <LeaveRoom
+          socket={socket}
+          name={name}
+          room={room}
+          setJoined={setJoined}
+          setRoom={setRoom}
+          setMessages={setMessages}
+          setUsers={setUsers}
+        />
+      ) : null}
 
       {/* Print messages */}
-      {messages.map((message : Imessage) => ( 
-        <ChatMessage key={message.id}  name={message.name} message={message.message} room={message.room} date={message.date}/>
+      {messages.map((message: Imessage) => (
+        <ChatMessage
+          key={message.id}
+          name={message.name}
+          message={message.message}
+          room={message.room}
+          date={message.date}
+        />
       ))}
 
-      <FormCreateChannel socket={socket} user={{id: "an id", name: "Test"}} />
-
+      <FormCreateChannel socket={socket} user={{ id: "an id", name: "Test" }} />
     </div>
   );
 }

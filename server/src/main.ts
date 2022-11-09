@@ -6,7 +6,7 @@ import { AppModule } from './app.module';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
-const multer = require("multer");
+const multer = require('multer');
 
 dotenv.config();
 
@@ -14,12 +14,11 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.enableCors({
-	"origin": "*",
-	"methods": "GET,PUT,POST,DELETE",
-	"preflightContinue": false,
-	"optionsSuccessStatus": 204,
-	});
-
+    origin: '*',
+    methods: 'GET,PUT,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+  });
 
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));

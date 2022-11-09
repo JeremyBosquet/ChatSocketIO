@@ -8,9 +8,8 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path/posix';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserModel]),],
+  imports: [TypeOrmModule.forFeature([UserModel])],
   controllers: [UsersController],
-  providers:[UsersService, JwtService],
+  providers: [UsersService, JwtService],
 })
-
-export class UsersModule{}
+export class UsersModule {}

@@ -11,9 +11,15 @@ import { FtStrategy } from './ft.strategy';
 import { SessionSerializer } from './session.serializer';
 
 @Module({
-imports: [TypeOrmModule.forFeature([UserModel])],
+  imports: [TypeOrmModule.forFeature([UserModel])],
   //controllers: [LoginController],
-  providers: [ConfigService, FtStrategy, SessionSerializer, AppService, JwtService, UsersService],
-  
+  providers: [
+    ConfigService,
+    FtStrategy,
+    SessionSerializer,
+    AppService,
+    JwtService,
+    UsersService,
+  ],
 })
 export class LoginModule {}

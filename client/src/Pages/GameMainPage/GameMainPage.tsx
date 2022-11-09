@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import io, { Socket } from 'socket.io-client';
-import axios from 'axios';
-import RoomInfo from '../../Components/RoomInfo/RoomInfo';
-import FormCreateRoom from '../../Components/FormCreateRoom/FormCreateRoom';
-import React from 'react';
+import { useEffect, useState } from "react";
+import io, { Socket } from "socket.io-client";
+import axios from "axios";
+import RoomInfo from "../../Components/RoomInfo/RoomInfo";
+import FormCreateRoom from "../../Components/FormCreateRoom/FormCreateRoom";
+import React from "react";
 
 interface Irooms {
   id: string;
@@ -15,7 +15,7 @@ interface Irooms {
   settings: ISettings;
 }
 
-interface ISettings{
+interface ISettings {
   defaultSpeed: number;
   defaultDirection: number;
   boardWidth: number;
@@ -23,34 +23,44 @@ interface ISettings{
   ballRadius: number;
 }
 
-
 function GameMainPage() {
   const [socket, setSocket] = useState<Socket>();
   const [rooms, setRooms] = useState<Irooms[]>([]);
 
-  const getRooms = async (e : any) => {
-    const messages = await axios.get(`http://90.66.192.148:7000/api/room/getRooms`);
+  const getRooms = async (e: any) => {
+    const messages = await axios.get(
+      `http://90.66.192.148:7000/api/room/getRooms`
+    );
 
     if (messages?.data) {
       setRooms(messages.data);
     }
-  }
-  useEffect(() => { // Connect to the socket
-    const newSocket = io('http://90.66.192.148:7002');
+  };
+  useEffect(() => {
+    // Connect to the socket
+    const newSocket = io("http://90.66.192.148:7002");
     setSocket(newSocket);
     getRooms(null);
-    
   }, []);
-  useEffect(() => { // Event listener from socket server
-    socket?.on('roomCreated', (rooms: Irooms[]) => {
+  useEffect(() => {
+    // Event listener from socket server
+    socket?.on("roomCreated", (rooms: Irooms[]) => {
       setRooms(rooms);
     });
   }, [socket]);
   return (
     <div>
-      
-      {rooms.map((room : Irooms) => (
-        <RoomInfo key={room.id} id={room.id} owner={room.owner} status={room.status} nbPlayers={room.nbPlayers} name={room.name} createdAt={room.createdAt} settings={room.settings}/>
+      {rooms.map((room: Irooms) => (
+        <RoomInfo
+          key={room.id}
+          id={room.id}
+          owner={room.owner}
+          status={room.status}
+          nbPlayers={room.nbPlayers}
+          name={room.name}
+          createdAt={room.createdAt}
+          settings={room.settings}
+        />
       ))}
       <button onClick={getRooms}>Click me</button>
     </div>

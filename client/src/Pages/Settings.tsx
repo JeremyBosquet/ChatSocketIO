@@ -10,6 +10,7 @@ import { redirect, useNavigate, useLocation } from "react-router-dom"
 // import "react-toastify/dist/ReactToastify.css";
 import { createNotification } from '../Components/notif/Notif';
 import React from 'react';
+import NavBar from '../Components/Nav/NavBar';
 
 
 function Settings() {
@@ -64,11 +65,16 @@ function Settings() {
 					console.log(res.data.User);
 				}).catch((err) => {
 					console.log(err.message);
-					setUser(undefined);	
+					setUser(undefined);
+					createNotification('error', 'User not found');
+					navigate("/");
 				});
 		}
 		else
+		{
 			createNotification('error', 'User not found');
+			navigate("/");
+		}
 		setbooleffect2(false);
 	}
 
@@ -205,6 +211,7 @@ function Settings() {
 							!(User === undefined) ?
 							(
 								<div>
+									<NavBar/>
 									<p> Current username : {User.username} </p>
 										<form onSubmit={ChangeUsername}>
 											<p> New Username : &nbsp;

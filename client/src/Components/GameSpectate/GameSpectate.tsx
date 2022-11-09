@@ -5,6 +5,7 @@ import './GameSpectate.scss';
 import { Stage, Layer, Rect, Circle, Text } from 'react-konva';
 import Konva from "konva";
 import useEventListener from "@use-it/event-listener";
+import NavBar from "../Nav/NavBar";
 
 
 interface props {
@@ -138,7 +139,6 @@ function GameSpectate(props: props) {
       <div id="gameMainCanvas">
         <Stage width={windowsWidth} height={windowsHeight} className="gameMainCanvas">
           <Layer >
-            <Text text="Game : ?" />
             <Rect width={9000} height={8000} x={0} y={0} fill="gray" />
             {<Rect ref={playerA.ref} x={playerA.x} y={playerA.y} width={boardWidth} height={boardHeight} fill="blue" />}
             {<Rect ref={playerB.ref} x={playerB.x} y={playerB.y} width={boardWidth} height={boardHeight} fill="green" />}

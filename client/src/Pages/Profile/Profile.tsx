@@ -7,6 +7,7 @@ import { whoWon } from '../../Components/Utils/whoWon';
 import React from 'react';
 
 import "./Profile.scss";
+import NavBar from '../../Components/Nav/NavBar';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 
@@ -29,6 +30,11 @@ function Profile() {
 	const [IsLoggedIn, setLogged] = useState<boolean>();
 	const [IsTwoAuthActivated, setActivated] = useState<boolean>();
 	const [IsTwoAuthConnected, setConnected] = useState<boolean>();
+
+	function goHome()
+	{
+		navigate("/");
+	}
 
 	async function GetLoggedInfoAndUser()
 	{
@@ -64,13 +70,17 @@ function Profile() {
 						})
 					console.log(res.data.User)
 				}).catch((err) => {
-					console.log(err.message);
+					console.log(err);
 					setUser(undefined);
 					createNotification('error', 'User not found');
+					navigate("/");
 				});
 		}
 		else
+		{
 			createNotification('error', 'User not found');
+			navigate("/");
+		}
 		setbooleffect2(false);
 	}
 	useEffect(() : any => {
@@ -85,79 +95,73 @@ function Profile() {
 		<div className='profilePage'>
 			<div className='container'>
 			{
-				!(booleffect2) ?
-				(	
-					<div>
-					{
-						(User) ?
-						(
-							<div className='userProfile'>
-							{
-								User === undefined ?
-								(
-									<div className='userNotFound'>
-										<button onClick={() => navigate("/")}> Home </button>
-									</div>
-								)
-
-								:
-
-								<div>
-									<h1> Hello {User?.username} </h1>
-									<img src={User?.image} alt="user_img" width="384" height="256"/><br></br>
-								<div id='listParent'>
+				<div>
+					<NavBar />
+				<div>
+				{
+					!(booleffect2) ?
+					(
+						<div>
+						{
+							(User) ?
+							(
+								<div className='userProfile'>
 								{
-									
-									historyList.length ?
-									(
-										<div id='list'>
-										{
-											historyList.map((game, index) => (
-												<ul key={index} >
-													{whoWon(User.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
-													
-														<li> <span id='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+									<div>
+										<h1> Hello {User?.username} </h1>
+										<img src={User?.image} alt="user_img" width="384" height="256"/><br></br>
+									<div id='listParent'>
+									{
+										
+										historyList.length ?
+										(
+											<div id='list'>
+											{
+												historyList.map((game, index) => (
+													<ul key={index} >
+														{whoWon(User.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
+														
+															<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
 
-														:
+															:
 
-														<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-													}
-													<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-													<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-													<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-													<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-													<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-												</ul>
-											))
-										}
-										</div>
-									)
+															<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+														}
+														<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+														<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+														<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+														<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+														<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+													</ul>
+												))
+											}
+											</div>
+										)
 
-									:
+										:
 
-									null
+										null
+									}
+									</div>
+										<button onClick={() => navigate("/")}> Home </button>
+										<button onClick={() => navigate("/logout")}> Logout </button>
+									</div>
 								}
 								</div>
-									<button onClick={() => navigate("/")}> Home </button>
-									<button onClick={() => navigate("/logout")}> Logout </button>
-								</div>
-							}
-							</div>
-						)
+							)
 
-						:
+							:
 
-						<div className='userNotFound'>
-							<button onClick={() => navigate("/")}> Home </button>
+							null
+						}
 						</div>
-					}
-					</div>
-				)
-				:
-				<div>
-					<p> Loading .... </p>
+					)
+					:
+						null
+				}
 				</div>
-			}
+				</div>
+			}	
 			</div>
 		</div>
 	)

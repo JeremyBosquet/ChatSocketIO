@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { createNotification } from "../notif/Notif";
 import React from 'react';
-
+import "./GameReady.scss";
+import { PacmanLoader, ScaleLoader } from "react-spinners";
+import NavBar from "../Nav/NavBar";
 /*
   Check if player search on another tab
 */
@@ -150,11 +152,19 @@ function GameReady(props: props) {
   return (
     <div>
       {!searchingDisplay && !configuringDisplay ? (<div>
-        <button onClick={handleReady}>Search for a game</button>
+        <button onClick={handleReady} className="play-button" >Search for a game</button>
       </div>) : (null)}
       {searchingDisplay ? (
         <div>
-          <p>Searching for a game...</p>
+          <ScaleLoader className="loading-spinner"
+            color={"#123abc"}
+            loading={true}
+            height={65}
+            speedMultiplier={0.75}
+            width={10}
+          />
+          {//<p className="waiting-text">Searching for a game...</p>
+          }
           <button onClick={() => {
             props.socket?.emit("cancelSearching", { tmpUser, room });
             setSearchingDisplay(false);
@@ -162,15 +172,15 @@ function GameReady(props: props) {
             setSearching(false);
             setTmpUserBoolean(false);
             
-          }/*Cancel search*/}>Cancel</button>
+          }/*Cancel search*/} className="cancel-button">Cancel</button>
         </div>) : (null)}
       {configuringDisplay ? (
         <div>
-          <div>
+          <div className="game-config">
             <p>Configuring the game...</p>
             <div className="ChannelRoomFormInput-Difficulty">
               <label htmlFor="Difficulty">Difficulty </label>
-              <select defaultValue="undefined" id="Difficulty" onChange={(e) => {
+              <select className="game-config-select" defaultValue="undefined" id="Difficulty" onChange={(e) => {
                 if (e.target.value === "undefined")
                   return;
                 if (settings)
@@ -187,7 +197,7 @@ function GameReady(props: props) {
             </div>
             <div className="ChannelRoomFormInput-Background">
               <label htmlFor="Background">Background </label>
-              <select defaultValue="undefined" id="Background" onChange={(e) => {
+              <select className="game-config-select" defaultValue="undefined" id="Background" onChange={(e) => {
                 if (e.target.value === "undefined")
                   return;
                 if (settings)
@@ -202,7 +212,7 @@ function GameReady(props: props) {
               </select>
             </div>
 
-            <button onClick={() => {
+            <button className="game-config-button" onClick={() => {
               console.log("cancel searching", tmpUser);
               props.socket?.emit("cancelSearching", {tmpUser, room});
               setSearchingDisplay(false);
@@ -211,14 +221,14 @@ function GameReady(props: props) {
               
               setConfiguringDisplay(false);
             }/*Cancel search*/}>Cancel</button>
-            <button onClick={() => {
+            <button className="game-config-button" onClick={() => {
               if (settings?.difficulty && settings?.background && settings?.confirmed === false) {
                 setSettings({ ...settings, confirmed: true });
                 props.socket?.emit("confirmConfiguration", settings);
               }
             }/*Cancel search*/}>Ready</button>
           </div>
-          <div>
+          <div className="game-config-secondary">
             <p>Configuration of the other player</p>
             <div className="ChannelRoomFormInput-Difficulty">
               <label htmlFor="Difficulty">Difficulty </label>

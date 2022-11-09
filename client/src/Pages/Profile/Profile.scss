@@ -16,14 +16,14 @@
 				  }
 				  
 				  ::-webkit-scrollbar-track {
-					background: #e27c00; 
+					background: linear-gradient(135deg, #9a0dfe, #637dfb);
 					border-radius: 10px;      /* color of the tracking area */
 				  }
 				  
 				  ::-webkit-scrollbar-thumb {
-					background-color: blue;    /* color of the scroll thumb */
+					background: linear-gradient(135deg, #fe0d29, #dfc60a);    /* color of the scroll thumb */
 					border-radius: 10px;       /* roundness of the scroll thumb */
-					border: 3px solid #e27c00;/* creates padding around scroll thumb */
+					border: 3px solid linear-gradient(135deg, #9a0dfe, #637dfb);/* creates padding around scroll thumb */
 				  }
 				// position : relative;
 				// align-items: center;
@@ -48,11 +48,11 @@
 						font-size: 25px;
 					}
 
-					#green{
+					.green{
 						color :#2fbb00
 					}
 					
-					#red{
+					.red{
 						color :#bf0000
 					}
 				}
@@ -79,7 +79,7 @@
 					margin-top: 20px;
 					margin-right: 4px;
 					padding: 3px 10px;
-					background: #e27c00;
+					background: linear-gradient(135deg, #9a0dfe, #637dfb);
 					color: #fff;
 					border: 0;
 					outline : none;
@@ -93,6 +93,22 @@
 		}
 	}
 }
+
+// .profilePage button {
+// 	position: absolute;
+// 	top: 70%;
+// 	left: 50%;
+// 	transform: translate(-50%, -50%);
+// 	background: linear-gradient(135deg, #9a0dfe, #637dfb);
+// 	border: none;
+// 	width: 200px;
+// 	height: 100px;
+// 	color: #fff;
+// 	font-family:'Times New Roman', Times, serif;
+// 	font-size: 70px;
+// 	border-radius: 30px;
+// }
+
 
 @media screen and (max-width: 550px) {
 	.profilePage .container .userProfile img {

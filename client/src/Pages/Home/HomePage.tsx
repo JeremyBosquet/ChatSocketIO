@@ -12,6 +12,7 @@ import {IoLogOutSharp}  from 'react-icons/io5';
 import {IoGameController}  from 'react-icons/io5';
 import {BsFillEyeFill}  from 'react-icons/bs';
 import React from 'react';
+import NavBar from '../../Components/Nav/NavBar';
 
 
 
@@ -22,6 +23,7 @@ function HomePage() {
 	const [compt, setCompt] = useState<number>(0);
 	//const [user, setUser] = useState<any>();
 	const booleffect = useRef<boolean>(false);
+	const [booleffect2, setbooleffect2] = useState<boolean>(true);
 	const firstrender = useRef<boolean>(true);
 	const [socket, setSocket] = useState<Socket>();
 
@@ -232,7 +234,6 @@ function HomePage() {
 				tab = res.data.ListFriendsRequest;
 				if (tab.length) {
 					setFriendRequest(tab.length);
-					//createNotification('success', "You have a new friend request");
 				}
 				else
 					setFriendRequest(0);
@@ -242,6 +243,7 @@ function HomePage() {
 				setFriendRequest(0);
 			});
 		}
+		setbooleffect2(false);
 	}
 
 	useEffect(() => {
@@ -254,71 +256,29 @@ function HomePage() {
 	return (
 		<div className='HomePage'>
 		{
-			<div>
-			<div >
-			{
-				(!User) ?
-				(
-					<div>
-						<button id='login' onClick={() => navigate("/login")}> login </button>
-					</div>
-				)
-
-				:
-
-				(
-					<div className='menu'>
-						<div id='profile'>
-							<label id='icon' htmlFor="profile"> <input type="radio" id='profile' value="Profile" name="menu_text" onChange={() => {}} onClick={() => activeorDisable(0)} checked={checkedProfile}/> <span>< FaUserCircle/></span> <p id='menu_text'>test</p></label>
-						</div>
-						<div id='settings'>
-							<label id='icon' htmlFor="settings"> <input type="radio" id='settings' value="Settings" name="menu_text" onChange={() => {}} onClick={() => activeorDisable(1)} checked={checkedSettings}/> <span><IoMdSettings/></span> <p id='menu_text'>test</p></label>
-						</div>
-						<div id='logout'>				
-							<label id='icon' htmlFor="logout"> <input type="radio" id='logout' value="Logout" name="menu_text" onChange={() => {}} onClick={() => activeorDisable(2)} checked={checkedLogout}/> <span><IoLogOutSharp/></span> <p id='menu_text'>test</p> </label>
-						</div>
-						<div id='game'>	
-							<label id='icon' htmlFor="game"> <input type="radio" id='game' value="Game" name="menu_text" onChange={() => {}} onClick={() => activeorDisable(3)} checked={checkedGame}/> <span><IoGameController/></span> <p id='menu_text'>test</p></label>
-						</div>
-						<div id='spectate'>	
-							<label id='icon' htmlFor="spectate"> <input type="radio" id='spectate' value="Spectate" name="menu_text" onChange={() => {}} onClick={() => activeorDisable(4)} checked={checkedSpectate}/> <span><BsFillEyeFill/></span> <p id='menu_text'>test</p></label>
-						</div>
-						{/* <button id='menu_text' onClick={() => navigate("/profile")}> Profile </button>
-						<button id='menu_text' onClick={() => navigate("/settings")}> Settings </button>
-						<button id='menu_text' onClick={() => navigate("/logout")}> Logout </button>
-						<button id='menu_text' onClick={() => navigate("/game")}> Game </button>
-						<button id='menu_text' onClick={() => navigate("/game/spectate")}> Spectate a game </button> */}
+			!(booleffect2) ?
+			(
+				<div>
+				{
+					(!User) ?
+					(
 						<div>
-						{
-							(friendRequest) ?
-								(
-									<div id='social'>			
-									<label id='icon' htmlFor="social"> <input type="radio" id='social' value="Social" name="menu_text" onChange={() => {}} onClick={() => activeorDisable(5)} checked={checkedSocial}/><span><FaUserFriends/></span> </label>
-									{/* <button id='menu_text' onClick={() => {
-										socket?.disconnect();
-										setSocket(undefined);
-										navigate("/social")
-									}}> Social({compt}) </button> */}
-									</div>
-								)
-
-								:
-								<div id='social'>
-									<label id='icon' htmlFor="social"> <input type="radio" id='social' value="Social" name="menu_text" onChange={() => {}} onClick={() => activeorDisable(5)} checked={checkedSocial}/><span><FaUserFriends/></span> </label>
-								{/* <button id='menu_text' onClick={() => {
-									socket?.disconnect();
-									setSocket(undefined);
-									navigate("/social")
-								}}> Social </button> */}
-								</div>
-						}
+							<button id='login' onClick={() => navigate("/login")}> login </button>
 						</div>
-					</div>
-				)
-			}
-			</div>
-				<h1> Fils de pute </h1>
-			</div>
+					)
+
+					:
+
+					(
+						<NavBar socket={socket} setSocket={setSocket} />
+					)
+				}
+				</div>
+			)
+
+			:
+
+				null
 		}
 		</div>
 	)

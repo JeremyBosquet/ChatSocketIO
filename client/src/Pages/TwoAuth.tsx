@@ -44,8 +44,13 @@ function TwoAuth() {
 					setConnected(res.data.isSecondFactorAuthenticated);
 				}).catch((err) => {
 					console.log(err.message);
-					setUser("{}");	
+					setUser(undefined);	
 				});
+		}
+		else
+		{
+			createNotification('error', 'User not found');
+			navigate("/");
 		}
 		booleffect2.current = false;
 	}

@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-
+(window as any).global = window;
 
 root.render(
   <React.StrictMode>

@@ -5,6 +5,7 @@ import './GamePlay.scss';
 import { Stage, Layer, Rect, Circle, Text } from 'react-konva';
 import Konva from "konva";
 import useEventListener from "@use-it/event-listener";
+import NavBar from "../Nav/NavBar";
 
 interface props {
   socket: Socket | undefined;
@@ -89,8 +90,8 @@ interface ICanvasBall {
 */
 
 function GamePlay(props: props) {
-  const [windowsWidth, setWindowsWidth] = useState(window.innerWidth / 1.2);
-  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight / 1.4);
+  const [windowsWidth, setWindowsWidth] = useState(window.innerWidth);
+  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight - 100); // game board
   const [boardWidth, setBoardWidth] = useState<number>(props.room?.settings.boardWidth ? (props.room?.settings.boardWidth / 100) * windowsWidth : 100);
   const [boardHeight, setBoardHeight] = useState<number>(props.room?.settings.boardHeight ? (props.room?.settings.boardHeight / 100) * windowsHeight : 100);
   const [ball, setBall] = useState<ICanvasBall>({ id: "ball", x: (props.room?.ball.x ? (props.room?.ball.x / 100) * windowsWidth : windowsWidth / 2), y: (props.room?.ball.y ? (props.room?.ball.y / 100) * windowsHeight : windowsHeight / 2), radius: props.room?.settings.ballRadius ? (props.room?.settings.ballRadius / 100) * windowsHeight : 100, percentX: 50, percentY: 50, ref: React.createRef<Konva.Circle>() });
@@ -122,16 +123,16 @@ function GamePlay(props: props) {
     //if (tmpPlayerY === _player.y)
     //  return;
     props.socket?.emit("playerMove", { id: _player.id, x: ((100 * _player.x) / windowsWidth), y: ((100 * _player.y) / windowsHeight) });
-    if (props.room?.playerA.name === props.playerName)
-      setPlayerA({ ...playerA, y: _player.y, percentY: ((100 * _player.y) / windowsHeight) });
-    else
-      setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight) });
+    //if (props.room?.playerA.name === props.playerName)
+    //  setPlayerA({ ...playerA, y: _player.y, percentY: ((100 * _player.y) / windowsHeight) });
+    //else
+    //  setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight) });
   }, [playerA, playerB, windowsHeight, windowsWidth, boardHeight, props.playerName, props.room?.playerA.name, props.socket]);
 
   useEventListener('mousemove', mousemove);
   function handleResize() {
-    setWindowsWidth(window.innerWidth / 1.2);
-    setWindowsHeight(window.innerHeight / 1.4);
+    setWindowsWidth(window.innerWidth);
+    setWindowsHeight(window.innerHeight  - 100);
     setBoardWidth(props.room?.settings.boardWidth ? (props.room?.settings.boardWidth  /100 ) * windowsWidth : 100);
     setBoardHeight(props.room?.settings.boardHeight ? (props.room?.settings.boardHeight /100) * windowsHeight  : 100);
     setBall({...ball,id: "ball", radius: props.room?.settings.ballRadius ? (props.room?.settings.ballRadius / 100) * windowsHeight: 100, x: (ball.percentX / 100) * windowsWidth, y: (ball.percentY / 100) * windowsHeight, percentX: ball.percentX, percentY: ball.percentY});
@@ -145,35 +146,29 @@ function GamePlay(props: props) {
   useEffect(() => { // Check car le resize ne met pas a jour les var du useEffect
     props.socket?.removeListener('playerMovement');
     props.socket?.on("playerMovement", (room: IRoom) => {
-      console.log("playerMovement", props.playerId);
-      if (room.playerB.id === props.playerId) {
+      //console.log("playerMovement", props.playerId);
+      //if (room.playerB.id === props.playerId) {
         setPlayerA({...playerA, id: "playerA", x: 0.15 * windowsWidth, y: (room.playerA.y / 100) * windowsHeight, percentY: room.playerA.y});
-      } else {
+      //} else {
         setPlayerB({...playerB, id: "playerB", x: windowsWidth - boardWidth - (0.15 * windowsWidth), y: (room.playerB.y / 100) * windowsHeight, percentY: room.playerB.y});
-      }
+      //}
     });
     props.socket?.removeListener('ballMovement');
     props.socket?.on("ballMovement", (room: IRoom) => {
       ball.ref.current?.to({
         x: (room.ball.x / 100) * windowsWidth,
         y: (room.ball.y / 100) * windowsHeight,
-        duration: 0.248,
-        onFinish: () => {
-          setBall({...ball, id: "ball", x: (room.ball.x / 100) * windowsWidth, y: (room.ball.y / 100) * windowsHeight, percentX: room.ball.x, percentY: room.ball.y});
-          
-        }
       });
     });
   }, [props.socket, props.playerId, playerA, playerB, ball, windowsHeight, windowsWidth, boardWidth]);
   return (
     <div>
-      <p>Game (t'es une merde) :</p>
       <GameBoard socket={props.socket} room={props.room} />
       <div id="gameMainCanvas">
       <Stage width={windowsWidth} height={windowsHeight} className="gameMainCanvas">
           <Layer >
-            <Text text="Game : ?" />
-            <Rect width={9000} height={8000} x={0} y={0} fill="gray" />
+          <Rect width={9000} height={8000} x={0} y={0} fill="gray" />
+
             {<Rect ref={playerA.ref} x={playerA.x} y={playerA.y} width={boardWidth} height={boardHeight} fill="blue" />}
             {<Rect ref={playerB.ref} x={playerB.x} y={playerB.y} width={boardWidth} height={boardHeight} fill="green" />}
             {<Circle ref={ball.ref} x={ball.x} y={ball.y} draggable onDragMove={(e)=> {

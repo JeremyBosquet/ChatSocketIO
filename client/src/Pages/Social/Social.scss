@@ -32,7 +32,7 @@
 		transition: transform 0.8s, opacity 0.8s;
 		opacity: 0;
 		//width : 400px; //vtre
-		background: rgb(30, 30, 117);
+		background: linear-gradient(135deg, #9a0dfe, #637dfb);
 		/* animation: name duration timing-function delay iteration-count direction fill-mode; */
 		border-radius: 6px;
 		text-align: center;
@@ -52,7 +52,7 @@
 			width : 100%;
 			margin-top : 12px;
 			padding: 10px 0;
-			background: #e27c00;
+			background: linear-gradient(135deg, #fe0d29, #dfc60a);
 			color: #fff;
 			border: 0;
 			outline : none;
@@ -71,14 +71,14 @@
 			}
 			
 			::-webkit-scrollbar-track {
-				background: #e27c00; 
+				background: linear-gradient(135deg, #fe0d29, #dfc60a); 
 				border-radius: 10px;      /* color of the tracking area */
 			}
 			
 			::-webkit-scrollbar-thumb {
-				background-color: rgb(30, 30, 117);    /* color of the scroll thumb */
+				background: linear-gradient(135deg, #9a0dfe, #637dfb);;    /* color of the scroll thumb */
 				border-radius: 10px;       /* roundness of the scroll thumb */
-				border: 3px solid #e27c00;/* creates padding around scroll thumb */
+				border: 3px solid linear-gradient(135deg, #fe0d29, #dfc60a);/* creates padding around scroll thumb */
 			}
 
 			#list{
@@ -89,11 +89,11 @@
 				overflow:hidden;
 				overflow-y:scroll;
 
-				#green{
+				.green{
 					color :#2fbb00
 				}
 
-				#red{
+				.red{
 					color :#bf0000
 				}
 

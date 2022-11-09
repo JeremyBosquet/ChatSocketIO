@@ -4,6 +4,7 @@ import GameReady from '../../Components/GameReady/GameReady';
 import GamePlay from '../../Components/GamePlay/GamePlay';
 import { createNotification } from '../../Components/notif/Notif';
 import React from 'react';
+import NavBar from '../../Components/Nav/NavBar';
 
 interface IPlayer {
   id: string;
@@ -140,12 +141,12 @@ function GamePlayingPage() {
 
   return (
     <div>
+      <NavBar socket={socket} setSocket={setSocket} />
       {!ready && !playing ? (<GameReady socket={socket} setReady={setReady} setPlayerId={setPlayerId} setPlayerName={setPlayerName} />) : null}
       {ready ? (<div> Waiting for another player </div>) : null}
       <p>{ready && !playing ? "PlayerA : " + room?.playerA?.name : null}</p>
       <p>{ready && !playing ? "PlayerB : " + room?.playerB?.name : null}</p>
       {playing ? (<GamePlay playerName={playerName} playerId={playerId} socket={socket} room={room} />) : null}
-      <GamePlay playerName={playerName} playerId={playerId} socket={socket} room={room} />
     </div>
   );
 }

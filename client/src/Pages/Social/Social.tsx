@@ -5,8 +5,10 @@ import { createNotification } from '../../Components/notif/Notif';
 import io, { Socket } from 'socket.io-client';
 import { Link, useLocation } from 'react-router-dom';
 import { whoWon } from '../../Components/Utils/whoWon';
+import React from 'react';
 //const style = require('./Social.scss');
 import './Social.scss';
+import NavBar from '../../Components/Nav/NavBar';
 
 
 function Social() {
@@ -14,6 +16,7 @@ function Social() {
 	let location = useLocation();
 	const booleffect = useRef<boolean>(false);
 	const booleffect2 = useRef<boolean>(false);
+	const [booleffect3, setbooleffect3] = useState<boolean>(true);
 	const token = localStorage.getItem('token');
 	let boolFriendOrNot : boolean = false;
 
@@ -46,6 +49,9 @@ function Social() {
 	useEffect(() => {
 		if (socket) {
 			socket.removeAllListeners();
+			socket.on("stpUneNotifstpUneNotif", (data: any) => {
+				createNotification("info", "test");
+			});
 			socket.on("newFriend", (data: any) => {
 				if (data.uuid === User.uuid && data?.username) {
 					createNotification("info", "New friend request from: " + data.username);
@@ -137,7 +143,7 @@ function Social() {
 	}, [socket, User]);
 
 	async function GetLoggedInfoAndUser() {
-		if (token) {
+		if (localStorage.getItem('token')) {
 			await axios.get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
@@ -160,6 +166,8 @@ function Social() {
 			}).catch((err) => {
 				console.log(err.message);
 				setUser(undefined);
+				createNotification('error', 'User not found');
+				navigate("/");
 			});
 			await axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
 				headers: ({
@@ -179,6 +187,12 @@ function Social() {
 				setFriendRequest(undefined);
 			});
 		}
+		else
+		{
+			createNotification('error', 'User not found');
+			navigate("/");
+		}
+		setbooleffect3(false);
 	}
 
 	async function ListFriends() {
@@ -515,9 +529,9 @@ function Social() {
 	useEffect(() => {
 		if (!booleffect.current) {
 			GetLoggedInfoAndUser();
-			ListFriends();
-			ListBlocked()
-			ListRequested();
+				ListFriends();
+				ListBlocked()
+				ListRequested();
 			booleffect.current = true;
 		}
 	},);
@@ -537,159 +551,180 @@ function Social() {
 
 	return (
 		<div className='SocialPage'>
-			<div className='container' id='blur'>
-				<div >
-					<h1> Friends List </h1>
-					{friendList.map((user) => (
-					<div key={user.uuid}> 
-						<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/> <br></br>
-						<p> {user.username} </p>
-						<button onClick={(e) => (RemoveFriend(user.uuid))} > remove friend </button>
-						<button onClick={(e) => (ShowProfile(user.uuid))} > profile </button>
-						<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}> Block </button><br></br><br></br>
-					</div>))}
-					<br></br>
-				</div>
-				<div>
-					<h1> Search Friends </h1>
-					<form >
-						<p> Your friend username : &nbsp;
-							<input
-							type="text"
-							id="friendusername"
-							name="friendusername"	
-							required
-							onChange={e  => SearchFriend(e.target.value)}
-							/>
-						</p>
-					</form>
-					{searchList.map((user, index) => (
-					<div key={user.uuid}> 
-						<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-						<p> {user.username} </p>
-						<div>
-						{	IsRequested(user.uuid) ?
-							(
-								IsRequest(user.uuid) ?
-								(
-									<div>
-										<button onClick={() => (AddOrRemoveFriend(user.uuid))} > {IsFriend(user.uuid) ? "Add as friend": "Remove friend"} </button>
-									</div>
-								)
-
-								:
-
-								(
-									<div>
-										<button onClick={() => (AcceptFriend(user.uuid, user.image))} > Accept Friend </button>
-										<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > decline friend </button>
-									</div>
-								)
-		
-							)
-							:
-								<button onClick={(e) => (CancelFriendAdd(user.uuid))} > cancel friend add </button>	
-						}
-						</div>
-						<button onClick={(e) => (ShowProfile(user.uuid))} > profile </button>
-						<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? "Block": "Unblock"} </button><br></br><br></br>
-					</div>))}
-					<br></br>
-				</div>
-				<div>
-					<h1> Friend requests </h1>
-					{requestList.map((user, index) => (
-					<div key={index}> 
-						<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-						<p> {user?.username} </p>
-						<button onClick={(e) => (AcceptFriend(user.uuid, user.image))} > accept friend </button>
-						<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > decline friend </button>
-						<button onClick={(e) => (ShowProfile(user.uuid))} > profile </button>
-						<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> Block </button>
-					</div>))}
-					<br></br>
-				</div>
-				<div>
-					<button onClick={() => navigate("/")}> Home </button>
-				</div>
-			</div>
-			<div id="popup">
+		{
+			<div>
+				<NavBar socket={socket} setSocket={setSocket} />
+			<div>
+			<button onClick={() => {socket?.emit("stpUneNotif")}}>Ask notifcation</button>
 			{
-				profileDisplayed ?
+				!(booleffect3) ?
 				(
 					<div>
-						<h1> {profilePage?.username} </h1>
-						<img className="ProfileImg" src={profilePage?.image} alt="user_img" width="384" height="256"/><br></br>
+					<div className='container' id='blur'>
+						<div >
+							<h1> Friends List </h1>
+							{friendList.map((user) => (
+							<div key={user.uuid}> 
+								<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/> <br></br>
+								<p> {user.username} </p>
+								<button onClick={(e) => (RemoveFriend(user.uuid))} > remove friend </button>
+								<button onClick={(e) => (ShowProfile(user.uuid))} > profile </button>
+								<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}> Block </button><br></br><br></br>
+							</div>))}
+							<br></br>
+						</div>
 						<div>
-						{	IsRequested(profilePage?.uuid) ?
-							(
-								IsRequest(profilePage?.uuid) ?
+							<h1> Search Friends </h1>
+							<form >
+								<p> Your friend username : &nbsp;
+									<input
+									type="text"
+									id="friendusername"
+									name="friendusername"	
+									required
+									onChange={e  => SearchFriend(e.target.value)}
+									/>
+								</p>
+							</form>
+							{searchList.map((user, index) => (
+							<div key={user.uuid}> 
+								<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
+								<p> {user.username} </p>
+								<div>
+								{	IsRequested(user.uuid) ?
+									(
+										IsRequest(user.uuid) ?
+										(
+											<div>
+												<button onClick={() => (AddOrRemoveFriend(user.uuid))} > {IsFriend(user.uuid) ? "Add as friend": "Remove friend"} </button>
+											</div>
+										)
+
+										:
+
+										(
+											<div>
+												<button onClick={() => (AcceptFriend(user.uuid, user.image))} > Accept Friend </button>
+												<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > decline friend </button>
+											</div>
+										)
+				
+									)
+									:
+										<button onClick={(e) => (CancelFriendAdd(user.uuid))} > cancel friend add </button>	
+								}
+								</div>
+								<button onClick={(e) => (ShowProfile(user.uuid))} > profile </button>
+								<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? "Block": "Unblock"} </button><br></br><br></br>
+							</div>))}
+							<br></br>
+						</div>
+						<div>
+							<h1> Friend requests </h1>
+							{requestList.map((user, index) => (
+							<div key={index}> 
+								<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
+								<p> {user?.username} </p>
+								<button onClick={(e) => (AcceptFriend(user.uuid, user.image))} > accept friend </button>
+								<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > decline friend </button>
+								<button onClick={(e) => (ShowProfile(user.uuid))} > profile </button>
+								<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> Block </button>
+							</div>))}
+							<br></br>
+						</div>
+						<div>
+							<button onClick={() => navigate("/")}> Home </button>
+						</div>
+					</div>
+				<div id="popup">
+				{
+					profileDisplayed ?
+					(
+						<div>
+							<h1> {profilePage?.username} </h1>
+							<img className="ProfileImg" src={profilePage?.image} alt="user_img" width="384" height="256"/><br></br>
+							<div>
+							{	IsRequested(profilePage?.uuid) ?
 								(
-									<div>
-										<button onClick={() => (AddOrRemoveFriend(profilePage?.uuid))} > {IsFriend(profilePage?.uuid) ? "Add as friend": "Remove friend"} </button>
+									IsRequest(profilePage?.uuid) ?
+									(
+										<div>
+											<button onClick={() => (AddOrRemoveFriend(profilePage?.uuid))} > {IsFriend(profilePage?.uuid) ? "Add as friend": "Remove friend"} </button>
+										</div>
+									)
+
+									:
+
+									(
+										<div>
+											<button onClick={() => (AcceptFriend(profilePage?.uuid, profilePage?.image))} > Accept Friend </button>
+											<button onClick={(e) => (DeclineFriendAdd(profilePage?.uuid))} > decline friend </button>
+										</div>
+									)
+			
+								)
+								:
+									<button onClick={(e) => (CancelFriendAdd(profilePage?.uuid))} > cancel friend add </button>	
+							}
+							</div>
+							<button onClick={() => (BlockOrUnblockUser(profilePage?.uuid))} > {IsBlocked(profilePage?.uuid) ? "Block": "Unblock"} </button>
+							<button onClick={() =>  HideProfile()}> Close </button>
+							<div id='listParent'>
+							{
+								historyList.length ?
+								(
+									<div id='list'>
+									{
+										historyList.map((game, index) => (
+											<ul key={index} >
+												{whoWon(profilePage.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
+												
+													<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+
+													:
+
+													<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+													
+												}
+												<li> <span className='green'> this is test of history match </span> </li>
+												<li> <span className='red'> this is test of history match </span> </li>
+												<li> <span className='green'> this is test of history match </span> </li>
+												<li> <span className='red'> this is test of history match </span> </li>
+												<li> <span className='green'> this is test of history match </span> </li>
+											</ul>
+										))
+									}
 									</div>
 								)
 
 								:
 
-								(
-									<div>
-										<button onClick={() => (AcceptFriend(profilePage?.uuid, profilePage?.image))} > Accept Friend </button>
-										<button onClick={(e) => (DeclineFriendAdd(profilePage?.uuid))} > decline friend </button>
-									</div>
-								)
-		
-							)
-							:
-								<button onClick={(e) => (CancelFriendAdd(profilePage?.uuid))} > cancel friend add </button>	
-						}
+								null
+							}
+							</div>
+							
 						</div>
-						<button onClick={() => (BlockOrUnblockUser(profilePage?.uuid))} > {IsBlocked(profilePage?.uuid) ? "Block": "Unblock"} </button>
-						<button onClick={() =>  HideProfile()}> Close </button>
-						<div id='listParent'>
-						{
-							historyList.length ?
-							(
-								<div id='list'>
-								{
-									historyList.map((game, index) => (
-										<ul key={index} >
-											{whoWon(profilePage.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
-											
-												<li> <span id='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+						
+					)
 
-												:
+					:
 
-												<li> <span id='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-												
-											}
-											<li> <span id='green'> this is test of history match </span> </li>
-											<li> <span id='red'> this is test of history match </span> </li>
-											<li> <span id='green'> this is test of history match </span> </li>
-											<li> <span id='red'> this is test of history match </span> </li>
-											<li> <span id='green'> this is test of history match </span> </li>
-										</ul>
-									))
-								}
-								</div>
-							)
-
-							:
-
-							null
-						}
-						</div>
-					</div>
+					(
+						null
+					)
+				}
+				</div>
+				</div>
+					
 				)
 
 				:
-
-				(
 					null
-				)
+				}
+				</div>
+				</div>
 			}
 			</div>
-		</div>
 	)
 }
 

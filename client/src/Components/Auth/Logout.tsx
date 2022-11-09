@@ -9,11 +9,6 @@ function Logout() {
 	let location = useLocation();
 	let booleffect = false;
   
-	// const IsLoggedIn = useSelector(getLogged);
-	// const IsTwoAuthConnected = useSelector(getConnected);
-	// const IsTwoAuthActivated = useSelector(getActivated);
-	// const User = useSelector(getUser);
-	// const dispatch = useDispatch();
 
 	const [User, setUser] = useState<any>();
 	const [IsLoggedIn, setLogged] = useState<boolean>();

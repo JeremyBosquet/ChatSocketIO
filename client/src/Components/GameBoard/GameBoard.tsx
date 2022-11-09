@@ -1,5 +1,6 @@
 import { Socket } from "socket.io-client";
 import React from 'react';
+import './GameBoard.scss';
 
 interface props {
   socket : Socket | undefined;
@@ -26,10 +27,25 @@ interface IRoom {
 
 function GameBoard(props : props) {
   return (
-      <div>
-        PlayerA : {props.room?.playerA.name} - {props.room?.playerA.score} <br/>
-        PlayerB : {props.room?.playerB.name} - {props.room?.playerB.score} <br/>
+    <div className="game-board">
+      <div className="game-board__player">
+        <div className="game-board__player__name">
+          {props.room?.playerA.name}
+        </div>
+        <div className="game-board__player__score">
+          {props.room?.playerA.score}
+        </div>
       </div>
+      <div className="game-board__player">
+        <div className="game-board__player__name">
+          {props.room?.playerB.name}
+        </div>
+        <div className="game-board__player__score">
+          {props.room?.playerB.score}
+        </div>
+      </div>
+    </div>
+    
   );
 }
 

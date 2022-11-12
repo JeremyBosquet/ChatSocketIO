@@ -7,8 +7,9 @@ import Messages from './Messages/Messages';
 import { Imessage } from './interfaces/messages';
 import './ChatChannel.scss'
 import { useDispatch, useSelector } from 'react-redux';
-import { getSelectedChannelDM, getSocket, setChannels, setSelectedChannelDM } from '../../../Redux/chatSlice';
+import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface Ichannel {
   id: string;
@@ -21,10 +22,12 @@ function DMChannel() {
   const [usersConnected, setUsersConnected] = useState<Iuser[]>([]);
   const [dm, setDm] = useState<Ichannel>();
   const [name, setName] = useState<string>();
-  
-  const selectedChannelDM = useSelector(getSelectedChannelDM);
-  const user = useSelector(getUser);
+  const params = useParams();
+
   const socket = useSelector(getSocket);
+  const selectedChannelDM = params.id || "";
+  const user = useSelector(getUser);
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -41,12 +44,10 @@ function DMChannel() {
     .then(res => {
       if (res.data)
         setMessages(res.data);
-    }).catch(err => {
-      if (err.response.status === 401) {
-        dispatch(setSelectedChannelDM(""));
+    }).catch(() => {
       getUsersChannel(user.id);
       setMessages([]);
-      }
+      navigate('/chat/dm');
     });
   }
   
@@ -56,16 +57,16 @@ function DMChannel() {
       setDm(dm);
       setUsers(dm.users);
     }
-    if (selectedChannelDM !== "")
+    if (params.id)
     {
-      socket?.emit("join", {channelId: selectedChannelDM, userId: user.id});
+      socket?.emit("join", {channelId: params.id, userId: user.id});
       getMessages();
-      
     }
     
     getChannel();
-  }, [selectedChannelDM])
-  
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id])
+
   useEffect(() => {
     const getName = async () => {
       const userId = dm?.users[0]?.id === user.id ? dm?.users[1]?.id : dm?.users[0]?.id;
@@ -75,18 +76,22 @@ function DMChannel() {
     }
     if (dm?.id)
       getName();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dm])
   
   useEffect(() => {
-    socket.removeListener('messageFromServer');
-    socket.on('messageFromServer', (message: Imessage) => {
-      setMessages(messages => [...messages, message]);
-    });
-    
-    socket.removeListener('usersConnected');
-    socket.on('usersConnected', (usersConnected: Iuser[]) => {
-      setUsersConnected(usersConnected);
-    });
+    if (socket)
+    {
+      socket.removeListener('messageFromServer');
+      socket.on('messageFromServer', (message: Imessage) => {
+        setMessages(messages => [...messages, message]);
+      });
+      
+      socket.removeListener('usersConnected');
+      socket.on('usersConnected', (usersConnected: Iuser[]) => {
+        setUsersConnected(usersConnected);
+      });
+    }
   }, [socket])
 
 

@@ -1,12 +1,14 @@
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Channels from '../../Components/Channels/Channels';
+import PrivateMessages from '../../Components/PrivateMessages/PrivateMessages';
 import { getLogged, getUser, setLogged, setUser } from '../../Redux/authSlice';
-import './ChannelPage.scss'
+import { getMode } from '../../Redux/chatSlice';
+import './DMPage.scss'
 
-function ChannelPage() {
+function DMPage() {
 	const logged = useSelector(getLogged);
+    const mode = useSelector(getMode);
     const user = useSelector(getUser);
     const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -25,9 +27,9 @@ function ChannelPage() {
 
 	const handleChangeMode = (newMode: string) => {
 		if (newMode === "channels")
-			return ;
+			navigate("/chat/channel")
 		if (newMode === "dm")
-			navigate("/chat/dm")
+			return ;
 	}
 	return (
 		<div className='chatPage'>
@@ -42,9 +44,9 @@ function ChannelPage() {
 						</div>
  					:
 					<>
-						<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
-						<button className="selectedButton" onClick={() => handleChangeMode("dm")}>Private Messages</button>
-						<Channels />
+						<button className={mode === "channel" ? "selectedButton" : null + ' selectButton'} onClick={() => handleChangeMode("channels")}>Channels</button>
+						<button className={mode === "dm" ? "selectedButton" : null + ' selectButton'} onClick={() => handleChangeMode("dm")}>Private Messages</button>
+						<PrivateMessages />
 					</>
 				}
 				</div>
@@ -53,4 +55,4 @@ function ChannelPage() {
 	);
 }
 
-export default ChannelPage;
+export default DMPage;

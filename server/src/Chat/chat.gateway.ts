@@ -51,7 +51,6 @@ export class ChatGateway {
         client.leave(client.data.channelId);
         this.server.emit('leaveFromServer', {channelId: client.data.channelId, userId: client.data.userId});
         const s = await this.server.in(client.data.channelId).fetchSockets()
-
         let u = [];
         for (const socket of s) {
             u.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
@@ -62,11 +61,11 @@ export class ChatGateway {
         // Join to the room.
         
         client.join(data.channelId);
-
+        
         client.data.userId = data.userId;
         client.data.name = (await this.chatService.getUser(data.userId)).name;
         client.data.channelId = data.channelId;
-
+        
         this.server.emit('joinFromServer', data);
         const sockets = await this.server.in(data.channelId).fetchSockets()
 

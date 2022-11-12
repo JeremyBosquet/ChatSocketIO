@@ -1,9 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
-import { getSelectedChannel, getSelectedChannelDM, getSocket, setSelectedChannelDM } from '../../../Redux/chatSlice';
+import { getSocket } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface props {
     dm: any;
@@ -12,17 +13,18 @@ interface props {
 function DM(props: props) {
   const user = useSelector(getUser);
   const socket = useSelector(getSocket);
-  const selectedChannelDM = useSelector(getSelectedChannelDM);
   const [name, setName] = useState<string>("Pending...");
-  let init = false;
+  
+  const params = useParams();
+  const selectedChannelDM = params.id || "";
+  const navigate = useNavigate();
 
-  const dispatch = useDispatch();
   
   const handleSelectChannel = (id: string) => {
     if (selectedChannelDM !== "" && selectedChannelDM !== id) {
       socket?.emit('leave', { userId: user.id, channelId: selectedChannelDM });
     }
-    dispatch(setSelectedChannelDM(id));
+    navigate('/chat/dm/' + id);
   }
   
   useEffect(() => {
@@ -31,9 +33,9 @@ function DM(props: props) {
       const u = (await axios.get(`http://localhost:4000/api/chat/user/` + userId)).data;
       if (u?.name)
         setName(u.name);
-      init = true;
     }
     getName();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

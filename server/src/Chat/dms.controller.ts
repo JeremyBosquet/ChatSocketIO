@@ -11,7 +11,6 @@ export class DMsController {
 
     @Post('dm') //Get dm where two user
     async getDmWhereTwoUser(@Body(ValidationPipe) body: DmCheckDTO, @Res() res) {
-        console.log(body)
         const dm = await this.dmsService.getAndCreateDmWhereTwoUser(body.user1, body.user2);
         res.json(dm);
     }

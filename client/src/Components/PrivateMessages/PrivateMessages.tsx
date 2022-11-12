@@ -2,17 +2,17 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import './Channels.scss';
 import { useSelector } from 'react-redux';
-import { getSelectedChannelDM } from '../../Redux/chatSlice';
 import { getUser } from '../../Redux/authSlice';
 import DM from './DM/DM';
 import DMChannel from './DMChannel/DMChannel';
+import { useParams } from 'react-router-dom';
 
 function PrivateMessages() {
+    const params = useParams();
     const [init, setInit] = useState<boolean>(false);
     const [dms, setDMs] = useState<[]>([]);
 
     const user = useSelector(getUser);
-    const selectedChannelDM = useSelector(getSelectedChannelDM);
     
     useEffect(() => {
         const getUsersDM = async (userId: any) => {
@@ -39,7 +39,7 @@ function PrivateMessages() {
                 ))}
             </div>
             <div className='channelChat'>
-                { selectedChannelDM !== "" ? 
+                { params.id !== undefined ? 
                     <DMChannel />
                         :
                     <p>Select a player</p>

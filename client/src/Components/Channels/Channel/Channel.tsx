@@ -1,13 +1,14 @@
 import Join from '../Join/Join';
 import Leave from '../Leave/Leave';
 import { ControlledMenu } from '@szhsin/react-menu';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
-import { getSelectedChannel, getSocket, setSelectedChannel } from '../../../Redux/chatSlice';
+import { getSocket } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
 import { useState } from 'react';
 import Manage from '../Manage/Manage';
 import { useRef } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface props {
     channel: any;
@@ -19,8 +20,10 @@ function Channel(props: props) {
   const ref = useRef(null);
   const user = useSelector(getUser);
   const socket = useSelector(getSocket);
-  const selectedChannel = useSelector(getSelectedChannel);
-  const dispatch = useDispatch()
+
+  const params = useParams();
+  const selectedChannel = params.id || "";
+  const navigate = useNavigate();
 
   const [toggleMenu, setToggleMenu] = useState<boolean>(false);
   const [manageMode, setManageMode] = useState<boolean>(false);
@@ -34,8 +37,9 @@ function Channel(props: props) {
     if (!props.foundChannel && selectedChannel !== "" && selectedChannel !== id) {
       socket?.emit('leave', { userId: user.id, channelId: selectedChannel });
     }
-    if (!props.foundChannel)
-      dispatch(setSelectedChannel(id))
+    if (!props.foundChannel && selectedChannel !== id)
+      navigate('/chat/channel/' + id);
+      // dispatch(setSelectedChannel(id))
   }
 
    function isOwner() {

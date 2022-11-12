@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { getUser } from "../../../../../Redux/authSlice";
-import { setMode, setSelectedChannelDM } from "../../../../../Redux/chatSlice";
 import { IuserDb } from "../../interfaces/users";
 
 interface props {
@@ -10,19 +10,20 @@ interface props {
 
 function DM(props : props) {
 
-  const dispatch = useDispatch();
   const me = useSelector(getUser);
+  const params = useParams();
+  const navigate = useNavigate();
 
   const handleDM = async (targetId: string) => {
+    if (!params.id)
+      navigate('/chat/channel');
+
     await axios.post(`http://localhost:4000/api/chat/dm/`, {
       user1: me.id,
       user2: targetId,
     }).then(res => {
       if (res.data.id)
-      {
-        dispatch(setSelectedChannelDM(res.data.id));
-        dispatch(setMode("dm"));
-      }
+        navigate(`/chat/dm/${res.data.id}`);
     });
   }
 

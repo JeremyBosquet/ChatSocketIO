@@ -1,14 +1,15 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getUser } from "../../../../../Redux/authSlice";
-import { getSelectedChannel, getSocket } from "../../../../../Redux/chatSlice";
+import { getSocket } from "../../../../../Redux/chatSlice";
 import { IuserDb } from "../../interfaces/users";
 import DateTimePicker from 'react-datetime-picker';
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
 import './Ban.scss'
+import { useNavigate, useParams } from "react-router-dom";
 
 interface props {
     user: IuserDb;
@@ -17,14 +18,19 @@ interface props {
 function Ban(props : props) {
   const [value, onChange] = useState<Date>(new Date());
   const socket = useSelector(getSocket);
-  const selectedChannel = useSelector(getSelectedChannel);
   const me = useSelector(getUser);
+
+  const params = useParams();
+  const navigate = useNavigate();
+  const selectedChannel = params.id || "";
 
   const [time, setTime] = useState<string>("permanent");
   const [banMenu, setBanMenu] = useState(false);
 
   const handleBan = async (targetId: string) => {
-    
+    if (!params.id)
+      navigate('/chat/channel');
+
     if (!value)
       onChange(new Date());
     

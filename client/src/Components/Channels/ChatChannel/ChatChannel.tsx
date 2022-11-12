@@ -7,8 +7,9 @@ import Messages from './Messages/Messages';
 import { Imessage } from './interfaces/messages';
 import './ChatChannel.scss'
 import { useDispatch, useSelector } from 'react-redux';
-import { getSelectedChannel, getSocket, setChannels, setSelectedChannel } from '../../../Redux/chatSlice';
+import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { getUser, setUser } from '../../../Redux/authSlice';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface Ichannel {
   id: string;
@@ -22,12 +23,14 @@ function ChatChannel() {
   const [usersConnected, setUsersConnected] = useState<Iuser[]>([]);
   const [channel, setChannel] = useState<Ichannel>();
   const [mutedUsers, setMutedUsers] = useState<[]>([]);
+  const params = useParams();
   
-  const selectedChannel = useSelector(getSelectedChannel);
+  const selectedChannel = params.id || "";
   const user = useSelector(getUser);
   const socket = useSelector(getSocket);
-
+  
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const getUsersChannel = async (userId: any) => {
     await axios.get("http://localhost:4000/api/chat/channels/user/" + userId)
@@ -44,89 +47,96 @@ function ChatChannel() {
         setMessages(res.data);
     }).catch(err => {
       if (err.response.status === 401) {
-        dispatch(setSelectedChannel(""));
-      getUsersChannel(user.id);
-      setMessages([]);
+        getUsersChannel(user.id);
+        setMessages([]);
       }
+      navigate('/chat/channel');
     });
   }
   
   useEffect(() => {
-    
-    const getMutedUsers = async () => {
-      await axios.get(`http://localhost:4000/api/chat/mutes/` + selectedChannel)
-      .then(res => {
-        if (res.data)
-          setMutedUsers(res.data);
-      });
-    }
-    const getChannel = async () => {
-      const channel = (await axios.get(`http://localhost:4000/api/chat/channel/` + selectedChannel)).data;
-      setChannel(channel);
-      setUsers(channel.users);
-      dispatch(setUser({...user, role: channel.users.find((u: IuserDb) => u.id === user.id)?.role}));
-    }
-    if (selectedChannel !== "")
+    if (params.id !== undefined) 
     {
-      socket?.emit("join", {channelId: selectedChannel, userId: user.id});
-      getMessages();
-    }
-
-    getChannel();
-
-    if (selectedChannel && channel?.users.filter(u => u.id === user.id)[0]?.role === ("admin" || "owner")) {
-      getMutedUsers();
-    }
-  }, [selectedChannel])
+      const getMutedUsers = async () => {
+        await axios.get(`http://localhost:4000/api/chat/mutes/` + selectedChannel)
+        .then(res => {
+          if (res.data)
+            setMutedUsers(res.data);
+        });
+      }
+      const getChannel = async () => {
+        const channel = (await axios.get(`http://localhost:4000/api/chat/channel/` + selectedChannel)).data;
+        setChannel(channel);
+        setUsers(channel.users);
+        dispatch(setUser({...user, role: channel.users.find((u: IuserDb) => u.id === user.id)?.role}));
+      }
+      if (selectedChannel !== "")
+      {
+        socket?.emit("join", {channelId: selectedChannel, userId: user.id});
+        getMessages();
+      }
+  
+      getChannel();
+  
+      if (selectedChannel && channel?.users.filter(u => u.id === user.id)[0]?.role === ("admin" || "owner")) {
+        getMutedUsers();
+      }
+    } else
+      navigate("/chat/channel/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params.id])
   
   useEffect(() => {
-    socket.removeListener('messageFromServer');
-    socket.on('messageFromServer', (message: Imessage) => {
-      setMessages(messages => [...messages, message]);
-    });
-    
-    socket.removeListener('usersConnected');
-    socket.on('usersConnected', (usersConnected: Iuser[]) => {
-      setUsersConnected(usersConnected);
-    });
-    
-    socket.removeListener('updateAllPlayers');
-    socket?.on('updateAllPlayers', (usersDb: IuserDb[]) => {
-      setUsers(usersDb);
-    });
-    
-    socket.removeListener('updateMutes');
-    socket?.on('updateMutes', (usersDb: []) => {
-      if (channel?.users.filter(user => user.id === user.id)[0]?.role === "admin" || "owner")
-        setMutedUsers(usersDb);
-    });
-    
-    socket.removeListener('kickFromChannel');
-    socket.on('kickFromChannel', (data: {target: string, channelId: string, message: string}) => {
-      socket?.emit('leavePermanant', { userId: user.id, channelId: data.channelId });
-      getUsersChannel(user.id);
-      console.log({selectedChannel: selectedChannel, channelId: data.channelId});
-      if (selectedChannel === data.channelId)
-        dispatch(setSelectedChannel(""));
-      // use message to display a message to the user
-    });
-    
-    socket.removeListener('adminFromServer');
-    socket.on('adminFromServer', (data: {target: string, channelId: string, message: string, role: string}) => {
-      if (data.target === user.id) {
-        dispatch(setUser((user : Iuser) => ({...user, role: data.role})));
+    if (socket) {
+      socket.removeListener('messageFromServer');
+      socket.on('messageFromServer', (message: Imessage) => {
+        setMessages(messages => [...messages, message]);
+      });
+      
+      socket.removeListener('usersConnected');
+      socket.on('usersConnected', (usersConnected: Iuser[]) => {
+        setUsersConnected(usersConnected);
+      });
+      
+      socket.removeListener('updateAllPlayers');
+      socket?.on('updateAllPlayers', (usersDb: IuserDb[]) => {
+        setUsers(usersDb);
+      });
+      
+      socket.removeListener('updateMutes');
+      socket?.on('updateMutes', (usersDb: []) => {
+        if (channel?.users.filter(u => u.id === user.id)[0]?.role === "admin" || "owner")
+          setMutedUsers(usersDb);
+      });
+      
+      socket.removeListener('kickFromChannel');
+      socket.on('kickFromChannel', (data: {target: string, channelId: string, message: string}) => {
+        socket?.emit('leavePermanant', { userId: user.id, channelId: data.channelId });
+        getUsersChannel(user.id);
+        if (params.id === data.channelId)
+          navigate('/chat/channel');
         // use message to display a message to the user
-      }
-      if (selectedChannel === data.channelId) {
-        if (user?.role === "admin") {
-          setUsers(users => users.map((user: IuserDb) => {
-            if (user.id === data.target)
-              return ({...user, role: data.role});
-  
-            return user;
-          }));
+      });
+      
+      socket.removeListener('adminFromServer');
+      socket.on('adminFromServer', (data: {target: string, channelId: string, message: string, role: string}) => {
+        if (data.target === user.id) {
+          dispatch(setUser(({...user, role: data.role})));
+          // use message to display a message to the user
         }
-    }});
+        if (params.id === data.channelId) {
+          console.log('here' + data.role);
+          if (user?.role === "admin") {
+            setUsers(users => users.map((user: IuserDb) => {
+              if (user.id === data.target)
+                return ({...user, role: data.role});
+
+              return user;
+            }));
+          }
+      }});
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket])
 
   return (

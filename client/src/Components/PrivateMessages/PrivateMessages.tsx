@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import './Channels.scss';
-import { useDispatch, useSelector } from 'react-redux';
-import { getChannels, getSelectedChannelDM, setChannels } from '../../Redux/chatSlice';
+import { useSelector } from 'react-redux';
+import { getSelectedChannelDM } from '../../Redux/chatSlice';
 import { getUser } from '../../Redux/authSlice';
 import DM from './DM/DM';
-import DMChannel from './ChatChannel/DMChannel';
+import DMChannel from './DMChannel/DMChannel';
 
 function PrivateMessages() {
     const [init, setInit] = useState<boolean>(false);

@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { getUser } from "../../../../../Redux/authSlice";
-import { getSelectedChannel, getSocket } from "../../../../../Redux/chatSlice";
+import { getSocket } from "../../../../../Redux/chatSlice";
 import { IuserDb } from "../../interfaces/users";
 
 interface props {
@@ -9,12 +10,16 @@ interface props {
 }
 
 function Kick(props : props) {
-
   const socket = useSelector(getSocket);
-  const selectedChannel = useSelector(getSelectedChannel);
   const me = useSelector(getUser);
+  const params = useParams();
+  const navigate = useNavigate();
+  const selectedChannel = params.id || "";
 
   const handleKick = async (targetId: string) => {
+    if (!params.id)
+      navigate('/chat/channel');
+
     await axios.post(`http://localhost:4000/api/chat/channel/kick/`, {
       channelId: selectedChannel,
       target: targetId,

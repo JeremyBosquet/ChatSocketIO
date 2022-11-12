@@ -14,7 +14,7 @@ export class ChatGateway {
 
     constructor(
         private chatService: ChatService,
-        private dmsService: DMsService    
+        private dmsService: DMsService
     ) {}
 
 
@@ -22,12 +22,12 @@ export class ChatGateway {
     server;
 
     clients = [];
-
+    
     @SubscribeMessage('connected')
     handleConnect(@MessageBody() data: {userId: string}, @ConnectedSocket() client: Socket): void {
         this.clients.push({id: client.id, userId: data.userId});
     }
-
+    
     @SubscribeMessage('disconnect')
     async handleDisconnect(@ConnectedSocket() client: Socket) : Promise<void> {
         const sockets = await this.server.in(client.data.channelId).fetchSockets()
@@ -146,14 +146,13 @@ export class ChatGateway {
     @SubscribeMessage('kick')
     async kick(@MessageBody() data: {channelId: string, target: string, type: string}, @ConnectedSocket() client: Socket): Promise<void> {
         const message = data.type === "kick" ? "You have been kicked from the channel" : "You have been banned from the channel";
-        const c = this.clients.filter(c => c.userId === data.target);
-        if (c.length > 0)
-            this.server.to(c[0].id).emit('kickFromChannel', {target: data.target, channelId: data.channelId, message: message});
         this.server.in(data.channelId).emit('updateAllPlayers', await this.chatService.getUsersInfosInChannel(data.channelId));
+        
         // Remove the id of the room from the user socket who has been kicked
         const sockets = await this.server.in(data.channelId).fetchSockets()
         for (const socket of sockets) {
             if (socket.data.userId === data.target) {
+                this.server.to(socket.id).emit('kickFromChannel', {target: data.target, channelId: data.channelId, message: message});
                 socket.data.channelId = "";
                 socket.leave(data.channelId);
             }

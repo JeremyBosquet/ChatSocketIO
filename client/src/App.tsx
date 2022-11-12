@@ -1,15 +1,16 @@
 import {
 	BrowserRouter as Router,
 	Route,
-	Routes
+	Routes,
 } from "react-router-dom";
-import ChatPage from "./Pages/ChatPage/ChatPage";
+import ChannelPage from "./Pages/ChannelPage/ChannelPage";
 
 function App() {
 	return (
 		<Router>
 			<Routes>
-				<Route path="/" element={<ChatPage />}></Route>
+				<Route path="/chat/channel" element={<ChannelPage />}></Route>
+				<Route path="/chat/channel/:id" element={<ChannelPage />}></Route>
 				<Route path="*" element={<div>Page not found</div>}></Route>
 			</Routes>
 		</Router>

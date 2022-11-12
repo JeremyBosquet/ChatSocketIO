@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { getUser } from "../../../../../Redux/authSlice";
-import { getSelectedChannel, getSocket } from "../../../../../Redux/chatSlice";
+import { getSocket } from "../../../../../Redux/chatSlice";
 import { IuserDb } from "../../interfaces/users";
 
 interface props {
@@ -13,15 +14,22 @@ interface props {
 function Admin(props : props) {
 
   const socket = useSelector(getSocket);
-  const selectedChannel = useSelector(getSelectedChannel);
   const me = useSelector(getUser);
 
+  const params = useParams();
+  const navigate = useNavigate();
+  const selectedChannel = params.id || "";
+
+  
   const setAdmin = async (targetId: string) => {
+    if (!params.id)
+      navigate('/chat/channel');
+
     await axios.post(`http://localhost:4000/api/chat/channel/setadmin/`, {
       channelId: selectedChannel,
       target: targetId,
       owner: me.id
-    }).then(res => {
+    }).then(() => {
       props.setUsers(props.users.map(user => {
         if (user.id === targetId)
           user.role = "admin";

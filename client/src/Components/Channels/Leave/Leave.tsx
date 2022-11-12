@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
-import { getSelectedChannel, getSocket, setChannels, setSelectedChannel } from '../../../Redux/chatSlice';
+import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface props {
     channelId: string;
@@ -11,8 +12,10 @@ interface props {
 function Leave(props: props) {
     const user = useSelector(getUser);
     const socket = useSelector(getSocket);
-    const selectedChannel = useSelector(getSelectedChannel);
     const dispatch = useDispatch()
+
+    const params = useParams();
+    const navigate = useNavigate();
 
     const handleLeave = async (id: string) => {
         const getUsersChannel = async (userId: any) => {
@@ -28,8 +31,8 @@ function Leave(props: props) {
             getUsersChannel(user.id);
             socket?.emit('leavePermanant', { userId: user.id, channelId: id });
             props.setSearchChannel("");
-            if (selectedChannel === id)
-                dispatch(setSelectedChannel(""));
+            if (params.id === id)
+                navigate('/chat/channel');
         })
     }
     

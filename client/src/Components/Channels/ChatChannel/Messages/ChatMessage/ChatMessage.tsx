@@ -33,6 +33,7 @@ function ChatMessage(props : props) {
     }
     if (props.message?.userId)
       getUsername();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

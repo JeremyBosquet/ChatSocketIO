@@ -6,10 +6,12 @@ import Search from './Search/Search';
 import './Channels.scss';
 import ChatChannel from './ChatChannel/ChatChannel';
 import { useDispatch, useSelector } from 'react-redux';
-import { getChannels, getSelectedChannel, setChannels } from '../../Redux/chatSlice';
+import { getChannels, setChannels } from '../../Redux/chatSlice';
+import { useParams } from 'react-router-dom';
 import { getUser } from '../../Redux/authSlice';
 
 function Channels() {
+    const params = useParams();
     const [searchChannel, setSearchChannel] = useState<string>("");
     const [init, setInit] = useState<boolean>(false);
     const [channelsFind, setChannelsFind] = useState<[]>([]);
@@ -17,7 +19,6 @@ function Channels() {
 
     const user = useSelector(getUser);
     const channels = useSelector(getChannels);
-    const selectedChannel = useSelector(getSelectedChannel);
     
     useEffect(() => {
         const getUsersChannel = async (userId: any) => {
@@ -29,10 +30,10 @@ function Channels() {
             })
         }
         
-        if (!init)
+        if (!init && user.id)
             getUsersChannel(user.id);
         //eslint-disable-next-line
-    }, [init])
+    }, [init, user])
 
     return (
     <div className='channels'>
@@ -57,7 +58,7 @@ function Channels() {
                 </div>
             }
             <div className='channelChat'>
-                { selectedChannel !== "" ? 
+                { params.id !== undefined ? 
                     <ChatChannel />
                         :
                     <p>Select a channel</p>

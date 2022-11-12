@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
-import { getSelectedChannel, getSelectedChannelDM, getSocket, setSelectedChannel, setSelectedChannelDM } from '../../../Redux/chatSlice';
+import { getSelectedChannel, getSelectedChannelDM, getSocket, setSelectedChannelDM } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
 import axios from 'axios';
 import { useEffect, useState } from 'react';

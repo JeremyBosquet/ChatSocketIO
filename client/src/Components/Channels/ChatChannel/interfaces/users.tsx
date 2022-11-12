@@ -3,6 +3,7 @@ export interface Iuser {
     userId: string;
     name: string;
     channelId: string;
+    role: string | undefined;
 }
 
 export interface IuserDb {

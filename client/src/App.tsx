@@ -6,7 +6,7 @@ import HomePage from "./Pages/Home/HomePage";
 import Profile from "./Pages/Profile/Profile";
 import NotFound from "./Pages/NotFound";
 import Logout from "./Components/Auth/Logout";
-import Settings from "./Pages/Settings";
+import Settings from "./Pages/Settings/Settings";
 import TwoAuth from "./Pages/TwoAuth";
 import GamePlayingPage from "./Pages/GamePlayingPage/GamePlayingPage";
 import axios from "axios";

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import SignIn from "../Components/Auth/Signin";
+import SignIn from "../../Components/Auth/Signin";
 import { redirect, useNavigate, useLocation } from "react-router-dom";
 //import { userInfo } from 'os';
 // import { useDispatch, useSelector } from 'react-redux';
@@ -8,9 +8,9 @@ import { redirect, useNavigate, useLocation } from "react-router-dom";
 // import {NotificationContainer, NotificationManager} from 'react-notification';
 // import { ToastContainer, toast } from 'react-toastify';
 // import "react-toastify/dist/ReactToastify.css";
-import { createNotification } from "../Components/notif/Notif";
+import { createNotification } from "../../Components/notif/Notif";
 import React from "react";
-import NavBar from "../Components/Nav/NavBar";
+import NavBar from "../../Components/Nav/NavBar";
 
 function Settings() {
   let navigate = useNavigate();

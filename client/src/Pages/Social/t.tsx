@@ -9,10 +9,6 @@ import React from 'react';
 //const style = require('./Social.scss');
 import './Social.scss';
 import NavBar from '../../Components/Nav/NavBar';
-import {IoPersonRemoveSharp, IoPersonAddSharp, IoSearchSharp} from 'react-icons/io5';
-import { FaUserCircle, FaUserFriends } from "react-icons/fa";
-import {ImBlocked, ImCross, ImCheckmark} from "react-icons/im";
-import {MdCancelScheduleSend} from "react-icons/md";
 
 
 function Social() {
@@ -505,7 +501,7 @@ function Social() {
 
 	function IsBlocked(uuid : string) {
 		const userBlocked : any[] = blockList;
-		const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid);
+		const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid)
 		if (!test.length)
 			return true;
 		return false;
@@ -543,12 +539,12 @@ function Social() {
 	useEffect(() => {
 
 		if (!booleffect2.current) {
-			// if (((location.pathname === '/social') || (location.pathname === '/social/')) && profileDisplayed)
-			// 	HideProfileUseEffect();
-			// else if (!(location.pathname === '/social') && !(location.pathname === '/social/') && !profileDisplayed)
-			// 	ShowProfileUseEffect(location.pathname.slice(8));
-			// console.log(location.pathname)
-			// console.log(!profileDisplayed)
+			if (((location.pathname === '/social') || (location.pathname === '/social/')) && profileDisplayed)
+				HideProfileUseEffect();
+			else if (!(location.pathname === '/social') && !(location.pathname === '/social/') && !profileDisplayed)
+				ShowProfileUseEffect(location.pathname.slice(8));
+			console.log(location.pathname)
+			console.log(!profileDisplayed)
 			booleffect2.current = true;
 		}
 	}, [location.pathname]);
@@ -557,234 +553,87 @@ function Social() {
 		<div className='SocialPage'>
 		{
 			<div>
-			{/* <button onClick={() => {socket?.emit("stpUneNotif")}}>Ask notifcation</button> */}
+				<NavBar socket={socket} setSocket={setSocket} />
+			<div>
+			<button onClick={() => {socket?.emit("stpUneNotif")}}>Ask notifcation</button>
 			{
 				!(booleffect3) ?
 				(
 					<div>
 					<div className='container' id='blur'>
-					<div>
-							<div id='listSearchParent'>
-								<h3> Search Friends </h3>
-								<form >
+						<div >
+							<h1> Friends List </h1>
+							{friendList.map((user) => (
+							<div key={user.uuid}> 
+								<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/> <br></br>
+								<p> {user.username} </p>
+								<button onClick={(e) => (RemoveFriend(user.uuid))} > remove friend </button>
+								<button onClick={(e) => (ShowProfile(user.uuid))} > profile </button>
+								<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}> Block </button><br></br><br></br>
+							</div>))}
+							<br></br>
+						</div>
+						<div>
+							<h1> Search Friends </h1>
+							<form >
+								<p> Your friend username : &nbsp;
 									<input
 									type="text"
 									id="friendusername"
 									name="friendusername"	
 									required
-									maxLength={16}
 									onChange={e  => SearchFriend(e.target.value)}
 									/>
-									<p><IoSearchSharp/></p>
-								</form>
+								</p>
+							</form>
+							{searchList.map((user, index) => (
+							<div key={user.uuid}> 
+								<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
+								<p> {user.username} </p>
 								<div>
-								{
-									searchList.length ?
+								{	IsRequested(user.uuid) ?
 									(
-										searchList.length > 3 ?
+										IsRequest(user.uuid) ?
 										(
-											<div id='listSearchScroll'>
-											{
-												searchList.map((user, index) => (
-												<div key={user.uuid} className='mapSearch'> 
-													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-													<p> {user.username} </p>
-													<div className='buttons'>
-														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? <ImBlocked/>: "Unblock"} </button>
-													</div>
-													<div>
-													{	IsRequested(user.uuid) ?
-														(
-															IsRequest(user.uuid) ?
-															(
-																<div className='buttons2'>
-																	<button onClick={() => (AddOrRemoveFriend(user.uuid))} > {IsFriend(user.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
-																</div>
-															)
-
-															:
-
-															(
-																<div className='buttons2'>
-																	<button onClick={() => (AcceptFriend(user.uuid, user.image))} > <span className='green'> <ImCheckmark/>  </span></button>
-																	<button onClick={(e) => (DeclineFriendAdd(user.uuid))} ><span className='red'><ImCross/></span> </button>
-																</div>
-															)
-									
-														)
-														:
-														<div className='buttons2'>
-															<button onClick={(e) => (CancelFriendAdd(user.uuid))} > <MdCancelScheduleSend/> </button>
-														</div>
-													}
-													</div>
-												</div>))
-											}
+											<div>
+												<button onClick={() => (AddOrRemoveFriend(user.uuid))} > {IsFriend(user.uuid) ? "Add as friend": "Remove friend"} </button>
 											</div>
 										)
 
 										:
 
 										(
-											<div id='listSearch'>
-											{
-												searchList.map((user, index) => (
-												<div key={user.uuid} className='mapSearch'> 
-													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-													<p> {user.username} </p>
-													<div className='buttons'>
-														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? <ImBlocked/>: "Unblock"} </button>
-													</div>
-													<div>
-													{	IsRequested(user.uuid) ?
-														(
-															IsRequest(user.uuid) ?
-															(
-																<div className='buttons2'>
-																	<button onClick={() => (AddOrRemoveFriend(user.uuid))} > {IsFriend(user.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
-																</div>
-															)
-
-															:
-
-															(
-																<div className='buttons2'>
-																	<button onClick={() => (AcceptFriend(user.uuid, user.image))} > <span className='green'><ImCheckmark/></span> </button>
-																	<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > <span className='red'><ImCross/></span> </button>
-																</div>
-															)
-									
-														)
-														:
-														<div className='buttons2'>
-															<button onClick={(e) => (CancelFriendAdd(user.uuid))} > <MdCancelScheduleSend/> </button>
-														</div>	
-													}
-													</div>
-												</div>))
-											}
+											<div>
+												<button onClick={() => (AcceptFriend(user.uuid, user.image))} > Accept Friend </button>
+												<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > decline friend </button>
 											</div>
 										)
+				
 									)
-
 									:
-
-										null
+										<button onClick={(e) => (CancelFriendAdd(user.uuid))} > cancel friend add </button>	
 								}
 								</div>
-							</div>
+								<button onClick={(e) => (ShowProfile(user.uuid))} > profile </button>
+								<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? "Block": "Unblock"} </button><br></br><br></br>
+							</div>))}
+							<br></br>
 						</div>
-						<div id='listFriendParent'>
-							<div>
-							<h3> Friend List </h3>
-							<div>
-							{
-								friendList.length ?
-								(
-									friendList.length > 2 ?
-									(
-										<div id='listFriendScroll'>
-										{
-											friendList.map((user) => (
-												<div key={user.uuid} className='mapFriend'> 
-													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-													<p> {user.username} </p>
-													<div className='buttons'>
-														<button onClick={(e) => (RemoveFriend(user.uuid))} > <IoPersonRemoveSharp/> </button>
-														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}><ImBlocked/></button>
-													</div>
-												</div>
-											))
-										}
-										</div>
-									)
-
-									:
-									
-									(
-										<div id='listFriend'>
-										{
-											friendList.map((user) => (
-												<div key={user.uuid} className='mapFriend'> 
-													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-													<p> {user.username} </p>
-													<div className='buttons'>
-														<button onClick={(e) => (RemoveFriend(user.uuid))} > <IoPersonRemoveSharp/> </button>
-														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}> <ImBlocked/> </button>
-													</div>
-												</div>
-											))
-										}
-										</div>
-									)
-
-								)
-
-								:
-
-									null
-							}
-							</div>
-							</div>
+						<div>
+							<h1> Friend requests </h1>
+							{requestList.map((user, index) => (
+							<div key={index}> 
+								<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
+								<p> {user?.username} </p>
+								<button onClick={(e) => (AcceptFriend(user.uuid, user.image))} > accept friend </button>
+								<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > decline friend </button>
+								<button onClick={(e) => (ShowProfile(user.uuid))} > profile </button>
+								<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> Block </button>
+							</div>))}
+							<br></br>
 						</div>
-						
-						<div id='listReqParent'>
-						{
-							<div>
-								<h3> Friend requests </h3>		
-								<div>
-								{								
-									requestList.length ?
-									(
-										requestList.length > 3 ?
-										(
-											<div id='listReqScroll'>
-											{
-												requestList.map((user, index) => (
-												<div key={index} className='mapReq'> 
-													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-													<p> {user?.username} </p>
-													<div className='buttons'>
-														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> <ImBlocked/> </button>
-														<button onClick={(e) => (AcceptFriend(user.uuid, user.image))} > <span className='green'><ImCheckmark/></span> </button>
-														<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > <span className='red'><ImCross/></span> </button>
-													</div>
-												</div>))
-											}
-											</div>
-										)
-										:
-										(
-											<div id='listReq'>
-											{
-												requestList.map((user, index) => (
-												<div key={index} className='mapReq'> 
-													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-													<p> {user?.username} </p>
-													<div className='buttons'>
-														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> <ImBlocked/> </button>
-														<button onClick={(e) => (AcceptFriend(user.uuid, user.image))} > <span className='green'><ImCheckmark/></span> </button>
-														<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > <span className='red'><ImCross/></span> </button>
-													</div>
-												</div>))
-											}
-											</div>
-										)
-									)
-
-									:
-
-									null							
-								}
-								</div>
-							</div>
-						}
+						<div>
+							<button onClick={() => navigate("/")}> Home </button>
 						</div>
 					</div>
 				<div id="popup">
@@ -792,15 +641,15 @@ function Social() {
 					profileDisplayed ?
 					(
 						<div>
-							<h3> {profilePage?.username} </h3>
-							<img className="ProfileImg" src={profilePage?.image} alt="user_img" width="384" height="256"/>
+							<h1> {profilePage?.username} </h1>
+							<img className="ProfileImg" src={profilePage?.image} alt="user_img" width="384" height="256"/><br></br>
 							<div>
 							{	IsRequested(profilePage?.uuid) ?
 								(
 									IsRequest(profilePage?.uuid) ?
 									(
 										<div>
-											<button onClick={() => (AddOrRemoveFriend(profilePage?.uuid))} > {IsFriend(profilePage?.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+											<button onClick={() => (AddOrRemoveFriend(profilePage?.uuid))} > {IsFriend(profilePage?.uuid) ? "Add as friend": "Remove friend"} </button>
 										</div>
 									)
 
@@ -808,69 +657,44 @@ function Social() {
 
 									(
 										<div>
-											<button onClick={() => (AcceptFriend(profilePage?.uuid, profilePage?.image))} > <span className='green'><ImCheckmark/></span> </button>
-											<button onClick={(e) => (DeclineFriendAdd(profilePage?.uuid))} > <span className='red'><ImCross/></span> </button>
+											<button onClick={() => (AcceptFriend(profilePage?.uuid, profilePage?.image))} > Accept Friend </button>
+											<button onClick={(e) => (DeclineFriendAdd(profilePage?.uuid))} > decline friend </button>
 										</div>
 									)
 			
 								)
 								:
-									<button onClick={(e) => (CancelFriendAdd(profilePage?.uuid))} > <MdCancelScheduleSend/> </button>	
+									<button onClick={(e) => (CancelFriendAdd(profilePage?.uuid))} > cancel friend add </button>	
 							}
 							</div>
-							<button onClick={() => (BlockOrUnblockUser(profilePage?.uuid))} > {IsBlocked(profilePage?.uuid) ? <ImBlocked/>: "Unblock"} </button>
+							<button onClick={() => (BlockOrUnblockUser(profilePage?.uuid))} > {IsBlocked(profilePage?.uuid) ? "Block": "Unblock"} </button>
 							<button onClick={() =>  HideProfile()}> Close </button>
-							<div id='listGameParent'>
+							<div id='listParent'>
 							{
 								historyList.length ?
 								(
-									historyList.length > 3 ?
-									(
-										<div id='listGameScroll'>
-										{
-											historyList.map((game, index) => (
-												<ul key={index} >
-													{whoWon(profilePage.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
+									<div id='list'>
+									{
+										historyList.map((game, index) => (
+											<ul key={index} >
+												{whoWon(profilePage.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
+												
+													<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+
+													:
+
+													<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
 													
-														<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-
-														:
-
-														<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-														
-													}
-													<li> <span className='green'> this is test of history match </span> </li>
-													<li> <span className='red'> this is test of history match </span> </li>
-													<li> <span className='green'> this is test of history match </span> </li>
-													<li> <span className='red'> this is test of history match </span> </li>
-													<li> <span className='green'> this is test of history match </span> </li>
-												</ul>
-											))
-										}
-										</div>
-									)
-
-									:
-
-									(
-										<div id='listGame'>
-										{
-											historyList.map((game, index) => (
-												<ul key={index} >
-													{whoWon(profilePage.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
-													
-														<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-
-														:
-
-														<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-														
-													}
-												</ul>
-											))
-										}
-										</div>
-									)
+												}
+												<li> <span className='green'> this is test of history match </span> </li>
+												<li> <span className='red'> this is test of history match </span> </li>
+												<li> <span className='green'> this is test of history match </span> </li>
+												<li> <span className='red'> this is test of history match </span> </li>
+												<li> <span className='green'> this is test of history match </span> </li>
+											</ul>
+										))
+									}
+									</div>
 								)
 
 								:
@@ -890,16 +714,17 @@ function Social() {
 					)
 				}
 				</div>
-					</div>
+				</div>
 					
 				)
 
 				:
 					null
 				}
+				</div>
+				</div>
+			}
 			</div>
-		}
-		</div>
 	)
 }
 

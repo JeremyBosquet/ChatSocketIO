@@ -1,16 +1,14 @@
-@import url(//db.onlinewebfonts.com/c/31ed0189fe1ff1e740a652e0f75b77dc?family=Snell+Roundhand);
-@font-face {font-family: "Snell Roundhand"; src: url("//db.onlinewebfonts.com/t/31ed0189fe1ff1e740a652e0f75b77dc.eot"); src: url("//db.onlinewebfonts.com/t/31ed0189fe1ff1e740a652e0f75b77dc.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/31ed0189fe1ff1e740a652e0f75b77dc.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/31ed0189fe1ff1e740a652e0f75b77dc.woff") format("woff"), url("//db.onlinewebfonts.com/t/31ed0189fe1ff1e740a652e0f75b77dc.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/31ed0189fe1ff1e740a652e0f75b77dc.svg#Snell Roundhand") format("svg"); }
 .NavBar .menu
 {
 	position: relative;
 	width: 100%;
 	height: 40px;
-	background: linear-gradient(135deg, #9a0dfe, #637dfb);
-	box-shadow: 0 2px 12px 0 rgba(91, 41, 191, 0.5);
+	background: #0582CA;
+	box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.5);
 	//border-radius: 4px;
 }
 
-.NavBar .menu .ProjectName
+.NavBar .menu #ProjectName
 {
 	position: absolute;
 	left : 10px;
@@ -20,7 +18,7 @@
 		border: none;
 		background: none;
 		color: #000000;
-		font-family: Snell Roundhand, cursive;
+		font-family:Georgia, 'Times New Roman', Times, serif;
 		font-size: 25px;
 		font-style: oblique;
 		&:hover
@@ -37,7 +35,7 @@
 	top: 70%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background: linear-gradient(135deg, #9a0dfe, #637dfb);
+	background: #0582CA;
 	border: none;
 	width: 200px;
 	height: 100px;
@@ -47,7 +45,7 @@
 	border-radius: 30px;
 }
   
-.NavBar .icon
+.NavBar .click
 {
   //font-size: 24px;
   //position: relative;
@@ -55,6 +53,12 @@
 }
 
 .NavBar .menu {
+	// #navButtons.hidden
+	// {
+	// 	visibility: hidden;
+	// 	pointer-events: none;
+	// 	user-select : none;
+	// }
 	#profile
 	{
 		margin-top: 5px;
@@ -225,7 +229,7 @@
   opacity: 0.7;
 }
 
-.NavBar .icon
+.NavBar .menu .click
 {
   position: relative;
   cursor: pointer;
@@ -240,31 +244,24 @@
   background-color: rgba(255, 255, 255, 0);
   box-sizing: border-box;
   transition : (all, 0.3s);
-  &:hover
-  {
-	color: rgb(255, 255, 255);
-	// #menu_text
-	// {
-	// 	//width: 112px;
-	// 	background-color: rgba(255, 255, 255, 0.3);
-    //     opacity: 1;
-	//   }
-    //   + .menu_box
-	//   {
-    //     opacity: 1;
-    //    	transform : (translateY(0), translateX(0) ,scale(1));
-	//   //}
-	// }
-  }
+  label {
+	&:hover
+	{
+	  color: rgb(255, 255, 255);
+	  cursor: pointer;
+	  transition : 0.3s;
+    }
+   }
 }
 
 
 .NavBar .menu [type=radio]
 {
-  opacity: 0;
+  //opacity: 1;
+  visibility: hidden;
   &:hover
   {
-    + .icon
+    .icon
 	{
 	  #menu_text
 	  {
@@ -285,49 +282,37 @@
 /* The side navigation menu */
 .sidenav {
 	visibility: hidden;
+	margin-top: 40px;
 	height: 100%; /* 100% Full-height */
 	width: 260px; /* 0 width - change this with JavaScript */
 	position: fixed; /* Stay in place */
 	z-index: 1; /* Stay on top */
 	top: 0; /* Stay at the top */
 	right: 0;
-	background-color: rgb(0, 0, 0); /* Black*/
+	background-color: rgba(0, 0, 0, 0.85); /* Black*/
 	overflow-x: hidden; /* Disable horizontal scroll */
 	padding-top: 60px; /* Place content 60px from the top */
 }
 
-.sidenav.active {
+.NavBar .sidenav.active {
 	visibility: visible;
-	a {
-		padding: 8px 8px 8px 32px;
-		text-decoration: none;
-		font-size: 25px;
-		color: #818181;
-		display: block;
-		transition: 0.3s;
-	  }
-	  
-	  /* When you mouse over the navigation links, change their color */
-	  a:hover {
-		color: #f1f1f1;
-	  }
-	  
-	  /* Position and style the close button (top right corner) */
 	  .closebtn {
-		background-color: rgb(210, 2, 2);
+		opacity: unset;
+		&:hover
+		{
+			transition: 0.3s;
+			color :rgb(255, 255, 255);
+		}
+		background-color: rgba(0, 0, 0, 0);
 		border : none;
 		outline : none;
-		color : red;
+		color : #818181;
 		position: absolute;
 		top: 10px;
 		right: 25px;
 		font-size: 30px;
 		margin-left: 50px;
-
-		span{
-			color : red;
-		}
-	  }
+	}
 }
   /* Style page content - use this if you want to push the page content to the right when you open the side navigation *
   
@@ -344,7 +329,7 @@
 		background: linear-gradient(135deg, #9a0dfe, #637dfb);
 		box-shadow: 0 2px 12px 0 rgba(91, 41, 191, 0.5);
 	}
-	.NavBar .menu .ProjectName
+	.NavBar .menu #ProjectName
 	{
 		position: absolute;
 		left : 80px;

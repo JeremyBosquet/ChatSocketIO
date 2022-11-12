@@ -5,6 +5,7 @@ import GamePlay from "../../Components/GamePlay/GamePlay";
 import { createNotification } from "../../Components/notif/Notif";
 import React from "react";
 import NavBar from "../../Components/Nav/NavBar";
+import "../../Pages/Home/HomePage.scss";
 
 interface IPlayer {
   id: string;
@@ -137,7 +138,7 @@ function GamePlayingPage() {
   }, [socket, ready, playing, room, notification]);
 
   return (
-    <div>
+    <div className="main">
       <NavBar socket={socket} setSocket={setSocket} />
       {!ready && !playing ? (
         <GameReady

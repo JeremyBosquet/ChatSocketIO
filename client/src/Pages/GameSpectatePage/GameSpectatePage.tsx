@@ -10,6 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import GameSpectate from "../../Components/GameSpectate/GameSpectate";
 import React from "react";
 import NavBar from "../../Components/Nav/NavBar";
+import "../../Pages/Home/HomePage.scss";
 
 interface IPlayer {
   id: string;
@@ -136,7 +137,7 @@ function GameSpectatePage() {
     }
   }, [socket, roomId, navigate, notification]);
   return (
-    <div>
+    <div className="main">
       <NavBar socket={socket} setSocket={setSocket} />
       {!roomId ? (
         <div>

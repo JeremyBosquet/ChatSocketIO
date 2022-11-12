@@ -254,7 +254,7 @@ function HomePage() {
   }, []);
 
   return (
-    <div className="HomePage">
+    <div className="main">
       {!booleffect2 ? (
         <div>
           {!User ? (

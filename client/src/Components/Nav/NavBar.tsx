@@ -14,7 +14,9 @@ import { IoLogOutSharp } from "react-icons/io5";
 import { IoGameController } from "react-icons/io5";
 import { BsFillEyeFill } from "react-icons/bs";
 import { GrClose } from "react-icons/gr";
+import {AiOutlineClose} from "react-icons/ai";
 import "./NavBar.scss";
+import Social from "../../Pages/Social/Social";
 
 function NavBar(props: any) {
   let navigate = useNavigate();
@@ -168,12 +170,16 @@ function NavBar(props: any) {
   function openNav() {
     const open = document.getElementById("mySidenav");
     open?.classList.toggle("active");
+	const reveal = document.getElementById("navButtons");
+	reveal?.classList.toggle("hidden");
   }
 
   /* Set the width of the side navigation to 0 */
   function closeNav() {
     const close = document.getElementById("mySidenav");
     close?.classList.toggle("active");
+	const hide = document.getElementById("navButtons");
+	hide?.classList.toggle("hidden");
   }
 
   useEffect(() => {
@@ -190,24 +196,21 @@ function NavBar(props: any) {
           {
             <div>
               <div className="menu">
-                <div className="ProjectName">
+                <div id='ProjectName'>
                   <button
                     onClick={() => {
                       closeSocket();
                       navigate("/");
-                    }}
-                  >
-                    {" "}
-                    Ft_transcendance{" "}
+                    }}>
+                    Ft_transcendance
                   </button>
                 </div>
                 <div id="navButtons">
                   <div id="profile" className="click">
-                    <label className="icon" htmlFor="profile">
-                      {" "}
+                    <label className="icon">
                       <input
                         type="radio"
-                        id="profile"
+                        id="Profile"
                         value="Profile"
                         name="menu_text"
                         onChange={() => {}}
@@ -216,18 +219,17 @@ function NavBar(props: any) {
                           activeorDisable(0);
                         }}
                         checked={checkedProfile}
-                      />{" "}
-                      <span className="span">
+                      />
+					  <span className="span">
                         <FaUserCircle />
-                      </span>{" "}
+                      </span>
                     </label>
                   </div>
                   <div id="settings" className="click">
-                    <label className="icon" htmlFor="settings">
-                      {" "}
+                    <label className="icon">
                       <input
                         type="radio"
-                        id="settings"
+                        id="Settings"
                         value="Settings"
                         name="menu_text"
                         onChange={() => {}}
@@ -236,18 +238,17 @@ function NavBar(props: any) {
                           activeorDisable(1);
                         }}
                         checked={checkedSettings}
-                      />{" "}
+                      />
                       <span className="span">
                         <IoMdSettings />
-                      </span>{" "}
+                      </span>
                     </label>
                   </div>
                   <div id="logout" className="click">
-                    <label className="icon" htmlFor="logout">
-                      {" "}
+                    <label className="icon">
                       <input
                         type="radio"
-                        id="logout"
+                        id="Logout"
                         value="Logout"
                         name="menu_text"
                         onChange={() => {}}
@@ -256,18 +257,17 @@ function NavBar(props: any) {
                           activeorDisable(2);
                         }}
                         checked={checkedLogout}
-                      />{" "}
+                      />
                       <span className="span">
                         <IoLogOutSharp />
-                      </span>{" "}
+                      </span>
                     </label>
                   </div>
                   <div id="game" className="click">
-                    <label className="icon" htmlFor="game">
-                      {" "}
+                    <label className="icon">
                       <input
                         type="radio"
-                        id="game"
+                        id="Game"
                         value="Game"
                         name="menu_text"
                         onChange={() => {}}
@@ -276,18 +276,17 @@ function NavBar(props: any) {
                           activeorDisable(3);
                         }}
                         checked={checkedGame}
-                      />{" "}
+                      />
                       <span className="span">
                         <IoGameController />
-                      </span>{" "}
+                      </span>
                     </label>
                   </div>
                   <div id="spectate" className="click">
-                    <label className="icon" htmlFor="spectate">
-                      {" "}
+                    <label className="icon">
                       <input
                         type="radio"
-                        id="spectate"
+                        id="Spectate"
                         value="Spectate"
                         name="menu_text"
                         onChange={() => {}}
@@ -296,33 +295,30 @@ function NavBar(props: any) {
                           activeorDisable(4);
                         }}
                         checked={checkedSpectate}
-                      />{" "}
+                      />
                       <span className="span">
                         <BsFillEyeFill />
-                      </span>{" "}
+                      </span>
                     </label>
                   </div>
-                </div>
                 <div>
                   {friendRequest ? (
                     <div id="social" className="click">
-                      <label className="icon" htmlFor="social">
-                        {" "}
+                      <label className="icon">
                         <input
                           type="radio"
-                          id="social"
+                          id="Social"
                           value="Social"
                           name="menu_text"
                           onChange={() => {}}
                           onClick={() => {
-                            closeSocket();
                             activeorDisable(5);
                           }}
                           checked={checkedSocial}
                         />
                         <span className="span">
                           <FaUserFriends />
-                        </span>{" "}
+                        </span>
                       </label>
                       {/* <button id='menu_text' onClick={() => {
 											socket?.disconnect();
@@ -332,23 +328,21 @@ function NavBar(props: any) {
                     </div>
                   ) : (
                     <div id="social" className="click">
-                      <label className="icon" htmlFor="social">
-                        {" "}
+                      <label className="icon">
                         <input
                           type="radio"
-                          id="social"
+                          id="Social"
                           value="Social"
                           name="menu_text"
                           onChange={() => {}}
                           onClick={() => {
-                            closeSocket();
                             activeorDisable(5);
                           }}
                           checked={checkedSocial}
                         />
                         <span className="span">
                           <FaUserFriends />
-                        </span>{" "}
+                        </span>
                       </label>
                       {/* <button id='menu_text' onClick={() => {
 										socket?.disconnect();
@@ -357,18 +351,20 @@ function NavBar(props: any) {
 									}}> Social </button> */}
                     </div>
                   )}
+				  </div>
+				  </div>
                   <div id="mySidenav" className="sidenav">
                     <button className="closebtn" onClick={() => closeNav()}>
                       <span>
-                        <GrClose />
+                        <AiOutlineClose />
                       </span>
                     </button>
-                    <a href="/">About</a>
+                    {/* <a href="/">About</a>
                     <a href="#">Services</a>
                     <a href="#">Clients</a>
-                    <a href="#">Contact</a>
+                    <a href="#">Contact</a> */}
+					<Social/>
                   </div>
-                </div>
               </div>
             </div>
           }

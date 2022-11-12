@@ -4,6 +4,7 @@ import axios from "axios";
 import RoomInfo from "../../Components/RoomInfo/RoomInfo";
 import FormCreateRoom from "../../Components/FormCreateRoom/FormCreateRoom";
 import React from "react";
+import "../../Pages/Home/HomePage.scss";
 
 interface Irooms {
   id: string;
@@ -49,7 +50,7 @@ function GameMainPage() {
     });
   }, [socket]);
   return (
-    <div>
+    <div className="main">
       {rooms.map((room: Irooms) => (
         <RoomInfo
           key={room.id}

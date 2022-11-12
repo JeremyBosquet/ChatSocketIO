@@ -79,14 +79,6 @@ interface ICanvasBall {
 
 /*
 
-  Todo :
-  - Add a timer to the game
-  - Add a score to the game
-  - Add a winner to the game
-  - Add a loser to the game
-  - Add a column for the last movement of the player and the ball for the connection
-  - On resize reset the position of each items
-
 */
 
 function GamePlay(props: props) {
@@ -165,10 +157,10 @@ function GamePlay(props: props) {
         x: (100 * _player.x) / windowsWidth,
         y: (100 * _player.y) / windowsHeight,
       });
-      //if (props.room?.playerA.name === props.playerName)
-      //  setPlayerA({ ...playerA, y: _player.y, percentY: ((100 * _player.y) / windowsHeight) });
-      //else
-      //  setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight) });
+      if (props.room?.playerA.name === props.playerName)
+        setPlayerA({ ...playerA, y: _player.y, percentY: ((100 * _player.y) / windowsHeight) });
+      else
+        setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight) });
     },
     [
       playerA,
@@ -238,27 +230,28 @@ function GamePlay(props: props) {
     props.socket?.removeListener("playerMovement");
     props.socket?.on("playerMovement", (room: IRoom) => {
       //console.log("playerMovement", props.playerId);
-      //if (room.playerB.id === props.playerId) {
-      setPlayerA({
-        ...playerA,
-        id: "playerA",
-        x: 0.15 * windowsWidth,
-        y: (room.playerA.y / 100) * windowsHeight,
-        percentY: room.playerA.y,
-      });
-      //} else {
-      setPlayerB({
-        ...playerB,
-        id: "playerB",
-        x: windowsWidth - boardWidth - 0.15 * windowsWidth,
-        y: (room.playerB.y / 100) * windowsHeight,
-        percentY: room.playerB.y,
-      });
-      //}
+      if (room.playerB.id === props.playerId) {
+        setPlayerA({
+          ...playerA,
+          id: "playerA",
+          x: 0.15 * windowsWidth,
+          y: (room.playerA.y / 100) * windowsHeight,
+          percentY: room.playerA.y,
+        });
+      } else {
+        setPlayerB({
+          ...playerB,
+          id: "playerB",
+          x: windowsWidth - boardWidth - 0.15 * windowsWidth,
+          y: (room.playerB.y / 100) * windowsHeight,
+          percentY: room.playerB.y,
+        });
+      }
     });
     props.socket?.removeListener("ballMovement");
     props.socket?.on("ballMovement", (room: IRoom) => {
       ball.ref.current?.to({
+        duration: 0.004,
         x: (room.ball.x / 100) * windowsWidth,
         y: (room.ball.y / 100) * windowsHeight,
       });
@@ -283,7 +276,7 @@ function GamePlay(props: props) {
           className="gameMainCanvas"
         >
           <Layer>
-            <Rect width={9000} height={8000} x={0} y={0} fill="gray" />
+            <Rect width={windowsWidth} height={windowsHeight} x={0} y={0} fill="gray" />
 
             {
               <Rect

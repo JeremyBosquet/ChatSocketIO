@@ -1,14 +1,14 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
 
-.HomePage
+.main
 {
-  background: linear-gradient(135deg, #fe0d29, #dfc60a);
+  background: linear-gradient(135deg, #003554, #051923);
   height: 100vh;
   overflow: hidden;
   font-family: 'Roboto', sans-serif;
 }
 
-.HomePage h1
+.main h1
 {
 	position: absolute;
 	top: 50%;
@@ -19,17 +19,17 @@
 	font-size: 120px;
 }
 
-.HomePage #login
+.main #login
 {
 	position: absolute;
 	top: 70%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background: linear-gradient(135deg, #9a0dfe, #637dfb);
+	background: #0582CA;
 	border: none;
 	width: 200px;
 	height: 100px;
-	color: #fff;
+	color: rgb(0, 0, 0);
 	font-family:'Times New Roman', Times, serif;
 	font-size: 70px;
 	border-radius: 30px;

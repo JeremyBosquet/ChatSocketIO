@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatModule } from './Chat/chat.module';
 import { Channel } from './Chat/Entities/channel.entity';
 import { User } from './Chat/Entities/user.entity';
+import { DM } from './Chat/Entities/dm.entity';
 
 @Module({
   imports: [
@@ -14,10 +15,10 @@ import { User } from './Chat/Entities/user.entity';
       username: 'jeremy',
       password: 'jeremy',
       database: 'chat',
-      entities: [Channel, User],
+      entities: [Channel, User, DM],
       synchronize: true,
     }),
-    TypeOrmModule.forFeature([Channel, User]),
+    TypeOrmModule.forFeature([Channel, User, DM]),
     ChatModule,
   ],
   controllers: [AppController],

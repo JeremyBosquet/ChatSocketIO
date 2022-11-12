@@ -15,7 +15,7 @@ function SendMessage(props : props) {
         e.preventDefault();
         if (message === "")
           return ;
-        socket?.emit('message', { userId: props.user.id, message: message, channelId: props.channelId, type: "message" });
+        socket?.emit('message', { userId: props.user.id, message: message, channelId: props.channelId, type: "dm" });
         setMessage("");
     }
 

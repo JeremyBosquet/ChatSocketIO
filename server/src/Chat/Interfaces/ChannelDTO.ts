@@ -133,6 +133,17 @@ export class UnmutePlayerDTO {
     target: string;
 }
 
+export class setAdminDTO {
+    @IsUUID()
+    channelId: string;
+    
+    @IsUUID()
+    owner: string;
+    
+    @IsUUID()
+    target: string;
+}
+
 export interface IbanPlayer {
     channelId: string,
     admin: string,

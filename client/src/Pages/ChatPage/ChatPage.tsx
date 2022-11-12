@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import Channels from '../../Components/Channels/Channels';
+import PrivateMessages from '../../Components/PrivateMessages/PrivateMessages';
 import { getLogged, getUser, setLogged, setUser } from '../../Redux/authSlice';
-import { setSocket } from '../../Redux/chatSlice';
+import { getMode, setMode, setSelectedChannel, setSelectedChannelDM, setSocket } from '../../Redux/chatSlice';
 import './ChatPage.scss'
 
 function ChatPage() {
 	// const [socket, setSocket] = useState<Socket>();
-	const [mode, setMode] = useState<string>("channels");
-	
+    const mode = useSelector(getMode);
     const logged = useSelector(getLogged);
     const user = useSelector(getUser);
     const dispatch = useDispatch();
@@ -46,6 +46,15 @@ function ChatPage() {
 		}
 	}
 
+	const handleChangeMode = (newMode: string) => {
+		if ((mode === "channels" && newMode === "channels") || (mode === "dm" && newMode === "dm"))
+			return ;
+		if (newMode === "channels")
+			dispatch(setSelectedChannelDM(""));
+		if (newMode === "dm")
+			dispatch(setSelectedChannel(""));
+		dispatch(setMode(newMode));
+	}
 	return (
 		<div className='chatPage'>
 			<div className='container'>
@@ -58,13 +67,13 @@ function ChatPage() {
 						</div>
 					:
 					<div className='selectChannelOrDm'>
-						<button className={mode === "channel" ? "selectedButton" : null + ' selectButton'} onClick={e => changeMode("channels")}>Channels</button>
-						<button className={mode === "dm" ? "selectedButton" : null + ' selectButton'} onClick={e => changeMode("dm")}>Private Messages</button>
+						<button className={mode === "channel" ? "selectedButton" : null + ' selectButton'} onClick={() => handleChangeMode("channels")}>Channels</button>
+						<button className={mode === "dm" ? "selectedButton" : null + ' selectButton'} onClick={() => handleChangeMode("dm")}>Private Messages</button>
 						{
 							mode === "channels" ?
 								<Channels />
 							:
-								<div>DM</div>
+								<PrivateMessages />
 						}
 					</div>
 				}

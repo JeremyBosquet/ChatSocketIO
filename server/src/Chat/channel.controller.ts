@@ -1,7 +1,8 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Res, ValidationPipe } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import { BanPlayerDTO, ChannelIdDTO, ChannelsWhereUserDTO, CreateChannelDTO, editChannelPasswordDTO, GetMessagesDTO, JoinChannelDTO, KickPlayerDTO, LeaveChannelDTO, MutePlayerDTO, UnmutePlayerDTO, UserIdDTO } from './Interfaces/ChannelDTO';
+import { BanPlayerDTO, ChannelIdDTO, ChannelsWhereUserDTO, CreateChannelDTO, editChannelPasswordDTO, GetMessagesDTO, JoinChannelDTO, KickPlayerDTO, LeaveChannelDTO, MutePlayerDTO, setAdminDTO, UnmutePlayerDTO, UserIdDTO } from './Interfaces/ChannelDTO';
 import * as bcrypt from 'bcrypt';
+import { User } from './Entities/user.entity';
 
 @Controller('api/chat')
 export class ChannelController {
@@ -199,7 +200,7 @@ export class ChannelController {
     @Get('messages/:channelId/:userId') // Get messages from 
     async getMessagesFromChannel(@Param(ValidationPipe) params: GetMessagesDTO, @Res() res) {
         const checkUserIsIn = (channel: any) => {
-            const containsUser = channel.users.filter(user => user.id === params.userId);
+            const containsUser = channel.users.filter((user : User) => user.id === params.userId);
             if (Object.keys(containsUser).length == 0)
                 return false;
             return true;
@@ -322,4 +323,56 @@ export class ChannelController {
         return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "User unmuted"});
     }
 
+
+    @Post('channel/setadmin') //set player to admin from channel
+    async setAdmin(@Body(ValidationPipe) body: setAdminDTO, @Res() res) {
+        const channel = await this.chatService.getChannel(body.channelId);
+        if (!channel)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
+
+        const owner = await this.chatService.getUserInChannel(body.owner, body.channelId);
+        if (!owner)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+        if (owner.role !== "owner")
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+        
+        const userToSetAdmin = await this.chatService.getUserInChannel(body.target, body.channelId);
+        if (!userToSetAdmin)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+
+        channel.users = channel.users.map(user => {
+            if (user.id === body.target)
+                user.role = "admin";
+            return user;
+        });
+        await this.chatService.updateChannel(channel.id, {users: channel.users});
+
+        return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "User promoted to admin"});
+    }
+
+    @Post('channel/unsetadmin') //set player to admin from channel
+    async unsetAdmin(@Body(ValidationPipe) body: setAdminDTO, @Res() res) {
+        const channel = await this.chatService.getChannel(body.channelId);
+        if (!channel)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
+
+        const owner = await this.chatService.getUserInChannel(body.owner, body.channelId);
+        if (!owner)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+        if (owner.role !== "owner")
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+        
+        const userToUnsetAdmin = await this.chatService.getUserInChannel(body.target, body.channelId);
+        if (!userToUnsetAdmin)
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+
+        channel.users = channel.users.map(user => {
+            if (user.id === body.target)
+                user.role = "default";
+            return user;
+        });
+        await this.chatService.updateChannel(channel.id, {users: channel.users});
+
+        return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "User downgraded to default"});
+    }
 }

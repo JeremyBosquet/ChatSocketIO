@@ -3,11 +3,6 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUser } from "../../../../Redux/authSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
-import Admin from "./Admin/Admin";
-import Ban from "./Ban/Ban";
-import DM from "./DM/DM";
-import Kick from "./Kick/Kick";
-import Mute from "./Mute/Mute";
 import './Player.scss';
 
 interface props {
@@ -15,7 +10,6 @@ interface props {
     setUsers: any;
     user: IuserDb;
     usersConnected: Iuser[];
-    mutedUsers: [];
 }
 
 function Player(props : props) {
@@ -44,24 +38,6 @@ function Player(props : props) {
       {
         props.user?.id === me.id ? null :
         <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 
-              {(me.role === "admin" && 
-                props.user.role !== 'admin' && 
-                props.user.role !== 'owner') ?
-                  <>
-                    <Ban user={props.user} />
-                    <Kick user={props.user} />
-                    <Mute user={props.user} mutedUsers={props.mutedUsers}/>
-                  </>
-                : (me.role === "owner") ? 
-                  <>
-                    <Ban user={props.user} />
-                    <Kick user={props.user} />
-                    <Mute user={props.user} mutedUsers={props.mutedUsers}/>
-                    <Admin user={props.user} users={props.users} setUsers={props.setUsers}/>
-                  </>
-                : null
-              }
-              <DM user={props.user}/>
               <button className="actionButton">Profile</button>
               <button className="actionButton">Block</button>
               <button className="actionButton">Add friend</button>

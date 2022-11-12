@@ -1,6 +1,5 @@
 import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
 import { ChatService } from './chat.service';
-import * as bcrypt from 'bcrypt';
 
 @Controller('api/chat')
 export class ChatController {
@@ -16,7 +15,7 @@ export class ChatController {
 
     @Get('user/:id')
     async getUser(@Param() param, @Res() res) {
-        const channels = await this.chatService.getUser(param.id);
-        res.json(channels);
+        const user = await this.chatService.getUser(param.id);
+        res.json(user);
     }
 }

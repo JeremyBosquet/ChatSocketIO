@@ -4,6 +4,7 @@ export interface IChatReceive {
     channelId: string
     message: string,
     createdAt: Date
+    type: string
 }
 
 export interface IChatKick {

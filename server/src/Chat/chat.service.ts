@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { userInfo } from "os";
 import { Repository } from "typeorm";
 import { Channel } from "./Entities/channel.entity";
 import { User } from "./Entities/user.entity";
@@ -138,7 +137,7 @@ export class ChatService {
         const channel = await this.channelRepository.findOneBy({id: channelId});
 
         const checkUserIsIn = async (channel: any) => {
-          const containsUser = await channel.users.filter(user => user.id === userId);
+          const containsUser = await channel.users.filter((user : User) => user.id === userId);
           if (Object.keys(containsUser).length == 0)
               return false;
           return true;
@@ -147,12 +146,9 @@ export class ChatService {
         return (channel && checkUserIsIn(channel));
       }
 
-      
       async userIsBanned(channelId: string, userId: string): Promise<Boolean> {
         const channel = await this.channelRepository.findOneBy({id: channelId});
         
-
-        console.log(new Date().toISOString());
         if (channel?.bans.filter(ban => ban.id === userId).length > 0)
         {
           const ban = channel.bans.filter(ban => ban.id === userId)[0];

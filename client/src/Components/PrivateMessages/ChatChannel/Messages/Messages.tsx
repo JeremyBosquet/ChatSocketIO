@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
+import ChatMessage from "../../../Channels/ChatChannel/Messages/ChatMessage/ChatMessage";
 import { Imessage } from "../interfaces/messages";
 import { IuserDb } from "../interfaces/users";
-import ChatMessage from "./ChatMessage/ChatMessage";
 import './Messages.scss';
 
 interface props {

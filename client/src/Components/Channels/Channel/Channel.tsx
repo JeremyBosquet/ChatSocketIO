@@ -31,11 +31,11 @@ function Channel(props: props) {
   }
   
   const handleSelectChannel = (id: string) => {
-    if (!props.foundChannel && selectedChannel !== "" && selectedChannel !== id)
+    if (!props.foundChannel && selectedChannel !== "" && selectedChannel !== id) {
       socket?.emit('leave', { userId: user.id, channelId: selectedChannel });
-    if (!props.foundChannel) {
-      dispatch(setSelectedChannel(id))
     }
+    if (!props.foundChannel)
+      dispatch(setSelectedChannel(id))
   }
 
    function isOwner() {

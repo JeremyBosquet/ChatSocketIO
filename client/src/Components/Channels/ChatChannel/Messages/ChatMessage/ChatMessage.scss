@@ -1,0 +1,31 @@
+.message {
+    background-color: #ECECEC;
+    padding: 0px 10px;
+    margin: 3px;
+    border-radius: 10px;
+    min-width: 150px;
+    max-width: 70%;
+    width: fit-content;
+    color: black;
+    animation: visible 0.2s;
+
+    .messageUser {
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+
+    .messageContent {
+        margin-top: 0px;
+    }
+}
+
+.sender {
+    align-self: flex-end;
+    text-align: right;
+    background-color: #00A4F8;
+    color: white;
+
+    .messageContent {
+        text-align: left;
+    }
+}

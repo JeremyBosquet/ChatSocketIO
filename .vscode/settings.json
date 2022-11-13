@@ -5,16 +5,6 @@
 			"server": "90.66.192.148",
 			"port": 5432,
 			"driver": "PostgreSQL",
-			"name": "90.66.192.148",
-			"database": "chat",
-			"username": "jeremy",
-			"password": "jeremy"
-		},
-		{
-			"previewLimit": 50,
-			"server": "90.66.192.148",
-			"port": 5432,
-			"driver": "PostgreSQL",
 			"name": "jeremy",
 			"database": "adonis",
 			"username": "transcendance",
@@ -22,10 +12,20 @@
 		},
 		{
 			"previewLimit": 50,
-			"server": "localhost",
+			"server": "90.66.192.148",
 			"port": 5432,
 			"driver": "PostgreSQL",
 			"name": "test",
+			"database": "trantran",
+			"username": "jerem",
+			"password": "jerem"
+		},
+		{
+			"previewLimit": 50,
+			"server": "192.168.1.56",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "192.168.1.56",
 			"database": "trantran",
 			"username": "jerem",
 			"password": "jerem"

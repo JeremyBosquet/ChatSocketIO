@@ -1,31 +1,45 @@
 import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
 } from 'typeorm';
 import { IChannelUser } from '../Interfaces/User';
 
-@Entity({ name: 'channels' })
+@Entity({name: "channels"})
 export class Channel {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
 
-  @Column()
-  name: string;
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
 
-  @Column({ type: 'simple-array' })
-  owner: IChannelUser; // Iuser
+    @Column()
+    name: string;
 
-  @Column()
-  visibility: string;
+    @Column({type: 'jsonb'})
+    owner: IChannelUser; // Iuser
 
-  @Column({ nullable: true })
-  password: string; // mp/room
+    @Column()
+    visibility: string;
 
-  @Column({ type: 'simple-array' })
-  users: IChannelUser[];
+    @Column()
+    code: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
+    @Column({nullable: true})
+    password: string; // mp/room
+    
+    @Column({type: 'jsonb'})
+    users: any;
+    
+    @Column({type: 'jsonb'})
+    messages: any;
+
+    @Column({type: 'jsonb'})
+    mutes: any;
+
+    @Column({type: 'jsonb'})
+    bans: any;
+
+    @CreateDateColumn()
+    createdAt: Date;
+
 }

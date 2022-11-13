@@ -13,11 +13,28 @@ import axios from "axios";
 import Social from "./Pages/Social/Social";
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
-
+import { getUser } from "./Redux/authSlice";
+import { setSocket } from "./Redux/chatSlice";
+import ChannelPage from "./Pages/ChannelPage/ChannelPage";
+import DMPage from "./Pages/DMPage/DMPage";
 import "./App.css";
+import { useDispatch, useSelector } from "react-redux";
+import { io } from "socket.io-client";
 
 function App() {
   const [APIStatus, setAPIStatus] = useState<boolean>(true);
+	const dispatch = useDispatch();
+	const user = useSelector(getUser);
+
+	useEffect(() => { // Connect to the socket
+		const newSocket = io('http://90.66.192.148:4001');
+		dispatch(setSocket(newSocket));
+		newSocket.on('connect', () => {
+			newSocket.emit("connected", {userId: user.id});
+		});
+		//eslint-disable-next-line
+	}, []);
+
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -46,12 +63,17 @@ function App() {
           <Route path="/profile" element={<Profile />}></Route>
           <Route path="/logout" element={<Logout />}></Route>
           <Route path="/settings" element={<Settings />}></Route>
-          <Route path="*" element={<NotFound />}></Route>
           <Route path="/twoAuth" element={<TwoAuth />}></Route>
           <Route path="/social" element={<Social />}></Route>
           <Route path="/social/:UserId" element={<Social />}></Route>
           <Route path="/game/" element={<GamePlayingPage />}></Route>
           <Route path="/game/spectate" element={<GameSpectatePage />}></Route>
+          <Route path="/chat/" element={<ChannelPage />}></Route>
+          <Route path="/chat/channel" element={<ChannelPage />}></Route>
+          <Route path="/chat/channel/:id" element={<ChannelPage />}></Route>
+          <Route path="/chat/dm" element={<DMPage />}></Route>
+          <Route path="/chat/dm/:id" element={<DMPage />}></Route>
+          <Route path="*" element={<NotFound />}></Route>
           <Route
             path="/game/spectate/:roomId"
             element={<GameSpectatePage />}

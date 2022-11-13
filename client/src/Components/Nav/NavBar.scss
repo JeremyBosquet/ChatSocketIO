@@ -326,8 +326,11 @@
 	.NavBar .menu
 	{
 		height: 70px;
-		background: linear-gradient(135deg, #9a0dfe, #637dfb);
-		box-shadow: 0 2px 12px 0 rgba(91, 41, 191, 0.5);
+		// background: linear-gradient(135deg, #9a0dfe, #637dfb);
+		// box-shadow: 0 2px 12px 0 rgba(91, 41, 191, 0.5);
+	}
+	.sidenav {
+		margin-top: 70px;
 	}
 	.NavBar .menu #ProjectName
 	{

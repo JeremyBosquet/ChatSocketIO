@@ -10,11 +10,10 @@ specifiers:
   '@babel/plugin-syntax-flow': ^7.18.6
   '@babel/plugin-transform-react-jsx': ^7.19.0
   '@reduxjs/toolkit': ^1.9.0
+  '@szhsin/react-menu': ^3.2.1
   '@testing-library/dom': ^8.19.0
   '@testing-library/jest-dom': ^5.16.5
   '@testing-library/react': ^13.4.0
-  '@testing-library/user-event': ^13.5.0
-  '@types/jest': ^27.5.2
   '@types/node': ^16.18.3
   '@types/react': ^18.0.25
   '@types/react-dom': ^18.0.8
@@ -24,6 +23,9 @@ specifiers:
   konva: ^8.3.14
   node-sass-chokidar: ^2.0.0
   react: ^18.2.0
+  react-calendar: ^4.0.0
+  react-clock: ^4.0.0
+  react-datetime-picker: ^4.1.1
   react-dom: ^18.2.0
   react-icons: ^4.6.0
   react-konva: ^18.2.3
@@ -39,18 +41,17 @@ specifiers:
   vite: ^3.2.3
   vite-plugin-svgr: ^2.2.2
   vite-tsconfig-paths: ^3.5.2
-  web-vitals: ^2.1.4
+  web-vitals: ^3.0.4
 
 dependencies:
   '@babel/core': 7.20.2
   '@babel/plugin-syntax-flow': 7.18.6_@babel+core@7.20.2
   '@babel/plugin-transform-react-jsx': 7.19.0_@babel+core@7.20.2
   '@reduxjs/toolkit': 1.9.0_k4ae6lp43ej6mezo3ztvx6pykq
+  '@szhsin/react-menu': 3.2.1_biqbaboplfbrettd7655fr4n2y
   '@testing-library/dom': 8.19.0
   '@testing-library/jest-dom': 5.16.5
   '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
-  '@testing-library/user-event': 13.5.0_aaq3sbffpfe3jnxzm2zngsddei
-  '@types/jest': 27.5.2
   '@types/node': 16.18.3
   '@types/react': 18.0.25
   '@types/react-dom': 18.0.8
@@ -59,6 +60,9 @@ dependencies:
   konva: 8.3.14
   node-sass-chokidar: 2.0.0
   react: 18.2.0
+  react-calendar: 4.0.0_biqbaboplfbrettd7655fr4n2y
+  react-clock: 4.0.0_biqbaboplfbrettd7655fr4n2y
+  react-datetime-picker: 4.1.1_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.6.0_react@18.2.0
   react-konva: 18.2.3_b37p36zhls44rqmxgh4mahumjq
@@ -71,7 +75,7 @@ dependencies:
   sass: 1.56.1
   socket.io-client: 4.5.3
   typescript: 4.8.4
-  web-vitals: 2.1.4
+  web-vitals: 3.0.4
 
 devDependencies:
   '@vitejs/plugin-react': 2.2.0_vite@3.2.3
@@ -2331,7 +2335,7 @@ packages:
     dependencies:
       '@svgr/plugin-jsx': 5.5.0
       camelcase: 6.3.0
-      cosmiconfig: 7.0.1
+      cosmiconfig: 7.1.0
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -2344,7 +2348,7 @@ packages:
       '@svgr/babel-preset': 6.5.1_@babel+core@7.20.2
       '@svgr/plugin-jsx': 6.5.1_@svgr+core@6.5.1
       camelcase: 6.3.0
-      cosmiconfig: 7.0.1
+      cosmiconfig: 7.1.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -2395,7 +2399,7 @@ packages:
     resolution: {integrity: sha512-r5swKk46GuQl4RrVejVwpeeJaydoxkdwkM1mBKOgJLBUJPGaLci6ylg/IjhrRsREKDkr4kbMWdgOtbXEh0fyLQ==}
     engines: {node: '>=10'}
     dependencies:
-      cosmiconfig: 7.0.1
+      cosmiconfig: 7.1.0
       deepmerge: 4.2.2
       svgo: 1.3.2
     dev: false
@@ -2414,6 +2418,18 @@ packages:
       loader-utils: 2.0.4
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /@szhsin/react-menu/3.2.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-HEStuXNYHxLcGByiWaxFcE+ZaZ5BPQd/NtwBcxmUvHdvAaCZngmZ2ZddWuDAYZval94Kpahi1ZH0/WSv3oFnFg==}
+    peerDependencies:
+      react: '>=16.14.0'
+      react-dom: '>=16.14.0'
+    dependencies:
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      react-transition-state: 1.1.5_biqbaboplfbrettd7655fr4n2y
     dev: false
 
   /@testing-library/dom/8.19.0:
@@ -2457,16 +2473,6 @@ packages:
       '@types/react-dom': 18.0.8
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
-    dev: false
-
-  /@testing-library/user-event/13.5.0_aaq3sbffpfe3jnxzm2zngsddei:
-    resolution: {integrity: sha512-5Kwtbo3Y/NowpkbRuSepbyMFkZmHgD+vPzYB/RJ4oxt5Gj/avFFBYjhw27cqSVPVw/3a67NK1PbiIr9k4Gwmdg==}
-    engines: {node: '>=10', npm: '>=6'}
-    peerDependencies:
-      '@testing-library/dom': '>=7.21.4'
-    dependencies:
-      '@babel/runtime': 7.20.1
-      '@testing-library/dom': 8.19.0
     dev: false
 
   /@tootallnate/once/1.1.2:
@@ -2670,6 +2676,12 @@ packages:
 
   /@types/range-parser/1.2.4:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
+    dev: false
+
+  /@types/react-calendar/3.5.3:
+    resolution: {integrity: sha512-CRbEPcK+KolZBKeaJ/pm5VzRSA4KVTsz/c61Vdl74y0tuZm7WHIJPaRvVM+3ggInc8TkJrrt8/YKVrkrwGkfrA==}
+    dependencies:
+      '@types/react': 18.0.25
     dev: false
 
   /@types/react-dom/18.0.8:
@@ -3041,6 +3053,10 @@ packages:
     dependencies:
       '@webassemblyjs/ast': 1.11.1
       '@xtuc/long': 4.2.2
+    dev: false
+
+  /@wojtekmaj/date-utils/1.0.3:
+    resolution: {integrity: sha512-1VPkkTBk07gMR1fjpBtse4G+oJqpmE+0gUFB0dg3VIL7qJmUVaBoD/vlzMm/jNeOPfvlmerl1lpnsZyBUFIRuw==}
     dev: false
 
   /@xtuc/ieee754/1.2.0:
@@ -3515,7 +3531,7 @@ packages:
     engines: {node: '>=10', npm: '>=6'}
     dependencies:
       '@babel/runtime': 7.20.1
-      cosmiconfig: 7.0.1
+      cosmiconfig: 7.1.0
       resolve: 1.22.1
     dev: false
 
@@ -3915,8 +3931,9 @@ packages:
     engines: {node: '>=6.0'}
     dev: false
 
-  /ci-info/3.5.0:
-    resolution: {integrity: sha512-yH4RezKOGlOhxkmhbeNuC4eYZKAUsEaGtBuBzDDP1eFUKiccDWzBABxBfOx31IDwDIXMTxWuwAxUGModvkbuVw==}
+  /ci-info/3.6.1:
+    resolution: {integrity: sha512-up5ggbaDqOqJ4UqLKZ2naVkyqSJQgJi5lwD6b6mM748ysrghDBX0bx/qJTUHzw7zu6Mq4gycviSF5hJnwceD8w==}
+    engines: {node: '>=8'}
     dev: false
 
   /cjs-module-lexer/1.2.2:
@@ -4156,8 +4173,8 @@ packages:
       yaml: 1.10.2
     dev: false
 
-  /cosmiconfig/7.0.1:
-    resolution: {integrity: sha512-a1YWNUV2HwGimB7dU2s1wUMurNKjpx60HxBB6xUM8Re+2s1g1IIfJvFR0/iCF+XHdE0GMTKTuLR32UQff4TEyQ==}
+  /cosmiconfig/7.1.0:
+    resolution: {integrity: sha512-AdmX6xUzdNASswsFtmwSt7Vj8po9IuqXm0UXz7QKPuEUmPB4XyjGfaAr2PSuELMwkRMVH1EpIkX5bTZGRB3eCA==}
     engines: {node: '>=10'}
     dependencies:
       '@types/parse-json': 4.0.0
@@ -4211,8 +4228,8 @@ packages:
       postcss-selector-parser: 6.0.10
     dev: false
 
-  /css-loader/6.7.1_webpack@5.75.0:
-    resolution: {integrity: sha512-yB5CNFa14MbPJcomwNh3wLThtkZgcNyI2bNMRt8iE5Z8Vwl7f8vQXFAzn2HDOJvtDq2NTZBUGMSUNNyrv3/+cw==}
+  /css-loader/6.7.2_webpack@5.75.0:
+    resolution: {integrity: sha512-oqGbbVcBJkm8QwmnNzrFrWTnudnRZC+1eXikLJl0n4ljcfotgRifpg2a1lKy8jTrc4/d9A/ap1GFq1jDKG7J+Q==}
     engines: {node: '>= 12.13.0'}
     peerDependencies:
       webpack: ^5.0.0
@@ -4570,6 +4587,10 @@ packages:
   /destroy/1.2.0:
     resolution: {integrity: sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==}
     engines: {node: '>= 0.8', npm: 1.2.8000 || >= 1.4.16}
+    dev: false
+
+  /detect-element-overflow/1.2.0:
+    resolution: {integrity: sha512-Jtr9ivYPhpd9OJux+hjL0QjUKiS1Ghgy8tvIufUjFslQgIWvgGr4mn57H190APbKkiOmXnmtMI6ytaKzMusecg==}
     dev: false
 
   /detect-newline/3.1.0:
@@ -5984,6 +6005,12 @@ packages:
       get-intrinsic: 1.1.3
     dev: false
 
+  /get-user-locale/1.5.1:
+    resolution: {integrity: sha512-WiNpoFRcHn1qxP9VabQljzGwkAQDrcpqUtaP0rNBEkFxJdh4f3tik6MfZsMYZc+UgQJdGCxWEjL9wnCUlRQXag==}
+    dependencies:
+      lodash.memoize: 4.1.2
+    dev: false
+
   /getpass/0.1.7:
     resolution: {integrity: sha512-0fzj9JxOLfJ+XGLhR8ze3unN0KZCgZwiSSDz168VERjK8Wl8kVSdcu2kspd4s4wtAa1y/qrVRiAA0WclVsu0ng==}
     dependencies:
@@ -6895,7 +6922,7 @@ packages:
       '@jest/types': 27.5.1
       babel-jest: 27.5.1_@babel+core@7.20.2
       chalk: 4.1.2
-      ci-info: 3.5.0
+      ci-info: 3.6.1
       deepmerge: 4.2.2
       glob: 7.2.3
       graceful-fs: 4.2.10
@@ -7241,7 +7268,7 @@ packages:
       '@jest/types': 27.5.1
       '@types/node': 16.18.3
       chalk: 4.1.2
-      ci-info: 3.5.0
+      ci-info: 3.6.1
       graceful-fs: 4.2.10
       picomatch: 2.3.1
     dev: false
@@ -7253,7 +7280,7 @@ packages:
       '@jest/types': 28.1.3
       '@types/node': 16.18.3
       chalk: 4.1.2
-      ci-info: 3.5.0
+      ci-info: 3.6.1
       graceful-fs: 4.2.10
       picomatch: 2.3.1
     dev: false
@@ -7701,6 +7728,10 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       semver: 6.3.0
+    dev: false
+
+  /make-event-props/1.3.0:
+    resolution: {integrity: sha512-oWiDZMcVB1/A487251hEWza1xzgCzl6MXxe9aF24l5Bt9N9UEbqTqKumEfuuLhmlhRZYnc+suVvW4vUs8bwO7Q==}
     dev: false
 
   /make-fetch-happen/9.1.0:
@@ -8841,7 +8872,7 @@ packages:
       postcss: ^7.0.0 || ^8.0.1
       webpack: ^5.0.0
     dependencies:
-      cosmiconfig: 7.0.1
+      cosmiconfig: 7.1.0
       klona: 2.0.5
       postcss: 8.4.19
       semver: 7.3.8
@@ -9476,6 +9507,73 @@ packages:
       whatwg-fetch: 3.6.2
     dev: false
 
+  /react-calendar/4.0.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-y9Q5Oo3Mq869KExbOCP3aJ3hEnRZKZ0TqUa9QU1wJGgDZFrW1qTaWp5v52oZpmxTTrpAMTUcUGaC0QJcO1f8Nw==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@wojtekmaj/date-utils': 1.0.3
+      clsx: 1.2.1
+      get-user-locale: 1.5.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-clock/4.0.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-CBevN5B40TDUegSWzXk6bSwXhYzyerL9JGTme8GMAY0zO4FiEhVTGN1uzgC0rn/oSAMJw3M5wSf/OJpp9vcN2Q==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@wojtekmaj/date-utils': 1.0.3
+      clsx: 1.2.1
+      get-user-locale: 1.5.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-date-picker/9.1.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-wj9SoOhEgQTzJsDRLePpNzUDNrcSiCpj1TFSwiAnLlOuJvvkk10I9rdvIyHmeJg/G17hyP5wSwTppCZHqOTHhA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@types/react-calendar': 3.5.3
+      '@wojtekmaj/date-utils': 1.0.3
+      clsx: 1.2.1
+      get-user-locale: 1.5.1
+      make-event-props: 1.3.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-calendar: 4.0.0_biqbaboplfbrettd7655fr4n2y
+      react-dom: 18.2.0_react@18.2.0
+      react-fit: 1.4.0_biqbaboplfbrettd7655fr4n2y
+      update-input-width: 1.2.2
+    dev: false
+
+  /react-datetime-picker/4.1.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-e8ANKLcWFL4/TutvggqVfRiDigyelcVdLvWQzOP5cMJ6IxR08Qv2dOncjBWVkwU9vTsDemuHSAGIGqZXtr3aXA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@wojtekmaj/date-utils': 1.0.3
+      clsx: 1.2.1
+      get-user-locale: 1.5.1
+      make-event-props: 1.3.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-calendar: 4.0.0_biqbaboplfbrettd7655fr4n2y
+      react-clock: 4.0.0_biqbaboplfbrettd7655fr4n2y
+      react-date-picker: 9.1.0_biqbaboplfbrettd7655fr4n2y
+      react-dom: 18.2.0_react@18.2.0
+      react-fit: 1.4.0_biqbaboplfbrettd7655fr4n2y
+      react-time-picker: 5.1.0_biqbaboplfbrettd7655fr4n2y
+    dev: false
+
   /react-dev-utils/12.0.1_jhkpzg2brfkmxknx2ey4cnt3n4:
     resolution: {integrity: sha512-84Ivxmr17KjUupyqzFode6xKhjwuEJDROWKJy/BthkL7Wn6NJ8h4WE6k/exAv6ImS+0oZLRRW5j/aINMHyeGeQ==}
     engines: {node: '>=14'}
@@ -9530,6 +9628,19 @@ packages:
 
   /react-error-overlay/6.0.11:
     resolution: {integrity: sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==}
+    dev: false
+
+  /react-fit/1.4.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-cf9sFKbr1rlTB9fNIKE5Uy4NCMUOqrX2mdJ69V4RtmV4KubPdtnbIP1tEar16GXaToCRr7I7c9d2wkTNk9TV5g==}
+    peerDependencies:
+      react: ^15.5.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^15.5.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      detect-element-overflow: 1.2.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      tiny-warning: 1.0.3
     dev: false
 
   /react-icons/4.6.0_react@18.2.0:
@@ -9667,7 +9778,7 @@ packages:
       browserslist: 4.21.4
       camelcase: 6.3.0
       case-sensitive-paths-webpack-plugin: 2.4.0
-      css-loader: 6.7.1_webpack@5.75.0
+      css-loader: 6.7.2_webpack@5.75.0
       css-minimizer-webpack-plugin: 3.4.1_webpack@5.75.0
       dotenv: 10.0.0
       dotenv-expand: 5.1.0
@@ -9751,6 +9862,24 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
+  /react-time-picker/5.1.0_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-NGpy5FM8WYdgCKXE/a85mhf0TunOk+N8ZG6rXBahD0mXeQZ/aBM+iVuKN4ell+QFH8/7F8dhT200ZKatBIphnA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      '@wojtekmaj/date-utils': 1.0.3
+      clsx: 1.2.1
+      get-user-locale: 1.5.1
+      make-event-props: 1.3.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-clock: 4.0.0_biqbaboplfbrettd7655fr4n2y
+      react-dom: 18.2.0_react@18.2.0
+      react-fit: 1.4.0_biqbaboplfbrettd7655fr4n2y
+      update-input-width: 1.2.2
+    dev: false
+
   /react-toastify/9.1.1_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-pkFCla1z3ve045qvjEmn2xOJOy4ZciwRXm1oMPULVkELi5aJdHCN/FHnuqXq8IwGDLB7PPk2/J6uP9D8ejuiRw==}
     peerDependencies:
@@ -9758,6 +9887,16 @@ packages:
       react-dom: '>=16'
     dependencies:
       clsx: 1.2.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-transition-state/1.1.5_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-ITY2mZqc2dWG2eitJkYNdcSFW8aKeOlkL2A/vowRrLL8GH3J6Re/SpD/BLvQzrVOTqjsP0b5S9N10vgNNzwMUQ==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     dev: false
@@ -11021,6 +11160,10 @@ packages:
     resolution: {integrity: sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==}
     dev: false
 
+  /tiny-warning/1.0.3:
+    resolution: {integrity: sha512-lBN9zLN/oAf68o3zNXYrdCt1kP8WsiGW8Oo2ka41b2IM5JL/S1CTyX1rW0mb/zSuJun0ZUrDxx4sqvYS2FWzPA==}
+    dev: false
+
   /tmpl/1.0.5:
     resolution: {integrity: sha512-3f0uOEAQwIqGuWW2MVzYg8fV/QNnc/IpuJNG837rLuczAaLVHslWHZQj4IGiEl5Hs3kkbhwL9Ab7Hrsmuj+Smw==}
     dev: false
@@ -11294,6 +11437,10 @@ packages:
       escalade: 3.1.1
       picocolors: 1.0.0
 
+  /update-input-width/1.2.2:
+    resolution: {integrity: sha512-6QwD9ZVSXb96PxOZ01DU0DJTPwQGY7qBYgdniZKJN02Xzom2m+9J6EPxMbefskqtj4x78qbe5psDSALq9iNEYg==}
+    dev: false
+
   /uri-js/4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
     dependencies:
@@ -11474,8 +11621,8 @@ packages:
       minimalistic-assert: 1.0.1
     dev: false
 
-  /web-vitals/2.1.4:
-    resolution: {integrity: sha512-sVWcwhU5mX6crfI5Vd2dC4qchyTqxV8URinzt25XqVh+bHEPGH4C3NPrNionCP7Obx59wrYEbNlw4Z8sjALzZg==}
+  /web-vitals/3.0.4:
+    resolution: {integrity: sha512-Yau8qf1AJ/dm6MY180Bi0qpCIuWmAfKAnOqmxLecGfIHn0+ND3H4JOhXeY73Pyi9zjSF5J4SNUewHLNUzU7mmA==}
     dev: false
 
   /webidl-conversions/4.0.2:

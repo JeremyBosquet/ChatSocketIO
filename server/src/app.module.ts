@@ -15,12 +15,12 @@ import { AppService } from './app.service';
 import { JwtStrategy } from './login/jwt.strategy';
 import { twoAuthModule } from './2auth/twoFactorAuthentication.module';
 import { JwtTwoFactorStrategy } from './2auth/auth.strategy';
-import { Chat } from './Chat/Entities/chat.entity';
 import { ChatModule } from './Chat/chat.module';
 import { Channel } from './Chat/Entities/channel.entity';
 import { User } from './Chat/Entities/user.entity';
 import { RoomModule } from './Game/room.module';
 import { AppGateway } from './app.gateway';
+import { DM } from './Chat/Entities/dm.entity';
 
 @Module({
   imports: [
@@ -39,7 +39,7 @@ import { AppGateway } from './app.gateway';
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([UserModel, Chat, Channel, User]),
+    TypeOrmModule.forFeature([UserModel, Channel, User, DM]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

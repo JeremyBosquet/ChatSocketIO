@@ -31,7 +31,6 @@ export class DMsController {
     async getMessagesFromChannel(@Param(ValidationPipe) params: GetMessagesDmDTO, @Res() res) {
         const checkUserIsIn = (channel: any) => {
             const containsUser = channel?.users.filter((user: any) => user.id === params.userId);
-            console.log(params, channel, containsUser);
             if (Object.keys(containsUser).length == 0)
                 return false;
             return true;

@@ -16,7 +16,7 @@ export const gameSlice = createSlice({
     },
     
     setSocketSpectate: (state, action) => {
-        state.socket = action.payload
+        state.socketSpectate = action.payload
     }
     },
 

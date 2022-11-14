@@ -122,6 +122,7 @@ export class RoomService {
           excludeExtraneousValues: true,
         }),
       );
+    tab.reverse();
     return tab;
   }
 }

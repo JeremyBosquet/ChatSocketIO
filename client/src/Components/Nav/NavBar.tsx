@@ -6,6 +6,7 @@ import {
   useNavigate,
   useLocation,
   useParams,
+  NavLink,
 } from "react-router-dom";
 import { createNotification } from "../notif/Notif";
 import { FaUserCircle, FaUserFriends } from "react-icons/fa";
@@ -41,6 +42,7 @@ function NavBar(props: any) {
   const [checkedSocial, setCheckedSocial] = useState<boolean>(false);
 
   async function GetLoggedInfo() {
+
     if (localStorage.getItem("token")) {
       await axios
         .get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
@@ -100,6 +102,12 @@ function NavBar(props: any) {
       booleffect = true;
     }
   }, []);
+
+  const handleClickNav = (pathname: string) => {
+    if (location.pathname !== pathname)
+      closeSocket();
+  }
+
   return (
     <div className="NavBar">
       {!booleffect2 ? (
@@ -110,24 +118,29 @@ function NavBar(props: any) {
               </button>
             </div>
             <div id="navButtons">	  
-              <button id="profile" className="click" onClick={() => {closeSocket();navigate("/profile");}}>
+              <NavLink to="/profile" id="profile" className="click">
                 <FaUserCircle className="icon"/>
-              </button>
-              <button id="settings" className="click" onClick={() => {closeSocket();navigate("/settings");}}>
+              </NavLink>
+
+              <NavLink to="/settings" id="settings" className="click">
                 <IoMdSettings className="icon"/>
-              </button>
-              <button id="chat" className="click" onClick={() => {closeSocket();navigate("/chat");}}>
+              </NavLink>
+
+              <NavLink to="/chat" id="chat" className="click">
                 <HiChatBubbleLeftRight className="icon"/>
-              </button>
-              <button id="logout" className="click" onClick={() => {closeSocket();navigate("/logout");}}>
-                <IoLogOutSharp className="icon"/>
-              </button>
-              <button id="game" className="click" onClick={() => {closeSocket();navigate("/game");}}>
+              </NavLink>
+
+              <NavLink to="/game" id="game" className="click" onClick={() => handleClickNav("/game")}>
                 <IoGameController className="icon"/>
-              </button>
-              <button id="spectate" className="click" onClick={() => {closeSocket();navigate("/game/spectate");}}>
+              </NavLink>
+              
+              <NavLink to="/game/spectate" id="spectate" className="click" onClick={() => handleClickNav("/game/spectate")}>
                 <BsFillEyeFill className="icon"/>
-              </button>
+              </NavLink>
+
+              <NavLink to="/logout" id="logout" className="click">
+                <IoLogOutSharp className="icon"/>
+              </NavLink>
               <>
                 {friendRequest ? (
                   <button id="social" className="click" onClick={() => {openNav()}}>

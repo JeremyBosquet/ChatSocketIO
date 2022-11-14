@@ -127,6 +127,7 @@ function GameReady(props: props) {
       setSearching(true);
       setTmpUserBoolean(true);
       setConfiguringDisplay(false);
+      setSettings(undefined);
     });
   }, [
     notification,
@@ -152,7 +153,7 @@ function GameReady(props: props) {
       });
     if (messages?.data && messages.data?.User) {
       console.log(messages.data.User, {
-        id: messages.data.User.id,
+        id: messages.data.User.uuid,
         name: messages.data.User.username,
       });
       setTmpUser({
@@ -294,8 +295,8 @@ function GameReady(props: props) {
                   setSearchingDisplay(false);
                   setSearching(false);
                   setTmpUserBoolean(false);
-
                   setConfiguringDisplay(false);
+                  setSettings(undefined);
                 } /*Cancel search*/
               }
             >
@@ -312,6 +313,9 @@ function GameReady(props: props) {
                   ) {
                     setSettings({ ...settings, confirmed: true });
                     socket?.emit("confirmConfiguration", settings);
+                  }
+                  else {
+                    console.log ("settings", settings);
                   }
                 } /*Cancel search*/
               }

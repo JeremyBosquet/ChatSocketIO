@@ -12,6 +12,7 @@ import { Socket } from 'socket.io';
 import { RoomService } from './room.service';
 import { v4 as uuidv4 } from 'uuid';
 import { time } from 'console';
+import { exit } from 'process';
 
 interface Irooms {
   id: string;
@@ -58,11 +59,13 @@ export class RoomGateway {
         this.roomService.save(room);
       } else if (room.status === 'playing') {
         //console.log('gameLoop - playing', room.playerA);
-        if (room.ball.x < 0 || room.ball.x + settings.ballRadius > 100) {
+        if (room.ball.x + settings.ballRadius < 0 || room.ball.x + settings.ballRadius > 100) {
           if (room.ball.x + settings.ballRadius < 0) {
             room.playerB.score += 1;
-          } else {
+            console.log("p 1 player b");
+          } else if (room.ball.x + settings.ballRadius){
             room.playerA.score += 1;
+            console.log("p 1 player a");
           }
           if (room.playerA.score >= 10 || room.playerB.score >= 10) {
             room.status = 'finished';
@@ -99,11 +102,11 @@ export class RoomGateway {
               room.ball.y > playerA.y &&
               room.ball.y < playerA.y + settings.boardHeight
             ) {
-              ////console.log('gameLoop - collision with playerA');
+              console.log('gameLoop - collision with playerA');
               //room.ball.x = playerA.x - settings.boardWidth;
               room.ball.direction = Math.PI - room.ball.direction;
-              room.ball.x += room.ball.speed * 0.2 * Math.cos(room.ball.direction);
-              room.ball.y += room.ball.speed * 0.2 * Math.sin(room.ball.direction);
+              room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
+              room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
               room.ball.speed += 0.15;
             }
             else if (
@@ -112,11 +115,11 @@ export class RoomGateway {
               room.ball.y > playerB.y &&
               room.ball.y < playerB.y + settings.boardHeight
             ) {
-              ////console.log('gameLoop - collision with playerB');
+              console.log('gameLoop - collision with playerB');
               //room.ball.x = playerB.x + settings.ballRadius;
               room.ball.direction = Math.PI - room.ball.direction;
-              room.ball.x += room.ball.speed * 0.2 * Math.cos(room.ball.direction);
-              room.ball.y += room.ball.speed * 0.2 * Math.sin(room.ball.direction);
+              room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
+              room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
               room.ball.speed += 0.15;
             }
             else if (
@@ -130,17 +133,17 @@ export class RoomGateway {
                 room.ball.y = 100 - settings.ballRadius;
               }
               room.ball.direction = -room.ball.direction;
-              room.ball.x += room.ball.speed * 0.2 * Math.cos(room.ball.direction);
-              room.ball.y += room.ball.speed * 0.2 * Math.sin(room.ball.direction);
+              room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
+              room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
               room.ball.speed += 0.15;
             }
             else
             {
-              room.ball.x += room.ball.speed * 0.05 * Math.cos(room.ball.direction);
-              room.ball.y += room.ball.speed * 0.05 * Math.sin(room.ball.direction);
+              room.ball.x += room.ball.speed * 0.2 * Math.cos(room.ball.direction);
+              room.ball.y += room.ball.speed * 0.2 * Math.sin(room.ball.direction);
             }
             room.lastActivity = Date.now();
-            console.log("Last emit : ", Date.now());
+            //console.log("Last emit : ", Date.now());
             this.server.in('room-' + room.id).emit('ballMovement', room);
           //}
         }
@@ -489,7 +492,7 @@ export class RoomGateway {
         _room.playerB.x = 85;
         _room.playerB.y = 50;
         this.server.emit('roomStarted', _room);
-        intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 10);
+        intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 40);
         room.lastActivity = Date.now();
         await this.roomService.save(_room);
         this.server.in('room-' + _room?.id).emit('gameStart', _room);

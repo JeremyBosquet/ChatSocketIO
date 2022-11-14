@@ -114,7 +114,7 @@ export class ChannelController {
                 }
 
                 await this.chatService.updateChannel(channel.id , {users: channel.users});
-                return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "You have successfully join the channel"});
+                return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "You have successfully join the channel", channelId: channel.id});
             }
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
         }
@@ -165,7 +165,7 @@ export class ChannelController {
             return await bcrypt.hash(password, 10);
         }
 
-        const channel = await this.chatService.getChannel(body.channelId);
+        const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
             

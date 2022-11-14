@@ -14,17 +14,28 @@ function DMPage() {
     const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const setGood = async (e: any) => {
-		e.preventDefault();
-		if (user?.id !== "")
-		{
-			const userInfos = (await axios.get("http://90.66.192.148:7000/api/chat/user/" + user.id))?.data;
-			if (!userInfos)
-				return ;
-			dispatch(setUser(userInfos));
-			dispatch(setLogged(true));
+	useEffect(() => {
+		const getUserInfos = async () => {
+			await axios
+			.get(`http://90.66.192.148:7000/user`, {
+			  headers: {
+				Authorization: "Bearer " + localStorage.getItem("token"),
+			  },
+			})
+			.then((res) => {
+			  dispatch(setUser(res.data.User));
+			  dispatch(setLogged(true));
+			})
+			.catch((err) => {
+			  setUser({});
+			  createNotification("error", "User not found");
+			  navigate("/");
+			});
 		}
-	}
+
+		if (localStorage.getItem("token"))
+			getUserInfos();
+	}, []);
 
 	const handleChangeMode = (newMode: string) => {
 		if (newMode === "channels")
@@ -38,10 +49,8 @@ function DMPage() {
 				<div className='selectChannelOrDm'>
 					
 					{logged === false ?
-						<div className='login'>
-							<h1>Log in</h1>
-							<input type="text" placeholder="User id" onChange={(e) => dispatch(setUser({id: e.target.value}))}/>
-							<input type="submit" value="Log in" onClick={(e) => setGood(e)}/>
+						<div className='notLogged'>
+							<p>Pending...</p>
 						</div>
  					:
 					<>

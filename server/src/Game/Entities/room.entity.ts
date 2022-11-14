@@ -61,5 +61,7 @@ export class Room {
   @Column({ nullable: true, type: 'bigint' })
   @Exclude()
   lastActivity: number;
+  
+  //@Column({type: ''})
   //createdAt: Date;
 }

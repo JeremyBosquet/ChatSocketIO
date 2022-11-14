@@ -1,6 +1,6 @@
 import axios from 'axios';import { getUser } from '../../../Redux/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setChannels } from '../../../Redux/chatSlice';
+import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { useState } from 'react';
 import React from 'react';
 
@@ -14,6 +14,7 @@ interface props {
 function Search(props: props) {
     const [privateJoin, setPrivateJoin] = useState<boolean>(false);
     const user = useSelector(getUser);
+    const socket = useSelector(getSocket);
 
     const dispatch = useDispatch();
 
@@ -51,6 +52,8 @@ function Search(props: props) {
             {
                 setPrivateJoin(false);
                 props.getUsersChannel(user.uuid);
+                socket?.emit('joinPermanent', { channelId: res.data.channelId });
+                console.log('la join emit')
             }
         }).catch((err) => {
             console.log(err.response.data.message); //set in notification

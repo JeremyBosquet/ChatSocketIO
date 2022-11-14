@@ -1,6 +1,10 @@
 import {
   IsBoolean,
+  IsDate,
+  IsDateString,
+  IsISO31661Alpha2,
   IsNotEmpty,
+  IsNumber,
   IsString,
   Length,
   minLength,
@@ -10,6 +14,7 @@ import { Exclude, Expose } from 'class-transformer';
 import { IPlayers } from './Interfaces/Players';
 import { IBall } from './Interfaces/Ball';
 import { ISettings } from './Interfaces/Settings';
+import { isBigInt64Array } from 'util/types';
 
 interface IConfiguration {
   difficulty: string;
@@ -39,8 +44,11 @@ export class SendGameHistoryDto {
   owner: string;
   @Exclude()
   nbPlayer: number;
-  @Exclude()
-  createdAt: string;
+
+  //@IsNotEmpty()
+  //@IsDate()
+  //@Expose()
+  //createdAt: string;
 
   @Exclude()
   nbPlayers: number;
@@ -57,6 +65,7 @@ export class SendGameHistoryDto {
   @Exclude()
   configurationB: IConfiguration;
 
-  @Exclude()
+  @IsNumber()
+  @Expose()
   lastActivity: number;
 }

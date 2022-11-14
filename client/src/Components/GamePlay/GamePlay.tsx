@@ -83,7 +83,7 @@ g
 
 function GamePlay(props: props) {
   const [windowsWidth, setWindowsWidth] = useState(window.innerWidth);
-  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight - 100); // game board
+  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight - 200); // game board
   const [boardWidth, setBoardWidth] = useState<number>(
     props.room?.settings.boardWidth
       ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -210,14 +210,14 @@ function GamePlay(props: props) {
     setPlayerA({
       ...playerA,
       id: "playerA",
-      x: 0.15 * windowsWidth - boardWidth,
+      x: (0.15 * windowsWidth) - boardWidth,
       y: (playerA.percentY / 100) * windowsHeight,
       percentY: playerA.percentY,
     });
     setPlayerB({
       ...playerB,
       id: "playerB",
-      x: windowsWidth - boardWidth - 0.15 * windowsWidth,
+      x: windowsWidth - 0.15 * windowsWidth,
       y: (playerB.percentY / 100) * windowsHeight,
       percentY: playerB.percentY,
     });
@@ -242,7 +242,7 @@ function GamePlay(props: props) {
         setPlayerB({
           ...playerB,
           id: "playerB",
-          x: windowsWidth - boardWidth - 0.15 * windowsWidth,
+          x: windowsWidth - 0.15 * windowsWidth,
           y: (room.playerB.y / 100) * windowsHeight,
           percentY: room.playerB.y,
         });
@@ -251,7 +251,7 @@ function GamePlay(props: props) {
     props.socket?.removeListener("ballMovement");
     props.socket?.on("ballMovement", (room: IRoom) => {
       ball.ref.current?.to({
-        duration: 0.004,
+        duration: 0.040,
         x: (room.ball.x / 100) * windowsWidth,
         y: (room.ball.y / 100) * windowsHeight,
       });

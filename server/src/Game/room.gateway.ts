@@ -65,10 +65,10 @@ export class RoomGateway {
             room.playerA.score += 1;
           }
           if (room.playerA.score >= 10 || room.playerB.score >= 10) {
-            this.server.emit('roomFinished', room);
             room.status = 'finished';
+            await this.roomService.save(room);
+            this.server.emit('roomFinished', room);
             this.server.in('room-' + room.id).emit('gameEnd', room);
-            this.roomService.save(room);
             clearInterval(intervalList[room.id]);
           }
           room.ball.direction = Math.random() * 2 * Math.PI;
@@ -178,7 +178,7 @@ export class RoomGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() data: any,
   ): Promise<void> {
-    //console.log('call');
+    console.log('call');
     if (data?.id && data?.name) {
       const rooms = await this.roomService.getRooms();
       if (rooms.length == 0) {

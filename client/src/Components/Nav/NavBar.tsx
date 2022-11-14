@@ -15,6 +15,7 @@ import { IoGameController } from "react-icons/io5";
 import { BsFillEyeFill } from "react-icons/bs";
 import { GrClose } from "react-icons/gr";
 import {AiOutlineClose} from "react-icons/ai";
+import {HiChatBubbleLeftRight} from "react-icons/hi2";
 import "./NavBar.scss";
 import Social from "../../Pages/Social/Social";
 
@@ -84,102 +85,12 @@ function NavBar(props: any) {
     }
   }
 
-  function activeorDisable(nb: number) {
-    switch (nb) {
-      case 0:
-        if (checkedProfile) setCheckedProfile(false);
-        else {
-          setCheckedSettings(false);
-          setCheckedLogout(false);
-          setCheckedGame(false);
-          setCheckedSpectate(false);
-          setCheckedSocial(false);
-          setCheckedProfile(true);
-        }
-        navigate("/profile");
-        break;
-      case 1:
-        if (checkedSettings) setCheckedSettings(false);
-        else {
-          setCheckedLogout(false);
-          setCheckedGame(false);
-          setCheckedSpectate(false);
-          setCheckedSocial(false);
-          setCheckedProfile(false);
-          setCheckedSettings(true);
-        }
-        navigate("/settings");
-        break;
-      case 2:
-        if (checkedLogout) setCheckedLogout(false);
-        else {
-          setCheckedSettings(false);
-          setCheckedGame(false);
-          setCheckedSpectate(false);
-          setCheckedSocial(false);
-          setCheckedProfile(false);
-          setCheckedLogout(true);
-        }
-        navigate("/logout");
-        break;
-      case 3:
-        if (checkedGame) setCheckedGame(false);
-        else {
-          setCheckedSettings(false);
-          setCheckedLogout(false);
-          setCheckedSpectate(false);
-          setCheckedSocial(false);
-          setCheckedProfile(false);
-          setCheckedGame(true);
-        }
-        navigate("/game");
-        break;
-      case 4:
-        if (checkedSpectate) setCheckedSpectate(false);
-        else {
-          setCheckedSettings(false);
-          setCheckedLogout(false);
-          setCheckedGame(false);
-          setCheckedSocial(false);
-          setCheckedProfile(false);
-          setCheckedSpectate(true);
-        }
-        navigate("/game/spectate");
-        break;
-      case 5:
-        if (checkedSocial) {
-          setCheckedSocial(false);
-          closeNav();
-        } else {
-          setCheckedSettings(false);
-          setCheckedLogout(false);
-          setCheckedGame(false);
-          setCheckedSpectate(false);
-          setCheckedProfile(false);
-          setCheckedSocial(true);
-          openNav();
-        }
-        //navigate("/social");
-        break;
-      default:
-        break;
-    }
-  }
-
   /* Set the width of the side navigation to 250px */
   function openNav() {
-    const open = document.getElementById("mySidenav");
-    open?.classList.toggle("active");
-	const reveal = document.getElementById("navButtons");
-	reveal?.classList.toggle("hidden");
-  }
-
-  /* Set the width of the side navigation to 0 */
-  function closeNav() {
-    const close = document.getElementById("mySidenav");
-    close?.classList.toggle("active");
-	const hide = document.getElementById("navButtons");
-	hide?.classList.toggle("hidden");
+		const openOrClose = document.getElementById("mySidenav");
+		openOrClose?.classList.toggle("active");
+		const revealOrHide = document.getElementById("navButtons");
+		revealOrHide?.classList.toggle("hidden");
   }
 
   useEffect(() => {
@@ -192,183 +103,62 @@ function NavBar(props: any) {
   return (
     <div className="NavBar">
       {!booleffect2 ? (
-        <div>
-          {
-            <div>
-              <div className="menu">
-                <div id='ProjectName'>
-                  <button
-                    onClick={() => {
-                      closeSocket();
-                      navigate("/");
-                    }}>
-                    Ft_transcendance
-                  </button>
-                </div>
-                <div id="navButtons">
-                  <div id="profile" className="click">
-                    <label className="icon">
-                      <input
-                        type="radio"
-                        id="Profile"
-                        value="Profile"
-                        name="menu_text"
-                        onChange={() => {}}
-                        onClick={() => {
-                          closeSocket();
-                          activeorDisable(0);
-                        }}
-                        checked={checkedProfile}
-                      />
-					  <span className="span">
-                        <FaUserCircle />
-                      </span>
-                    </label>
-                  </div>
-                  <div id="settings" className="click">
-                    <label className="icon">
-                      <input
-                        type="radio"
-                        id="Settings"
-                        value="Settings"
-                        name="menu_text"
-                        onChange={() => {}}
-                        onClick={() => {
-                          closeSocket();
-                          activeorDisable(1);
-                        }}
-                        checked={checkedSettings}
-                      />
-                      <span className="span">
-                        <IoMdSettings />
-                      </span>
-                    </label>
-                  </div>
-                  <div id="logout" className="click">
-                    <label className="icon">
-                      <input
-                        type="radio"
-                        id="Logout"
-                        value="Logout"
-                        name="menu_text"
-                        onChange={() => {}}
-                        onClick={() => {
-                          closeSocket();
-                          activeorDisable(2);
-                        }}
-                        checked={checkedLogout}
-                      />
-                      <span className="span">
-                        <IoLogOutSharp />
-                      </span>
-                    </label>
-                  </div>
-                  <div id="game" className="click">
-                    <label className="icon">
-                      <input
-                        type="radio"
-                        id="Game"
-                        value="Game"
-                        name="menu_text"
-                        onChange={() => {}}
-                        onClick={() => {
-                          closeSocket();
-                          activeorDisable(3);
-                        }}
-                        checked={checkedGame}
-                      />
-                      <span className="span">
-                        <IoGameController />
-                      </span>
-                    </label>
-                  </div>
-                  <div id="spectate" className="click">
-                    <label className="icon">
-                      <input
-                        type="radio"
-                        id="Spectate"
-                        value="Spectate"
-                        name="menu_text"
-                        onChange={() => {}}
-                        onClick={() => {
-                          closeSocket();
-                          activeorDisable(4);
-                        }}
-                        checked={checkedSpectate}
-                      />
-                      <span className="span">
-                        <BsFillEyeFill />
-                      </span>
-                    </label>
-                  </div>
-                <div>
-                  {friendRequest ? (
-                    <div id="social" className="click">
-                      <label className="icon">
-                        <input
-                          type="radio"
-                          id="Social"
-                          value="Social"
-                          name="menu_text"
-                          onChange={() => {}}
-                          onClick={() => {
-                            activeorDisable(5);
-                          }}
-                          checked={checkedSocial}
-                        />
-                        <span className="span">
-                          <FaUserFriends />
-                        </span>
-                      </label>
-                      {/* <button id='menu_text' onClick={() => {
-											socket?.disconnect();
-											setSocket(undefined);
-											navigate("/social")
-										}}> Social({compt}) </button> */}
-                    </div>
-                  ) : (
-                    <div id="social" className="click">
-                      <label className="icon">
-                        <input
-                          type="radio"
-                          id="Social"
-                          value="Social"
-                          name="menu_text"
-                          onChange={() => {}}
-                          onClick={() => {
-                            activeorDisable(5);
-                          }}
-                          checked={checkedSocial}
-                        />
-                        <span className="span">
-                          <FaUserFriends />
-                        </span>
-                      </label>
-                      {/* <button id='menu_text' onClick={() => {
-										socket?.disconnect();
-										setSocket(undefined);
-										navigate("/social")
-									}}> Social </button> */}
-                    </div>
-                  )}
-				  </div>
-				  </div>
-                  <div id="mySidenav" className="sidenav">
-                    <button className="closebtn" onClick={() => closeNav()}>
-                      <span>
-                        <AiOutlineClose />
-                      </span>
-                    </button>
-                    {/* <a href="/">About</a>
-                    <a href="#">Services</a>
-                    <a href="#">Clients</a>
-                    <a href="#">Contact</a> */}
-					<Social/>
-                  </div>
-              </div>
+        <>
+            <div id='ProjectName'>
+              <button onClick={() => {closeSocket();navigate("/");}}>
+                Ft_transcendance
+              </button>
             </div>
-          }
-        </div>
+            <div id="navButtons">	  
+              <button id="profile" className="click" onClick={() => {closeSocket();navigate("/profile");}}>
+                <FaUserCircle className="icon"/>
+              </button>
+              <button id="settings" className="click" onClick={() => {closeSocket();navigate("/settings");}}>
+                <IoMdSettings className="icon"/>
+              </button>
+              <button id="chat" className="click" onClick={() => {closeSocket();navigate("/chat");}}>
+                <HiChatBubbleLeftRight className="icon"/>
+              </button>
+              <button id="logout" className="click" onClick={() => {closeSocket();navigate("/logout");}}>
+                <IoLogOutSharp className="icon"/>
+              </button>
+              <button id="game" className="click" onClick={() => {closeSocket();navigate("/game");}}>
+                <IoGameController className="icon"/>
+              </button>
+              <button id="spectate" className="click" onClick={() => {closeSocket();navigate("/game/spectate");}}>
+                <BsFillEyeFill className="icon"/>
+              </button>
+              <>
+                {friendRequest ? (
+                  <button id="social" className="click" onClick={() => {openNav()}}>
+                        <FaUserFriends className="icon"/>
+                    {/* <button id='menu_text' onClick={() => {
+                    socket?.disconnect();
+                    setSocket(undefined);
+                    navigate("/social")
+                  }}> Social({compt}) </button> */}
+                  </button>
+                ) : (
+                  <button id="social" className="click" onClick={() => {openNav()}}>
+                        <FaUserFriends className="icon"/>
+                    {/* <button id='menu_text' onClick={() => {
+                  socket?.disconnect();
+                  setSocket(undefined);
+                  navigate("/social")
+                }}> Social </button> */}
+                  </button>
+                )}
+              </>
+            </div>
+            <div id="mySidenav" className="sidenav">
+              <button className="closebtn" onClick={() => openNav()}>
+                <span>
+                <AiOutlineClose />
+                </span>
+              </button>
+              <Social/>
+            </div>
+        </>
       ) : null}
     </div>
   );

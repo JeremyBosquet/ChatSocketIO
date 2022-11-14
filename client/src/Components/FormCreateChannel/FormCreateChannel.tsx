@@ -64,12 +64,12 @@ function FormCreateChannel() {
 
     const defaultUsers = [
       {
-        id: user.id,
+        id: user.uuid,
         role: "owner"
       }
     ]
 
-    axios.post('http://90.66.192.148:7000/api/chat/channel', { name: channelName, owner: user, visibility: visibility, password: password, users: defaultUsers, messages: [], mutes: [], bans: [] })
+    axios.post('http://90.66.192.148:7000/api/chat/channel', { name: channelName, owner: {id: user.uuid}, visibility: visibility, password: password, users: defaultUsers, messages: [], mutes: [], bans: [] })
     .then((res : any) => {
         if (res.data ) {
         setSuccess("Success: channel " + channelName + " is created.");
@@ -83,7 +83,7 @@ function FormCreateChannel() {
           })
         }
 
-        getUsersChannel(user.id);
+        getUsersChannel(user.uuid);
         
         //Reset form
         setChannelName("");

@@ -6,6 +6,8 @@ import { createNotification } from "../../Components/notif/Notif";
 import React from "react";
 import NavBar from "../../Components/Nav/NavBar";
 import "../../Pages/Home/HomePage.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { getSockeGame, setSocketGame } from "../../Redux/gameSlice";
 
 interface IPlayer {
   id: string;
@@ -54,7 +56,8 @@ interface ISettings {
 }
 
 function GamePlayingPage() {
-  const [socket, setSocket] = useState<Socket>();
+  const socket = useSelector(getSockeGame);
+  const dispatch = useDispatch();
   const [ready, setReady] = useState<boolean>(false);
   const [playing, setPlaying] = useState<boolean>(false);
   const [playerId, setPlayerId] = useState<string>("");
@@ -62,40 +65,49 @@ function GamePlayingPage() {
   const [room, setRoom] = useState<IRoom>();
   const [notification, setNotificaton] = useState<Boolean>(false);
 
+
   useEffect(() => {
     // Connect to the socket
+    console.log("socket", socket);
+    if (socket)
+      socket?.close();
     const newSocket = io("http://90.66.192.148:7002");
-    setSocket(newSocket);
+    dispatch(setSocketGame(newSocket));
   }, []);
 
   useEffect(() => {
+    console.log("newSocket gfgdfgdf", socket)
+    socket?.emit("searching");
+  }, [socket]);
+
+  useEffect(() => {
     if (socket) {
-      socket.removeListener("errorRoomIsFull");
-      socket.removeListener("playerReady");
-      socket.removeListener("gameStart");
-      socket.removeListener("playerDisconnected");
-      socket.removeListener("gameEnd");
-      socket.removeListener("gameForceEnd");
-      socket.removeListener("roomUpdated");
-      socket.on("errorRoomIsFull", (id: string) => {
+      socket?.removeListener("errorRoomIsFull");
+      socket?.removeListener("playerReady");
+      socket?.removeListener("gameStart");
+      socket?.removeListener("playerDisconnected");
+      socket?.removeListener("gameEnd");
+      socket?.removeListener("gameForceEnd");
+      socket?.removeListener("roomUpdated");
+      socket?.on("errorRoomIsFull", (id: string) => {
         console.log("errorRoomIsFull", id);
         //window.location.href = '/game/';
         //Spectator here
       });
-      socket.on("playerReady", (data: IRoom) => {
+      socket?.on("playerReady", (data: IRoom) => {
         if (ready) {
           setRoom(data);
           //if (data?.playerA?.id && data?.playerB?.id)
           //  setPlaying(true);
         }
       });
-      socket.on("gameStart", (data: IRoom) => {
+      socket?.on("gameStart", (data: IRoom) => {
         setRoom(data);
         setPlaying(true);
         setReady(false);
         setNotificaton(false);
       });
-      socket.on("playerDisconnected", (data: IRoom) => {
+      socket?.on("playerDisconnected", (data: IRoom) => {
         if (ready) {
           if (!notification)
             createNotification("info", "L'autre connard a leave 2");
@@ -107,7 +119,7 @@ function GamePlayingPage() {
           } else setRoom(data);
         }
       });
-      socket.on("gameEnd", (data: IRoom) => {
+      socket?.on("gameEnd", (data: IRoom) => {
         console.log("gameEnd", data);
         if (data.playerA.score === 10 && !notification)
           createNotification("success", "PlayerA a gagner");
@@ -118,7 +130,7 @@ function GamePlayingPage() {
         setPlaying(false);
         setReady(false);
       });
-      socket.on("gameForceEnd", (data: IRoom) => {
+      socket?.on("gameForceEnd", (data: IRoom) => {
         console.log(
           "gameForceEnd donc erreur 'sorry l'autre connard a crash'",
           data
@@ -130,16 +142,16 @@ function GamePlayingPage() {
         setPlaying(false);
         setReady(false);
       });
-      socket.on("roomUpdated", (data: IRoom) => {
+      socket?.on("roomUpdated", (data: IRoom) => {
         console.log("roomUpdated", data);
         setRoom(data);
       });
     }
   }, [socket, ready, playing, room, notification]);
-
+ // Modif navbar
   return (
     <div className="main">
-      <NavBar socket={socket} setSocket={setSocket} />
+      <NavBar socket={socket} setSocket={setSocketGame} />
       {!ready && !playing ? (
         <GameReady
           socket={socket}

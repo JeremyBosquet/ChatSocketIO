@@ -27,10 +27,10 @@ function Leave(props: props) {
             })
         }
     
-        await axios.post("http://90.66.192.148:7000/api/chat/channel/leave", {"channelId": id, "userId": user.id})
+        await axios.post("http://90.66.192.148:7000/api/chat/channel/leave", {"channelId": id, "userId": user.uuid})
         .then((res) => {
-            getUsersChannel(user.id);
-            socket?.emit('leavePermanant', { userId: user.id, channelId: id });
+            getUsersChannel(user.uuid);
+            socket?.emit('leavePermanant', { userId: user.uuid, channelId: id });
             props.setSearchChannel("");
             if (params.id === id)
                 navigate('/chat/channel');

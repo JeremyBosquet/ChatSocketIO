@@ -5,7 +5,7 @@ import React from 'react';
 
 interface props {
     channelId: string;
-    user: {id: string};
+    user: {uuid: string};
 }
 
 function SendMessage(props : props) {
@@ -16,7 +16,7 @@ function SendMessage(props : props) {
         e.preventDefault();
         if (message === "")
           return ;
-        socket?.emit('message', { userId: props.user.id, message: message, channelId: props.channelId, type: "dm" });
+        socket?.emit('message', { userId: props.user.uuid, message: message, channelId: props.channelId, type: "dm" });
         setMessage("");
     }
 

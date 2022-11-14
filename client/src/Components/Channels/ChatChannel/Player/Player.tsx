@@ -25,7 +25,7 @@ function Player(props : props) {
 
   useEffect(() => {
     async function isConnected(user: IuserDb) {
-      let userFinded = props.usersConnected.find(userConnected => userConnected.userId === user.id);
+      let userFinded = props.usersConnected.find(userConnected => userConnected.userId === user.uuid);
       if (userFinded)
       {
         setConnected(true);
@@ -40,10 +40,10 @@ function Player(props : props) {
   }, [props.usersConnected])
   
   return (
-    <div className='player' key={props.user?.id}>
-      <p>{props.user?.name} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p> 
+    <div className='player' key={props.user?.uuid}>
+      <p>{props.user?.username} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p> 
       {
-        props.user?.id === me.id ? null :
+        props.user?.uuid === me.uuid ? null :
         <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 
               {(me.role === "admin" && 
                 props.user.role !== 'admin' && 

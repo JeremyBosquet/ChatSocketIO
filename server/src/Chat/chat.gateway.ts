@@ -34,7 +34,7 @@ export class ChatGateway {
 
         let users = [];
         for (const socket of sockets) {
-            users.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
+            users.push({id: socket.id, userId: socket.data.userId, username: socket.data.username, channelId: client.data.room});
         }
        
         this.server.in(client.data.channelId).emit('usersConnected', users);
@@ -42,7 +42,7 @@ export class ChatGateway {
         this.clients = this.clients.filter(c => c.id !== client.id);
         client.data.channelId = "";
         client.data.userId = "";
-        client.data.name = "";
+        client.data.username = "";
     }
 
     @SubscribeMessage('join')
@@ -53,7 +53,7 @@ export class ChatGateway {
         const s = await this.server.in(client.data.channelId).fetchSockets()
         let u = [];
         for (const socket of s) {
-            u.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
+            u.push({id: socket.id, userId: socket.data.userId, username: socket.data.username, channelId: client.data.room});
         }
 
         this.server.in(client.data.channelId).emit('usersConnected', u);
@@ -63,15 +63,17 @@ export class ChatGateway {
         client.join(data.channelId);
         
         client.data.userId = data.userId;
-        client.data.name = (await this.chatService.getUser(data.userId)).name;
+        client.data.username = (await this.chatService.getUser(data.userId)).username;
         client.data.channelId = data.channelId;
+
+        console.log(client.data);
         
         this.server.emit('joinFromServer', data);
         const sockets = await this.server.in(data.channelId).fetchSockets()
 
         let users = [];
         for (const socket of sockets) {
-            users.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
+            users.push({id: socket.id, userId: socket.data.userId, username: socket.data.username, channelId: client.data.room});
         }
 
         this.server.in(data.channelId).emit('usersConnected', users);
@@ -89,7 +91,7 @@ export class ChatGateway {
 
         let users = [];
         for (const socket of sockets) {
-            users.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
+            users.push({id: socket.id, userId: socket.data.userId, username: socket.data.username, channelId: client.data.room});
         }
 
         this.server.in(data.channelId).emit('usersConnected', users);
@@ -105,7 +107,7 @@ export class ChatGateway {
 
             let users = [];
             for (const socket of sockets) {
-                users.push({id: socket.id, userId: socket.data.userId, name: socket.data.name, channelId: client.data.room});
+                users.push({id: socket.id, userId: socket.data.userId, username: socket.data.username, channelId: client.data.room});
             }
 
             this.server.in(data.channelId).emit('usersConnected', users);
@@ -133,13 +135,18 @@ export class ChatGateway {
             if (await this.chatService.userIsMuted(data.channelId, data.userId))
                 return;
             if (await this.chatService.userIsInChannel(data.channelId, data.userId))
+            {
                 await this.chatService.createMessage(chat, data.channelId);
+                this.server.in(data.channelId).emit('messageFromServer', data);
+            }
         }
         else if (data.type === "dm") {
             if (await this.dmsService.userIsInChannel(data.channelId, data.userId))
+            {
                 await this.dmsService.createMessage(chat, data.channelId);
+                this.server.in(data.channelId).emit('messageFromServer', data);
+            }
         }
-        this.server.in(data.channelId).emit('messageFromServer', data);
     }
 
     @SubscribeMessage('kick')

@@ -3,6 +3,7 @@ import { ChatService } from './chat.service';
 import { BanPlayerDTO, ChannelIdDTO, ChannelsWhereUserDTO, CreateChannelDTO, editChannelPasswordDTO, GetMessagesDTO, JoinChannelCodeDTO, JoinChannelDTO, KickPlayerDTO, LeaveChannelDTO, MutePlayerDTO, setAdminDTO, UnmutePlayerDTO, UserIdDTO } from './Interfaces/ChannelDTO';
 import * as bcrypt from 'bcrypt';
 import { User } from './Entities/user.entity';
+import { UserModel } from 'src/typeorm';
 
 @Controller('api/chat')
 export class ChannelController {
@@ -248,13 +249,13 @@ export class ChannelController {
     @Get('messages/:channelId/:userId') // Get messages from 
     async getMessagesFromChannel(@Param(ValidationPipe) params: GetMessagesDTO, @Res() res) {
         const checkUserIsIn = (channel: any) => {
-            const containsUser = channel.users.filter((user : User) => user.id === params.userId);
+            const containsUser = channel.users.filter((user : any) => user.id === params.userId);
             if (Object.keys(containsUser).length == 0)
                 return false;
             return true;
         }
 
-        const channel = await this.chatService.getChannel(params.channelId);
+        const channel = await this.chatService.getBrutChannel(params.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
@@ -267,7 +268,7 @@ export class ChannelController {
 
     @Get('mutes/:channelId') // Get mutes from channel 
     async getMutedUsers(@Param(ValidationPipe) params: ChannelIdDTO, @Res() res) {
-        const channel = await this.chatService.getChannel(params.channelId);
+        const channel = await this.chatService.getBrutChannel(params.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
         
@@ -277,7 +278,7 @@ export class ChannelController {
 
     @Post('channel/kick') //Kick player from channel
     async kick(@Body(ValidationPipe) body: KickPlayerDTO, @Res() res) {
-        const channel = await this.chatService.getChannel(body.channelId);
+        const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
@@ -291,7 +292,7 @@ export class ChannelController {
         if (!userToKick)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         
-        channel.users = channel.users.filter(user => user.id !== body.target);
+        channel.users = channel.users.filter((user : any) => user.id !== body.target);
 
         await this.chatService.updateChannel(channel.id, channel);
 
@@ -300,7 +301,7 @@ export class ChannelController {
 
     @Post('channel/ban') //Ban player from channel
     async ban(@Body(ValidationPipe) body: BanPlayerDTO, @Res() res) {
-        const channel = await this.chatService.getChannel(body.channelId);
+        const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
@@ -314,7 +315,7 @@ export class ChannelController {
         if (!userToBan)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         
-        channel.users = channel.users.filter(user => user.id !== body.target);
+        channel.users = channel.users.filter((user: any) => user.id !== body.target);
         if (body.isPermanent)
             body.time = "-1";
         channel.bans.push({id: body.target, time: body.time, permanent: body.isPermanent});
@@ -326,7 +327,7 @@ export class ChannelController {
     
     @Post('channel/mute') //mute player from channel
     async mute(@Body(ValidationPipe) body: MutePlayerDTO, @Res() res) {
-        const channel = await this.chatService.getChannel(body.channelId);
+        const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
@@ -351,7 +352,7 @@ export class ChannelController {
 
     @Post('channel/unmute') //mute player from channel
     async unmute(@Body(ValidationPipe) body: UnmutePlayerDTO, @Res() res) {
-        const channel = await this.chatService.getChannel(body.channelId);
+        const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
@@ -365,7 +366,7 @@ export class ChannelController {
         if (!userToUnmute)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
 
-        channel.mutes = channel.mutes.filter(user => user.id !== body.target);
+        channel.mutes = channel.mutes.filter((user : any) => user.id !== body.target);
         await this.chatService.updateChannel(channel.id, channel);
 
         return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "User unmuted"});
@@ -374,7 +375,7 @@ export class ChannelController {
 
     @Post('channel/setadmin') //set player to admin from channel
     async setAdmin(@Body(ValidationPipe) body: setAdminDTO, @Res() res) {
-        const channel = await this.chatService.getChannel(body.channelId);
+        const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
@@ -400,7 +401,7 @@ export class ChannelController {
 
     @Post('channel/unsetadmin') //set player to admin from channel
     async unsetAdmin(@Body(ValidationPipe) body: setAdminDTO, @Res() res) {
-        const channel = await this.chatService.getChannel(body.channelId);
+        const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 

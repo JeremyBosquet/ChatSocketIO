@@ -20,7 +20,7 @@ function DM(props : props) {
       navigate('/chat/channel');
 
     await axios.post(`http://90.66.192.148:7000/api/chat/dm/`, {
-      user1: me.id,
+      user1: me.uuid,
       user2: targetId,
     }).then(res => {
       if (res.data.id)
@@ -29,7 +29,7 @@ function DM(props : props) {
   }
 
   return (
-    <button className="actionButton" onClick={() => handleDM(props.user.id)}>DM</button>
+    <button className="actionButton" onClick={() => handleDM(props.user.uuid)}>DM</button>
   );
 }
 

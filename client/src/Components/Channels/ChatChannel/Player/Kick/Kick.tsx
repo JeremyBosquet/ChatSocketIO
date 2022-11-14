@@ -24,14 +24,14 @@ function Kick(props : props) {
     await axios.post(`http://90.66.192.148:7000/api/chat/channel/kick/`, {
       channelId: selectedChannel,
       target: targetId,
-      admin: me.id
+      admin: me.uuid
     }).then(res => {
       socket?.emit("kick", {channelId: selectedChannel, target: targetId, type: "kick"});
     });
   }
 
   return (
-    <button className="actionButton" onClick={e => handleKick(props.user.id)}>Kick</button>
+    <button className="actionButton" onClick={e => handleKick(props.user.uuid)}>Kick</button>
   );
 }
 

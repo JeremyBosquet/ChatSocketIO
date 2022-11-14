@@ -29,10 +29,10 @@ function Admin(props : props) {
     await axios.post(`http://90.66.192.148:7000/api/chat/channel/setadmin/`, {
       channelId: selectedChannel,
       target: targetId,
-      owner: me.id
+      owner: me.uuid
     }).then(() => {
       props.setUsers(props.users.map(user => {
-        if (user.id === targetId)
+        if (user.uuid === targetId)
           user.role = "admin";
           return user;
         }));
@@ -45,10 +45,10 @@ function Admin(props : props) {
     await axios.post(`http://90.66.192.148:7000/api/chat/channel/unsetadmin/`, {
       channelId: selectedChannel,
       target: targetId,
-      owner: me.id
-    }).then(res => {
+      owner: me.uuid
+    }).then(() => {
       props.setUsers(props.users.map(user => {
-        if (user.id === targetId)
+        if (user.uuid === targetId)
           user.role = "default";
         return user;
       }));
@@ -61,9 +61,9 @@ function Admin(props : props) {
     <>
       {
         props.user.role === "admin" ?
-          <button className="actionButton" onClick={() => unsetAdmin(props.user.id)}>Unset Admin</button> 
+          <button className="actionButton" onClick={() => unsetAdmin(props.user.uuid)}>Unset Admin</button> 
         :
-          <button className="actionButton" onClick={() => setAdmin(props.user.id)}>Set Admin</button>
+          <button className="actionButton" onClick={() => setAdmin(props.user.uuid)}>Set Admin</button>
       }
     </>
   );

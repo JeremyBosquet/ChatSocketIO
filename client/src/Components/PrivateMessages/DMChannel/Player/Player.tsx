@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { getUser } from "../../../../Redux/authSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
 import './Player.scss';
-
+import React from 'react';
 interface props {
     users: IuserDb[];
     setUsers: any;
-    user: IuserDb;
+    user: Iuser;
     usersConnected: Iuser[];
 }
 
@@ -17,7 +17,7 @@ function Player(props : props) {
   const me = useSelector(getUser);
 
   useEffect(() => {
-    async function isConnected(user: IuserDb) {
+    async function isConnected(user: Iuser) {
       let userFinded = props.usersConnected.find(userConnected => userConnected.userId === user.id);
       if (userFinded)
       {
@@ -34,7 +34,7 @@ function Player(props : props) {
   
   return (
     <div className='player' key={props.user?.id}>
-      <p>{props.user?.name} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p> 
+      <p>{props.user?.username} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p> 
       {
         props.user?.id === me.id ? null :
         <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 

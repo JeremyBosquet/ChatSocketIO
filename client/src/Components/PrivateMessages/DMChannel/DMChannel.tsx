@@ -21,7 +21,7 @@ function DMChannel() {
   const [messages, setMessages] = useState<Imessage[]>([]);
   const [users, setUsers] = useState<IuserDb[]>([]);
   const [usersConnected, setUsersConnected] = useState<Iuser[]>([]);
-  const [dm, setDm] = useState<Ichannel>();
+  const [dm, setDm] = useState<any>();
   const [name, setName] = useState<string>();
   const params = useParams();
 
@@ -41,12 +41,12 @@ function DMChannel() {
   }
 
   const getMessages = async () => {
-    await axios.get(`http://90.66.192.148:7000/api/chat/dm/messages/` + selectedChannelDM + '/' + user.id)
+    await axios.get(`http://90.66.192.148:7000/api/chat/dm/messages/` + selectedChannelDM + '/' + user.uuid)
     .then(res => {
       if (res.data)
         setMessages(res.data);
     }).catch(() => {
-      getUsersChannel(user.id);
+      getUsersChannel(user.uuid);
       setMessages([]);
       navigate('/chat/dm');
     });
@@ -60,7 +60,7 @@ function DMChannel() {
     }
     if (params.id)
     {
-      socket?.emit("join", {channelId: params.id, userId: user.id});
+      socket?.emit("join", {channelId: params.id, userId: user.uuid});
       getMessages();
     }
     
@@ -70,10 +70,10 @@ function DMChannel() {
 
   useEffect(() => {
     const getName = async () => {
-      const userId = dm?.users[0]?.id === user.id ? dm?.users[1]?.id : dm?.users[0]?.id;
+      const userId = dm?.users[0]?.id === user.uuid ? dm?.users[1]?.id : dm?.users[0]?.id;
       const u = (await axios.get(`http://90.66.192.148:7000/api/chat/user/` + userId)).data;
-      if (u?.name)
-        setName(u.name);
+      if (u?.username)
+        setName(u.username);
     }
     if (dm?.id)
       getName();
@@ -104,7 +104,7 @@ function DMChannel() {
               {name ? <h2>{name}</h2> : <h2>Select a DM</h2>}
             </div>
             {/* Print messages */}
-            <Messages userId={user.id} messages={messages} users={users} setUsers={setUsers}/>
+            <Messages userId={user.uuid} messages={messages} users={users} setUsers={setUsers}/>
             <div className='sendMessage'>
               <SendMessage channelId={selectedChannelDM} user={user}/>
             </div>
@@ -114,7 +114,7 @@ function DMChannel() {
         <h2>Players</h2>
         <div className='messages'>
           {users?.map((user : any) => ( 
-            <Player key={user.id} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} />
+            <Player key={user.uuid} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} />
           ))}
         </div>
       </div>

@@ -43,7 +43,7 @@ function Ban(props : props) {
     await axios.post(`http://90.66.192.148:7000/api/chat/channel/ban/`, {
       channelId: selectedChannel,
       target: targetId,
-      admin: me.id,
+      admin: me.uuid,
       time: duration,
       isPermanent: permanent
     }).then(res => {
@@ -62,7 +62,7 @@ function Ban(props : props) {
           <div className="banMenu">
             <div className="banContainer">
               <div className="banInfos">
-                <h3>Ban {props.user.name}</h3>
+                <h3>Ban {props.user.username}</h3>
                 <span onClick={handleClose}>X</span>
               </div>
               <div className="banDuration">
@@ -96,7 +96,7 @@ function Ban(props : props) {
                   required />
                   : null
               }
-              <button onClick={() => handleBan(props.user.id)}>Ban</button>
+              <button onClick={() => handleBan(props.user.uuid)}>Ban</button>
             </div>
           </div>
       : null

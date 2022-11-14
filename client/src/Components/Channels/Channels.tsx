@@ -32,8 +32,8 @@ function Channels() {
 
     useEffect(() => {
         
-        if (!init && user.id)
-            getUsersChannel(user.id);
+        if (!init && user.uuid)
+            getUsersChannel(user.uuid);
         //eslint-disable-next-line
     }, [init, user])
 

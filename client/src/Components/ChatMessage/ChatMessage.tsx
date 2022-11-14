@@ -10,7 +10,7 @@ function ChatMessage(props: props) {
   return (
     <div key={Math.random()}>
       <p>
-        [{props.date}] {props.name} : {props.message}
+        {props.name} : {props.message}
       </p>
     </div>
   );

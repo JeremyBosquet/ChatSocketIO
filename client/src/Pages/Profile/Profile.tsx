@@ -121,112 +121,19 @@ function Profile() {
                               <div id="list">
                                 {historyList.map((game, index) => (
                                   <ul key={index}>
-                                    {whoWon(
-                                      User.uuid,
-                                      game.playerA,
-                                      game.playerB,
-                                      game.status
-                                    ) === "Victory" ? (
+                                    {whoWon(User.uuid,game.playerA,game.playerB,game.status) === "Victory" ? (
                                       <li>
-                                        {" "}
                                         <span className="green">
-                                          {" "}
-                                          {game.playerA.name} vs{" "}
-                                          {game.playerB.name} /{" "}
-                                          {whoWon(
-                                            User.uuid,
-                                            game.playerA,
-                                            game.playerB,
-                                            game.status
-                                          )}
-                                        </span>{" "}
+                                          {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid,game.playerA,game.playerB,game.status)}
+                                        </span>
                                       </li>
                                     ) : (
                                       <li>
-                                        {" "}
                                         <span className="red">
-                                          {" "}
-                                          {game.playerA.name} vs{" "}
-                                          {game.playerB.name} /{" "}
-                                          {whoWon(
-                                            User.uuid,
-                                            game.playerA,
-                                            game.playerB,
-                                            game.status
-                                          )}
-                                        </span>{" "}
+                                          {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid,game.playerA,game.playerB, game.status)}
+                                        </span>
                                       </li>
                                     )}
-                                    <li>
-                                      {" "}
-                                      <span className="red">
-                                        {" "}
-                                        {game.playerA.name} vs{" "}
-                                        {game.playerB.name} /{" "}
-                                        {whoWon(
-                                          User.uuid,
-                                          game.playerA,
-                                          game.playerB,
-                                          game.status
-                                        )}
-                                      </span>{" "}
-                                    </li>
-                                    <li>
-                                      {" "}
-                                      <span className="red">
-                                        {" "}
-                                        {game.playerA.name} vs{" "}
-                                        {game.playerB.name} /{" "}
-                                        {whoWon(
-                                          User.uuid,
-                                          game.playerA,
-                                          game.playerB,
-                                          game.status
-                                        )}
-                                      </span>{" "}
-                                    </li>
-                                    <li>
-                                      {" "}
-                                      <span className="red">
-                                        {" "}
-                                        {game.playerA.name} vs{" "}
-                                        {game.playerB.name} /{" "}
-                                        {whoWon(
-                                          User.uuid,
-                                          game.playerA,
-                                          game.playerB,
-                                          game.status
-                                        )}
-                                      </span>{" "}
-                                    </li>
-                                    <li>
-                                      {" "}
-                                      <span className="red">
-                                        {" "}
-                                        {game.playerA.name} vs{" "}
-                                        {game.playerB.name} /{" "}
-                                        {whoWon(
-                                          User.uuid,
-                                          game.playerA,
-                                          game.playerB,
-                                          game.status
-                                        )}
-                                      </span>{" "}
-                                    </li>
-                                    <li>
-                                      {" "}
-                                      <span className="red">
-                                        {" "}
-                                        {game.playerA.name} vs{" "}
-                                        {game.playerB.name} /{" "}
-                                        {whoWon(
-                                          User.uuid,
-                                          game.playerA,
-                                          game.playerB,
-                                          game.status
-                                        )}
-                                      </span>{" "}
-                                    </li>
                                   </ul>
                                 ))}
                               </div>

@@ -13,7 +13,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 
 interface Ichannel {
-  id: string;
+  uuid: string;
   name: string;
   users: IuserDb[];
   visibility: string;
@@ -44,13 +44,13 @@ function ChatChannel() {
   }
 
   const getMessages = async () => {
-    await axios.get(`http://90.66.192.148:7000/api/chat/messages/` + selectedChannel + '/' + user.id)
+    await axios.get(`http://90.66.192.148:7000/api/chat/messages/` + selectedChannel + '/' + user.uuid)
     .then(res => {
       if (res.data)
         setMessages(res.data);
-    }).catch(err => {
+      }).catch(err => {
       if (err.response.status === 401) {
-        getUsersChannel(user.id);
+        getUsersChannel(user.uuid);
         setMessages([]);
       }
       navigate('/chat/channel');
@@ -71,17 +71,17 @@ function ChatChannel() {
         const channel = (await axios.get(`http://90.66.192.148:7000/api/chat/channel/` + selectedChannel)).data;
         setChannel(channel);
         setUsers(channel.users);
-        dispatch(setUser({...user, role: channel.users.find((u: IuserDb) => u.id === user.id)?.role}));
+        dispatch(setUser({...user, role: channel.users.find((u: IuserDb) => u.uuid === user.uuid)?.role}));
       }
-      if (selectedChannel !== "")
+      if (selectedChannel !== undefined)
       {
-        socket?.emit("join", {channelId: selectedChannel, userId: user.id});
+        socket?.emit("join", {channelId: selectedChannel, userId: user.uuid});
         getMessages();
       }
   
       getChannel();
   
-      if (selectedChannel && channel?.users.filter(u => u.id === user.id)[0]?.role === ("admin" || "owner")) {
+      if (selectedChannel && channel?.users.filter(u => u.uuid === user.uuid)[0]?.role === ("admin" || "owner")) {
         getMutedUsers();
       }
     } else
@@ -108,14 +108,18 @@ function ChatChannel() {
       
       socket.removeListener('updateMutes');
       socket?.on('updateMutes', (usersDb: []) => {
-        if (channel?.users.filter(u => u.id === user.id)[0]?.role === "admin" || "owner")
+        if (channel?.users.filter(u => u.uuid === user.uuid)[0]?.role === "admin" || "owner")
+        {
+          console.log('la pour mute')
           setMutedUsers(usersDb);
+          console.log(usersDb)
+        }
       });
       
       socket.removeListener('kickFromChannel');
       socket.on('kickFromChannel', (data: {target: string, channelId: string, message: string}) => {
-        socket?.emit('leavePermanant', { userId: user.id, channelId: data.channelId });
-        getUsersChannel(user.id);
+        socket?.emit('leavePermanant', { userId: user.uuid, channelId: data.channelId });
+        getUsersChannel(user.uuid);
         if (params.id === data.channelId)
           navigate('/chat/channel');
         // use message to display a message to the user
@@ -123,7 +127,7 @@ function ChatChannel() {
       
       socket.removeListener('adminFromServer');
       socket.on('adminFromServer', (data: {target: string, channelId: string, message: string, role: string}) => {
-        if (data.target === user.id) {
+        if (data.target === user.uuid) {
           dispatch(setUser(({...user, role: data.role})));
           // use message to display a message to the user
         }
@@ -131,7 +135,7 @@ function ChatChannel() {
           console.log('here' + data.role);
           if (user?.role === "admin") {
             setUsers(users => users.map((user: IuserDb) => {
-              if (user.id === data.target)
+              if (user.uuid === data.target)
                 return ({...user, role: data.role});
 
               return user;
@@ -154,7 +158,7 @@ function ChatChannel() {
                 <h3>{channel.visibility === "private" ? channel.code : null}</h3>
               </div>
               {/* Print messages */}
-              <Messages userId={user.id} messages={messages} users={users} setUsers={setUsers}/>
+              <Messages userId={user.uuid} messages={messages} users={users} setUsers={setUsers}/>
               <div className='sendMessage'>
                   <SendMessage channelId={selectedChannel} user={user}/>
               </div>
@@ -167,7 +171,7 @@ function ChatChannel() {
         <div className='messages'>
           {users?.map((user : any) => ( 
             user.print === undefined && user.print !== false ?
-              <Player key={user.id} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers}/>
+              <Player key={user.uuid} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers}/>
             : null
           ))}
         </div>

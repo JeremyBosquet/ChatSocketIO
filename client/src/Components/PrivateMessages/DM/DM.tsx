@@ -23,17 +23,17 @@ function DM(props: props) {
   
   const handleSelectChannel = (id: string) => {
     if (selectedChannelDM !== "" && selectedChannelDM !== id) {
-      socket?.emit('leave', { userId: user.id, channelId: selectedChannelDM });
+      socket?.emit('leave', { userId: user.uuid, channelId: selectedChannelDM });
     }
     navigate('/chat/dm/' + id);
   }
   
   useEffect(() => {
     const getName = async () => {
-      const userId = props.dm.users[0]?.id === user.id ? props.dm.users[1]?.id : props.dm.users[0]?.id;
+      const userId = props.dm.users[0]?.id === user.uuid ? props.dm.users[1]?.id : props.dm.users[0]?.id;
       const u = (await axios.get(`http://90.66.192.148:7000/api/chat/user/` + userId)).data;
-      if (u?.name)
-        setName(u.name);
+      if (u?.username)
+        setName(u.username);
     }
     getName();
     // eslint-disable-next-line react-hooks/exhaustive-deps

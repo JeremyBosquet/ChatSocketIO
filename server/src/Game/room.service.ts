@@ -114,7 +114,7 @@ export class RoomService {
         (room.playerA !== null &&
           room.status == 'finished' &&
           room.playerA.id === uuid) ||
-        (room.playerB !== null && room.playerB.id === uuid),
+        (room.playerB !== null && room.playerB.id === uuid && room.status == 'finished'),
     );
     for (let i = 0; i < info.length; i++)
       tab.push(

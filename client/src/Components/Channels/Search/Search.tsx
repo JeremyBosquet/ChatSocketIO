@@ -21,7 +21,7 @@ function Search(props: props) {
         props.setSearchChannel(e.target.value);
 
         const getUsersChannel = async (e: any) => {
-            await axios.get("http://90.66.192.148:7000/api/chat/channels/user/" + user.id)
+            await axios.get("http://90.66.192.148:7000/api/chat/channels/user/" + user.uuid)
             .then((res) => {
                 if (res)
                     dispatch(setChannels(res.data));
@@ -29,9 +29,9 @@ function Search(props: props) {
         }
 
         if (e.target.value === "")
-            getUsersChannel(user.id)
+            getUsersChannel(user.uuid)
         else {
-            await axios.get("http://90.66.192.148:7000/api/chat/channels/byname/" + e.target.value + "/" + user.id)
+            await axios.get("http://90.66.192.148:7000/api/chat/channels/byname/" + e.target.value + "/" + user.uuid)
             .then((res) => {
                 if (res)
                     props.setChannelsFind(res.data);
@@ -43,14 +43,14 @@ function Search(props: props) {
         e.preventDefault();
         const data = {
             code: e.target.joinPrivate.value,
-            userId: user.id
+            userId: user.uuid
         }
         await axios.post("http://90.66.192.148:7000/api/chat/channel/join/code", data)
         .then((res) => {
             if (res)
             {
                 setPrivateJoin(false);
-                props.getUsersChannel(user.id);
+                props.getUsersChannel(user.uuid);
             }
         }).catch((err) => {
             console.log(err.response.data.message); //set in notification

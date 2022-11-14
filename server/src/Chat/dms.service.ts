@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { UserModel } from "src/typeorm";
 import { Repository } from "typeorm";
 import { DM } from "./Entities/dm.entity";
 import { User } from "./Entities/user.entity";
@@ -8,7 +9,7 @@ import { IChat } from "./Interfaces/Chat";
 @Injectable()
 export class DMsService {
   constructor(
-      @InjectRepository(User) private userRepository: Repository<User>, 
+      @InjectRepository(UserModel) private userRepository: Repository<UserModel>, 
       @InjectRepository(DM) private dmsRepository: Repository<DM>, 
     ) {}
 
@@ -61,8 +62,8 @@ export class DMsService {
       return (await this.getAndCreateDmWhereTwoUser(user1, user2));
     }
 
-    async getUser(userId: string): Promise<User> {
-      return await this.userRepository.findOneBy({id: userId});
+    async getUser(userId: string): Promise<UserModel> {
+      return await this.userRepository.findOneBy({uuid: userId});
     }
 
     async getUsersInfosInDm(dmId: string): Promise<any> {
@@ -72,7 +73,12 @@ export class DMsService {
       if (dm?.users) {
         for (const user of dm.users) {
           let userInfos : any = await this.getUser(user.id);
-          users.push(userInfos);
+          let filteredUserInfos = {
+            id: userInfos.uuid,
+            username: userInfos.username,
+            image: userInfos.image
+          }
+          users.push(filteredUserInfos);
         }
       }
 

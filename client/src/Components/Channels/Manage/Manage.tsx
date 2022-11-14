@@ -44,7 +44,7 @@ function Manage(props: props) {
 
     await axios.post("http://90.66.192.148:7000/api/chat/channel/edit", {
       channelId: props.channel.id,
-      userId: user.id,
+      userId: user.uuid,
       removePassword: removePassword,
       newVisibility: visibility,
       newPassword: password,

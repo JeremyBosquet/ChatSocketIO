@@ -3,7 +3,6 @@ import { getUser } from '../../../Redux/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import React from 'react';
-;
 
 interface props {
     channelId: string;
@@ -41,9 +40,9 @@ function Join(props: props) {
             })
         }
     
-        await axios.post("http://90.66.192.148:7000/api/chat/channel/join", {"channelId": id, "userId": user.id, "password": password})
-        .then((res) => {
-            getUsersChannel(user.id);
+        await axios.post("http://90.66.192.148:7000/api/chat/channel/join", {"channelId": id, "userId": user.uuid, "password": password})
+        .then(() => {
+            getUsersChannel(user.uuid);
             socket?.emit('joinPermanent', { channelId: id });
             props.setSearchChannel("");
         }).catch((err) => {

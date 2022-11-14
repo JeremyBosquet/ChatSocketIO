@@ -26,7 +26,7 @@ function PrivateMessages() {
         }
         
         if (!init)
-            getUsersDM(user.id);
+            getUsersDM(user.uuid);
         //eslint-disable-next-line
     }, [init])
 

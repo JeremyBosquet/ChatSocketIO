@@ -33,13 +33,14 @@ function Mute(props : props) {
     if (!params.id)
       navigate('/chat/channel');
 
-    if (isMuted()){
+    if (isMuted()){ //unmute
       await axios.post(`http://90.66.192.148:7000/api/chat/channel/unmute/`, {
         channelId: selectedChannel,
         target: targetId,
-        admin: me.id,
+        admin: me.uuid,
       }).then(res => {
         socket.emit("mute", {channelId: selectedChannel, target: targetId});
+        setMuteMenu(false);
       });
 
       return ;
@@ -54,11 +55,12 @@ function Mute(props : props) {
     await axios.post(`http://90.66.192.148:7000/api/chat/channel/mute/`, {
       channelId: selectedChannel,
       target: targetId,
-      admin: me.id,
+      admin: me.uuid,
       time: duration,
       isPermanent: permanent
     }).then(res => {
       socket.emit("mute", {channelId: selectedChannel, target: targetId});
+      setMuteMenu(false);
     });
   }
 
@@ -68,7 +70,7 @@ function Mute(props : props) {
   }
 
   const isMuted = () => {
-    if (props.mutedUsers.filter((user: any) => user.id === props.user.id).length > 0)
+    if (props.mutedUsers.filter((user: any) => user.id === props.user.uuid).length > 0)
       return true;
     return false;
   }
@@ -79,7 +81,7 @@ function Mute(props : props) {
           <div className="muteMenu">
             <div className="muteContainer">
               <div className="muteInfos">
-                <h3>Mute {props.user.name}</h3>
+                <h3>Mute {props.user.username}</h3>
                 <span onClick={handleClose}>X</span>
               </div>
               <div className="muteDuration">
@@ -113,14 +115,14 @@ function Mute(props : props) {
                   required />
                   : null
               }
-              <button onClick={() => handleMute(props.user.id)}>Mute</button>
+              <button onClick={() => handleMute(props.user.uuid)}>Mute</button>
             </div>
           </div>
       : null
     }
       {
         isMuted() ?
-          <button className="actionButton" onClick={() => handleMute(props.user.id)}>Unmute</button>
+          <button className="actionButton" onClick={() => handleMute(props.user.uuid)}>Unmute</button>
         :
           <button className="actionButton" onClick={() => setMuteMenu(!muteMenu)}>Mute</button>
       }

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Imessage } from "../../interfaces/messages";
 import { IuserDb } from "../../interfaces/users";
 import './ChatMessage.scss';
+import React from 'react';
 
 interface props {
     userId: string;
@@ -16,16 +17,16 @@ function ChatMessage(props : props) {
   
   useEffect(() => {
     const getUsername = async () => {
-      const userFinded = props.users.find(user => user.id === props.message.userId);
+      const userFinded = props.users.find(user => user.uuid === props.message.userId);
       let username = ".";
       
-      if (userFinded?.name)
-        username = userFinded.name;
+      if (userFinded?.username)
+        username = userFinded.username;
       else
       {
         await axios.get(`http://90.66.192.148:7000/api/chat/user/` + props.message.userId).then(res => {
           if (res.data)
-            username = res.data.name;
+            username = res.data.username;
             props.setUsers([...props.users, {...res.data, print: false}]);
         }).catch(err => console.log(err));
       }

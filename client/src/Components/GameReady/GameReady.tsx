@@ -6,6 +6,8 @@ import React from "react";
 import "./GameReady.scss";
 import { PacmanLoader, ScaleLoader } from "react-spinners";
 import NavBar from "../Nav/NavBar";
+import { useSelector } from "react-redux";
+import { getSockeGame } from "../../Redux/gameSlice";
 /*
   Check if player search on another tab
 */
@@ -70,6 +72,7 @@ function GameReady(props: props) {
   const [settings, setSettings] = useState<IConfiguration>();
   const [settingsBis, setSettingsBis] = useState<IConfiguration>();
   const [notification, setNotificaton] = useState<Boolean>(false);
+  const socket = useSelector(getSockeGame);
 
   // const [propsOn, setPropsOn] = useState<boolean>(false);
 
@@ -78,31 +81,32 @@ function GameReady(props: props) {
       setTmpUserBoolean(true);
       console.log("hey");
       console.log("say searching", tmpUser);
-      props.socket?.on("searching-" + tmpUser.id, (data: IRoom) => {
+      socket?.on("searching-" + tmpUser.id, (data: IRoom) => {
         console.log("receive searching", data);
         setSearchingDisplay(true);
 
         setNotificaton(false);
         setRoom(data);
       });
-      props.socket?.emit("searching", tmpUser);
+      socket?.emit("searching", tmpUser);
+      console.log("emit searching", socket);
     }
-  }, [searching, tmpUser, tmpUserBoolean, props.socket]);
+  }, [searching, tmpUser, tmpUserBoolean, socket]);
   //useEffect(() => {
   //if (!propsOn) {
   //  console.log("propsOn");
   //setPropsOn(true);
   useEffect(() => {
-    props.socket?.removeListener("configuring");
-    props.socket?.removeListener("configurationUpdated");
-    props.socket?.removeListener("playerLeave");
+    socket?.removeListener("configuring");
+    socket?.removeListener("configurationUpdated");
+    socket?.removeListener("playerLeave");
 
-    props.socket?.on("configuring", (data: IRoom) => {
+    socket?.on("configuring", (data: IRoom) => {
       console.log("receive configuring", data);
       setSearchingDisplay(false);
       setConfiguringDisplay(true);
     });
-    props.socket?.on("configurationUpdated", (data: IRoom) => {
+    socket?.on("configurationUpdated", (data: IRoom) => {
       console.log(
         "receive configurationUpdated",
         data.configurationB,
@@ -115,7 +119,7 @@ function GameReady(props: props) {
       if (data.playerA?.id === tmpUser?.id) setSettingsBis(data.configurationB);
       else setSettingsBis(data.configurationA);
     });
-    props.socket?.on("playerLeave", (any) => {
+    socket?.on("playerLeave", () => {
       console.log("receive cancelSearching");
       createNotification("info", "L'autre connard a leave 1");
       setNotificaton(true);
@@ -131,10 +135,10 @@ function GameReady(props: props) {
     searching,
     searchingDisplay,
     configuringDisplay,
-    props.socket,
+    socket,
   ]);
   // }
-  //}, [propsOn, props.socket, User, searchingDisplay, configuringDisplay, searching, tmpUserBoolean, settingsBis, settings, room, tmpUser, error, success]);
+  //}, [propsOn, socket, User, searchingDisplay, configuringDisplay, searching, tmpUserBoolean, settingsBis, settings, room, tmpUser, error, success]);
 
   const getUser = async () => {
     const messages = await axios
@@ -161,7 +165,7 @@ function GameReady(props: props) {
     getUser();
   }, []);
   async function handleReady() {
-    console.log("hey", tmpUser);
+    console.log("hey", socket);
     props.setPlayerId(tmpUser.id);
     props.setPlayerName(tmpUser.name);
     setNotificaton(false);
@@ -192,7 +196,7 @@ function GameReady(props: props) {
           <button
             onClick={
               () => {
-                props.socket?.emit("cancelSearching", { tmpUser, room });
+                socket?.emit("cancelSearching", { tmpUser, room });
                 setSearchingDisplay(false);
                 setConfiguringDisplay(false);
                 setSearching(false);
@@ -225,7 +229,7 @@ function GameReady(props: props) {
                       background: "",
                       confirmed: false,
                     });
-                  props.socket?.emit("updateConfirugation", {
+                  socket?.emit("updateConfirugation", {
                     difficulty: e.target.value,
                     background: settings?.background,
                     confirmed: false,
@@ -262,7 +266,7 @@ function GameReady(props: props) {
                       background: e.target.value,
                       confirmed: false,
                     });
-                  props.socket?.emit("updateConfirugation", {
+                  socket?.emit("updateConfirugation", {
                     difficulty: settings?.difficulty,
                     background: e.target.value,
                     confirmed: false,
@@ -286,7 +290,7 @@ function GameReady(props: props) {
               onClick={
                 () => {
                   console.log("cancel searching", tmpUser);
-                  props.socket?.emit("cancelSearching", { tmpUser, room });
+                  socket?.emit("cancelSearching", { tmpUser, room });
                   setSearchingDisplay(false);
                   setSearching(false);
                   setTmpUserBoolean(false);
@@ -307,7 +311,7 @@ function GameReady(props: props) {
                     settings?.confirmed === false
                   ) {
                     setSettings({ ...settings, confirmed: true });
-                    props.socket?.emit("confirmConfiguration", settings);
+                    socket?.emit("confirmConfiguration", settings);
                   }
                 } /*Cancel search*/
               }

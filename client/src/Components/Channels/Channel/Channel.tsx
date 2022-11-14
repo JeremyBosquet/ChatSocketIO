@@ -9,6 +9,7 @@ import { useState } from 'react';
 import Manage from '../Manage/Manage';
 import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import React from 'react';
 
 interface props {
     channel: any;
@@ -35,7 +36,7 @@ function Channel(props: props) {
   
   const handleSelectChannel = (id: string) => {
     if (!props.foundChannel && selectedChannel !== "" && selectedChannel !== id) {
-      socket?.emit('leave', { userId: user.id, channelId: selectedChannel });
+      socket?.emit('leave', { userId: user.uuid, channelId: selectedChannel });
     }
     if (!props.foundChannel && selectedChannel !== id)
       navigate('/chat/channel/' + id);
@@ -43,7 +44,7 @@ function Channel(props: props) {
   }
 
    function isOwner() {
-    const userFinded = props.channel.users.find((userFind: any) => userFind.id === user.id);
+    const userFinded = props.channel.users.find((userFind: any) => userFind.id === user.uuid);
     return (userFinded && userFinded.role === "owner");
   }
 

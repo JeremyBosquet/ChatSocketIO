@@ -3,6 +3,7 @@ import ChatMessage from "../../../Channels/ChatChannel/Messages/ChatMessage/Chat
 import { Imessage } from "../interfaces/messages";
 import { IuserDb } from "../interfaces/users";
 import './Messages.scss';
+import React from 'react';
 
 interface props {
   userId: string;

@@ -3,6 +3,7 @@ import { Imessage } from "../interfaces/messages";
 import { IuserDb } from "../interfaces/users";
 import ChatMessage from "./ChatMessage/ChatMessage";
 import './Messages.scss';
+import React from 'react';
 
 interface props {
   userId: string;

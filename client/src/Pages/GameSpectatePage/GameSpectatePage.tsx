@@ -11,6 +11,8 @@ import GameSpectate from "../../Components/GameSpectate/GameSpectate";
 import React from "react";
 import NavBar from "../../Components/Nav/NavBar";
 import "../../Pages/Home/HomePage.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { getSockeGame, getSockeSpectate, setSocketGame, setSocketSpectate } from "../../Redux/gameSlice";
 
 interface IPlayer {
   id: string;
@@ -59,12 +61,13 @@ interface ISettings {
 }
 
 function GameSpectatePage() {
-  const [socket, setSocket] = useState<Socket>();
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [room, setRoom] = useState<IRoom>();
   const [notification, setNotificaton] = useState<Boolean>(false);
   const navigate = useNavigate();
   const { roomId } = useParams<{ roomId: string }>();
+  const dispatch = useDispatch();
+  const socket = useSelector(getSockeSpectate);
 
   const getRooms = async (e: any) => {
     const messages = await axios.get(
@@ -77,9 +80,11 @@ function GameSpectatePage() {
   };
   useEffect(() => {
     // Connect to the socket
-    console.log("hey");
+    console.log("socket", socket);
+    if (socket)
+      socket?.close();
     const newSocket = io("http://90.66.192.148:7002");
-    setSocket(newSocket);
+    dispatch(setSocketSpectate(newSocket));
     getRooms(null);
   }, []);
   useEffect(() => {
@@ -138,7 +143,7 @@ function GameSpectatePage() {
   }, [socket, roomId, navigate, notification]);
   return (
     <div className="main">
-      <NavBar socket={socket} setSocket={setSocket} />
+      <NavBar />
       {!roomId ? (
         <div>
           <p>GameSpectatePage</p>

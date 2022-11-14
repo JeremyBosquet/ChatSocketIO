@@ -1,15 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { UserModel } from "src/typeorm";
 import { Repository } from "typeorm";
 import { Channel } from "./Entities/channel.entity";
-import { User } from "./Entities/user.entity";
+// import { User } from "./Entities/user.entity";
 import { IChat } from "./Interfaces/Chat";
 
 @Injectable()
 export class ChatService {
     constructor(
         @InjectRepository(Channel) private channelRepository: Repository<Channel>, 
-        @InjectRepository(User) private userRepository: Repository<User>, 
+        @InjectRepository(UserModel) private userRepository: Repository<UserModel>, 
       ) {}
 
       async createMessage(chat: IChat, channelId: string): Promise<void> {
@@ -107,12 +108,19 @@ export class ChatService {
         return await this.channelRepository.delete(channelId);
       }
 
-      async createUser(user: User): Promise<User> {
-        return await this.userRepository.save(user);
-      }
+      async getUser(userId: string): Promise<UserModel> {
+        const user = await this.userRepository.findOneBy({uuid: userId});
+        if (user)
+        {
+          let userInfos : any = {
+            uuid: user.uuid,
+            username: user.username,
+            image: user.image
+          };
 
-      async getUser(userId: string): Promise<User> {
-        return await this.userRepository.findOneBy({id: userId});
+          return (userInfos)
+        }
+        return user;
       }
 
       async getUserInChannel(userId: string, channelId: string): Promise<any> {
@@ -141,7 +149,7 @@ export class ChatService {
         const channel = await this.channelRepository.findOneBy({id: channelId});
 
         const checkUserIsIn = async (channel: any) => {
-          const containsUser = await channel.users.filter((user : User) => user.id === userId);
+          const containsUser = await channel.users.filter((user : any) => user.id === userId);
           if (Object.keys(containsUser).length == 0)
               return false;
           return true;

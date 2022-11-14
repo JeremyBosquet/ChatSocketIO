@@ -1,14 +1,14 @@
 export interface Iuser {
-    id: string;
+    uuid: string;
     userId: string;
-    name: string;
+    username: string;
     channelId: string;
     role: string | undefined;
 }
 
 export interface IuserDb {
-    id: string;
-    name: string;
+    uuid: string;
+    username: string;
     image: string;
     role: string;
 }

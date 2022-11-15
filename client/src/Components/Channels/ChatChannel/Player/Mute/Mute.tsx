@@ -11,6 +11,7 @@ import 'react-clock/dist/Clock.css';
 import './Mute.scss'
 import { useNavigate, useParams } from "react-router-dom";
 import React from 'react';
+import { createNotification } from "../../../../notif/Notif";
 
 interface props {
     user: IuserDb;
@@ -38,9 +39,10 @@ function Mute(props : props) {
         channelId: selectedChannel,
         target: targetId,
         admin: me.uuid,
-      }).then(res => {
+      }).then(() => {
         socket.emit("mute", {channelId: selectedChannel, target: targetId});
         setMuteMenu(false);
+        createNotification('success', 'You have successfully umuted the player.');
       });
 
       return ;
@@ -58,9 +60,13 @@ function Mute(props : props) {
       admin: me.uuid,
       time: duration,
       isPermanent: permanent
-    }).then(res => {
+    }).then(() => {
       socket.emit("mute", {channelId: selectedChannel, target: targetId});
       setMuteMenu(false);
+      if (permanent)
+        createNotification('success', 'You have permanently muted the player.');
+      else
+        createNotification('success', 'You have successfully muted the player until ' + value.toLocaleDateString() + " at " + value.getHours() + ":" + value.getMinutes() + '.');
     });
   }
 

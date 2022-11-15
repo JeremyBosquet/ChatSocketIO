@@ -10,13 +10,12 @@ import {
 } from "react-router-dom";
 import { createNotification } from "../notif/Notif";
 import { FaUserCircle, FaUserFriends } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
+import { IoMdChatbubbles, IoMdSettings } from "react-icons/io";
 import { IoLogOutSharp } from "react-icons/io5";
 import { IoGameController } from "react-icons/io5";
 import { BsFillEyeFill } from "react-icons/bs";
 import { GrClose } from "react-icons/gr";
 import {AiOutlineClose} from "react-icons/ai";
-import {HiChatBubbleLeftRight} from "react-icons/hi2";
 import "./NavBar.scss";
 import Social from "../../Pages/Social/Social";
 
@@ -110,16 +109,15 @@ function NavBar(props: any) {
 
   return (
     <div className="NavBar">
-      {!booleffect2 ? (
-        <>
             <div id='ProjectName'>
-              <button onClick={() => {closeSocket();navigate("/");}}>
+              <NavLink to="/" id='home'>
                 Ft_transcendance
-              </button>
-            </div>
-            <div id="navButtons">	  
+              </NavLink>
+			</div>
+        <>
+            <div id="navButtons">
               <NavLink to="/profile" id="profile" className="click">
-                <FaUserCircle className="icon"/>
+                <FaUserCircle className="icon"/ >
               </NavLink>
 
               <NavLink to="/settings" id="settings" className="click">
@@ -127,7 +125,7 @@ function NavBar(props: any) {
               </NavLink>
 
               <NavLink to="/chat" id="chat" className="click">
-                <HiChatBubbleLeftRight className="icon"/>
+                <IoMdChatbubbles className="icon" />
               </NavLink>
 
               <NavLink to="/game" id="game" className="click" onClick={() => handleClickNav("/game")}>
@@ -138,9 +136,6 @@ function NavBar(props: any) {
                 <BsFillEyeFill className="icon"/>
               </NavLink>
 
-              <NavLink to="/logout" id="logout" className="click">
-                <IoLogOutSharp className="icon"/>
-              </NavLink>
               <>
                 {friendRequest ? (
                   <button id="social" className="click" onClick={() => {openNav()}}>
@@ -162,6 +157,10 @@ function NavBar(props: any) {
                   </button>
                 )}
               </>
+
+              <NavLink to="/logout" id="logout" className="click">
+                <IoLogOutSharp className="icon"/>
+              </NavLink>
             </div>
             <div id="mySidenav" className="sidenav">
               <button className="closebtn" onClick={() => openNav()}>
@@ -172,7 +171,6 @@ function NavBar(props: any) {
               <Social/>
             </div>
         </>
-      ) : null}
     </div>
   );
 }

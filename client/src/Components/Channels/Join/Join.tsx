@@ -3,6 +3,7 @@ import { getUser } from '../../../Redux/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import React from 'react';
+import { createNotification } from '../../notif/Notif';
 
 interface props {
     channelId: string;
@@ -44,6 +45,7 @@ function Join(props: props) {
         .then(() => {
             getUsersChannel(user.uuid);
             socket?.emit('joinPermanent', { channelId: id });
+            createNotification("success", "You have successfully join the channel.");
             props.setSearchChannel("");
         }).catch((err) => {
             setError(err.response.data.message);

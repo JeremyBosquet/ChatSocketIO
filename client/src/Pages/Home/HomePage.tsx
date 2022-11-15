@@ -34,84 +34,6 @@ function HomePage() {
   const [User, setUser] = useState<any>();
   const [friendRequest, setFriendRequest] = useState<number>();
 
-  function activeorDisable(nb: number) {
-    switch (nb) {
-      case 0:
-        if (checkedProfile) setCheckedProfile(false);
-        else {
-          setCheckedSettings(false);
-          setCheckedLogout(false);
-          setCheckedGame(false);
-          setCheckedSpectate(false);
-          setCheckedSocial(false);
-          setCheckedProfile(true);
-        }
-        navigate("/profile");
-        break;
-      case 1:
-        if (checkedSettings) setCheckedSettings(false);
-        else {
-          setCheckedLogout(false);
-          setCheckedGame(false);
-          setCheckedSpectate(false);
-          setCheckedSocial(false);
-          setCheckedProfile(false);
-          setCheckedSettings(true);
-        }
-        navigate("/settings");
-        break;
-      case 2:
-        if (checkedLogout) setCheckedLogout(false);
-        else {
-          setCheckedSettings(false);
-          setCheckedGame(false);
-          setCheckedSpectate(false);
-          setCheckedSocial(false);
-          setCheckedProfile(false);
-          setCheckedLogout(true);
-        }
-        navigate("/logout");
-        break;
-      case 3:
-        if (checkedGame) setCheckedGame(false);
-        else {
-          setCheckedSettings(false);
-          setCheckedLogout(false);
-          setCheckedSpectate(false);
-          setCheckedSocial(false);
-          setCheckedProfile(false);
-          setCheckedGame(true);
-        }
-        navigate("/game");
-        break;
-      case 4:
-        if (checkedSpectate) setCheckedSpectate(false);
-        else {
-          setCheckedSettings(false);
-          setCheckedLogout(false);
-          setCheckedGame(false);
-          setCheckedSocial(false);
-          setCheckedProfile(false);
-          setCheckedSpectate(true);
-        }
-        navigate("/game/spectate");
-        break;
-      case 5:
-        if (checkedSocial) setCheckedSocial(false);
-        else {
-          setCheckedSettings(false);
-          setCheckedLogout(false);
-          setCheckedGame(false);
-          setCheckedSpectate(false);
-          setCheckedProfile(false);
-          setCheckedSocial(true);
-        }
-        navigate("/social");
-        break;
-      default:
-        break;
-    }
-  }
   useEffect(() => {
     // Connect to the socket
     const newSocket = io("http://90.66.192.148:7003");
@@ -254,20 +176,19 @@ function HomePage() {
   }, []);
 
   return (
-    <div className="main">
+    <div className="HomePage main">
       {!booleffect2 ? (
-        <div>
+        <>
           {!User ? (
             <div>
               <button id="login" onClick={() => navigate("/login")}>
-                {" "}
-                login{" "}
+                login
               </button>
             </div>
           ) : (
             <NavBar socket={socket} setSocket={setSocket} />
           )}
-        </div>
+        </>
       ) : null}
     </div>
   );

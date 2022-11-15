@@ -4,6 +4,7 @@ import { Socket } from 'socket.io-client';
 const initialState = {
     socket : null,
     socketSpectate : null,
+    socketGameChat : null,
 };
 
 export const gameSlice = createSlice({
@@ -17,14 +18,19 @@ export const gameSlice = createSlice({
     
     setSocketSpectate: (state, action) => {
         state.socketSpectate = action.payload
+    },
+    
+    setSocketGameChat: (state, action) => {
+        state.socketGameChat = action.payload
     }
     },
 
 });
 
-export const { setSocketGame, setSocketSpectate} = gameSlice.actions;
+export const { setSocketGame, setSocketSpectate, setSocketGameChat} = gameSlice.actions;
 
 export const getSockeGame = (state : any) => state.game.socket;
 export const getSockeSpectate = (state : any) => state.game.socketSpectate;
+export const getSockeGameChat = (state : any) => state.game.socketGameChat;
 
 export default gameSlice.reducer;

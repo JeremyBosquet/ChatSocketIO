@@ -16,10 +16,6 @@ interface props {
 function Messages(props : props) {
   const messageEl = useRef<HTMLDivElement>(null);
   const [usersChannel, setUsersChannel] = useState<IuserDb[]>(props.users);
-  let count = 0;
-  useEffect(() => {
-    console.log("Component messages did mount");
-  }, []);
 
   useEffect(() => {
     const getUsername = async () => {

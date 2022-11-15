@@ -7,7 +7,7 @@ import React from "react";
 import NavBar from "../../Components/Nav/NavBar";
 import "../../Pages/Home/HomePage.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { getSockeGame, setSocketGame } from "../../Redux/gameSlice";
+import { getSockeGame, getSockeGameChat, setSocketGame } from "../../Redux/gameSlice";
 
 interface IPlayer {
   id: string;
@@ -160,9 +160,6 @@ function GamePlayingPage() {
           setPlayerName={setPlayerName}
         />
       ) : null}
-      {ready ? <div> Waiting for another player </div> : null}
-      <p>{ready && !playing ? "PlayerA : " + room?.playerA?.name : null}</p>
-      <p>{ready && !playing ? "PlayerB : " + room?.playerB?.name : null}</p>
       {playing ? (
         <GamePlay
           playerName={playerName}

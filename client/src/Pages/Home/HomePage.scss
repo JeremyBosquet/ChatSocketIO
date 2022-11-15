@@ -6,9 +6,27 @@
   height: 100vh;
   overflow: hidden;
   font-family: 'Roboto', sans-serif;
+	// ::-webkit-scrollbar-button {
+	// 	height: 12px;
+	// }
+	// ::-webkit-scrollbar {
+	// 	width: 15px;       /* width of the entire scrollbar */
+	// }
+
+	// ::-webkit-scrollbar-track {
+	// 	background: #0582CA;  
+	// 	border-radius: 10px;      /* color of the tracking area */
+	// }
+
+	// ::-webkit-scrollbar-thumb {
+	// 	background: linear-gradient(135deg, #003554, #051923);   /* color of the scroll thumb */
+	// 	border-radius: 10px;       /* roundness of the scroll thumb */
+	// 	border: 1px solid #0582CA; /* creates padding around scroll thumb */
+	// }
+	// overflow-y: scroll;
 }
 
-.main h1
+.HomePage h1
 {
 	position: absolute;
 	top: 50%;
@@ -19,7 +37,7 @@
 	font-size: 120px;
 }
 
-.main #login
+.HomePage #login
 {
 	position: absolute;
 	top: 70%;

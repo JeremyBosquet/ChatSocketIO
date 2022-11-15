@@ -11,8 +11,9 @@ import './Social.scss';
 import NavBar from '../../Components/Nav/NavBar';
 import {IoPersonRemoveSharp, IoPersonAddSharp, IoSearchSharp} from 'react-icons/io5';
 import { FaUserCircle, FaUserFriends } from "react-icons/fa";
-import {ImBlocked, ImCross, ImCheckmark} from "react-icons/im";
-import {MdCancelScheduleSend} from "react-icons/md";
+import {ImCross, ImCheckmark} from "react-icons/im";
+import {MdCancelScheduleSend, MdBlock} from "react-icons/md";
+import {CgUnblock} from "react-icons/cg";
 
 
 function Social() {
@@ -556,14 +557,15 @@ function Social() {
 	return (
 		<div className='SocialPage'>
 		{
-			<div>
+			<>
 			{/* <button onClick={() => {socket?.emit("stpUneNotif")}}>Ask notifcation</button> */}
 			{
 				!(booleffect3) ?
 				(
-					<div>
+					// <div>
+					<>
 					<div className='container' id='blur'>
-					<div>
+						<div>
 							<div id='listSearchParent'>
 								<h3> Search Friends </h3>
 								<form >
@@ -575,9 +577,8 @@ function Social() {
 									maxLength={16}
 									onChange={e  => SearchFriend(e.target.value)}
 									/>
-									<p><IoSearchSharp/></p>
 								</form>
-								<div>
+								<div className='box'>
 								{
 									searchList.length ?
 									(
@@ -591,7 +592,7 @@ function Social() {
 													<p> {user.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? <ImBlocked/>: "Unblock"} </button>
+														<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
 													</div>
 													<div>
 													{	IsRequested(user.uuid) ?
@@ -635,7 +636,7 @@ function Social() {
 													<p> {user.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? <ImBlocked/>: "Unblock"} </button>
+														<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
 													</div>
 													<div>
 													{	IsRequested(user.uuid) ?
@@ -679,11 +680,11 @@ function Social() {
 						<div id='listFriendParent'>
 							<div>
 							<h3> Friend List </h3>
-							<div>
+							<div className='box'>
 							{
 								friendList.length ?
 								(
-									friendList.length > 2 ?
+									friendList.length > 3 ?
 									(
 										<div id='listFriendScroll'>
 										{
@@ -694,7 +695,7 @@ function Social() {
 													<div className='buttons'>
 														<button onClick={(e) => (RemoveFriend(user.uuid))} > <IoPersonRemoveSharp/> </button>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}><ImBlocked/></button>
+														<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}><MdBlock/></button>
 													</div>
 												</div>
 											))
@@ -714,7 +715,7 @@ function Social() {
 													<div className='buttons'>
 														<button onClick={(e) => (RemoveFriend(user.uuid))} > <IoPersonRemoveSharp/> </button>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}> <ImBlocked/> </button>
+														<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}> <MdBlock/> </button>
 													</div>
 												</div>
 											))
@@ -736,7 +737,7 @@ function Social() {
 						{
 							<div>
 								<h3> Friend requests </h3>		
-								<div>
+								<div className='box'>
 								{								
 									requestList.length ?
 									(
@@ -750,7 +751,7 @@ function Social() {
 													<p> {user?.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> <ImBlocked/> </button>
+														<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> <MdBlock/> </button>
 														<button onClick={(e) => (AcceptFriend(user.uuid, user.image))} > <span className='green'><ImCheckmark/></span> </button>
 														<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > <span className='red'><ImCross/></span> </button>
 													</div>
@@ -768,7 +769,7 @@ function Social() {
 													<p> {user?.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> <ImBlocked/> </button>
+														<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> <MdBlock/> </button>
 														<button onClick={(e) => (AcceptFriend(user.uuid, user.image))} > <span className='green'><ImCheckmark/></span> </button>
 														<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > <span className='red'><ImCross/></span> </button>
 													</div>
@@ -818,7 +819,7 @@ function Social() {
 									<button onClick={(e) => (CancelFriendAdd(profilePage?.uuid))} > <MdCancelScheduleSend/> </button>	
 							}
 							</div>
-							<button onClick={() => (BlockOrUnblockUser(profilePage?.uuid))} > {IsBlocked(profilePage?.uuid) ? <ImBlocked/>: "Unblock"} </button>
+							<button onClick={() => (BlockOrUnblockUser(profilePage?.uuid))} > {IsBlocked(profilePage?.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
 							<button onClick={() =>  HideProfile()}> Close </button>
 							<div id='listGameParent'>
 							{
@@ -890,14 +891,15 @@ function Social() {
 					)
 				}
 				</div>
-					</div>
+					{/* </div> */}
+					</>
 					
 				)
 
 				:
 					null
 				}
-			</div>
+			</>
 		}
 		</div>
 	)

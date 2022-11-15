@@ -20,6 +20,7 @@ import DMPage from "./Pages/DMPage/DMPage";
 import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
+import Protected from "./Protected";
 
 function App() {
   const [APIStatus, setAPIStatus] = useState<boolean>(true);
@@ -57,28 +58,26 @@ function App() {
     <Router>
       {APIStatus ? (
         <Routes>
-          <Route path="/" element={<HomePage />}></Route>
-          <Route path="/login" element={<SignIn />}></Route>
-          <Route path="/login/return/" element={<GetToken />}></Route>
-          <Route path="/profile" element={<Profile />}></Route>
-          <Route path="/logout" element={<Logout />}></Route>
-          <Route path="/settings" element={<Settings />}></Route>
-          <Route path="/twoAuth" element={<TwoAuth />}></Route>
-          <Route path="/social" element={<Social />}></Route>
-          <Route path="/social/:UserId" element={<Social />}></Route>
-          <Route path="/game/" element={<GamePlayingPage />}></Route>
-          <Route path="/game/spectate" element={<GameSpectatePage />}></Route>
-          <Route path="/chat/" element={<ChannelPage />}></Route>
-          <Route path="/chat/channel" element={<ChannelPage />}></Route>
-          <Route path="/chat/channel/:id" element={<ChannelPage />}></Route>
-          <Route path="/chat/dm" element={<DMPage />}></Route>
-          <Route path="/chat/dm/:id" element={<DMPage />}></Route>
-          <Route path="*" element={<NotFound />}></Route>
-          <Route
-            path="/game/spectate/:roomId"
-            element={<GameSpectatePage />}
-          ></Route>
-        </Routes>
+			
+			<Route path="/" element={<HomePage />}></Route>
+			<Route path="/login" element={<SignIn />}></Route>
+			<Route path="/login/return/" element={<GetToken />}></Route>
+			<Route path="/settings" element={<Settings />}></Route>
+			<Route path="/profile" element={<Protected><Profile /></Protected>}></Route>
+			<Route path="/logout" element={<Protected><Logout /></Protected>}></Route>
+			<Route path="/twoAuth" element={<Protected><TwoAuth /></Protected>}></Route>
+			<Route path="/social" element={<Protected><Social /></Protected>}></Route>
+			<Route path="/social/:UserId" element={<Protected><Social /></Protected>}></Route>
+			<Route path="/game/" element={<Protected><GamePlayingPage /></Protected>}></Route>
+			<Route path="/game/spectate" element={<Protected><GameSpectatePage /></Protected>}></Route>
+			<Route path="/game/spectate/:roomId" element={<Protected><GameSpectatePage /></Protected>}></Route>
+			<Route path="/chat/" element={<Protected><ChannelPage /></Protected>}></Route>
+			<Route path="/chat/channel" element={<Protected><ChannelPage /></Protected>}></Route>
+			<Route path="/chat/channel/:id" element={<Protected><ChannelPage /></Protected>}></Route>
+			<Route path="/chat/dm" element={<Protected><DMPage /></Protected>}></Route>
+			<Route path="/chat/dm/:id" element={<Protected><DMPage /></Protected>}></Route>
+			<Route path="*" element={<NotFound />}></Route>
+    </Routes>
       ) : (
         <Routes>
           <Route

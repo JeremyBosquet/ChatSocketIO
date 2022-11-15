@@ -91,7 +91,8 @@ export class ChatService {
             if (userInfos)
             {
               userInfos["role"] = user.role;
-            }
+            } else
+              userInfos = {user: user.id, username: "User deleted", role: user.role, print: false};
             users.push(userInfos);
           }
         }

@@ -27,6 +27,7 @@ export class AppService {
       const payload = { uuid: findUser[0].uuid };
       const token = this.jwtService.sign(payload);
       console.log(token);
+
       return token;
     } else {
       let customUsername: string = user.login;
@@ -61,6 +62,7 @@ export class AppService {
         blocked: newList,
         blockedby: newList,
         friendsNotacceptedYet: newList,
+        exp: 0.00,
       };
       const newUser = this.userRepository.create(form);
       await this.userRepository.save(newUser);

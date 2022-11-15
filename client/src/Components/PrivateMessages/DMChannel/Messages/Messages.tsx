@@ -21,7 +21,6 @@ function Messages(props : props) {
       if (messageEl.current)
         messageEl.current.scroll({top: messageEl.current.scrollHeight, behavior: 'auto'});
     }, 1)
-
   }, [props.messages]);
 
   return (

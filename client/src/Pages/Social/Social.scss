@@ -1,9 +1,6 @@
 .SocialPage {
-	// position: absolute;
-	//width: 20%;
-	// height: 100%;
-	margin-left: 10px;
-	width: 260px;
+	display: flex;
+	justify-content: space-around;
 	background: rgba(0, 0, 0, 0);
 	.container#blur.active{
 		filter : blur(20px);
@@ -12,7 +9,14 @@
 		display: flex;
 		justify-content: center;
 	}
-
+	.box
+	{
+		margin-top: 10px;
+		border: 2px solid rgb(255, 255, 255);
+		border-radius: 20px;
+		width: fit-content;
+		width : 240px;
+	}
 	button {
 		padding: 0;
 		border: none;
@@ -20,28 +24,43 @@
 		color : #0582CA;
 		font-size: large;
 	}
-
-	form {
-		p{
-			position: relative;
-			bottom : 20px;
-			left : 135px;
-			color : #0582CA;
-		}
-	}
-	form [type=text]{
-		margin-top: 20px;
-		padding: 4px 10px;
-		border-radius: 30px;
-		border: none;
-		p{
-			color : blue;
-		}
-	}
-
 	h3{
+		display: flex;
+		justify-content: center;
+		margin-top: 10px;
+		margin-bottom: 5px;
 		color: #fff;
 	}
+	form {
+		display: flex;
+		justify-content: center;
+		margin-bottom:15px;
+		p{
+			position: absolute;
+			right : 60px;
+			top : 115px;
+			//bottom : 10px;
+			// bottom :0px;
+			// left : 135px;
+			color : #0582CA;
+		}
+		height: 40px;
+		[type=text]{
+			margin-top: 10px;
+			padding: 4px 10px;
+			border-radius: 30px;
+			border: none;
+		}
+	}
+	// form [type=text]{
+	// 	margin-top: 10px;
+	// 	padding: 4px 10px;
+	// 	border-radius: 30px;
+	// 	border: none;
+	// 	p{
+	// 		color : blue;
+	// 	}
+	// }
 
 	.green {
 		color : green;
@@ -82,7 +101,7 @@
 				button{
 					margin-right: 6px;
 				}
-				width :fit-content;
+				//width :fit-content;
 				position: relative;
 				bottom : 55px;
 				left : 65px;
@@ -98,14 +117,14 @@
 				bottom : 84px;
 				left : 112px;
 			}
-			// border-radius : 4px;
-			margin-top : 15px;
-			margin-bottom: 20px;
-			height: 190px; 
-			//width:100%;
-			width: 240px;
 			overflow:hidden;
 			overflow-y:scroll;
+			margin-top : 15px;
+			margin-bottom: 15px;
+			height: 190px; 
+			width: 230px;
+			margin-left: 5px;
+			margin-right : 5px;
 
 			.mapSearch{
 				list-style-type: none;
@@ -143,9 +162,10 @@
 				left : 114px;
 			}
 			margin-top : 15px;
-			margin-bottom: 20px;
+			margin-bottom: 15px;
 			height: 190px; 
-			width: 240px;
+			width: 235px;
+			margin-left: 5px;
 	
 			.mapSearch {
 				list-style-type: none;
@@ -154,7 +174,7 @@
 				height: 70px;
 			}
 		}
-		margin-bottom: 20px;
+		//margin-bottom: 10px;
 	}
 
 	#listReqParent{
@@ -191,14 +211,14 @@
 				bottom : 55px;
 				left : 65px;
 			}
-			// border-radius : 4px;
-			margin-top : 15px;
-			margin-bottom: 20px;
-			height: 190px; 
-			//width:100%;
-			width: 240px;
 			overflow:hidden;
 			overflow-y:scroll;
+			margin-top : 15px;
+			margin-bottom: 15px;
+			height: 190px; 
+			width: 230px;
+			margin-left: 5px;
+			margin-right : 5px;
 
 			.mapReq{
 				list-style-type: none;
@@ -226,9 +246,10 @@
 				left : 65px;
 			}
 			margin-top : 15px;
-			margin-bottom: 20px;
+			margin-bottom: 15px;
 			height: 190px; 
-			width: 240px;
+			width: 235px;
+			margin-left: 5px;
 	
 			.mapReq {
 				list-style-type: none;
@@ -244,7 +265,7 @@
 			height: 12px;
 		}
 		::-webkit-scrollbar {
-			width: 15px;        /* width of the entire scrollbar */
+			width: 15px;       /* width of the entire scrollbar */
 		}
 		
 		::-webkit-scrollbar-track {
@@ -269,6 +290,7 @@
 				button{
 					margin-right: 6px;
 				}
+				width :fit-content;
 				position: relative;
 				bottom : 55px;
 				left : 65px;
@@ -276,9 +298,11 @@
 			// border-radius : 4px;
 			margin-top : 15px;
 			margin-bottom: 20px;
+			margin-left: 5px;
+			margin-right :5px;
 			height: 190px; 
 			//width:100%;
-			width: 240px;
+			width: 230px;
 			overflow:hidden;
 			overflow-y:scroll;
 
@@ -310,7 +334,8 @@
 			margin-top : 15px;
 			margin-bottom: 20px;
 			height: 190px; 
-			width: 240px;
+			width: 235px;
+			margin-left: 5px;
 	
 			.mapFriend {
 				list-style-type: none;
@@ -462,5 +487,12 @@
 	}
 	.SocialPage #popup #listParent #list li{
 		font-size: 50%;
+	}
+}
+
+@media screen and (max-width: 550px) {
+	.SocialPage{
+		height: calc(100vh - 100px);
+		overflow-y: scroll;
 	}
 }

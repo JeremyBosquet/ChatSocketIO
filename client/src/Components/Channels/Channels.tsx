@@ -10,8 +10,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getChannels, setChannels } from '../../Redux/chatSlice';
 import { useParams } from 'react-router-dom';
 import { getUser } from '../../Redux/authSlice';
+interface IInvites {
+    requestFrom: string;
+    roomId: string;
+  }
+interface props {
+    invites: IInvites[];
+}
 
-function Channels() {
+
+function Channels(props: props) {
     const params = useParams();
     const [searchChannel, setSearchChannel] = useState<string>("");
     const [init, setInit] = useState<boolean>(false);
@@ -61,7 +69,7 @@ function Channels() {
             }
             <div className='channelChat'>
                 { params.id !== undefined ? 
-                    <ChatChannel />
+                    <ChatChannel invites={props.invites} />
                         :
                     <p>Select a channel</p>
                 }

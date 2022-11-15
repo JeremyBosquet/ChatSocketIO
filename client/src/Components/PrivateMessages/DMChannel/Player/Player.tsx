@@ -34,7 +34,7 @@ function Player(props : props) {
   
   return (
     <div className='player' key={props.user?.id}>
-      <p>{props.user?.username} {connected ? <span className="connected"></span> : <span className="disconnected"></span>}</p> 
+      <p>{connected ? <span className="connected"></span> : <span className="disconnected"></span>} {props.user?.username}</p> 
       {
         props.user?.id === me.id ? null :
         <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 

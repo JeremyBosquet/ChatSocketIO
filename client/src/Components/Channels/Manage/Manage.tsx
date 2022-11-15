@@ -7,6 +7,7 @@ import './Manage.scss';
 import React from 'react';
 import axios from 'axios';
 import { setChannels } from '../../../Redux/chatSlice';
+import { createNotification } from '../../notif/Notif';
 
 interface props {
     channel: any;
@@ -29,13 +30,13 @@ function Manage(props: props) {
   const handleChange = async () => {
     if (props.channel.visibility === "protected"){
       if (!oldPassword){
-        setError("Error: You must enter the old password");
+        createNotification('error', 'You must enter the old password.');
         return ;
       } 
     }
     if (visibility === "protected"){
       if (!password) {
-        setError("Error: You must enter a password");
+        createNotification('error', 'You must enter a password.');
         return ;
       }
     }
@@ -61,10 +62,11 @@ function Manage(props: props) {
 
       const newChannels = channels.map((channel: any) => channel.id === props.channel.id ? newChannel : channel);
       dispatch(setChannels(newChannels));
+      createNotification('success', "You have successfully changed the channel's visibility.");
       props.setToggleMenu(false);
       props.setManageMode(false);
     }).catch(err => {
-      setError("Error: " + err.response.data?.message);
+      createNotification('error', err.response.data?.message + '.');
     });
   }
 

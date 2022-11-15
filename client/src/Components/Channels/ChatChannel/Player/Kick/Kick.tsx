@@ -5,6 +5,7 @@ import { getUser } from "../../../../../Redux/authSlice";
 import { getSocket } from "../../../../../Redux/chatSlice";
 import { IuserDb } from "../../interfaces/users";
 import React from 'react';
+import { createNotification } from "../../../../notif/Notif";
 
 interface props {
     user: IuserDb;
@@ -25,8 +26,9 @@ function Kick(props : props) {
       channelId: selectedChannel,
       target: targetId,
       admin: me.uuid
-    }).then(res => {
+    }).then(() => {
       socket?.emit("kick", {channelId: selectedChannel, target: targetId, type: "kick"});
+      createNotification('success', 'You have successfully kicked the player.');
     });
   }
 

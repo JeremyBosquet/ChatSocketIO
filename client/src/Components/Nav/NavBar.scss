@@ -16,7 +16,8 @@
 {
 	margin-left: 10px;
 	display: flex;
-	button{
+	#home{
+		text-decoration: none;
 		padding: 0;
 		border: none;
 		background: none;
@@ -58,7 +59,7 @@
 .NavBar .click
 {
 	display: flex;
-  margin-right: 8px;
+  margin: 4px;
   padding: 0;
   background: none;
   color: #000;
@@ -73,133 +74,6 @@
 	font-size: 32px;
 }
 
-// .NavBar  {
-// 	#navButtons.hidden
-// 	{
-// 		visibility: hidden;
-// 		pointer-events: none;
-// 		user-select : none;
-// 	}
-// 	#profile
-// 	{
-// 		margin-top: 5px;
-// 		position: relative;
-// 		//top : 1.5px;
-// 		margin-top: 6.5px;
-// 		right : -350px;
-// 		margin-right : 10px;
-// 		span
-// 		{
-// 			font-size : 22px;
-// 		}
-// 	}
-// 	#settings
-// 	{
-// 		margin-top: 5px;
-// 		position: relative;
-// 		right : -390px;
-// 		margin-right : 10px;
-// 		span
-// 		{
-// 			font-size : 25px;
-// 		}
-// 	}
-// 	#chat
-// 	{
-// 		margin-top: 5px;
-// 		position: absolute;
-// 		right : 170px;
-// 		margin-right : 10px;
-// 		span
-// 		{
-// 			font-size : 25px;
-// 		}
-// 	}
-// 	#logout
-// 	{
-// 		margin-top: 5px;
-// 		position: absolute;
-// 		right : 130px;
-// 		margin-right : 10px;
-// 		span
-// 		{
-// 			font-size : 25px;
-// 		}
-// 	}
-// 	#logout [type=radio]
-// 	{
-// 		position: absolute;
-// 		top: -3px;
-// 		right: 3px;
-// 		width : 20px;
-// 		height : 20px;
-// 		cursor: pointer;
-// 		z-index: 1000;
-// 	}
-// 	#game
-// 	{
-// 		margin-top: 5px;
-// 		position: absolute;
-// 		right : 90px;
-// 		margin-right : 10px;
-// 		span
-// 		{
-// 			font-size : 25px;
-// 		}
-// 	}
-// 	#game [type=radio]
-// 	{
-// 		position: absolute;
-// 		top: -3px;
-// 		right: 1.5px;
-// 		width : 20px;
-// 		height : 20px;
-// 		cursor: pointer;
-// 		z-index: 1000;
-// 	}
-// 	#spectate
-// 	{
-// 		margin-top: 5px;
-// 		position: absolute;
-// 		right : 50px;
-// 		margin-right : 10px;
-// 		span
-// 		{
-// 			font-size : 25px;
-// 		}
-// 	}
-// 	#spectate [type=radio]
-// 	{
-// 		position: absolute;
-// 		top: -2px;
-// 		right: 1.5px;
-// 		cursor: pointer;
-// 		width : 20px;
-// 		height : 20px;
-// 		z-index: 1000;
-// 	}
-// 	#social
-// 	{
-// 		margin-top: 5px;
-// 		position: absolute;
-// 		right : 10px;
-// 		margin-right : 10px;
-// 		span
-// 		{
-// 			font-size : 25px;
-// 		}
-// 	}
-// 	#social [type=radio]
-// 	{
-// 		position: absolute;
-// 		top: -2.5px;
-// 		right: 1.5px;
-// 		width : 20px;
-// 		height : 20px;
-// 		cursor: pointer;
-// 		z-index: 1000;
-// 	}
-// }
 .NavBar #menu_text
 {
 	position: absolute;
@@ -209,29 +83,29 @@
   transition : (all, 0.3s);
 }
 
-.NavBar _box
-{
-  background: #000;
-  box-shadow: 0 2px 12px 0 rgba(91, 41, 191, 0.5);
-  border-radius: 4px;
-  position: absolute;
-  bottom: calc(100% + 14px);
-  left: 0;
-  width: 100px;
-  padding: 10px;
-  opacity: 0;
-  transform : (translateY(100%), translateX(-30%), scale(0.1));
-  transition : (all, 0.2s);
-  &:after
-  {
-    content: "";
-    position: absolute;
-    left: 20px;
-    bottom: -20px;
-    border: 10px solid transparent;
-    border-top: 10px solid #000;
-  }
-}
+// .NavBar _box
+// {
+//   background: #000;
+//   box-shadow: 0 2px 12px 0 rgba(91, 41, 191, 0.5);
+//   border-radius: 4px;
+//   position: absolute;
+//   bottom: calc(100% + 14px);
+//   left: 0;
+//   width: 100px;
+//   padding: 10px;
+//   opacity: 0;
+//   transform : (translateY(100%), translateX(-30%), scale(0.1));
+//   transition : (all, 0.2s);
+//   &:after
+//   {
+//     content: "";
+//     position: absolute;
+//     left: 20px;
+//     bottom: -20px;
+//     border: 10px solid transparent;
+//     border-top: 10px solid #000;
+//   }
+//}
 
 .NavBar _list
 {
@@ -267,32 +141,10 @@
 // }
 
 
-.NavBar  [type=radio]
-{
-  //opacity: 1;
-  visibility: hidden;
-  &:hover
-  {
-    .icon
-	{
-	  #menu_text
-	  {
-		width: 112px;
-		background-color: rgba(229, 146, 146, 0.3);
-        opacity: 1;
-		z-index: -10;
-	  }
-      + _box
-	  {
-        opacity: 1;
-       	transform : (translateY(0), translateX(0) ,scale(1));
-	  }
-	}
-  }
-}
-
 /* The side navigation menu */
 .sidenav {
+	//display: flex;
+	//justify-content: right;
 	visibility: hidden;
 	margin-top: 60px;
 	height: 100%; /* 100% Full-height */
@@ -303,7 +155,7 @@
 	right: 0;
 	background-color: rgba(0, 0, 0, 0.85); /* Black*/
 	overflow-x: hidden; /* Disable horizontal scroll */
-	padding-top: 60px; /* Place content 60px from the top */
+	padding-top: 40px;
 }
 
 .NavBar .sidenav.active {
@@ -334,46 +186,45 @@
 	.sidenav a {font-size: 18px;}
   }
 
-  @media screen and (max-width: 440px) {
+  @media screen and (max-width: 550px) {
 	.NavBar 
 	{
-		height: 70px;
+		height: 100px;
+		display: flex;
+		flex-direction: column;
+		justify-content: unset;
 		// background: linear-gradient(135deg, #9a0dfe, #637dfb);
 		// box-shadow: 0 2px 12px 0 rgba(91, 41, 191, 0.5);
 	}
 	.sidenav {
-		margin-top: 70px;
+		margin-top: 9px;
+		width: 100%;
+		//height: 100%;
+		height: unset;
+		position : relative;
+		overflow-x: unset;
+		padding-top: unset;
 	}
-	.NavBar  #ProjectName
+	.NavBar #ProjectName
 	{
-		position: absolute;
-		left : 80px;
-		top : 35px;
+		display: flex;
+		margin-top: 5px;
+		justify-content: center;
+		align-items: center;
+		margin-left: unset;
+		//height: 35px;
 	}
-	.NavBar  {
-		#profile
-		{
-			left : 40px;
-		}
-		#settings
-		{
-			left : 80px;
-		}
-		#logout
-		{
-			left : 120px;
-		}
-		#game
-		{
-			left : 160px;
-		}
-		#spectate
-		{
-			left : 200px;
-		}
-		#social
-		{
-			left : 240px;
-		}
+	.NavBar #navButtons
+	{
+		margin-top: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: unset;
+		//margin-top: 50px;
+	}
+	.NavBar .click {
+		margin-right: unset;
+		margin: 4px;
 	}
   }

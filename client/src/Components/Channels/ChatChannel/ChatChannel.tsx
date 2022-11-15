@@ -19,8 +19,14 @@ interface Ichannel {
   visibility: string;
   code: string;
 }
-
-function ChatChannel() {
+interface IInvites {
+  requestFrom: string;
+  roomId: string;
+}
+interface props {
+  invites: IInvites[];
+}
+function ChatChannel(props: props) {
   const [messages, setMessages] = useState<Imessage[]>([]);
   const [users, setUsers] = useState<IuserDb[]>([]);
   const [usersConnected, setUsersConnected] = useState<Iuser[]>([]);
@@ -69,9 +75,13 @@ function ChatChannel() {
       }
       const getChannel = async () => {
         const channel = (await axios.get(`http://90.66.192.148:7000/api/chat/channel/` + selectedChannel)).data;
-        setChannel(channel);
-        setUsers(channel.users);
-        dispatch(setUser({...user, role: channel.users.find((u: IuserDb) => u.uuid === user.uuid)?.role}));
+        if (channel)
+        {
+          console.log(channel);
+          setChannel(channel);
+          setUsers(channel.users);
+          dispatch(setUser({...user, role: channel.users.find((u: IuserDb) => u.uuid === user.uuid)?.role}));
+        }
       }
       if (selectedChannel !== undefined)
       {
@@ -171,7 +181,7 @@ function ChatChannel() {
         <div className='messages'>
           {users?.map((user : any) => ( 
             user.print === undefined && user.print !== false ?
-              <Player key={user.uuid} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers}/>
+              <Player key={user.uuid} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers} invites={props.invites}/>
             : null
           ))}
         </div>

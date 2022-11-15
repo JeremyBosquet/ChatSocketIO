@@ -13,6 +13,7 @@ import { RoomService } from './room.service';
 import { v4 as uuidv4 } from 'uuid';
 import { time } from 'console';
 import { exit } from 'process';
+import { UsersService } from 'src/users/users.service';
 
 interface Irooms {
   id: string;
@@ -32,7 +33,7 @@ interface Iready {
 const intervalList = [];
 @WebSocketGateway(7002, { cors: '*:*' })
 export class RoomGateway {
-  constructor(private roomService: RoomService) {}
+  constructor(private roomService: RoomService, private usersService: UsersService) {}
   @WebSocketServer()
   server;
 
@@ -301,9 +302,10 @@ export class RoomGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() tmp: any,
   ): Promise<void> {
+    console.log("heho", tmp);
     const data = tmp?.tmpUser;
     const room = await this.roomService.getRoom(tmp?.room?.id);
-    //console.log('cancelSearching', data?.id, room?.id);
+    console.log(  'cancelSearching', data?.id, room?.id);
     if (data?.id && data?.name && room) {
       //console.log('cancelSearching');
       if (room?.playerA?.id == client.data.playerId) room.playerA = null;
@@ -340,11 +342,11 @@ export class RoomGateway {
       const room = await this.roomService.getRoom(client.data.roomId);
       if (room && room?.id && room?.nbPlayers !== null) {
         //console.log(
-       //   client.data.playerId,
-       //   client.data.roomId,
-       //   room.playerA?.id,
-       //   room.playerB?.id,
-       // );
+        //  client.data.playerId,
+        //  client.data.roomId,
+        //  room.playerA?.id,
+        //  room.playerB?.id,
+        //);
         if (room?.playerA?.id == client.data.playerId) room.playerA = null;
         else if (room?.playerB?.id == client.data.playerId) room.playerB = null;
         else {
@@ -500,5 +502,77 @@ export class RoomGateway {
       }
       this.server.in('room-' + _room?.id).emit('configurationUpdated', _room);
     }// else //console.log('action not allowed -', room?.id, room?.status);
+  }
+
+  @SubscribeMessage("joinInviteGame")
+  async joinInviteGame(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: any,
+  ): Promise<void> {
+    if (data?.roomId && data?.playerId && data?.playerName) {
+      const room = await this.roomService.getRoom(data.roomId);
+      console.log("joinInviteGame", data);
+      if (room){
+        try
+        {
+          await this.roomService.addPlayer(room, data.playerId, data.playerName);
+          client.data = { roomId: room.id, playerId: data.playerId };
+          client.join('room-' + room.id);
+          this.server.to('room-' + room.id).emit('playerJoined', room);
+        }
+        catch (e) {
+          console.log(e);
+          // Emit remove room invitation
+        }
+      }
+
+      
+    }
+  }
+
+
+  @SubscribeMessage('inviteGame')
+  async inviteGame(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: any,
+  ): Promise<void> {
+    console.log('inviteGame', data?.targetId, data?.ownId);
+    if (data?.targetId && data?.ownId)
+    {
+      const user = await this.usersService.findUserByUuid(data.ownId);
+      console.log('gfdgf', user);
+      if (user)
+      {
+        const newRoom = {
+          id: uuidv4(),
+          configurationA: null,
+          configurationB: null,
+          name: user?.username + '-room',
+          nbPlayers: 0,
+          owner: user?.uuid,
+          playerA: null,
+          playerB: null,
+          status: 'waiting|' + data?.ownId + '|' + data?.targetId,
+          ball: { x: 50, y: 50, direction: 0, speed: 0.5 },
+          settings: {
+            boardWidth: 1,
+            boardHeight: 10,
+            ballRadius: 1,
+            defaultSpeed: 0.2,
+            defaultDirection: Math.random() * 2 * Math.PI,
+            background: null,
+          },
+          lastActivity: Date.now(),
+        };
+        const room = await this.roomService.save(newRoom);
+        await this.roomService.addPlayer(room, user.uuid, user.username);
+        client.join('room-' + room.id);
+        client.data = { roomId: room.id, playerId: user.uuid };
+        await this.server.emit('gameFetchInvite', {room : room, target: data?.ownId, switch: true});
+        await this.server.emit('gameFetchInvite', {room : room, target: data?.targetId, switch: false});
+
+        
+      }
+    }
   }
 }

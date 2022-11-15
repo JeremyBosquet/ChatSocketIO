@@ -4,13 +4,12 @@ import { getUser } from '../../Redux/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, setChannels } from '../../Redux/chatSlice';
 import React from 'react';
+import { createNotification } from '../notif/Notif';
 
 function FormCreateChannel() {
   const [channelName, setChannelName] = useState<string>("");
   const [visibility, setVisibility] = useState<string>("public");
   const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
 
   const dispatch = useDispatch();
 
@@ -21,7 +20,7 @@ function FormCreateChannel() {
     if (visibility === "public" || visibility === "private" || visibility === "protected")
       return (true);
     else {
-      setError("Error: channel's visibility can only be (public, private or protected).");
+      createNotification("error", "Channel's visibility can only be (public, private or protected).");
       return (false);
     }
     
@@ -32,7 +31,7 @@ function FormCreateChannel() {
     {
       if (password.length < 8)
       {
-        setError("Error: password require minimum 8 characters.");
+        createNotification("error", "Password require minimum 8 characters.");
         return (false);
       }
     }
@@ -47,12 +46,9 @@ function FormCreateChannel() {
   const handleSubmit = async (e : any) => {
     e.preventDefault(); // Cancel the form submit event 
 
-    setSuccess("");
-    setError("");
-
     if (channelName === "") // Check if the name is empty
     {
-      setError("Error: channel's name can't be empty.");
+      createNotification("error", "channel's name can't be empty");
       return ;
     }
 
@@ -71,8 +67,8 @@ function FormCreateChannel() {
 
     axios.post('http://90.66.192.148:7000/api/chat/channel', { name: channelName, owner: {id: user.uuid}, visibility: visibility, password: password, users: defaultUsers, messages: [], mutes: [], bans: [] })
     .then((res : any) => {
-        if (res.data ) {
-        setSuccess("Success: channel " + channelName + " is created.");
+      if (res.data ) {
+        createNotification("success", "You have successfully created " + channelName + " channel.");
         socket?.emit('channelCreated');
 
         const getUsersChannel = async (userId: any) => {
@@ -93,7 +89,7 @@ function FormCreateChannel() {
     }
     ).catch((error : any) => {
         if (error) {
-          setError("Error: please retry later. (" + error +")")
+          createNotification("error", "Please retry later. (" + error +")");
         }
       }
     )
@@ -113,12 +109,6 @@ function FormCreateChannel() {
           ) : null}
           <button className="FormCreateChannelButtom" type="submit">Create channel</button>
         </form>
-
-        <div>
-          { error ? <p>{error}</p> : null }
-          { success ? <p>{success}</p> : null }
-        </div>
-
       </div>
   );
 }

@@ -11,6 +11,7 @@ import 'react-clock/dist/Clock.css';
 import './Ban.scss'
 import { useNavigate, useParams } from "react-router-dom";
 import React from 'react';
+import { createNotification } from "../../../../notif/Notif";
 
 interface props {
     user: IuserDb;
@@ -48,6 +49,10 @@ function Ban(props : props) {
       isPermanent: permanent
     }).then(res => {
       socket?.emit("kick", {channelId: selectedChannel, target: targetId, type: "ban"});
+      if (permanent)
+        createNotification('success', 'You have permanently banned the player.');
+      else
+        createNotification('success', 'You have successfully ban the player until ' + value.toLocaleDateString() + " at " + value.getHours() + ":" + value.getMinutes() + '.');
     });
   }
 

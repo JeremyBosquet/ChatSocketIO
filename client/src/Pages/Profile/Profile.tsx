@@ -99,11 +99,11 @@ function Profile() {
     <div className="profilePage">
       <div className="container">
         {
-          <div>
+          <>
             <NavBar />
-            <div>
+            <>
               {!booleffect2 ? (
-                <div>
+                <>
                   {User ? (
                     <div className="userProfile">
                       {
@@ -148,10 +148,10 @@ function Profile() {
                       }
                     </div>
                   ) : null}
-                </div>
+                </>
               ) : null}
-            </div>
-          </div>
+            </>
+          </>
         }
       </div>
     </div>

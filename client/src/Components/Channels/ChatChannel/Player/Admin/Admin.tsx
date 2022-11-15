@@ -5,6 +5,7 @@ import { getUser } from "../../../../../Redux/authSlice";
 import { getSocket } from "../../../../../Redux/chatSlice";
 import { IuserDb } from "../../interfaces/users";
 import React from 'react';
+import { createNotification } from "../../../../notif/Notif";
 
 interface props {
     user: IuserDb;
@@ -38,6 +39,7 @@ function Admin(props : props) {
         }));
         
         socket?.emit("admin", {channelId: selectedChannel, target: targetId, type: "promote"});
+        createNotification('success', 'You have successfully set the user as admin role.');
       });
   }
 
@@ -54,6 +56,7 @@ function Admin(props : props) {
       }));
 
       socket?.emit("admin", {channelId: selectedChannel, target: targetId, type: "downgrade"});
+      createNotification('success', 'You have successfully set the user as default role.');
     });
   }
 

@@ -4,6 +4,7 @@ import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
+import { createNotification } from '../../notif/Notif';
 
 interface props {
     channelId: string;
@@ -32,6 +33,7 @@ function Leave(props: props) {
             getUsersChannel(user.uuid);
             socket?.emit('leavePermanant', { userId: user.uuid, channelId: id });
             props.setSearchChannel("");
+            createNotification('success', 'You have successfully left the channel.');
             if (params.id === id)
                 navigate('/chat/channel');
         })

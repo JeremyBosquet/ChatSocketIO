@@ -10,10 +10,21 @@ export class ChatController {
     @Get('user/:id')
     async getUser(@Param() param, @Res() res) {
         let user = await this.chatService.getUser(param.id);
-        let data = {
-            uuid: user.uuid,
-            username: user.username,
-            image: user.image,
+        let data = {};
+        if (!user)
+        {
+            data = {
+                uuid: param.id,
+                username: "User deleted",
+                image: ""
+            }
+        } else
+        {
+            data = {
+                uuid: user.uuid,
+                username: user.username,
+                image: user.image,
+            }
         }
         res.json(data);
     }

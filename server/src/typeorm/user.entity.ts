@@ -76,4 +76,8 @@ export class UserModel {
   @Column({ nullable: true, type: 'jsonb' })
   @Exclude()
   blockedby: Ifriends[];
+
+  @Column({type: "decimal", precision: 10, scale: 2, default: 0.00})  
+  @Expose()
+  exp: number;
 }

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { useState } from 'react';
 import React from 'react';
+import { createNotification } from '../../notif/Notif';
 
 interface props {
     searchChannel: string;
@@ -56,7 +57,8 @@ function Search(props: props) {
                 console.log('la join emit')
             }
         }).catch((err) => {
-            console.log(err.response.data.message); //set in notification
+            createNotification("error", err.response.data.message);
+            // console.log(err.response.data.message); //set in notification
         })
     }
     

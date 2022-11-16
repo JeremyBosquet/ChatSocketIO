@@ -17,7 +17,7 @@ function Profile() {
   const token = localStorage.getItem("token");
 
   const [booleffect2, setbooleffect2] = useState<boolean>(true);
-  const [historyList, SetHistoryList] = useState<any[]>([]);
+  const [myHistoryList, SetMyHistoryList] = useState<any[]>([]);
   const firstrender = useRef<boolean>(true);
 
   // const IsTwoAuthConnected = useSelector(getConnected);
@@ -30,6 +30,14 @@ function Profile() {
   const [IsLoggedIn, setLogged] = useState<boolean>();
   const [IsTwoAuthActivated, setActivated] = useState<boolean>();
   const [IsTwoAuthConnected, setConnected] = useState<boolean>();
+
+  const [friendList, SetFriendList] = useState<any[]>([]);
+	const [blockList, SetBlockList] = useState<any[]>([]);
+	const [requestedList, SetRequestedList] = useState<any[]>([]);
+	const [requestList, SetRequestList] = useState<any[]>([]);
+	const [profilePage, setProfilePage] = useState<any>(null);
+	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
+	const [historyList, SetHistoryList] = useState<any[]>([]);
 
   function goHome() {
     navigate("/");
@@ -100,7 +108,20 @@ function Profile() {
       <div className="container">
         {
           <>
-            <NavBar />
+            <NavBar 
+			socket={null}
+			setSocket={null}
+			friendList={friendList}
+			SetFriendList={SetFriendList}
+			blockList={blockList}
+			SetBlockList={SetBlockList}
+			requestList={requestList}
+			SetRequestList={SetRequestList}
+			requestedList={requestedList}
+			SetRequestedList={SetRequestedList}
+			setProfilePage={setProfilePage}
+			setProfileDisplayed={setProfileDisplayed}
+			SetHistoryList={SetHistoryList}/>
             <>
               {!booleffect2 ? (
                 <>
@@ -117,7 +138,7 @@ function Profile() {
                           />
                           <br></br>
                           <div id="listParent">
-                            {historyList.length ? (
+                            {myHistoryList.length ? (
                               <div id="list">
                                 {historyList.map((game, index) => (
                                   <ul key={index}>

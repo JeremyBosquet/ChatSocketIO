@@ -80,6 +80,14 @@ function ChannelPage() {
 	const [room, setRoom] = useState<IRoom>();
 	const [notification, setNotificaton] = useState<Boolean>(false);
 	const [inviteGames, setInviteGames] = useState<IInvites[]>([]);
+
+	const [friendList, SetFriendList] = useState<any[]>([]);
+	const [blockList, SetBlockList] = useState<any[]>([]);
+	const [requestedList, SetRequestedList] = useState<any[]>([]);
+	const [requestList, SetRequestList] = useState<any[]>([]);
+	const [profilePage, setProfilePage] = useState<any>(null);
+	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
+	const [historyList, SetHistoryList] = useState<any[]>([]);
   
 
 	useEffect(() => {
@@ -195,6 +203,11 @@ function ChannelPage() {
 				// C'est la merde faut pause la room
 			  } else setRoom(data);
 			}
+			setInGame(false);
+			setRoom(undefined);
+			setPlaying(false);
+			setReady(false);
+			quitGame();
 			});
 			socketGame?.on("gameEnd", (data: IRoom) => {
 			console.log("gameEnd", data);
@@ -203,9 +216,11 @@ function ChannelPage() {
 			else if (data.playerB.score === 10 && !notification)
 			  createNotification("success", "PlayerB a gagner");
 			setNotificaton(true);
-			setRoom(data);
+			setRoom(undefined);
 			setPlaying(false);
 			setReady(false);
+			setInGame(false);
+			quitGame();
 			});
 			socketGame?.on("gameForceEnd", (data: IRoom) => {
 			console.log(
@@ -215,9 +230,12 @@ function ChannelPage() {
 			if (!notification)
 			  createNotification("info", "L'autre connard a leave 3");
 			setNotificaton(true);
-			setRoom(data);
+			setRoom(undefined);
 			setPlaying(false);
 			setReady(false);
+			// quit game
+			setInGame(false);
+			quitGame();
 			});
 			socketGame?.on("roomUpdated", (data: IRoom) => {
 			console.log("roomUpdated", data);
@@ -228,7 +246,20 @@ function ChannelPage() {
 	
 	return (
 		<div className='main'>
-		<NavBar />
+		<NavBar 
+			socket={undefined}
+			setSocket={undefined}
+			friendList={friendList}
+			SetFriendList={SetFriendList}
+			blockList={blockList}
+			SetBlockList={SetBlockList}
+			requestList={requestList}
+			SetRequestList={SetRequestList}
+			requestedList={requestedList}
+			SetRequestedList={SetRequestedList}
+			setProfilePage={setProfilePage}
+			setProfileDisplayed={setProfileDisplayed}
+			SetHistoryList={SetHistoryList}/>
 			{!inGame ? (
 		<div className='chatPage'>
 			<div className='container'>

@@ -65,6 +65,14 @@ function GamePlayingPage() {
   const [room, setRoom] = useState<IRoom>();
   const [notification, setNotificaton] = useState<Boolean>(false);
 
+  const [friendList, SetFriendList] = useState<any[]>([]);
+	const [blockList, SetBlockList] = useState<any[]>([]);
+	const [requestedList, SetRequestedList] = useState<any[]>([]);
+	const [requestList, SetRequestList] = useState<any[]>([]);
+	const [profilePage, setProfilePage] = useState<any>(null);
+	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
+	const [historyList, SetHistoryList] = useState<any[]>([]);
+
 
   useEffect(() => {
     // Connect to the socket
@@ -97,11 +105,13 @@ function GamePlayingPage() {
       socket?.on("playerReady", (data: IRoom) => {
         if (ready) {
           setRoom(data);
+          console.log("hey gameStart", data);
           //if (data?.playerA?.id && data?.playerB?.id)
           //  setPlaying(true);
         }
       });
       socket?.on("gameStart", (data: IRoom) => {
+        console.log("hey gameStart", data);
         setRoom(data);
         setPlaying(true);
         setReady(false);
@@ -151,7 +161,18 @@ function GamePlayingPage() {
  // Modif navbar
   return (
     <div className="main">
-      <NavBar socket={socket} setSocket={setSocketGame} />
+      <NavBar socket={undefined} setSocket={undefined} 
+	  friendList={friendList}
+	  SetFriendList={SetFriendList}
+	  blockList={blockList}
+	  SetBlockList={SetBlockList}
+	  requestList={requestList}
+	  SetRequestList={SetRequestList}
+	  requestedList={requestedList}
+	  SetRequestedList={SetRequestedList}
+	  setProfilePage={setProfilePage}
+	  setProfileDisplayed={setProfileDisplayed}
+	  SetHistoryList={SetHistoryList}/>
       {!ready && !playing ? (
         <GameReady
           socket={socket}

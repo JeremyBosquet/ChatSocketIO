@@ -69,6 +69,14 @@ function GameSpectatePage() {
   const dispatch = useDispatch();
   const socket = useSelector(getSockeSpectate);
 
+  const [friendList, SetFriendList] = useState<any[]>([]);
+	const [blockList, SetBlockList] = useState<any[]>([]);
+	const [requestedList, SetRequestedList] = useState<any[]>([]);
+	const [requestList, SetRequestList] = useState<any[]>([]);
+	const [profilePage, setProfilePage] = useState<any>(null);
+	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
+	const [historyList, SetHistoryList] = useState<any[]>([]);
+
   const getRooms = async (e: any) => {
     const messages = await axios.get(
       `http://90.66.192.148:7000/api/room/getRoomSpectates`
@@ -143,7 +151,20 @@ function GameSpectatePage() {
   }, [socket, roomId, navigate, notification]);
   return (
     <div className="main">
-      <NavBar />
+      <NavBar 
+			socket={null}
+			setSocket={null}
+			friendList={friendList}
+			SetFriendList={SetFriendList}
+			blockList={blockList}
+			SetBlockList={SetBlockList}
+			requestList={requestList}
+			SetRequestList={SetRequestList}
+			requestedList={requestedList}
+			SetRequestedList={SetRequestedList}
+			setProfilePage={setProfilePage}
+			setProfileDisplayed={setProfileDisplayed}
+			SetHistoryList={SetHistoryList}/>
       {!roomId ? (
         <div>
           <p>GameSpectatePage</p>

@@ -213,13 +213,13 @@ function HomePage() {
 			setProfileDisplayed={setProfileDisplayed}
 			SetHistoryList={SetHistoryList}/>
 			</div>
-			<div id="popup">
+			<div className="popup">
 			{
 				profileDisplayed ?
 				(
 					<>
-						<h3> {profilePage?.username} </h3>
 						<img className="ProfileImg" src={profilePage?.image} alt="user_img" width="384" height="256"/>
+						<h3> {profilePage?.username} </h3>
 						<>
 						{	IsRequested(profilePage?.uuid, requestedList) ?
 							(

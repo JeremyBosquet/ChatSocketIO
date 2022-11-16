@@ -49,7 +49,8 @@ function Social(props: any) {
 
 	useEffect(() => { // Connect to the socket
 		const newSocket = io('http://90.66.192.148:7003');
-		props?.setSocket(newSocket);
+		if (props?.setSocket)
+			props?.setSocket(newSocket);
 	}, []);
 
 	useEffect(() => {
@@ -293,10 +294,12 @@ function Social(props: any) {
 				// 	navigate(location.pathname + '/' + uuid);
 				props?.setProfilePage(res.data.User);
 				props?.setProfileDisplayed(true);
-				let blur = document.getElementById('blur');
-				blur?.classList.toggle('active');
-				let popup = document.getElementById('popup');
-				popup?.classList.toggle('active');
+				let blur = document.getElementsByClassName('blur');
+				for (let i = 0; i < blur.length ; i++)
+					blur[i]?.classList.toggle('active');
+				let popup = document.getElementsByClassName('popup');
+				for (let i = 0; i < popup.length ; i++)
+					popup[i]?.classList.toggle('active');
 			}
 			else
 				props?.setProfilePage([]);
@@ -327,10 +330,12 @@ function Social(props: any) {
 			{
 				props?.setProfilePage(res.data.User);
 				props?.setProfileDisplayed(true);
-				let blur = document.getElementById('blur');
-				blur?.classList.toggle('active');
-				let popup = document.getElementById('popup');
-				popup?.classList.toggle('active');
+				let blur = document.getElementsByClassName('blur');
+				for (let i = 0; i < blur.length ; i++)
+					blur[i]?.classList.toggle('active');
+				let popup = document.getElementsByClassName('popup');
+				for (let i = 0; i < popup.length ; i++)
+					popup[i]?.classList.toggle('active');
 			}
 			else
 				props?.setProfilePage([]);
@@ -353,10 +358,12 @@ function Social(props: any) {
 	async function HideProfileUseEffect()
 	{
 		props?.setProfileDisplayed(false);
-		let blur = document.getElementById('blur');
-		blur?.classList.toggle('active');
-		let popup = document.getElementById('popup');
-		popup?.classList.toggle('active');
+		let blur = document.getElementsByClassName('blur');
+		for (let i = 0; i < blur.length ; i++)
+			blur[i]?.classList.toggle('active');
+		let popup = document.getElementsByClassName('popup');
+		for (let i = 0; i < popup.length ; i++)
+			popup[i]?.classList.toggle('active');
 	}
 
 	// function IsFriend(uuid : string) {
@@ -424,7 +431,7 @@ function Social(props: any) {
 				(
 					// <div>
 					<>
-					<div className='container' id='blur'>
+					<div className="container blur">
 						<div>
 							<div id='listSearchParent'>
 								<h3> Search Friends </h3>

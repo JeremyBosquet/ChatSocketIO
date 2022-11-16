@@ -166,11 +166,12 @@ export async function BlockOrUnblockUser(uuid : string, blockList : any[], socke
 
 export async function HideProfile(path : string, setProfileDisplayed : any, navigate : any)
 {
-	console.log(path);
 	navigate(path);
 	setProfileDisplayed(false);
-	let blur = document.getElementById('blur');
-	blur?.classList.toggle('active');
-	let popup = document.getElementById('popup');
-	popup?.classList.toggle('active');
+	let blur = document.getElementsByClassName('blur');
+	for (let i = 0; i < blur.length ; i++)
+		blur[i]?.classList.toggle('active');
+	let popup = document.getElementsByClassName('popup');
+	for (let i = 0; i < popup.length ; i++)
+		popup[i]?.classList.toggle('active');
 }

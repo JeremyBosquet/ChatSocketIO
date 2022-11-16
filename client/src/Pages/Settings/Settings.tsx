@@ -37,6 +37,15 @@ function Settings() {
   const [IsTwoAuthActivated, setActivated] = useState<boolean>();
   const [IsTwoAuthConnected, setConnected] = useState<boolean>();
 
+
+  const [friendList, SetFriendList] = useState<any[]>([]);
+	const [blockList, SetBlockList] = useState<any[]>([]);
+	const [requestedList, SetRequestedList] = useState<any[]>([]);
+	const [requestList, SetRequestList] = useState<any[]>([]);
+	const [profilePage, setProfilePage] = useState<any>(null);
+	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
+	const [historyList, SetHistoryList] = useState<any[]>([]);
+
   async function GetLoggedInfoAndUser() {
     if (localStorage.getItem("token")) {
       await axios
@@ -243,7 +252,20 @@ function Settings() {
             <div>
               {!(User === undefined) ? (
                 <div>
-                  <NavBar />
+                  <NavBar 
+					socket={null}
+					setSocket={null}
+					friendList={friendList}
+					SetFriendList={SetFriendList}
+					blockList={blockList}
+					SetBlockList={SetBlockList}
+					requestList={requestList}
+					SetRequestList={SetRequestList}
+					requestedList={requestedList}
+					SetRequestedList={SetRequestedList}
+					setProfilePage={setProfilePage}
+					setProfileDisplayed={setProfileDisplayed}
+					SetHistoryList={SetHistoryList}/>
                   <p> Current username : {User.username} </p>
                   <form onSubmit={ChangeUsername}>
                     <p>

@@ -323,10 +323,19 @@ export class RoomGateway {
       room.configurationA = null;
       room.configurationB = null;
       client.leave('room-' + room.id);
-      if (room.status == 'configuring') {
+      if (room.status == 'configuring' || room?.status.includes('configuring')) {
         //console.log('configuring');
-        room.status = 'waiting';
-        this.server.in('room-' + room.id).emit('playerLeave');
+        if (room.status == 'configuring')
+        {
+          room.status = 'waiting';
+          this.server.in('room-' + room.id).emit('playerLeave');
+        }
+        else
+        {
+          this.server.in('room-' + room.id).emit('playerLeave');
+          // detruire la room car l'autre a quitté
+          await this.roomService.removeFromID(room.id);
+        }
       }
       room.status = 'waiting';
       if (intervalList[room.id]) clearInterval(intervalList[room.id]);
@@ -355,9 +364,19 @@ export class RoomGateway {
           //);
           return;
         }
-        if (room.status == 'configuring') {
-          room.status = 'waiting';
-          this.server.in('room-' + room.id).emit('playerLeave');
+        if (room.status == 'configuring' || room?.status.includes('configuring')) {
+          //console.log('configuring');
+          if (room.status == 'configuring')
+          {
+            room.status = 'waiting';
+            this.server.in('room-' + room.id).emit('playerLeave');
+          }
+          else
+          {
+            this.server.in('room-' + room.id).emit('playerLeave');
+            // detruire la room car l'autre a quitté
+            await this.roomService.removeFromID(room.id);
+          }
         }
         client.data.roomId = null;
         client.data.playerId = null;
@@ -428,7 +447,7 @@ export class RoomGateway {
   ): Promise<void> {
     const room = await this.roomService.getRoom(client.data?.roomId);
     //console.log('socket id : ', client.id);
-    if (room && room?.status === 'configuring') {
+    if (room && (room?.status === 'configuring' || room?.status.includes('configuring'))) {
       if (room.playerA?.id === client.data?.playerId) {
         //console.log('updateConfirugationA - difficulty', data);
         room.configurationA = data;
@@ -449,7 +468,7 @@ export class RoomGateway {
     @MessageBody() data: any,
   ): Promise<void> {
     const room = await this.roomService.getRoom(client.data?.roomId);
-    if (room && room?.status === 'configuring') {
+    if (room && (room?.status == 'configuring' || room?.status.includes('configuring'))) {
       if (room.playerA?.id === client.data?.playerId) {
         //console.log('updateConfirugationA - difficulty', data);
         room.configurationA = data;
@@ -462,7 +481,7 @@ export class RoomGateway {
       }
       const _room = await this.roomService.save(room);
       if (_room.configurationA?.confirmed && _room.configurationB?.confirmed) {
-        //console.log('start game');
+        console.log('start game');
         const random = Math.floor(Math.random() * 2);
         _room.settings.defaultSpeed = 3;
         if (random === 0) {
@@ -494,11 +513,11 @@ export class RoomGateway {
         _room.playerB.x = 85;
         _room.playerB.y = 50;
         this.server.emit('roomStarted', _room);
-        intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 40);
         room.lastActivity = Date.now();
         await this.roomService.save(_room);
         this.server.in('room-' + _room?.id).emit('gameStart', _room);
         this.server.in('room-' + _room?.id).emit('playerReady', _room);
+        intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 40);
       }
       this.server.in('room-' + _room?.id).emit('configurationUpdated', _room);
     }// else //console.log('action not allowed -', room?.id, room?.status);
@@ -517,8 +536,13 @@ export class RoomGateway {
         {
           await this.roomService.addPlayer(room, data.playerId, data.playerName);
           client.data = { roomId: room.id, playerId: data.playerId };
-          client.join('room-' + room.id);
-          this.server.to('room-' + room.id).emit('playerJoined', room);
+          await client.join('room-' + room.id);
+          await this.server.to('room-' + room.id).emit('gameFetchInvite', {target: data.playerId, room:room, switch: true});
+          if (room.playerA && room.playerB) {
+            await this.server.to('room-' + room.id).emit('configuring', room);
+            room.status = 'configuring' + "|" + room.playerA.id + "|" + room.playerB.id;
+            await this.roomService.save(room);
+          }
         }
         catch (e) {
           console.log(e);

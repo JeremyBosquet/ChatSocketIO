@@ -10,7 +10,7 @@ import Settings from "./Pages/Settings/Settings";
 import TwoAuth from "./Pages/TwoAuth";
 import GamePlayingPage from "./Pages/GamePlayingPage/GamePlayingPage";
 import axios from "axios";
-import Social from "./Pages/Social/Social";
+import Social from "./Components/Social/Social";
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
 import { getUser } from "./Redux/authSlice";
@@ -66,8 +66,8 @@ function App() {
 			<Route path="/profile" element={<Protected><Profile /></Protected>}></Route>
 			<Route path="/logout" element={<Protected><Logout /></Protected>}></Route>
 			<Route path="/twoAuth" element={<Protected><TwoAuth /></Protected>}></Route>
-			<Route path="/social" element={<Protected><Social /></Protected>}></Route>
-			<Route path="/social/:UserId" element={<Protected><Social /></Protected>}></Route>
+			{/* <Route path="/social" element={<Protected><Social /></Protected>}></Route> */}
+			{/* <Route path=":UserId" element={<Protected><Social /></Protected>}></Route> */}
 			<Route path="/game/" element={<Protected><GamePlayingPage /></Protected>}></Route>
 			<Route path="/game/spectate" element={<Protected><GameSpectatePage /></Protected>}></Route>
 			<Route path="/game/spectate/:roomId" element={<Protected><GameSpectatePage /></Protected>}></Route>

@@ -6,13 +6,14 @@ import { createNotification } from "../../Components/notif/Notif";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 import "./HomePage.scss";
-import { FaUserCircle, FaUserFriends } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
-import { IoLogOutSharp } from "react-icons/io5";
-import { IoGameController } from "react-icons/io5";
-import { BsFillEyeFill } from "react-icons/bs";
+import {IoPersonRemoveSharp, IoPersonAddSharp} from 'react-icons/io5';
+import {ImCross, ImCheckmark} from "react-icons/im";
+import {MdCancelScheduleSend, MdBlock} from "react-icons/md";
+import {CgUnblock} from "react-icons/cg";
 import React from "react";
 import NavBar from "../../Components/Nav/NavBar";
+import {IsFriend, IsRequest, IsRequested, IsBlocked, AddOrRemoveFriend, CancelFriendAdd, AcceptFriend, DeclineFriendAdd, BlockOrUnblockUser, HideProfile} from "../../Components/Utils/socialCheck"
+import { whoWon } from "../../Components/Utils/whoWon";
 
 function HomePage() {
   let navigate = useNavigate();
@@ -33,6 +34,15 @@ function HomePage() {
   const [checkedSocial, setCheckedSocial] = useState<boolean>(false);
   const [User, setUser] = useState<any>();
   const [friendRequest, setFriendRequest] = useState<number>();
+
+
+	const [friendList, SetFriendList] = useState<any[]>([]);
+	const [blockList, SetBlockList] = useState<any[]>([]);
+	const [requestedList, SetRequestedList] = useState<any[]>([]);
+	const [requestList, SetRequestList] = useState<any[]>([]);
+	const [profilePage, setProfilePage] = useState<any>(null);
+	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
+	const [historyList, SetHistoryList] = useState<any[]>([]);
 
   useEffect(() => {
     // Connect to the socket
@@ -186,7 +196,127 @@ function HomePage() {
               </button>
             </div>
           ) : (
-            <NavBar socket={socket} setSocket={setSocket} />
+			<>
+			<div className='blur'>
+            <NavBar 
+			socket={socket}
+			setSocket={setSocket}
+			friendList={friendList}
+			SetFriendList={SetFriendList}
+			blockList={blockList}
+			SetBlockList={SetBlockList}
+			requestList={requestList}
+			SetRequestList={SetRequestList}
+			requestedList={requestedList}
+			SetRequestedList={SetRequestedList}
+			setProfilePage={setProfilePage}
+			setProfileDisplayed={setProfileDisplayed}
+			SetHistoryList={SetHistoryList}/>
+			</div>
+			<div id="popup">
+			{
+				profileDisplayed ?
+				(
+					<>
+						<h3> {profilePage?.username} </h3>
+						<img className="ProfileImg" src={profilePage?.image} alt="user_img" width="384" height="256"/>
+						<>
+						{	IsRequested(profilePage?.uuid, requestedList) ?
+							(
+								IsRequest(profilePage?.uuid, requestList) ?
+								(
+									<div>
+										<button onClick={() => (AddOrRemoveFriend(profilePage?.uuid, friendList, SetRequestedList, requestedList, socket, User, SetFriendList))} > {IsFriend(profilePage?.uuid, friendList) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+									</div>
+								)
+
+								:
+
+								(
+									<div>
+										<button onClick={() => (AcceptFriend(profilePage?.uuid, profilePage?.image, requestList, SetRequestList, SetFriendList, friendList, socket, User))} > <span className='green'><ImCheckmark/></span> </button>
+										<button onClick={(e) => (DeclineFriendAdd(profilePage?.uuid, requestList, SetRequestList, socket, User))} > <span className='red'><ImCross/></span> </button>
+									</div>
+								)
+		
+							)
+							:
+								<button onClick={(e) => (CancelFriendAdd(profilePage?.uuid, requestedList, SetRequestedList, socket, User))} > <MdCancelScheduleSend/> </button>	
+						}
+						</>
+						<button onClick={() => (BlockOrUnblockUser(profilePage?.uuid , blockList, socket, User, friendList, SetFriendList, requestList, SetRequestList, requestedList, SetRequestedList, SetBlockList))} > {IsBlocked(profilePage?.uuid, blockList) ? <MdBlock/>: <CgUnblock/>} </button>
+						<button onClick={() =>  HideProfile('/' ,setProfileDisplayed, navigate)}> Close </button>
+						<div id='listGameParent'>
+						{
+							historyList.length ?
+							(
+								historyList.length > 3 ?
+								(
+									<div id='listGameScroll'>
+									{
+										historyList.map((game, index) => (
+											<ul key={index} >
+												{whoWon(profilePage.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
+												
+													<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+
+													:
+
+													<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+													
+												}
+												<li> <span className='green'> this is test of history match </span> </li>
+												<li> <span className='red'> this is test of history match </span> </li>
+												<li> <span className='green'> this is test of history match </span> </li>
+												<li> <span className='red'> this is test of history match </span> </li>
+												<li> <span className='green'> this is test of history match </span> </li>
+											</ul>
+										))
+									}
+									</div>
+								)
+
+								:
+
+								(
+									<div id='listGame'>
+									{
+										historyList.map((game, index) => (
+											<ul key={index} >
+												{whoWon(profilePage.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
+												
+													<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+
+													:
+
+													<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+													
+												}
+											</ul>
+										))
+									}
+									</div>
+								)
+							)
+
+							:
+
+							null
+						}
+						</div>
+						
+					</>
+					
+				)
+
+				:
+
+				(
+					null
+				)
+			}
+			</div>
+			</>
           )}
         </>
       ) : null}

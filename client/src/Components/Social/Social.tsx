@@ -1,22 +1,23 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useNavigation, } from "react-router-dom"
-import { createNotification } from '../../Components/notif/Notif';
+import { createNotification } from '../notif/Notif';
 import io, { Socket } from 'socket.io-client';
 import { Link, useLocation } from 'react-router-dom';
-import { whoWon } from '../../Components/Utils/whoWon';
+import { whoWon } from '../Utils/whoWon';
 import React from 'react';
 //const style = require('./Social.scss');
 import './Social.scss';
-import NavBar from '../../Components/Nav/NavBar';
+import NavBar from '../Nav/NavBar';
 import {IoPersonRemoveSharp, IoPersonAddSharp, IoSearchSharp} from 'react-icons/io5';
 import { FaUserCircle, FaUserFriends } from "react-icons/fa";
 import {ImCross, ImCheckmark} from "react-icons/im";
 import {MdCancelScheduleSend, MdBlock} from "react-icons/md";
 import {CgUnblock} from "react-icons/cg";
+import {IsFriend, IsRequest, IsRequested, IsBlocked, AddOrRemoveFriend, CancelFriendAdd, AcceptFriend, DeclineFriendAdd, BlockOrUnblockUser} from "../../Components/Utils/socialCheck"
 
 
-function Social() {
+function Social(props: any) {
 	let navigate = useNavigate();
 	let location = useLocation();
 	const booleffect = useRef<boolean>(false);
@@ -26,16 +27,16 @@ function Social() {
 	let boolFriendOrNot : boolean = false;
 
 	const [friendRequest, setFriendRequest] = useState<number>();
-	const [requestList, SetRequestList] = useState<any[]>([]);
+	//const [requestList, SetRequestList] = useState<any[]>([]);
 	const firstrender = useRef<boolean>(true);
-	const [socket, setSocket] = useState<Socket>();
-	const [friendList, SetFriendList] = useState<any[]>([]);
-	const [blockList, SetBlockList] = useState<any[]>([]);
-	const [requestedList, SetRequestedList] = useState<any[]>([]);
+	//const [socket, setSocket] = useState<Socket>();
+	// const [friendList, SetFriendList] = useState<any[]>([]);
+	// const [blockList, SetBlockList] = useState<any[]>([]);
+	// const [requestedList, SetRequestedList] = useState<any[]>([]);
 	const [searchList, SetsearchList] = useState<any[]>([]);
-	const [historyList, SetHistoryList] = useState<any[]>([]);
-	const [profilePage, setProfilePage] = useState<any>(null);
-	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
+	// const [historyList, SetHistoryList] = useState<any[]>([]);
+	//const [profilePage, setProfilePage] = useState<any>(null);
+	//const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
 	const [searchFriend, SetsearchFriend] = useState<string>();
 	const [friendStatus, SetfriendStatus] = useState<string>();
 
@@ -48,16 +49,16 @@ function Social() {
 
 	useEffect(() => { // Connect to the socket
 		const newSocket = io('http://90.66.192.148:7003');
-		setSocket(newSocket);
+		props?.setSocket(newSocket);
 	}, []);
 
 	useEffect(() => {
-		if (socket) {
-			socket.removeAllListeners();
-			socket.on("stpUneNotifstpUneNotif", (data: any) => {
+		if (props?.socket) {
+			props?.socket.removeAllListeners();
+			props?.socket.on("stpUneNotifstpUneNotif", (data: any) => {
 				createNotification("info", "test");
 			});
-			socket.on("newFriend", (data: any) => {
+			props?.socket.on("newFriend", (data: any) => {
 				if (data.uuid === User.uuid && data?.username) {
 					createNotification("info", "New friend request from: " + data.username);
 					axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
@@ -67,16 +68,16 @@ function Social() {
 					}).then((res) => {
 						requestTab = res.data.usernameList;
 						if (requestTab.length)
-							SetRequestList(requestTab);
+							props?.SetRequestList(requestTab);
 						else
-							SetRequestList([]);
+							props?.SetRequestList([]);
 					}).catch((err) => {
 						console.log(err.message);
 						// SetRequestList([]);
 					});
 				}
 			});
-			socket.on("friendAccepted", (data: any) => {
+			props?.socket.on("friendAccepted", (data: any) => {
 				if (data.uuid === User.uuid && data?.username && data?.friendUuid) {
 					createNotification("info", data.username + " accepted your friend request");
 					axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
@@ -84,16 +85,16 @@ function Social() {
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
 					}).then((res) => {
-						const requested = requestedList.filter((e) => e.uuid !== data.friendUuid);
-						SetRequestedList(requested);
+						const requested = props?.requestedList.filter((e : any) => e.uuid !== data.friendUuid);
+						props?.SetRequestedList(requested);
 						friendTab = res.data.friendList;
-						SetFriendList(friendTab);
+						props?.SetFriendList(friendTab);
 					}).catch((err) => {
 						console.log(err.message);
 					});
 				}
 			});
-			socket.on("removedOrBlocked", (data: any) => {
+			props?.socket.on("removedOrBlocked", (data: any) => {
 				if (data.uuid === User.uuid && data?.username) {
 					//createNotification("info", data.username + " accepted your friend request");
 					axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
@@ -102,13 +103,13 @@ function Social() {
 					})
 					}).then((res) => {
 						friendTab = res.data.friendList;
-						SetFriendList(friendTab);
+						props?.SetFriendList(friendTab);
 					}).catch((err) => {
 						console.log(err.message);
 					});
 				}
 			});
-			socket.on("CancelFriend", (data: any) => {
+			props?.socket.on("CancelFriend", (data: any) => {
 				if (data.uuid === User.uuid) {
 					axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
 					headers: ({
@@ -117,16 +118,16 @@ function Social() {
 					}).then((res) => {
 						requestTab = res.data.usernameList;
 						if (requestTab.length)
-							SetRequestList(requestTab);
+							props?.SetRequestList(requestTab);
 						else
-							SetRequestList([]);
+							props?.SetRequestList([]);
 					}).catch((err) => {
 						console.log(err.message);
 						//SetRequestList([]);
 					});
 				}
 			});
-			socket.on("DeclineFriend", (data: any) => {
+			props?.socket.on("DeclineFriend", (data: any) => {
 				if (data.uuid === User.uuid) {
 					axios.get(`http://90.66.192.148:7000/user/ListFriendRequested`, {
 					headers: ({
@@ -135,9 +136,9 @@ function Social() {
 					}).then((res) => {
 						requestedTab = res.data.ListFriendsRequested;
 						if (requestedTab.length)
-							SetRequestedList(requestedTab);
+							props?.SetRequestedList(requestedTab);
 						else
-							SetRequestedList([]);
+							props?.SetRequestedList([]);
 					}).catch((err) => {
 						console.log(err.message);
 						//SetRequestList([]);
@@ -145,7 +146,7 @@ function Social() {
 				}
 			});
 		}
-	}, [socket, User]);
+	}, [props?.socket, User]);
 
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem('token')) {
@@ -180,7 +181,7 @@ function Social() {
 				})
 			}).then((res) => {
 				requestTab = res.data.usernameList;
-				SetRequestList(requestTab);
+				props?.SetRequestList(requestTab);
 				if (requestTab.length) {
 					setFriendRequest(requestTab.length);
 					//createNotification('success', "You have a new friend request");
@@ -206,7 +207,7 @@ function Social() {
 					Authorization: 'Bearer ' + token,
 				})
 			}).then((res) => {
-				SetFriendList(res.data.friendList);
+				props?.SetFriendList(res.data.friendList);
 			}).catch((err) => {
 				console.log(err.message);
 			});
@@ -218,7 +219,7 @@ function Social() {
 					Authorization: 'Bearer ' + token,
 				})
 			}).then((res) => {
-				SetRequestedList(res.data.ListFriendsRequested);
+				props?.SetRequestedList(res.data.ListFriendsRequested);
 			}).catch((err) => {
 				console.log(err.message);
 			});
@@ -230,7 +231,7 @@ function Social() {
 					Authorization: 'Bearer ' + token,
 				})
 			}).then((res) => {
-				SetBlockList(res.data.ListUsersblocked);
+				props?.SetBlockList(res.data.ListUsersblocked);
 			}).catch((err) => {
 				console.log(err.message);
 			});
@@ -242,53 +243,14 @@ function Social() {
 					Authorization: 'Bearer ' + token,
 				})
 			}).then((res) => {
-				const users : any[] = friendList.filter(element => element.uuid !== uuid);
-				SetFriendList(users);
-				socket?.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
+				const users : any[] = props?.friendList.filter((element : any) => element.uuid !== uuid);
+				props?.SetFriendList(users);
+				props?.socket?.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
 			}).catch((err) => {
 				console.log(err.response.data.message);
 			});
 	}
 
-	async function BlockOrUnblockUser(uuid : string) {
-		const userBlocked : any[] = blockList;
-		const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid)
-		if (!test.length)
-		{
-			await axios.post(`http://90.66.192.148:7000/user/BlockUser`, {uuid : uuid}, {
-					headers: ({
-						Authorization: 'Bearer ' + token,
-					})
-				}).then((res) => {
-					const users : any[] = friendList.filter(element => element.uuid !== uuid);
-					const request : any[] = requestList.filter(element => element.uuid !== uuid);
-					const requested : any[] = requestedList.filter(element => element.uuid !== uuid);
-					SetFriendList(users);
-					SetBlockList([...blockList,{uuid : uuid}])
-					SetRequestList(request);
-					SetRequestedList(requested);
-					socket?.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
-					socket?.emit('CancelFriendAdd', {uuid : uuid, myUUID : User.uuid});
-					socket?.emit('DeclineFriendAdd', {uuid : uuid, myUUID : User.uuid});
-				}).catch((err) => {
-					console.log(err.response.data.message);
-				});
-		}
-		else
-		{
-			await axios.post(`http://90.66.192.148:7000/user/UnblockUser`, {uuid : uuid}, {
-				headers: ({
-					Authorization: 'Bearer ' + token,
-				})
-			}).then((res) => {
-				const users : any[] = friendList.filter(element => element.uuid !== uuid);
-				SetFriendList(users);
-				SetBlockList(blockList.filter(user => user.uuid !== uuid));
-			}).catch((err) => {
-				console.log(err.response.data.message);
-			});
-		}
-	}
 
 	async function SearchFriend(username : string) {
 		await axios.get(`http://90.66.192.148:7000/user/SearchFriend/` + username, {
@@ -305,92 +267,6 @@ function Social() {
 			});
 	}
 
-	async function AddOrRemoveFriend(uuid : string) {
-		const userFriends : any[] = friendList;
-		const test : any[] = userFriends.filter(friend => friend.uuid === uuid)
-		if (!test.length)
-		{
-			await axios.post(`http://90.66.192.148:7000/user/AddFriend`, {uuid : uuid}, {
-					headers: ({
-						Authorization: 'Bearer ' + token,
-					})
-				}).then((res) => {
-					SetRequestedList([...requestedList, {uuid : uuid}])
-					socket?.emit('addFriend', {uuid : uuid, myUUID : User.uuid})
-				}).catch((err) => {
-					console.log(err.response.data.message);
-				});
-		}
-		else
-		{
-			await axios.post(`http://90.66.192.148:7000/user/RemoveFriend`, {uuid : uuid}, {
-				headers: ({
-					Authorization: 'Bearer ' + token,
-				})
-			}).then((res) => {
-				const users : any[] = friendList.filter(element => element.uuid !== uuid);
-				SetFriendList(users);
-				socket?.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
-			}).catch((err) => {
-				console.log(err.response.data.message);
-			});
-		}
-	}
-
-	async function AcceptFriend(uuid : string, image : any) {
-		const test : any[] = requestList.filter(friend => friend.uuid === uuid)
-		if (test.length)
-		{
-			await axios.post(`http://90.66.192.148:7000/user/AcceptFriend`, {uuid : uuid}, {
-					headers: ({
-						Authorization: 'Bearer ' + token,
-					})
-				}).then((res) => {
-					const request : any[] = requestList.filter(element => element.uuid !== uuid);
-					SetFriendList([...friendList, {uuid : uuid , username : test[0].username, image : image}]);
-					SetRequestList(request);
-					socket?.emit('acceptFriend', {uuid : uuid, myUUID : User.uuid});
-				}).catch((err) => {
-					console.log(err.response.data.message);
-				});
-		}
-	}
-
-	async function DeclineFriendAdd(uuid : string) {
-		const test : any[] = requestList.filter(friend => friend.uuid === uuid)
-		if (test.length)
-		{
-			await axios.post(`http://90.66.192.148:7000/user/DeclineFriendAdd`, {uuid : uuid}, {
-					headers: ({
-						Authorization: 'Bearer ' + token,
-					})
-				}).then((res) => {
-					const request : any[] = requestList.filter(element => element.uuid !== uuid);
-					SetRequestList(request);
-					socket?.emit('DeclineFriendAdd', {uuid : uuid, myUUID : User.uuid});
-				}).catch((err) => {
-					console.log(err.response.data.message);
-				});
-		}
-	}
-
-	async function CancelFriendAdd(uuid : string) {
-		const test : any[] = requestedList.filter(friend => friend.uuid === uuid)
-		if (test.length)
-		{
-			await axios.post(`http://90.66.192.148:7000/user/CancelFriendAdd`, {uuid : uuid}, {
-					headers: ({
-						Authorization: 'Bearer ' + token,
-					})
-				}).then((res) => {
-					const requested : any[] = requestedList.filter(element => element.uuid !== uuid);
-					SetRequestedList(requested);
-					socket?.emit('CancelFriendAdd', {uuid : uuid, myUUID : User.uuid});
-				}).catch((err) => {
-					console.log(err.response.data.message);
-				});
-		}
-	}
 
 	async function ShowProfile(uuid : string)
 	{
@@ -400,9 +276,9 @@ function Social() {
 		})
 		}).then((res) => {
 			if (res.data && res.data.length)
-				SetHistoryList(res.data)
+				props?.SetHistoryList(res.data)
 			else if (res.data)
-				SetHistoryList([]);
+				props?.SetHistoryList([]);
 		});
 		await axios.get(`http://90.66.192.148:7000/user/findUser/` + uuid, {
 		headers: ({
@@ -411,19 +287,22 @@ function Social() {
 		}).then((res) => {
 			if (res && res.data)
 			{
-				navigate('/social/' + uuid);
-				setProfilePage(res.data.User);
-				setProfileDisplayed(true);
+				// if (location.pathname[location.pathname.length - 1] == '/')
+				// 	navigate(location.pathname + uuid);
+				// else
+				// 	navigate(location.pathname + '/' + uuid);
+				props?.setProfilePage(res.data.User);
+				props?.setProfileDisplayed(true);
 				let blur = document.getElementById('blur');
 				blur?.classList.toggle('active');
 				let popup = document.getElementById('popup');
 				popup?.classList.toggle('active');
 			}
 			else
-				setProfilePage([]);
+				props?.setProfilePage([]);
 		}).catch((err) => {
 			console.log(err.response.data.message);
-			navigate('/social');
+			navigate(location.pathname);
 		});
 	}
 
@@ -435,9 +314,9 @@ function Social() {
 		})
 		}).then((res) => {
 			if (res.data && res.data.length)
-				SetHistoryList(res.data)
+				props?.SetHistoryList(res.data)
 			else if (res.data)
-				SetHistoryList([]);
+				props?.SetHistoryList([]);
 		});
 		await axios.get(`http://90.66.192.148:7000/user/findUser/` + uuid, {
 		headers: ({
@@ -446,89 +325,70 @@ function Social() {
 		}).then((res) => {
 			if (res && res.data)
 			{
-				setProfilePage(res.data.User);
-				setProfileDisplayed(true);
+				props?.setProfilePage(res.data.User);
+				props?.setProfileDisplayed(true);
 				let blur = document.getElementById('blur');
 				blur?.classList.toggle('active');
 				let popup = document.getElementById('popup');
 				popup?.classList.toggle('active');
 			}
 			else
-				setProfilePage([]);
+				props?.setProfilePage([]);
 		}).catch((err) => {
 			console.log(err.response.data.message);
 			navigate('/social');
 		});
 	}
 
-	async function HideProfile()
-	{
-		navigate('/social');
-		setProfileDisplayed(false);
-		let blur = document.getElementById('blur');
-		blur?.classList.toggle('active');
-		let popup = document.getElementById('popup');
-		popup?.classList.toggle('active');
-	}
+	// async function HideProfile()
+	// {
+	// 	navigate('/social');
+	// 	setProfileDisplayed(false);
+	// 	let blur = document.getElementById('blur');
+	// 	blur?.classList.toggle('active');
+	// 	let popup = document.getElementById('popup');
+	// 	popup?.classList.toggle('active');
+	// }
 
 	async function HideProfileUseEffect()
 	{
-		setProfileDisplayed(false);
+		props?.setProfileDisplayed(false);
 		let blur = document.getElementById('blur');
 		blur?.classList.toggle('active');
 		let popup = document.getElementById('popup');
 		popup?.classList.toggle('active');
 	}
 
-	function IsFriend(uuid : string) {
-		const userFriends : any[] = friendList;
-		const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
-		if (!test.length)
-			return true;
-		return false;
-	}
+	// function IsFriend(uuid : string) {
+	// 	const userFriends : any[] = friendList;
+	// 	const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
+	// 	if (!test.length)
+	// 		return true;
+	// 	return false;
+	// }
 
-	function IsRequested(uuid : string) {
-		const userRequested : any[] = requestedList;
-		const test : any[] = userRequested.filter(requested => requested.uuid === uuid);
-		if (!test.length)
-			return true;
-		return false;
-	}
+	// function IsRequested(uuid : string) {
+	// 	const userRequested : any[] = requestedList;
+	// 	const test : any[] = userRequested.filter(requested => requested.uuid === uuid);
+	// 	if (!test.length)
+	// 		return true;
+	// 	return false;
+	// }
 
-	function IsRequest(uuid : string) {
-		const userRequest : any[] = requestList;
-		const request : any[] = userRequest.filter(request => request.uuid === uuid);
-		if (!request.length)
-			return true;
-		return false;
-	}
+	// function IsRequest(uuid : string) {
+	// 	const userRequest : any[] = requestList;
+	// 	const request : any[] = userRequest.filter(request => request.uuid === uuid);
+	// 	if (!request.length)
+	// 		return true;
+	// 	return false;
+	// }
 
-	function IsBlocked(uuid : string) {
-		const userBlocked : any[] = blockList;
-		const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid);
-		if (!test.length)
-			return true;
-		return false;
-	}
-
-	// 	for (let i = 0; i < users.length; i++)
-	// 	{
-	// 		await axios.get(`http://90.66.192.148:7000/user/IsFriend/` + users[i].uuid, {
-	// 				headers: ({
-	// 					Authorization: 'Bearer ' + token,
-	// 				})
-	// 			}).then((res) => {
-	// 				console.log(res)
-	// 				if (res && res.data && res.data.IsFriend)
-	// 					boolFriendOrNot = true;
-	// 				else
-	// 					boolFriendOrNot =false;
-	// 			}).catch((err) => {
-	// 				console.log(err.response.data.message);
-	// 				boolFriendOrNot =false;
-	// 			});
-	// 	}
+	// function IsBlocked(uuid : string) {
+	// 	const userBlocked : any[] = blockList;
+	// 	const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid);
+	// 	if (!test.length)
+	// 		return true;
+	// 	return false;
 	// }
 
 	useEffect(() => {
@@ -592,15 +452,15 @@ function Social() {
 													<p> {user.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
+														<button onClick={() => (BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))} > {IsBlocked(user.uuid, props?.blockList) ? <MdBlock/>: <CgUnblock/>} </button>
 													</div>
 													<div>
-													{	IsRequested(user.uuid) ?
+													{	IsRequested(user.uuid, props?.requestedList) ?
 														(
-															IsRequest(user.uuid) ?
+															IsRequest(user.uuid, props?.requestList) ?
 															(
 																<div className='buttons2'>
-																	<button onClick={() => (AddOrRemoveFriend(user.uuid))} > {IsFriend(user.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+																	<button onClick={() => (AddOrRemoveFriend(user.uuid, props?.friendList, props?.SetRequestedList, props?.requestedList, props?.socket, User, props?.SetFriendList))} > {IsFriend(user.uuid, props?.friendList) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
 																</div>
 															)
 
@@ -608,15 +468,15 @@ function Social() {
 
 															(
 																<div className='buttons2'>
-																	<button onClick={() => (AcceptFriend(user.uuid, user.image))} > <span className='green'> <ImCheckmark/>  </span></button>
-																	<button onClick={(e) => (DeclineFriendAdd(user.uuid))} ><span className='red'><ImCross/></span> </button>
+																	<button onClick={() => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, props?.socket, User))} > <span className='green'> <ImCheckmark/>  </span></button>
+																	<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, props?.socket, User))} ><span className='red'><ImCross/></span> </button>
 																</div>
 															)
 									
 														)
 														:
 														<div className='buttons2'>
-															<button onClick={(e) => (CancelFriendAdd(user.uuid))} > <MdCancelScheduleSend/> </button>
+															<button onClick={(e) => (CancelFriendAdd(user.uuid, props?.requestedList, props?.SetRequestedList, props?.socket, User))} > <MdCancelScheduleSend/> </button>
 														</div>
 													}
 													</div>
@@ -636,15 +496,15 @@ function Social() {
 													<p> {user.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={() => (BlockOrUnblockUser(user.uuid))} > {IsBlocked(user.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
+														<button onClick={() => (BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))} > {IsBlocked(user.uuid, props?.blockList) ? <MdBlock/>: <CgUnblock/>} </button>
 													</div>
 													<div>
-													{	IsRequested(user.uuid) ?
+													{	IsRequested(user.uuid, props?.requestedList) ?
 														(
-															IsRequest(user.uuid) ?
+															IsRequest(user.uuid, props?.requestList) ?
 															(
 																<div className='buttons2'>
-																	<button onClick={() => (AddOrRemoveFriend(user.uuid))} > {IsFriend(user.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+																	<button onClick={() => (AddOrRemoveFriend(user.uuid, props?.friendList, props?.SetRequestedList, props?.requestedList, props?.socket, User, props?.SetFriendList))} > {IsFriend(user.uuid, props?.friendList) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
 																</div>
 															)
 
@@ -652,15 +512,15 @@ function Social() {
 
 															(
 																<div className='buttons2'>
-																	<button onClick={() => (AcceptFriend(user.uuid, user.image))} > <span className='green'><ImCheckmark/></span> </button>
-																	<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > <span className='red'><ImCross/></span> </button>
+																	<button onClick={() => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, props?.socket, User))} > <span className='green'><ImCheckmark/></span> </button>
+																	<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, props?.socket, User))} > <span className='red'><ImCross/></span> </button>
 																</div>
 															)
 									
 														)
 														:
 														<div className='buttons2'>
-															<button onClick={(e) => (CancelFriendAdd(user.uuid))} > <MdCancelScheduleSend/> </button>
+															<button onClick={(e) => (CancelFriendAdd(user.uuid, props?.requestedList, props?.SetRequestedList, props?.socket, User))} > <MdCancelScheduleSend/> </button>
 														</div>	
 													}
 													</div>
@@ -682,20 +542,20 @@ function Social() {
 							<h3> Friend List </h3>
 							<div className='box'>
 							{
-								friendList.length ?
+								props?.friendList.length ?
 								(
-									friendList.length > 3 ?
+									props?.friendList.length > 3 ?
 									(
 										<div id='listFriendScroll'>
 										{
-											friendList.map((user) => (
+											props?.friendList.map((user : any) => (
 												<div key={user.uuid} className='mapFriend'> 
 													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 													<p> {user.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (RemoveFriend(user.uuid))} > <IoPersonRemoveSharp/> </button>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}><MdBlock/></button>
+														<button onClick={(e) => (BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))}><MdBlock/></button>
 													</div>
 												</div>
 											))
@@ -708,14 +568,14 @@ function Social() {
 									(
 										<div id='listFriend'>
 										{
-											friendList.map((user) => (
+											props?.friendList.map((user : any) => (
 												<div key={user.uuid} className='mapFriend'> 
 													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 													<p> {user.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (RemoveFriend(user.uuid))} > <IoPersonRemoveSharp/> </button>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => (BlockOrUnblockUser(user.uuid))}> <MdBlock/> </button>
+														<button onClick={(e) => (BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))}> <MdBlock/> </button>
 													</div>
 												</div>
 											))
@@ -739,21 +599,21 @@ function Social() {
 								<h3> Friend requests </h3>		
 								<div className='box'>
 								{								
-									requestList.length ?
+									props?.requestList.length ?
 									(
-										requestList.length > 3 ?
+										props?.requestList.length > 3 ?
 										(
 											<div id='listReqScroll'>
 											{
-												requestList.map((user, index) => (
+												props?.requestList.map((user : any, index : number) => (
 												<div key={index} className='mapReq'> 
 													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 													<p> {user?.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> <MdBlock/> </button>
-														<button onClick={(e) => (AcceptFriend(user.uuid, user.image))} > <span className='green'><ImCheckmark/></span> </button>
-														<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > <span className='red'><ImCross/></span> </button>
+														<button onClick={(e) => BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList)}> <MdBlock/> </button>
+														<button onClick={(e) => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, props?.socket, User))} > <span className='green'><ImCheckmark/></span> </button>
+														<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, props?.socket, User))} > <span className='red'><ImCross/></span> </button>
 													</div>
 												</div>))
 											}
@@ -763,15 +623,15 @@ function Social() {
 										(
 											<div id='listReq'>
 											{
-												requestList.map((user, index) => (
+												props?.requestList.map((user : any, index : number) => (
 												<div key={index} className='mapReq'> 
 													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 													<p> {user?.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => BlockOrUnblockUser(user.uuid)}> <MdBlock/> </button>
-														<button onClick={(e) => (AcceptFriend(user.uuid, user.image))} > <span className='green'><ImCheckmark/></span> </button>
-														<button onClick={(e) => (DeclineFriendAdd(user.uuid))} > <span className='red'><ImCross/></span> </button>
+														<button onClick={(e) => BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList)}> <MdBlock/> </button>
+														<button onClick={(e) => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, props?.socket, User))} > <span className='green'><ImCheckmark/></span> </button>
+														<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, props?.socket, User))} > <span className='red'><ImCross/></span> </button>
 													</div>
 												</div>))
 											}
@@ -788,109 +648,6 @@ function Social() {
 						}
 						</div>
 					</div>
-				<div id="popup">
-				{
-					profileDisplayed ?
-					(
-						<div>
-							<h3> {profilePage?.username} </h3>
-							<img className="ProfileImg" src={profilePage?.image} alt="user_img" width="384" height="256"/>
-							<div>
-							{	IsRequested(profilePage?.uuid) ?
-								(
-									IsRequest(profilePage?.uuid) ?
-									(
-										<div>
-											<button onClick={() => (AddOrRemoveFriend(profilePage?.uuid))} > {IsFriend(profilePage?.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
-										</div>
-									)
-
-									:
-
-									(
-										<div>
-											<button onClick={() => (AcceptFriend(profilePage?.uuid, profilePage?.image))} > <span className='green'><ImCheckmark/></span> </button>
-											<button onClick={(e) => (DeclineFriendAdd(profilePage?.uuid))} > <span className='red'><ImCross/></span> </button>
-										</div>
-									)
-			
-								)
-								:
-									<button onClick={(e) => (CancelFriendAdd(profilePage?.uuid))} > <MdCancelScheduleSend/> </button>	
-							}
-							</div>
-							<button onClick={() => (BlockOrUnblockUser(profilePage?.uuid))} > {IsBlocked(profilePage?.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
-							<button onClick={() =>  HideProfile()}> Close </button>
-							<div id='listGameParent'>
-							{
-								historyList.length ?
-								(
-									historyList.length > 3 ?
-									(
-										<div id='listGameScroll'>
-										{
-											historyList.map((game, index) => (
-												<ul key={index} >
-													{whoWon(profilePage.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
-													
-														<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-
-														:
-
-														<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-														
-													}
-													<li> <span className='green'> this is test of history match </span> </li>
-													<li> <span className='red'> this is test of history match </span> </li>
-													<li> <span className='green'> this is test of history match </span> </li>
-													<li> <span className='red'> this is test of history match </span> </li>
-													<li> <span className='green'> this is test of history match </span> </li>
-												</ul>
-											))
-										}
-										</div>
-									)
-
-									:
-
-									(
-										<div id='listGame'>
-										{
-											historyList.map((game, index) => (
-												<ul key={index} >
-													{whoWon(profilePage.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
-													
-														<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-
-														:
-
-														<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
-														
-													}
-												</ul>
-											))
-										}
-										</div>
-									)
-								)
-
-								:
-
-								null
-							}
-							</div>
-							
-						</div>
-						
-					)
-
-					:
-
-					(
-						null
-					)
-				}
-				</div>
 					{/* </div> */}
 					</>
 					

@@ -17,7 +17,7 @@ import { BsFillEyeFill } from "react-icons/bs";
 import { GrClose } from "react-icons/gr";
 import {AiOutlineClose} from "react-icons/ai";
 import "./NavBar.scss";
-import Social from "../../Pages/Social/Social";
+import Social from "../Social/Social";
 
 function NavBar(props: any) {
   let navigate = useNavigate();
@@ -32,13 +32,6 @@ function NavBar(props: any) {
   const [IsTwoAuthActivated, setActivated] = useState<boolean>();
   const [IsTwoAuthConnected, setConnected] = useState<boolean>();
   const [friendRequest, setFriendRequest] = useState<number>();
-
-  const [checkedProfile, setCheckedProfile] = useState<boolean>(false);
-  const [checkedSettings, setCheckedSettings] = useState<boolean>(false);
-  const [checkedLogout, setCheckedLogout] = useState<boolean>(false);
-  const [checkedGame, setCheckedGame] = useState<boolean>(false);
-  const [checkedSpectate, setCheckedSpectate] = useState<boolean>(false);
-  const [checkedSocial, setCheckedSocial] = useState<boolean>(false);
 
   async function GetLoggedInfo() {
 
@@ -168,7 +161,21 @@ function NavBar(props: any) {
                 <AiOutlineClose />
                 </span>
               </button>
-              <Social/>
+              <Social
+			  socket={props?.socket}
+				setSocket={props?.setSocket}
+				friendList={props?.friendList}
+				SetFriendList={props?.SetFriendList}
+				blockList={props?.blockList}
+				SetBlockList={props?.SetBlockList}
+				requestList={props?.requestList}
+				SetRequestList={props?.SetRequestList}
+				requestedList={props?.requestedList}
+				SetRequestedList={props?.SetRequestedList}
+				setProfilePage={props?.setProfilePage}
+				setProfileDisplayed={props?.setProfileDisplayed}
+				SetHistoryList={props?.SetHistoryList}
+				/>
             </div>
         </>
     </div>

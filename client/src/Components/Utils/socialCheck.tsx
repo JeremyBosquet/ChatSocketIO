@@ -164,7 +164,7 @@ export async function BlockOrUnblockUser(uuid : string, blockList : any[], socke
 	}
 }
 
-export async function HideProfile(path : string, setProfileDisplayed : any, navigate : any)
+export async function HideProfile(path : string, setProfileDisplayed : any, navigate : any, setbooleffect3 : any)
 {
 	navigate(path);
 	setProfileDisplayed(false);

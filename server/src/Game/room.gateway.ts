@@ -68,8 +68,18 @@ export class RoomGateway {
             room.playerA.score += 1;
             console.log("p 1 player a");
           }
-          if (room.playerA.score >= 10 || room.playerB.score >= 10) {
+          if (room.playerA.score >= 1 || room.playerB.score >= 1) {
             room.status = 'finished';
+            if (room.playerA.score >= 1)
+            { 
+              await this.usersService.addExp(room.playerA.id, 0.42);
+              await this.usersService.addExp(room.playerB.id, 0.15);
+            }
+            else if (room.playerB.score >= 1)
+            {
+              await this.usersService.addExp(room.playerB.id, 0.42);
+              await this.usersService.addExp(room.playerA.id, 0.15);
+              }
             await this.roomService.save(room);
             this.server.emit('roomFinished', room);
             this.server.in('room-' + room.id).emit('gameEnd', room);

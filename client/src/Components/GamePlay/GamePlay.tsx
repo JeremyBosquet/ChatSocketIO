@@ -129,9 +129,22 @@ function GamePlay(props: props) {
   });
   //const [notification, setNotificaton] = useState<Boolean>(false);
 
+  //set interval with useEffect
+
+  //useEffect(() => { // Update display
+  //  const id = setInterval(() => {
+  //    //console.log("interval");
+  //  }, 50);
+  //
+  //  return () => {
+  //    clearInterval(id);
+  //  }
+  //
+  //}, [playerA, playerB, windowsHeight]);
+
   const mousemove = useCallback(
     (e: any) => {
-      console.log("Emit");
+      //console.log("Emit");
       const _player = { id: "", x: 0, y: 0 };
       if (props.room?.playerA.name === props.playerName) {
         _player.id = playerA.id;
@@ -267,9 +280,9 @@ function GamePlay(props: props) {
     boardWidth,
   ]);
   return (
-    <div>
+    <div id="gameMainCanvas">
       <GameBoard socket={props.socket} room={props.room} />
-      <div id="gameMainCanvas">
+      <div>
         <Stage
           width={windowsWidth}
           height={windowsHeight}

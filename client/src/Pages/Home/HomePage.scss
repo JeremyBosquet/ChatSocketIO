@@ -2,88 +2,163 @@
 
 .blur.active{
 	color : white;
-	filter : blur(1px);
-	//pointer-events: none;
-	//user-select : none;
-	// display: flex;
-	// justify-content: center;
+	filter : blur(5px);
+	pointer-events: none;
+	user-select : none;
 }
 
 .popup {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	//transform: translate(-50%, -50%);
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top : 50%;
+	left : 50%;
 	width : 50%;
+	//margin: 1px;
 
-	//display: flex;
-	//align-items: center;
-	//justify-content: center;
 	visibility: hidden;
 	transition: transform 0.8s, opacity 0.8s;
 	opacity: 0;
+	z-index: 10;
 	//width : 400px; //vtre
-	background: linear-gradient(135deg, #9a0dfe, #637dfb);
+	background: #0582CA;
 	/* animation: name duration timing-function delay iteration-count direction fill-mode; */
 	border-radius: 6px;
 	//text-align: center;
-	padding : 0 30px 30px;
+	padding : 0px 20px;
 	color : rgb(255, 255, 255);
 	font-family:Georgia, 'Times New Roman', Times, serif;
 	font-size : 100%;
 	h3 {
+		font-size: 30px;
+		width : 90px;
 		color :rgb(0, 0, 0);
-		display : flex;
 		top : 50px;
+		position: relative;
+		left: 110px;
+		top : -70px;
 	}
 	.ProfileImg {
-		display : flex;
-		width: 300px;
-		height: 300px;
+		width: 100px;
+		height: 100px;
+		position : relative;
+		top : 20px;
+		right : 0px;
 		object-fit: cover;
 		border-radius: 50%;
 	}
 
-	button{
-		
-		width : 100%;
-		margin-top : 12px;
-		padding: 10px 0;
-		background: linear-gradient(135deg, #fe0d29, #dfc60a);
-		color: #fff;
-		border: 0;
-		outline : none;
-		font-size : 18px;
-		border-radius : 4px;
-		cursor: pointer;
-		box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
-		font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	.Buttons{
+		display: flex;
+		//position: flex;
+		width : 10%;
+		position: relative;
+		left : 110px;
+		top : -75px;
+		height: auto;
+		margin-top : 10px;
+		//margin-left : 10px;
+		button {
+			padding:4px;
+			height : fit-content;
+			background: linear-gradient(135deg, #003554, #051923);
+			color: #fff;
+			border: 0;
+			outline : none;
+			font-size : 18px;
+			margin :1px;
+			//padding: px;
+			border-radius : 4px;
+			cursor: pointer;
+			box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+			font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+		}
+		.closebtn {
+			opacity: unset;
+			&:hover
+			{
+				transition: 0.2s;
+				color :rgb(255, 255, 255);
+			}
+			background-color: rgba(0, 0, 0, 0);
+			border : none;
+			outline : none;
+			color : #c50000;
+			position: absolute;
+			top: 10px;
+			right: 25px;
+			font-size: 30px;
+			margin-left: 50px;
+		}
 	}
 
+	.closeProfile {
+		position: absolute;
+		right : 10px;
+		top : 10px;
+		opacity: unset;
+		&:hover
+		{
+			transition: 0.3s;
+			color :rgb(255, 255, 255);
+		}
+		background-color: rgba(0, 0, 0, 0);
+		border : none;
+		outline : none;
+		color : #000000;
+		font-size: 30px;
+		margin-left: 50px;
+	}
+	.expBar
+	{
+		width : 100%;
+		background: linear-gradient(135deg, #003554, #051923);
+		height: 35px;
+		top : -35px;
+		position: relative;
+		border-radius: 4px;
+		.exp{
+			--expAmount : 0%;
+			background: linear-gradient(90deg, rgba(255,0,0,1) 35%, rgba(255,248,0,1) 100%);
+			width : var(--expAmount);
+			border: #000000;
+			height: 35px;
+			border-radius: 4px;
+			//top : 15px;
+			// left : 40px;
+			position: absolute;
+		}
+		p{
+			font-size: 24px;
+			display: flex;
+			height: fit-content;
+			justify-content: center;
+			position: relative;
+		}
+	}
 	#listGameParent{
-		#listGameScroll{
-			width : 100%;
-		border-radius : 4px;
-		::-webkit-scrollbar {
+		background: linear-gradient(135deg, #003554, #051923);
+		padding: 10px;
+		margin-bottom: 20px;
+		border-radius: 5px;
+		::-webkit-scrollbar { 
 			width: 15px;         /* width of the entire scrollbar */
 		}
-		
 		::-webkit-scrollbar-track {
-			background: linear-gradient(135deg, #fe0d29, #dfc60a); 
+			background: #0582CA; 
 			border-radius: 10px;      /* color of the tracking area */
 		}
 		
 		::-webkit-scrollbar-thumb {
-			background: linear-gradient(135deg, #9a0dfe, #637dfb);;    /* color of the scroll thumb */
+			background: linear-gradient(135deg, #003554, #051923);    /* color of the scroll thumb */
 			border-radius: 10px;       /* roundness of the scroll thumb */
-			border: 3px solid linear-gradient(135deg, #fe0d29, #dfc60a);/* creates padding around scroll thumb */
+			border: 1px solid #0582CA; /* creates padding around scroll thumb */
 		}
-			margin-top : 20px;
-			height: 90px; 
-			//width:100%;
-			width:400px;
+		#listGameScroll{
+  			scrollbar-color: #051923 #0582CA;
+			
 			overflow:hidden;
 			overflow-y:scroll;
+			height: 85px;
 
 			.green{
 				color :#2fbb00
@@ -103,12 +178,8 @@
 		}
 
 		#listGame{
-			width : 100%;
-			border-radius : 4px;
-			margin-top : 20px;
-			height: 90px; 
-			//width:100%;
-			width:400px;
+			height: 85px;
+			overflow: hidden;
 
 			.green{
 				color :#2fbb00
@@ -122,7 +193,6 @@
 				list-style-type: none;
 				position: relative;
 				font-size: 25px;
-				margin-bottom: 2px;
 			}
 		}
 	}
@@ -132,7 +202,6 @@
 	visibility: visible;
 	opacity: 1;
 	transition: transform 0.8s, opacity 0.8s;
-	z-index: 1;
 }
 
 .main
@@ -141,24 +210,6 @@
   height: 100vh;
   overflow: hidden;
   font-family: 'Roboto', sans-serif;
-	// ::-webkit-scrollbar-button {
-	// 	height: 12px;
-	// }
-	// ::-webkit-scrollbar {
-	// 	width: 15px;       /* width of the entire scrollbar */
-	// }
-
-	// ::-webkit-scrollbar-track {
-	// 	background: #0582CA;  
-	// 	border-radius: 10px;      /* color of the tracking area */
-	// }
-
-	// ::-webkit-scrollbar-thumb {
-	// 	background: linear-gradient(135deg, #003554, #051923);   /* color of the scroll thumb */
-	// 	border-radius: 10px;       /* roundness of the scroll thumb */
-	// 	border: 1px solid #0582CA; /* creates padding around scroll thumb */
-	// }
-	// overflow-y: scroll;
 }
 
 .HomePage h1
@@ -186,4 +237,17 @@
 	font-family:'Times New Roman', Times, serif;
 	font-size: 70px;
 	border-radius: 30px;
+}
+
+@media screen and (max-width: 550px) {
+	.popup{
+		h3 {
+			margin-top: 10px;
+			font-size: 14px;
+		}
+		.expBar
+		{
+			margin-top: 8px;
+		}
+	}
 }

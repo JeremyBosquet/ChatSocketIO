@@ -175,6 +175,7 @@ function NavBar(props: any) {
 				setProfilePage={props?.setProfilePage}
 				setProfileDisplayed={props?.setProfileDisplayed}
 				SetHistoryList={props?.SetHistoryList}
+				setbooleffect3={props?.setbooleffect3}
 				/>
             </div>
         </>

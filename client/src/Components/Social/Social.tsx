@@ -47,107 +47,107 @@ function Social(props: any) {
 	let statusTab: typeof useState[];
 	const [User, setUser] = useState<any>();
 
-	useEffect(() => { // Connect to the socket
-		const newSocket = io('http://90.66.192.148:7003');
-		if (props?.setSocket)
-			props?.setSocket(newSocket);
-	}, []);
+	// useEffect(() => { // Connect to the socket
+	// 	const newSocket = io('http://90.66.192.148:7003');
+	// 	if (props?.setSocket)
+	// 		props?.setSocket(newSocket);
+	// }, []);
 
-	useEffect(() => {
-		if (props?.socket) {
-			props?.socket.removeAllListeners();
-			props?.socket.on("stpUneNotifstpUneNotif", (data: any) => {
-				createNotification("info", "test");
-			});
-			props?.socket.on("newFriend", (data: any) => {
-				if (data.uuid === User.uuid && data?.username) {
-					createNotification("info", "New friend request from: " + data.username);
-					axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-					}).then((res) => {
-						requestTab = res.data.usernameList;
-						if (requestTab.length)
-							props?.SetRequestList(requestTab);
-						else
-							props?.SetRequestList([]);
-					}).catch((err) => {
-						console.log(err.message);
-						// SetRequestList([]);
-					});
-				}
-			});
-			props?.socket.on("friendAccepted", (data: any) => {
-				if (data.uuid === User.uuid && data?.username && data?.friendUuid) {
-					createNotification("info", data.username + " accepted your friend request");
-					axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-					}).then((res) => {
-						const requested = props?.requestedList.filter((e : any) => e.uuid !== data.friendUuid);
-						props?.SetRequestedList(requested);
-						friendTab = res.data.friendList;
-						props?.SetFriendList(friendTab);
-					}).catch((err) => {
-						console.log(err.message);
-					});
-				}
-			});
-			props?.socket.on("removedOrBlocked", (data: any) => {
-				if (data.uuid === User.uuid && data?.username) {
-					//createNotification("info", data.username + " accepted your friend request");
-					axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-					}).then((res) => {
-						friendTab = res.data.friendList;
-						props?.SetFriendList(friendTab);
-					}).catch((err) => {
-						console.log(err.message);
-					});
-				}
-			});
-			props?.socket.on("CancelFriend", (data: any) => {
-				if (data.uuid === User.uuid) {
-					axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-					}).then((res) => {
-						requestTab = res.data.usernameList;
-						if (requestTab.length)
-							props?.SetRequestList(requestTab);
-						else
-							props?.SetRequestList([]);
-					}).catch((err) => {
-						console.log(err.message);
-						//SetRequestList([]);
-					});
-				}
-			});
-			props?.socket.on("DeclineFriend", (data: any) => {
-				if (data.uuid === User.uuid) {
-					axios.get(`http://90.66.192.148:7000/user/ListFriendRequested`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-					}).then((res) => {
-						requestedTab = res.data.ListFriendsRequested;
-						if (requestedTab.length)
-							props?.SetRequestedList(requestedTab);
-						else
-							props?.SetRequestedList([]);
-					}).catch((err) => {
-						console.log(err.message);
-						//SetRequestList([]);
-					});
-				}
-			});
-		}
-	}, [props?.socket, User]);
+	// useEffect(() => {
+	// 	if (props?.socket) {
+	// 		props?.socket.removeAllListeners();
+	// 		props?.socket.on("stpUneNotifstpUneNotif", (data: any) => {
+	// 			createNotification("info", "test");
+	// 		});
+	// 		props?.socket.on("newFriend", (data: any) => {
+	// 			if (data.uuid === User.uuid && data?.username) {
+	// 				createNotification("info", "New friend request from: " + data.username);
+	// 				axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
+	// 				headers: ({
+	// 					Authorization: 'Bearer ' + localStorage.getItem('token'),
+	// 				})
+	// 				}).then((res) => {
+	// 					requestTab = res.data.usernameList;
+	// 					if (requestTab.length)
+	// 						props?.SetRequestList(requestTab);
+	// 					else
+	// 						props?.SetRequestList([]);
+	// 				}).catch((err) => {
+	// 					console.log(err.message);
+	// 					// SetRequestList([]);
+	// 				});
+	// 			}
+	// 		});
+	// 		props?.socket.on("friendAccepted", (data: any) => {
+	// 			if (data.uuid === User.uuid && data?.username && data?.friendUuid) {
+	// 				createNotification("info", data.username + " accepted your friend request");
+	// 				axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
+	// 				headers: ({
+	// 					Authorization: 'Bearer ' + localStorage.getItem('token'),
+	// 				})
+	// 				}).then((res) => {
+	// 					const requested = props?.requestedList.filter((e : any) => e.uuid !== data.friendUuid);
+	// 					props?.SetRequestedList(requested);
+	// 					friendTab = res.data.friendList;
+	// 					props?.SetFriendList(friendTab);
+	// 				}).catch((err) => {
+	// 					console.log(err.message);
+	// 				});
+	// 			}
+	// 		});
+	// 		props?.socket.on("removedOrBlocked", (data: any) => {
+	// 			if (data.uuid === User.uuid && data?.username) {
+	// 				//createNotification("info", data.username + " accepted your friend request");
+	// 				axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
+	// 				headers: ({
+	// 					Authorization: 'Bearer ' + localStorage.getItem('token'),
+	// 				})
+	// 				}).then((res) => {
+	// 					friendTab = res.data.friendList;
+	// 					props?.SetFriendList(friendTab);
+	// 				}).catch((err) => {
+	// 					console.log(err.message);
+	// 				});
+	// 			}
+	// 		});
+	// 		props?.socket.on("CancelFriend", (data: any) => {
+	// 			if (data.uuid === User.uuid) {
+	// 				axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
+	// 				headers: ({
+	// 					Authorization: 'Bearer ' + localStorage.getItem('token'),
+	// 				})
+	// 				}).then((res) => {
+	// 					requestTab = res.data.usernameList;
+	// 					if (requestTab.length)
+	// 						props?.SetRequestList(requestTab);
+	// 					else
+	// 						props?.SetRequestList([]);
+	// 				}).catch((err) => {
+	// 					console.log(err.message);
+	// 					//SetRequestList([]);
+	// 				});
+	// 			}
+	// 		});
+	// 		props?.socket.on("DeclineFriend", (data: any) => {
+	// 			if (data.uuid === User.uuid) {
+	// 				axios.get(`http://90.66.192.148:7000/user/ListFriendRequested`, {
+	// 				headers: ({
+	// 					Authorization: 'Bearer ' + localStorage.getItem('token'),
+	// 				})
+	// 				}).then((res) => {
+	// 					requestedTab = res.data.ListFriendsRequested;
+	// 					if (requestedTab.length)
+	// 						props?.SetRequestedList(requestedTab);
+	// 					else
+	// 						props?.SetRequestedList([]);
+	// 				}).catch((err) => {
+	// 					console.log(err.message);
+	// 					//SetRequestList([]);
+	// 				});
+	// 			}
+	// 		});
+	// 	}
+	// }, [props?.socket, User]);
 
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem('token')) {
@@ -303,8 +303,9 @@ function Social(props: any) {
 			}
 			else
 				props?.setProfilePage([]);
+			props?.setbooleffect3(false);
 		}).catch((err) => {
-			console.log(err.response.data.message);
+			console.log(err);
 			navigate(location.pathname);
 		});
 	}
@@ -340,7 +341,7 @@ function Social(props: any) {
 			else
 				props?.setProfilePage([]);
 		}).catch((err) => {
-			console.log(err.response.data.message);
+			console.log(err);
 			navigate('/social');
 		});
 	}

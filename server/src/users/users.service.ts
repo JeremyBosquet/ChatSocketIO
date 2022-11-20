@@ -81,17 +81,14 @@ export class UsersService {
   }
 
   async findUserByUuid(uuid: string) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
     return find;
   }
 
   async ListFriendsWithUuid(uuid: string) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
-    if (find) return find.friends;
+    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    if (find)
+		return find.friends;
     return [];
   }
 
@@ -115,7 +112,8 @@ export class UsersService {
     const find = (await this.userRepository.find()).filter(
       (user) => user.uuid === uuid,
     )[0];
-    if (find) return find.friendsNotacceptedYet;
+    if (find)
+		return find.friendsNotacceptedYet;
     return null;
   }
 
@@ -123,7 +121,8 @@ export class UsersService {
     const find = (await this.userRepository.find()).filter(
       (user) => user.uuid === uuid,
     )[0];
-    if (find) return find.friendRequest;
+    if (find)
+		return find.friendRequest;
     return null;
   }
 
@@ -151,8 +150,30 @@ export class UsersService {
     const find = (await this.userRepository.find()).filter(
       (user) => user.uuid === uuid,
     )[0];
-    if (find) return find.blocked;
+    if (find)
+		return find.blocked;
     return null;
+  }
+
+  async getExp(uuid: string) {
+    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    if (find)
+		return find.exp;
+    return (undefined);
+  }
+
+  async addExp(uuid: string, exp : number) {
+    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    if (find) {
+		  let oldexp = find.exp;
+      exp = exp - (Number(oldexp.toString()[0]) / 100) * 2;
+      if (exp < 0)
+        exp = 0;
+      let newexp = Number((Number(oldexp) + Number(exp)).toFixed(2));
+      await this.userRepository.update({ uuid }, { exp :  newexp});
+      return 1;
+    }
+    return 0;
   }
 
   async IsFriendByUuid(uuid: string, userUuid: string) {

@@ -369,6 +369,8 @@
 @media screen and (max-width: 550px) {
 	.SocialPage{
 		height: calc(100vh - 100px);
-		overflow-y: scroll;
+		overflow:hidden;
+		overflow-y:scroll;
+		scrollbar-width: none;
 	}
 }

@@ -63,3 +63,9 @@ export class SearchDto {
   @Expose()
   username: string;
 }
+
+export class ExpDto {
+	@IsNotEmpty()
+	@Expose()
+	exp: number;
+  }

@@ -29,6 +29,16 @@
 			"database": "trantran",
 			"username": "jerem",
 			"password": "jerem"
+		},
+		{
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"database": "trantran",
+			"username": "jerem",
+			"password": "jerem",
+			"name": "bruh"
 		}
 	]
 }

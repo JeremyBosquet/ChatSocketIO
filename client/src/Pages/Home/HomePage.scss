@@ -31,7 +31,7 @@
 	h3 {
 		font-size: 30px;
 		width : 90px;
-		color :rgb(0, 0, 0);
+		color :rgb(255, 255, 255);
 		top : 50px;
 		position: relative;
 		left: 110px;
@@ -212,15 +212,123 @@
   font-family: 'Roboto', sans-serif;
 }
 
-.HomePage h1
-{
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	color: #fff;
-	font-family: Snell Roundhand, cursive;
-	font-size: 120px;
+.HomePage #myProfile {
+	display: flex;
+	height: 300px;
+	.userInfo
+	{
+		width: 100%;
+		margin-left: 20px;
+		margin-right: 20px;
+	}
+	.userImg
+	{
+		width: 150px;
+		height: 150px;
+		position : relative;
+		top : 20px;
+		margin-left: 10px;
+		object-fit: cover;
+		border-radius: 50%;
+	}
+	h3 {
+		position: relative;
+		top: 50px;
+		color: #fff;
+		font-size: 26px;
+	}
+	.expBar
+	{
+		width : 100%;
+		background: linear-gradient(135deg, #003554, #051923);
+		height: 35px;
+		top : 70px;
+		position: relative;
+		border-radius: 4px;
+		.myExp{
+			--expAmount : 0%;
+			background: linear-gradient(90deg, rgba(255,0,0,1) 35%, rgba(255,248,0,1) 100%);
+			width : var(--expAmount);
+			border: #000000;
+			height: 35px;
+			border-radius: 4px;
+			//top : 15px;
+			// left : 40px;
+			position: absolute;
+		}
+		p{
+			top : 4px;
+			color: #fff;
+			font-size: 24px;
+			display: flex;
+			height: fit-content;
+			justify-content: center;
+			position: relative;
+		}
+	}
+	#listMyGameParent{
+		top : 112px;
+		position: relative;
+		//margin-left : 180px;
+		background: linear-gradient(135deg, #003554, #051923);
+		padding: 10px;
+		//margin-bottom: 20px;
+		border-radius: 5px;
+		::-webkit-scrollbar { 
+			width: 15px;         /* width of the entire scrollbar */
+		}
+		::-webkit-scrollbar-track {
+			background: #0582CA; 
+			border-radius: 10px;      /* color of the tracking area */
+		}
+		
+		::-webkit-scrollbar-thumb {
+			background: linear-gradient(135deg, #003554, #051923);    /* color of the scroll thumb */
+			border-radius: 10px;       /* roundness of the scroll thumb */
+			border: 1px solid #0582CA; /* creates padding around scroll thumb */
+		}
+		#listMyGameScroll{
+  			scrollbar-color: #051923 #0582CA;
+			overflow:hidden;
+			overflow-y:scroll;
+			height: 85px;
+
+			.green{
+				color :#2fbb00
+			}
+
+			.red{
+				color :#bf0000
+			}
+
+			li{
+				list-style-type: none;
+				display : flex;
+				//position: relative;
+				font-size: 25px;
+				margin-bottom: 2px;
+			}
+		}
+
+		#listMyGame{
+			height: 85px;
+			overflow: hidden;
+
+			.green{
+				color :#2fbb00
+			}
+
+			.red{
+				color :#bf0000
+			}
+
+			li{
+				list-style-type: none;
+				position: relative;
+				font-size: 25px;
+			}
+		}
+	}
 }
 
 .HomePage #login

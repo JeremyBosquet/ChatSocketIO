@@ -151,7 +151,7 @@ function GameSpectatePage() {
   }, [socket, roomId, navigate, notification]);
   return (
     <div className="main">
-      <NavBar 
+      {/* Bar 
 			socket={null}
 			setSocket={null}
 			friendList={friendList}
@@ -164,7 +164,7 @@ function GameSpectatePage() {
 			SetRequestedList={SetRequestedList}
 			setProfilePage={setProfilePage}
 			setProfileDisplayed={setProfileDisplayed}
-			SetHistoryList={SetHistoryList}/>
+			SetHistoryList={SetHistoryList}/> */}
       {!roomId ? (
         <div>
           <p>GameSpectatePage</p>

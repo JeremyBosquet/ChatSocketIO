@@ -109,27 +109,11 @@ function NavBar(props: any) {
 			</div>
         <>
             <div id="navButtons">
-              <NavLink to="/profile" id="profile" className="click">
-                <FaUserCircle className="icon"/ >
-              </NavLink>
-
-              <NavLink to="/settings" id="settings" className="click">
-                <IoMdSettings className="icon"/>
-              </NavLink>
-
-              <NavLink to="/chat" id="chat" className="click">
+			<NavLink to="/chat" id="chat" className="click">
                 <IoMdChatbubbles className="icon" />
-              </NavLink>
-
-              <NavLink to="/game" id="game" className="click" onClick={() => handleClickNav("/game")}>
-                <IoGameController className="icon"/>
-              </NavLink>
-              
-              <NavLink to="/game/spectate" id="spectate" className="click" onClick={() => handleClickNav("/game/spectate")}>
-                <BsFillEyeFill className="icon"/>
-              </NavLink>
-
-              <>
+            </NavLink>
+			
+			<>
                 {friendRequest ? (
                   <button id="social" className="click" onClick={() => {openNav()}}>
                         <FaUserFriends className="icon"/>
@@ -150,6 +134,18 @@ function NavBar(props: any) {
                   </button>
                 )}
               </>
+
+              <NavLink to="/game" id="game" className="click" onClick={() => handleClickNav("/game")}>
+                <IoGameController className="icon"/>
+              </NavLink>
+              
+              <NavLink to="/game/spectate" id="spectate" className="click" onClick={() => handleClickNav("/game/spectate")}>
+                <BsFillEyeFill className="icon"/>
+              </NavLink>
+
+			  <NavLink to="/settings" id="settings" className="click">
+                <IoMdSettings className="icon"/>
+              </NavLink>
 
               <NavLink to="/logout" id="logout" className="click">
                 <IoLogOutSharp className="icon"/>

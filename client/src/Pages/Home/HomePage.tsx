@@ -14,7 +14,7 @@ import {AiOutlineClose} from "react-icons/ai";
 import React from "react";
 import NavBar from "../../Components/Nav/NavBar";
 import {IsFriend, IsRequest, IsRequested, IsBlocked, AddOrRemoveFriend, CancelFriendAdd, AcceptFriend, DeclineFriendAdd, BlockOrUnblockUser, HideProfile} from "../../Components/Utils/socialCheck"
-import {getExp} from '../../Components/Utils/getExp'
+import {getExp, getMyExp} from '../../Components/Utils/getExp'
 import { whoWon } from "../../Components/Utils/whoWon";
 
 function HomePage() {
@@ -30,7 +30,9 @@ function HomePage() {
   const [booleffect2, setbooleffect2] = useState<boolean>(true);
   const [booleffect3, setbooleffect3] = useState<boolean>(false);
   const firstrender = useRef<boolean>(true);
+  const firstrender2 = useRef<boolean>(true);
   const [socket, setSocket] = useState<Socket>();
+  const [myHistoryList, SetMyHistoryList] = useState<any[]>([]);
 
   const [checkedProfile, setCheckedProfile] = useState<boolean>(false);
   const [checkedSettings, setCheckedSettings] = useState<boolean>(false);
@@ -41,6 +43,7 @@ function HomePage() {
   const [User, setUser] = useState<any>();
   const [friendRequest, setFriendRequest] = useState<number>();
   const [ProfileExp, setProfileExp] = useState<any>();
+  const [myProfileExp, setMyProfileExp] = useState<any>();
 
 
 	const [friendList, SetFriendList] = useState<any[]>([]);
@@ -60,9 +63,6 @@ function HomePage() {
   useEffect(() => {
 	if (socket) {
 		socket.removeAllListeners();
-		socket.on("stpUneNotifstpUneNotif", (data: any) => {
-			createNotification("info", "test");
-		});
 		socket.on("newFriend", (data: any) => {
 			if (data.uuid === User.uuid && data?.username) {
 				createNotification("info", "New friend request from: " + data.username);
@@ -166,6 +166,17 @@ function HomePage() {
 	}
 	}), [profilePage];
 
+	useEffect (() => {
+		if (firstrender2.current)
+		{
+			firstrender2.current = false;
+			return;
+		}
+		if (!booleffect2)
+			if (User)
+				getMyExp(User.uuid, setMyProfileExp);
+	}), [User];
+
   async function GetLoggedInfoAndUser() {
     if (localStorage.getItem("token")) {
       await axios
@@ -183,21 +194,35 @@ function HomePage() {
           console.log(err.message);
           setUser(undefined);
         });
-      await axios
-        .get(`http://90.66.192.148:7000/user`, {
+      await axios.get(`http://90.66.192.148:7000/user`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
         })
         .then((res) => {
-          setUser(res.data.User);
-        })
-        .catch((err) => {
-          console.log(err.message);
-          setUser(undefined);
-        });
-      await axios
-        .get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
+			setUser(res.data.User);
+			axios
+			  .get(
+				`http://90.66.192.148:7000/api/room/getGameOfUser/` +
+				  res.data.User.uuid,
+				{
+				  headers: {
+					Authorization: "Bearer " + localStorage.getItem("token"),
+				  },
+				}
+			  )
+			  .then((res) => {
+				if (res.data && res.data.length)
+					SetMyHistoryList(res.data);
+				else if (res.data)
+					SetMyHistoryList([]);
+			  });
+			console.log(res.data.User);
+			}).catch((err) => {
+				console.log(err.message);
+				setUser(undefined);
+		});
+      await axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -237,21 +262,89 @@ function HomePage() {
           ) : (
 			<>
 			<div className='blur'>
-            <NavBar 
-			socket={socket}
-			setSocket={setSocket}
-			friendList={friendList}
-			SetFriendList={SetFriendList}
-			blockList={blockList}
-			SetBlockList={SetBlockList}
-			requestList={requestList}
-			SetRequestList={SetRequestList}
-			requestedList={requestedList}
-			SetRequestedList={SetRequestedList}
-			setProfilePage={setProfilePage}
-			setProfileDisplayed={setProfileDisplayed}
-			SetHistoryList={SetHistoryList}
-			setbooleffect3={setbooleffect3}/>
+				<NavBar 
+				socket={socket}
+				setSocket={setSocket}
+				friendList={friendList}
+				SetFriendList={SetFriendList}
+				blockList={blockList}
+				SetBlockList={SetBlockList}
+				requestList={requestList}
+				SetRequestList={SetRequestList}
+				requestedList={requestedList}
+				SetRequestedList={SetRequestedList}
+				setProfilePage={setProfilePage}
+				setProfileDisplayed={setProfileDisplayed}
+				SetHistoryList={SetHistoryList}
+				setbooleffect3={setbooleffect3}/>
+				<div id="myProfile">
+					<img
+					src={User?.image}
+					alt="user_img"
+					className="userImg"
+					width="384"
+					height="256"
+					/>
+					<div className="userInfo">
+						<h3> {User?.username} </h3>
+						<div className="expBar">
+							<span className="myExp"> </span>
+							<p>{myProfileExp}</p>
+						</div>
+						<div id="listMyGameParent">
+						{myHistoryList.length ? 
+						(
+							myHistoryList.length > 3 ? 
+							(
+								<div id="listMyGameScroll">
+								{myHistoryList.map((game, index) => (
+									<ul key={index}>
+									{whoWon(User.uuid,game.playerA,game.playerB,game.status) === "Victory" ? (
+										<li>
+										<span className="green">
+											{game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid,game.playerA,game.playerB,game.status)}
+										</span>
+										</li>
+									) : (
+										<li>
+										<span className="red">
+											{game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid,game.playerA,game.playerB, game.status)}
+										</span>
+										</li>
+									)}
+									</ul>
+								))}
+								</div>
+							)
+
+							:
+
+							(
+								<div id="listMyGame">
+								{myHistoryList.map((game, index) => (
+									<ul key={index}>
+									{whoWon(User.uuid,game.playerA,game.playerB,game.status) === "Victory" ? (
+										<li>
+										<span className="green">
+											{game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid,game.playerA,game.playerB,game.status)}
+										</span>
+										</li>
+									) : (
+										<li>
+										<span className="red">
+											{game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid,game.playerA,game.playerB, game.status)}
+										</span>
+										</li>
+									)}
+									</ul>
+								))}
+								</div>
+							)
+
+						) : null}
+						</div>
+					</div>
+				</div>
 			</div>
 			<div className="popup">
 			{

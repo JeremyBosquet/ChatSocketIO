@@ -15,17 +15,15 @@ export class RoomService {
       }
     }
   }
+  async updateRoom(roomId: string, data: any): Promise<any> {
+    return await this.roomRepository.update(roomId, data);
+  }
   async clearDatabase() {
     console.log('Clear database in progress :');
     const list = await this.roomRepository.find();
     for (let i = 0; i < list.length; i++) {
       if (list[i].status != 'finished') {
         console.log('Clearing room', list[i].id);
-        list[i].playerA = null;
-        list[i].playerB = null;
-        list[i].nbPlayers = 0;
-        list[i].status = 'waiting';
-        //await this.roomRepository.save(list[i]);
         await this.roomRepository.remove(list[i]);
       } else console.log('Finished room', list[i].id);
     }
@@ -57,9 +55,7 @@ export class RoomService {
     return await this.roomRepository.save(room);
   }
   async getRoom(roomId: string): Promise<Room> {
-    return await (
-      await this.roomRepository.find()
-    ).filter((room) => room.id === roomId)[0];
+    return await (this.roomRepository.findOneBy({ id: roomId }));
   }
   async removeFromID(roomId: string): Promise<void> {
     await this.roomRepository.delete(roomId);

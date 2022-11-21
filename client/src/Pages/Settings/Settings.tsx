@@ -135,10 +135,9 @@ function Settings() {
         createNotification("success", "Username succefuly changed");
       })
       .catch((err) => {
-        //console.log(err.response.statusText);
         createNotification(
           "error",
-          "Username is either too short , too long or made of only space char"
+          err.response.data.message
         );
       });
   };
@@ -269,7 +268,6 @@ function Settings() {
                   <p> Current username : {User.username} </p>
                   <form onSubmit={ChangeUsername}>
                     <p>
-                      {" "}
                       New Username : &nbsp;
                       <input
                         type="text"
@@ -284,7 +282,6 @@ function Settings() {
                     </p>
                   </form>
                   <p>
-                    {" "}
                     Current Avatar :
                     <img
                       src={User.image}
@@ -296,7 +293,6 @@ function Settings() {
                   </p>
                   <form onSubmit={ChangeAvatar}>
                     <p>
-                      {" "}
                       New Avatar : &nbsp;
                       <input
                         type="file"

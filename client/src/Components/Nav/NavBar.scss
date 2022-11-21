@@ -54,6 +54,10 @@
 {
 	display: flex;
 	margin-right: 10px;
+	#chat {
+		position: relative;
+		top : 3px;
+	}
 }
 
 .NavBar .click

@@ -85,6 +85,21 @@ export class UsersService {
     return find;
   }
 
+  async findFriendByUuid(Useruuid : string, uuid: string) {
+    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+	if (find)
+	{
+		for (let i = 0; i < find.blocked.length; i++)
+			if (find.blocked[i].uuid === Useruuid)
+				return (2);
+		for (let i = 0; i < find.blockedby.length; i++)
+			if (find.blockedby[i].uuid === Useruuid)
+				return (3);
+	}
+    return find;
+  }
+
+
   async ListFriendsWithUuid(uuid: string) {
     const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
     if (find)

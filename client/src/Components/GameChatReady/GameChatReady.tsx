@@ -167,7 +167,8 @@ function GameChatReady(props: props) {
       props.setPlayerId(messages.data.User.uuid);
       props.setPlayerName(messages.data.User.username);
       setNotificaton(false);
-      setSearchingDisplay(true);
+      setSearchingDisplay(false);
+      setConfiguringDisplay(true);
     }
   };
   useEffect(() => {

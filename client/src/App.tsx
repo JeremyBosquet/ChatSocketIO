@@ -63,7 +63,7 @@ function App() {
 			<Route path="/login" element={<SignIn />}></Route>
 			<Route path="/login/return/" element={<GetToken />}></Route>
 			<Route path="/settings" element={<Settings />}></Route>
-			<Route path="/profile" element={<Protected><Profile /></Protected>}></Route>
+			{/* <Route path="/profile" element={<Protected><Profile /></Protected>}></Route> */}
 			<Route path="/logout" element={<Protected><Logout /></Protected>}></Route>
 			<Route path="/twoAuth" element={<Protected><TwoAuth /></Protected>}></Route>
 			{/* <Route path="/social" element={<Protected><Social /></Protected>}></Route> */}

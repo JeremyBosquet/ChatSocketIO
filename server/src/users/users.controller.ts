@@ -699,21 +699,22 @@ export class UsersController {
 		!Name ||
 		!newName ||
 		/^\s*$/.test(newName) ||
-		newName.length < 1 ||
+		newName.length < 2 ||
 		newName.length > 16
 	  ) {
-		return res.status(HttpStatus.NOT_MODIFIED).json({
-		  statusCode: HttpStatus.NOT_MODIFIED,
+		return res.status(HttpStatus.BAD_REQUEST).json({
+		  statusCode: HttpStatus.BAD_REQUEST,
 		  message:
 			'Username is either too short , too long or made of only space char',
-		  error: 'NOT_MODIFIED',
+		  error: 'BAD_REQUEST',
 		});
 	  }
 	  if (!(await this.userService.ChangeUsername(User.uuid, newName))) {
-		return res.status(HttpStatus.NOT_MODIFIED).json({
-		  statusCode: HttpStatus.NOT_MODIFIED,
+		return res.status(HttpStatus.BAD_REQUEST).json({
+		  statusCode: HttpStatus.BAD_REQUEST,
+		  test : 'yolo',
 		  message: 'Username already exist',
-		  error: 'NOT_MODIFIED',
+		  error: 'BAD_REQUEST',
 		});
 	  }
 	  return res.status(HttpStatus.OK).json({
@@ -833,15 +834,30 @@ export class UsersController {
 	//console.log(req)
 	//const uuid = param["uuid"];
 	if (User && param.uuid) {
-	  const UserUuid = await this.userService.findUserByUuid(param.uuid);
+	  const UserUuid = await this.userService.findFriendByUuid(User.uuid, param.uuid);
 	  if (UserUuid) {
-		return res.status(HttpStatus.OK).json({
-		  statusCode: HttpStatus.OK,
-		  message: 'succes',
-		  User: plainToClass(SendUserDto, UserUuid, {
-			excludeExtraneousValues: true,
-		  }),
-		});
+		switch(UserUuid)
+		{
+			case 2:
+				return res.status(HttpStatus.BAD_REQUEST).json({
+					statusCode: HttpStatus.BAD_REQUEST,
+					message: "You can't access the profile of someone who blocked you",
+					error: 'BAD_REQUEST',
+				  });
+			case 3:
+				return res.status(HttpStatus.BAD_REQUEST).json({
+					statusCode: HttpStatus.BAD_REQUEST,
+					message: "You can't access the profile of someoneyou blocked",
+					error: 'BAD_REQUEST',
+					});
+			default :
+				return res.status(HttpStatus.OK).json({
+					statusCode: HttpStatus.OK,
+					message: 'succes',
+					User: plainToClass(SendUserDto, UserUuid, {
+					excludeExtraneousValues: true,
+					}) });
+		}
 	  }
 	  return res.status(HttpStatus.BAD_REQUEST).json({
 		statusCode: HttpStatus.BAD_REQUEST,

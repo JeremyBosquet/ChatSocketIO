@@ -149,6 +149,9 @@ function ChannelPage() {
 		  	socketGame?.removeListener("roomUpdated");
 		  	socketGame?.removeListener("gameFetchInvite");
 		  
+			socketGame.on("gameRemoveInvite", (data: any) => {
+				setInviteGames(inviteGames.filter((invite) => invite.roomId !== data.roomId));
+			});
 			socketGame.on("gameFetchInvite", (data: any) => {
 				if (data?.target && data?.room && data?.switch == true)
 				{

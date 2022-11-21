@@ -5,6 +5,7 @@ const initialState = {
   logged: false,
   connected: false,
   activated: false,
+  socket: null
 };
 
 export const authSlice = createSlice({
@@ -24,15 +25,18 @@ export const authSlice = createSlice({
     setActivated: (state: any, action: any) => {
       state.activated = action.payload;
     },
+    setSocket: (state: any, action: any) => {
+      state.socket = action.payload;
+    },
   },
 });
 
-export const { setUser, setLogged, setConnected, setActivated } =
-  authSlice.actions;
+export const { setUser, setLogged, setConnected, setActivated, setSocket } = authSlice.actions;
 
 export const getUser = (state: any) => state.auth.user;
 export const getLogged = (state: any) => state.auth.logged;
 export const getActivated = (state: any) => state.auth.activated;
 export const getConnected = (state: any) => state.auth.connected;
+export const getSocket = (state: any) => state.auth.socket;
 
 export default authSlice.reducer;

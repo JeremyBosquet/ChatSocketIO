@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import KillSocket from '../../Components/KillSocket/KillSocket';
 import { createNotification } from '../../Components/notif/Notif';
 import PrivateMessages from '../../Components/PrivateMessages/PrivateMessages';
 import { getLogged, getUser, setLogged, setUser } from '../../Redux/authSlice';
@@ -14,6 +15,10 @@ function DMPage() {
     const user = useSelector(getUser);
     const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+
+	KillSocket("spectate");
+	KillSocket("game");
 
 	useEffect(() => {
 		const getUserInfos = async () => {

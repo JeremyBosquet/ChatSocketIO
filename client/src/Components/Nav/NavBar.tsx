@@ -18,6 +18,8 @@ import { GrClose } from "react-icons/gr";
 import {AiOutlineClose} from "react-icons/ai";
 import "./NavBar.scss";
 import Social from "../Social/Social";
+import { useDispatch, useSelector } from "react-redux";
+import { getSockeGame, getSockeGameChat, getSockeSpectate, setSocketGame, setSocketGameChat, setSocketSpectate } from "../../Redux/gameSlice";
 
 function NavBar(props: any) {
   let navigate = useNavigate();
@@ -32,6 +34,8 @@ function NavBar(props: any) {
   const [IsTwoAuthActivated, setActivated] = useState<boolean>();
   const [IsTwoAuthConnected, setConnected] = useState<boolean>();
   const [friendRequest, setFriendRequest] = useState<number>();
+
+  
 
   async function GetLoggedInfo() {
 
@@ -72,12 +76,6 @@ function NavBar(props: any) {
     setbooleffect2(false);
   }
 
-  function closeSocket() {
-    if (props?.socket) {
-      props.socket.disconnect();
-      if (props?.setSocket) props.setSocket(undefined);
-    }
-  }
 
   /* Set the width of the side navigation to 250px */
   function openNav() {
@@ -95,9 +93,32 @@ function NavBar(props: any) {
     }
   }, []);
 
+  const socketGame = useSelector(getSockeGame);
+  const socketSpectate = useSelector(getSockeSpectate);
+  const socketChatGame = useSelector(getSockeGameChat);
+  const dispatch = useDispatch();
+  function closeSocketGame() {
+    if (socketGame)
+      socketGame.disconnect();
+      dispatch(setSocketGame(null));
+  }
+  function closeSocketSpectate() {
+    if (socketSpectate)
+    socketSpectate.disconnect();
+    dispatch(setSocketSpectate(null));
+  }
+  function closeSocketChatGame() {
+    if (socketChatGame)
+    socketChatGame.disconnect();
+    dispatch(setSocketGameChat(null));
+  }
   const handleClickNav = (pathname: string) => {
-    if (location.pathname !== pathname)
-      closeSocket();
+    if (!location.pathname.startsWith(pathname) && pathname == "/game")
+      closeSocketGame();
+    if (!location.pathname.startsWith(pathname) && pathname == "/game/spectate")
+    closeSocketSpectate();
+    if (!location.pathname.startsWith(pathname) && pathname == "/chat")
+    closeSocketChatGame();
   }
 
   return (
@@ -109,7 +130,7 @@ function NavBar(props: any) {
 			</div>
         <>
             <div id="navButtons">
-			<NavLink to="/chat" id="chat" className="click">
+			<NavLink to="/chat" id="chat" className="click" onClick={() => handleClickNav("/chat")}>
                 <IoMdChatbubbles className="icon" />
             </NavLink>
 			

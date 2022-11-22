@@ -30,7 +30,6 @@
 	font-size : 100%;
 	h3 {
 		font-size: 30px;
-		width : 90px;
 		color :rgb(255, 255, 255);
 		top : 50px;
 		position: relative;
@@ -206,7 +205,8 @@
 
 .main
 {
-  background: linear-gradient(135deg, #003554, #051923);
+  --light_blue : #02254b;
+  background: #000814;
   height: 100vh;
   overflow: hidden;
   font-family: 'Roboto', sans-serif;
@@ -218,8 +218,8 @@
 	.userInfo
 	{
 		width: 100%;
-		margin-left: 20px;
-		margin-right: 20px;
+		margin-left: 18px;
+		margin-right: 18px;
 	}
 	.userImg
 	{
@@ -240,7 +240,7 @@
 	.expBar
 	{
 		width : 100%;
-		background: linear-gradient(135deg, #003554, #051923);
+		background: var(--light_blue);
 		height: 35px;
 		top : 70px;
 		position: relative;
@@ -270,7 +270,7 @@
 		top : 112px;
 		position: relative;
 		//margin-left : 180px;
-		background: linear-gradient(135deg, #003554, #051923);
+		background: var(--light_blue);
 		padding: 10px;
 		//margin-bottom: 20px;
 		border-radius: 5px;
@@ -278,17 +278,17 @@
 			width: 15px;         /* width of the entire scrollbar */
 		}
 		::-webkit-scrollbar-track {
-			background: #0582CA; 
+			background: #ffffff; 
 			border-radius: 10px;      /* color of the tracking area */
 		}
 		
 		::-webkit-scrollbar-thumb {
-			background: linear-gradient(135deg, #003554, #051923);    /* color of the scroll thumb */
+			background: var(--light_blue);    /* color of the scroll thumb */
 			border-radius: 10px;       /* roundness of the scroll thumb */
-			border: 1px solid #0582CA; /* creates padding around scroll thumb */
+			border: 1px solid #ffffff; /* creates padding around scroll thumb */
 		}
 		#listMyGameScroll{
-  			scrollbar-color: #051923 #0582CA;
+  			scrollbar-color: var(--light_blue) #ffffff;
 			overflow:hidden;
 			overflow-y:scroll;
 			height: 85px;
@@ -307,6 +307,7 @@
 				//position: relative;
 				font-size: 25px;
 				margin-bottom: 2px;
+				margin-right: 0px;
 			}
 		}
 
@@ -347,15 +348,37 @@
 	border-radius: 30px;
 }
 
-@media screen and (max-width: 550px) {
+@media screen and (max-width: 790px) {
 	.popup{
 		h3 {
 			margin-top: 10px;
-			font-size: 14px;
+			font-size: 16px;
 		}
 		.expBar
 		{
 			margin-top: 8px;
+		}
+	}
+}
+
+@media screen and (max-width: 500px) {
+	.popup{
+		width: 75%;
+		h3 {
+			font-size : 25px;
+		}
+	}
+	.HomePage {
+		
+		#myProfile{
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			.userInfo {
+				align-items: center;
+				width: 80%;
+				margin: 0;
+			}
 		}
 	}
 }

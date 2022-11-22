@@ -11,8 +11,10 @@ import { redirect, useNavigate, useLocation } from "react-router-dom";
 import { createNotification } from "../../Components/notif/Notif";
 import React from "react";
 import NavBar from "../../Components/Nav/NavBar";
+import KillSocket from "../../Components/KillSocket/KillSocket";
 
 function Settings() {
+  KillSocket("all");
   let navigate = useNavigate();
   let booleffect = false;
   const [changename, setChangename] = useState<string>();

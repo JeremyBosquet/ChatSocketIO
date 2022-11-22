@@ -13,6 +13,7 @@ import NavBar from "../../Components/Nav/NavBar";
 import "../../Pages/Home/HomePage.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeSpectate, setSocketGame, setSocketSpectate } from "../../Redux/gameSlice";
+import KillSocket from "../../Components/KillSocket/KillSocket";
 
 interface IPlayer {
   id: string;
@@ -68,6 +69,7 @@ function GameSpectatePage() {
   const { roomId } = useParams<{ roomId: string }>();
   const dispatch = useDispatch();
   const socket = useSelector(getSockeSpectate);
+  const [display, setDisplay] = useState<Boolean>(false);
 
   const [friendList, SetFriendList] = useState<any[]>([]);
 	const [blockList, SetBlockList] = useState<any[]>([]);
@@ -76,6 +78,10 @@ function GameSpectatePage() {
 	const [profilePage, setProfilePage] = useState<any>(null);
 	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
 	const [historyList, SetHistoryList] = useState<any[]>([]);
+
+  
+	KillSocket("game");
+	KillSocket("chat");
 
   const getRooms = async (e: any) => {
     const messages = await axios.get(
@@ -129,8 +135,9 @@ function GameSpectatePage() {
         else if (data.playerB.score === 10 && !notification)
           createNotification("success", "PlayerB a gagner");
         setNotificaton(true);
-        navigate("/game/spectate");
+        setDisplay(false);
         setRoom(undefined);
+        navigate("/game/spectate");
       });
       socket.on("gameForceEnd", (data: IRoom) => {
         console.log(
@@ -140,8 +147,9 @@ function GameSpectatePage() {
         if (!notification)
           createNotification("info", "L'autre connard a leave 3");
         setNotificaton(true);
-        navigate("/game/spectate");
+        setDisplay(false);
         setRoom(undefined);
+        navigate("/game/spectate");
       });
       socket.on("roomUpdated", (data: IRoom) => {
         console.log("roomUpdated", data);
@@ -149,9 +157,28 @@ function GameSpectatePage() {
       });
     }
   }, [socket, roomId, navigate, notification]);
+
+  useEffect(() => {
+    const checkId = async () => {
+      if (roomId) {
+        console.log("room", roomId);
+        const result = await axios.get(`http://90.66.192.148:7000/api/room/checkGame/` + roomId);
+        if (result.data) {
+          setDisplay(true);
+        }
+        else {
+          navigate("/game/spectate");
+          setDisplay(false);
+        }
+        console.log("result", result.data);
+      }
+    };
+    checkId();
+  }, [roomId]);
+
   return (
     <div className="main">
-      {/* Bar 
+      { <NavBar 
 			socket={null}
 			setSocket={null}
 			friendList={friendList}
@@ -164,10 +191,10 @@ function GameSpectatePage() {
 			SetRequestedList={SetRequestedList}
 			setProfilePage={setProfilePage}
 			setProfileDisplayed={setProfileDisplayed}
-			SetHistoryList={SetHistoryList}/> */}
+			SetHistoryList={SetHistoryList}/> }
       {!roomId ? (
         <div>
-          <p>GameSpectatePage</p>
+          <p>List of game :</p>
           {rooms.map((room: IRoom) => (
             <RoomSpectateInfo
               key={room.id}
@@ -183,7 +210,6 @@ function GameSpectatePage() {
         </div>
       ) : (
         <div>
-          <p>GameSpectatePage {roomId}</p>
           {room ? <GameSpectate socket={socket} room={room} /> : null}
         </div>
       )}

@@ -83,6 +83,8 @@ export class RoomGateway {
             await this.roomService.save(room);
             this.server.emit('roomFinished', room);
             this.server.in('room-' + room.id).emit('gameEnd', room);
+            this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
+            this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
             clearInterval(intervalList[room.id]);
             //roomList[room.id] = null;
           }
@@ -329,6 +331,8 @@ export class RoomGateway {
         } 
         else
         {
+          this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
+          this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
           this.server.in('room-' + room.id).emit('playerLeave');
           // detruire la room car l'autre a quitté
           await this.roomService.removeFromID(room.id);
@@ -373,6 +377,8 @@ export class RoomGateway {
           else
           {
             this.server.in('room-' + room.id).emit('playerLeave');
+            this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
+            this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
             // detruire la room car l'autre a quitté
             await this.roomService.removeFromID(room.id);
           }
@@ -389,6 +395,8 @@ export class RoomGateway {
           this.server.to('room-' + room.id).emit('gameForceEnd', room);
           if (intervalList[room.id]) clearInterval(intervalList[room.id]);
           roomList[room.id] = null;
+          this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
+          this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
           this.roomService.removeFromID(room.id);
         } else {
           room.status = 'waiting'; // remove that
@@ -416,11 +424,11 @@ export class RoomGateway {
         data?.y
      ) {
         if ('playerA' === data.id) {
-          client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerA", x: 15, y: data.y});
-          await this.roomService.updateRoom(client.data.roomId, {playerA: {x: 15, y: data.y, score : room.playerA.score}});
+          client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerA", x: 85, y: data.y});
+          await this.roomService.updateRoom(client.data.roomId, {playerA: {x: 15, y: data.y, score : room.playerA.score, status: "ready", id: client.data.playerId, name: client.data.playerName}});
         } else if ('playerB' === data.id) {
           client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerB", x: 85, y: data.y});
-          await this.roomService.updateRoom(client.data.roomId, {playerB: {x: 85, y: data.y, score : room.playerB.score}});
+          await this.roomService.updateRoom(client.data.roomId, {playerB: {x: 85, y: data.y, score : room.playerB.score, status: "ready", id: client.data.playerId, name: client.data.playerName}});
         }
       }
     }
@@ -540,11 +548,15 @@ export class RoomGateway {
             await this.server.to('room-' + room.id).emit('configuring', room);
             room.status = 'configuring' + "|" + room.playerA.id + "|" + room.playerB.id;
             await this.roomService.save(room);
+            this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
+            this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
           }
         }
         catch (e) {
           console.log(e);
-          // Emit remove room invitation
+          this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
+          this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
+          // Redirect to home
         }
       }
 
@@ -594,6 +606,24 @@ export class RoomGateway {
         await this.server.emit('gameFetchInvite', {room : room, target: data?.targetId, switch: false});
 
         
+      }
+    }
+  }
+
+  @SubscribeMessage('gameAskInvite')
+  async gameAskInvite(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: any,
+  ): Promise<void> {
+    {
+      if (data?.id){
+        const rooms = await this.roomService.getRooms();
+        rooms.forEach(room => {
+          if (room.status.startsWith('waiting|') && room.status.includes(data.id))
+          {
+            this.server.emit('gameFetchInvite', {room : room, target: data.id, switch: false});
+          }
+        });
       }
     }
   }

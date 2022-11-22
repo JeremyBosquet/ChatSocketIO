@@ -8,6 +8,7 @@ import NavBar from "../../Components/Nav/NavBar";
 import "../../Pages/Home/HomePage.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeGameChat, setSocketGame } from "../../Redux/gameSlice";
+import KillSocket from "../../Components/KillSocket/KillSocket";
 
 interface IPlayer {
   id: string;
@@ -73,6 +74,9 @@ function GamePlayingPage() {
 	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
 	const [historyList, SetHistoryList] = useState<any[]>([]);
 
+  
+	KillSocket("chat");
+	KillSocket("spectate");
 
   useEffect(() => {
     // Connect to the socket

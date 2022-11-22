@@ -13,6 +13,7 @@ import { io } from 'socket.io-client';
 import GamePlay from '../../Components/GamePlay/GamePlay';
 import GameReady from '../../Components/GameReady/GameReady';
 import GameChatReady from '../../Components/GameChatReady/GameChatReady';
+import KillSocket from '../../Components/KillSocket/KillSocket';
 
 
 interface IPlayer {
@@ -89,6 +90,8 @@ function ChannelPage() {
 	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
 	const [historyList, SetHistoryList] = useState<any[]>([]);
   
+	KillSocket("game");
+	KillSocket("spectate");
 
 	useEffect(() => {
 		const getUserInfos = async () => {
@@ -150,8 +153,17 @@ function ChannelPage() {
 		  	socketGame?.removeListener("gameFetchInvite");
 		  
 			socketGame.on("gameRemoveInvite", (data: any) => {
-				setInviteGames(inviteGames.filter((invite) => invite.roomId !== data.roomId));
+				if (data?.target && data?.room)
+				{
+					console.log("gameFetchInvite", data?.target, user.uuid)
+					if (data?.target === user.uuid && data.room?.id)
+					{
+						setInviteGames(inviteGames.filter((invite) => invite.roomId !== data.room?.id));
+					}
+				}
 			});
+
+			socketGame.emit("gameAskInvite", {id: user.uuid});
 			socketGame.on("gameFetchInvite", (data: any) => {
 				if (data?.target && data?.room && data?.switch == true)
 				{
@@ -173,9 +185,10 @@ function ChannelPage() {
 					{
 						const newInvitation : IInvites = {
 							requestFrom : data.room?.playerA.id,
-							roomId: data.room?.id,
+							roomId: data.room?.id, 
 						}
-						setInviteGames([...inviteGames, newInvitation]);
+						if (inviteGames.filter((invite) => invite.roomId === data.room.id).length === 0)
+							setInviteGames([...inviteGames, newInvitation]);
 					}
 				}
 			});

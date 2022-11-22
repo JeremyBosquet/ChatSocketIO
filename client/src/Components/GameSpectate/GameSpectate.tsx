@@ -235,7 +235,6 @@ function GameSpectate(props: props) {
   ]);
   return (
     <div>
-      <p>Game (t'es une merde) :</p>
       <GameBoard socket={props.socket} room={props.room} />
       <div id="gameMainCanvas">
         <Stage
@@ -244,7 +243,7 @@ function GameSpectate(props: props) {
           className="gameMainCanvas"
         >
           <Layer>
-            <Rect width={9000} height={8000} x={0} y={0} fill="gray" />
+          <Rect width={windowsWidth} height={windowsHeight} x={0} y={0} fill="gray" />
             {
               <Rect
                 ref={playerA.ref}

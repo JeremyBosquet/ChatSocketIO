@@ -8,6 +8,7 @@ import React from "react";
 
 import "./Profile.scss";
 import NavBar from "../../Components/Nav/NavBar";
+import KillSocket from "../../Components/KillSocket/KillSocket";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 
@@ -15,7 +16,7 @@ function Profile() {
   let navigate = useNavigate();
   let booleffect = false;
   const token = localStorage.getItem("token");
-
+  KillSocket("all");
   const [booleffect2, setbooleffect2] = useState<boolean>(true);
   const [myHistoryList, SetMyHistoryList] = useState<any[]>([]);
   const firstrender = useRef<boolean>(true);

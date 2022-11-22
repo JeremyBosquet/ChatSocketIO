@@ -16,6 +16,7 @@ import NavBar from "../../Components/Nav/NavBar";
 import {IsFriend, IsRequest, IsRequested, IsBlocked, AddOrRemoveFriend, CancelFriendAdd, AcceptFriend, DeclineFriendAdd, BlockOrUnblockUser, HideProfile} from "../../Components/Utils/socialCheck"
 import {getExp, getMyExp} from '../../Components/Utils/getExp'
 import { whoWon } from "../../Components/Utils/whoWon";
+import KillSocket from "../../Components/KillSocket/KillSocket";
 
 function HomePage() {
   let navigate = useNavigate();
@@ -53,6 +54,9 @@ function HomePage() {
 	const [profilePage, setProfilePage] = useState<any>(null);
 	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
 	const [historyList, SetHistoryList] = useState<any[]>([]);
+
+
+	KillSocket("all");
 
   useEffect(() => {
     // Connect to the socket
@@ -387,7 +391,7 @@ function HomePage() {
 						{
 							true ?
 							(
-								historyList.length >= 0 ?
+								historyList.length > 3 ?
 								(
 									<div id='listGameScroll'>
 									{

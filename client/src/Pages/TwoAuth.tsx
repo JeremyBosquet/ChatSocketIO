@@ -6,8 +6,10 @@ import { redirect, useNavigate, useLocation } from "react-router-dom";
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 import { createNotification } from "../Components/notif/Notif";
 import React from "react";
+import KillSocket from "../Components/KillSocket/KillSocket";
 
 function TwoAuth() {
+  KillSocket("all");
   let navigate = useNavigate();
   let booleffect = false;
   const [print, setPrint] = useState<boolean>();

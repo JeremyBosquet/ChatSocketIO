@@ -15,6 +15,8 @@ import {ImCross, ImCheckmark} from "react-icons/im";
 import {MdCancelScheduleSend, MdBlock} from "react-icons/md";
 import {CgUnblock} from "react-icons/cg";
 import {IsFriend, IsRequest, IsRequested, IsBlocked, AddOrRemoveFriend, CancelFriendAdd, AcceptFriend, DeclineFriendAdd, BlockOrUnblockUser} from "../../Components/Utils/socialCheck"
+import { useSelector } from 'react-redux';
+import { getSocketSocial } from '../../Redux/authSlice';
 
 
 function Social(props: any) {
@@ -25,6 +27,8 @@ function Social(props: any) {
 	const [booleffect3, setbooleffect3] = useState<boolean>(true);
 	const token = localStorage.getItem('token');
 	let boolFriendOrNot : boolean = false;
+
+	const socketSocial = useSelector(getSocketSocial);
 
 	const [friendRequest, setFriendRequest] = useState<number>();
 	//const [requestList, SetRequestList] = useState<any[]>([]);
@@ -246,7 +250,7 @@ function Social(props: any) {
 			}).then((res) => {
 				const users : any[] = props?.friendList.filter((element : any) => element.uuid !== uuid);
 				props?.SetFriendList(users);
-				props?.socket?.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
+				socketSocial.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
 			}).catch((err) => {
 				console.log(err.response.data.message);
 			});
@@ -426,7 +430,7 @@ function Social(props: any) {
 		<div className='SocialPage'>
 		{
 			<>
-			{/* <button onClick={() => {socket?.emit("stpUneNotif")}}>Ask notifcation</button> */}
+			{/* <button onClick={() => {socketSocial.emit("stpUneNotif")}}>Ask notifcation</button> */}
 			{
 				!(booleffect3) ?
 				(
@@ -460,7 +464,7 @@ function Social(props: any) {
 													<p> {user.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={() => (BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))} > {IsBlocked(user.uuid, props?.blockList) ? <MdBlock/>: <CgUnblock/>} </button>
+														<button onClick={() => (BlockOrUnblockUser(user.uuid, props?.blockList, socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))} > {IsBlocked(user.uuid, props?.blockList) ? <MdBlock/>: <CgUnblock/>} </button>
 													</div>
 													<div>
 													{	IsRequested(user.uuid, props?.requestedList) ?
@@ -468,7 +472,7 @@ function Social(props: any) {
 															IsRequest(user.uuid, props?.requestList) ?
 															(
 																<div className='buttons2'>
-																	<button onClick={() => (AddOrRemoveFriend(user.uuid, props?.friendList, props?.SetRequestedList, props?.requestedList, props?.socket, User, props?.SetFriendList))} > {IsFriend(user.uuid, props?.friendList) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+																	<button onClick={() => (AddOrRemoveFriend(user.uuid, props?.friendList, props?.SetRequestedList, props?.requestedList, socket, User, props?.SetFriendList))} > {IsFriend(user.uuid, props?.friendList) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
 																</div>
 															)
 
@@ -476,15 +480,15 @@ function Social(props: any) {
 
 															(
 																<div className='buttons2'>
-																	<button onClick={() => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, props?.socket, User))} > <span className='green'> <ImCheckmark/>  </span></button>
-																	<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, props?.socket, User))} ><span className='red'><ImCross/></span> </button>
+																	<button onClick={() => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, socket, User))} > <span className='green'> <ImCheckmark/>  </span></button>
+																	<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, socket, User))} ><span className='red'><ImCross/></span> </button>
 																</div>
 															)
 									
 														)
 														:
 														<div className='buttons2'>
-															<button onClick={(e) => (CancelFriendAdd(user.uuid, props?.requestedList, props?.SetRequestedList, props?.socket, User))} > <MdCancelScheduleSend/> </button>
+															<button onClick={(e) => (CancelFriendAdd(user.uuid, props?.requestedList, props?.SetRequestedList, socket, User))} > <MdCancelScheduleSend/> </button>
 														</div>
 													}
 													</div>
@@ -504,7 +508,7 @@ function Social(props: any) {
 													<p> {user.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={() => (BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))} > {IsBlocked(user.uuid, props?.blockList) ? <MdBlock/>: <CgUnblock/>} </button>
+														<button onClick={() => (BlockOrUnblockUser(user.uuid, props?.blockList, socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))} > {IsBlocked(user.uuid, props?.blockList) ? <MdBlock/>: <CgUnblock/>} </button>
 													</div>
 													<div>
 													{	IsRequested(user.uuid, props?.requestedList) ?
@@ -512,7 +516,7 @@ function Social(props: any) {
 															IsRequest(user.uuid, props?.requestList) ?
 															(
 																<div className='buttons2'>
-																	<button onClick={() => (AddOrRemoveFriend(user.uuid, props?.friendList, props?.SetRequestedList, props?.requestedList, props?.socket, User, props?.SetFriendList))} > {IsFriend(user.uuid, props?.friendList) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+																	<button onClick={() => (AddOrRemoveFriend(user.uuid, props?.friendList, props?.SetRequestedList, props?.requestedList, socket, User, props?.SetFriendList))} > {IsFriend(user.uuid, props?.friendList) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
 																</div>
 															)
 
@@ -520,15 +524,15 @@ function Social(props: any) {
 
 															(
 																<div className='buttons2'>
-																	<button onClick={() => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, props?.socket, User))} > <span className='green'><ImCheckmark/></span> </button>
-																	<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, props?.socket, User))} > <span className='red'><ImCross/></span> </button>
+																	<button onClick={() => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, socket, User))} > <span className='green'><ImCheckmark/></span> </button>
+																	<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, socket, User))} > <span className='red'><ImCross/></span> </button>
 																</div>
 															)
 									
 														)
 														:
 														<div className='buttons2'>
-															<button onClick={(e) => (CancelFriendAdd(user.uuid, props?.requestedList, props?.SetRequestedList, props?.socket, User))} > <MdCancelScheduleSend/> </button>
+															<button onClick={(e) => (CancelFriendAdd(user.uuid, props?.requestedList, props?.SetRequestedList, socket, User))} > <MdCancelScheduleSend/> </button>
 														</div>	
 													}
 													</div>
@@ -563,7 +567,7 @@ function Social(props: any) {
 													<div className='buttons'>
 														<button onClick={(e) => (RemoveFriend(user.uuid))} > <IoPersonRemoveSharp/> </button>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => (BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))}><MdBlock/></button>
+														<button onClick={(e) => (BlockOrUnblockUser(user.uuid, props?.blockList, socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))}><MdBlock/></button>
 													</div>
 												</div>
 											))
@@ -583,7 +587,7 @@ function Social(props: any) {
 													<div className='buttons'>
 														<button onClick={(e) => (RemoveFriend(user.uuid))} > <IoPersonRemoveSharp/> </button>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => (BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))}> <MdBlock/> </button>
+														<button onClick={(e) => (BlockOrUnblockUser(user.uuid, props?.blockList, socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList))}> <MdBlock/> </button>
 													</div>
 												</div>
 											))
@@ -619,9 +623,9 @@ function Social(props: any) {
 													<p> {user?.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList)}> <MdBlock/> </button>
-														<button onClick={(e) => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, props?.socket, User))} > <span className='green'><ImCheckmark/></span> </button>
-														<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, props?.socket, User))} > <span className='red'><ImCross/></span> </button>
+														<button onClick={(e) => BlockOrUnblockUser(user.uuid, props?.blockList, socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList)}> <MdBlock/> </button>
+														<button onClick={(e) => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, socket, User))} > <span className='green'><ImCheckmark/></span> </button>
+														<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, socket, User))} > <span className='red'><ImCross/></span> </button>
 													</div>
 												</div>))
 											}
@@ -637,9 +641,9 @@ function Social(props: any) {
 													<p> {user?.username} </p>
 													<div className='buttons'>
 														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => BlockOrUnblockUser(user.uuid, props?.blockList, props?.socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList)}> <MdBlock/> </button>
-														<button onClick={(e) => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, props?.socket, User))} > <span className='green'><ImCheckmark/></span> </button>
-														<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, props?.socket, User))} > <span className='red'><ImCross/></span> </button>
+														<button onClick={(e) => BlockOrUnblockUser(user.uuid, props?.blockList, socket, User, props?.friendList, props?.SetFriendList, props?.requestList, props?.SetRequestList, props?.requestedList, props?.SetRequestedList, props?.SetBlockList)}> <MdBlock/> </button>
+														<button onClick={(e) => (AcceptFriend(user.uuid, user.image, props?.requestList, props?.SetRequestList, props?.SetFriendList, props?.friendList, socket, User))} > <span className='green'><ImCheckmark/></span> </button>
+														<button onClick={(e) => (DeclineFriendAdd(user.uuid, props?.requestList, props?.SetRequestList, socket, User))} > <span className='red'><ImCross/></span> </button>
 													</div>
 												</div>))
 											}

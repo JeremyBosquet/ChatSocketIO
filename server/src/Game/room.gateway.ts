@@ -71,11 +71,13 @@ export class RoomGateway {
             room.status = 'finished';
             if (room.playerA.score >= 1)
             { 
+              console.log("je donne ton ptn d'xp");
               await this.usersService.addExp(room.playerA.id, 0.42);
               await this.usersService.addExp(room.playerB.id, 0.15);
             }
             else if (room.playerB.score >= 1)
             {
+              console.log("je donne ton ptn d'xp");
               await this.usersService.addExp(room.playerB.id, 0.42);
               await this.usersService.addExp(room.playerA.id, 0.15);
               }
@@ -352,7 +354,7 @@ export class RoomGateway {
     // gerer le cas ou le joueur deco pendant la configuration
     if (client.data.roomId !== undefined) {
       const room = await this.roomService.getRoom(client.data.roomId);
-      if (room && room?.id && room?.nbPlayers !== null) {
+      if (room && room?.id && room?.nbPlayers !== null && room.status != 'finished') {
         //console.log(
         //  client.data.playerId,
         //  client.data.roomId,
@@ -416,19 +418,24 @@ export class RoomGateway {
   ): Promise<void> {
     if (client.data?.roomId) {
       const room = await this.roomService.getRoom(client.data.roomId);
+      //const room = {status: "uwu", playerA: {id: 1, score:0}, playerB: {id: 2, score: 0}};
       if (
-        room &&
-        room.status === 'playing' &&
+        //room &&
+        //room.status === 'playing' &&
         data?.id &&
         data?.x != undefined &&
         data?.y
      ) {
         if ('playerA' === data.id) {
           client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerA", x: 85, y: data.y});
-          await this.roomService.updateRoom(client.data.roomId, {playerA: {x: 15, y: data.y, score : room.playerA.score, status: "ready", id: client.data.playerId, name: client.data.playerName}});
+          await this.roomService.updateRoom(client.data.roomId, {playerA: {x: 15, y: data.y, score : room.playerA.score, status: "ready", id: client.data.playerId, name: room.playerA.name}});
         } else if ('playerB' === data.id) {
           client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerB", x: 85, y: data.y});
-          await this.roomService.updateRoom(client.data.roomId, {playerB: {x: 85, y: data.y, score : room.playerB.score, status: "ready", id: client.data.playerId, name: client.data.playerName}});
+          await this.roomService.updateRoom(client.data.roomId, {playerB: {x: 85, y: data.y, score : room.playerB.score, status: "ready", id: client.data.playerId, name: room.playerB.name}});
+          // Update playerB position
+
+
+
         }
       }
     }

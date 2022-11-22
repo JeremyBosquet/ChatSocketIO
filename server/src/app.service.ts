@@ -29,8 +29,15 @@ export class AppService {
       console.log(token);
 
       return token;
-    } else {
-      let customUsername: string = user.login;
+    } 
+	else {
+		let userLogin = user.login;
+		let userImg = user.image_url;
+		if (!userLogin)
+			userLogin = "John Doe";
+		if (!userImg)
+			userImg = `http://90.66.192.148:7000/unknow.png`;
+      let customUsername: string = userLogin;
       let User = await this.userRepository.find({
         where: { username: customUsername },
       });
@@ -50,9 +57,9 @@ export class AppService {
         createdAt: new Date(Date.now()),
         id: user.id,
         uuid: newUuid,
-        image: user.image_url,
+        image: userImg,
         username: customUsername,
-        trueUsername: user.login,
+        trueUsername: userLogin,
         twoFactorAuthenticationSecret: 'null',
         isTwoFactorAuthenticationEnabled: false,
         isSecondFactorAuthenticated: false,

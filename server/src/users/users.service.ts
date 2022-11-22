@@ -180,13 +180,20 @@ export class UsersService {
   async addExp(uuid: string, exp : number) {
     const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
     if (find) {
-		  let oldexp = find.exp;
-      exp = exp - (Number(oldexp.toString()[0]) / 100) * 2;
-      if (exp < 0)
-        exp = 0;
-      let newexp = Number((Number(oldexp) + Number(exp)).toFixed(2));
-      await this.userRepository.update({ uuid }, { exp :  newexp});
-      return 1;
+		let oldexp = find.exp;
+		if (Number(oldexp))
+		{
+			exp = exp - (Number(oldexp.toString()[0]) / 100) * 2;
+			if (exp < 0)
+				exp = 0;
+		}
+		let newexp : number;
+		if (Number((Number(oldexp) + Number(exp)).toFixed(2)) > 21.00)
+			newexp = 21.00;
+		else
+			newexp = Number((Number(oldexp) + Number(exp)).toFixed(2));
+		await this.userRepository.update({ uuid }, { exp :  newexp});
+		return 1;
     }
     return 0;
   }

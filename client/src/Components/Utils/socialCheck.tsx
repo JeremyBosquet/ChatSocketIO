@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Socket } from "socket.io-client";
+import { useNavigate } from "react-router-dom";
 export function IsFriend(uuid : string, friendList : any[]) {
 	const userFriends : any[] = friendList;
 	const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
@@ -164,8 +165,9 @@ export async function BlockOrUnblockUser(uuid : string, blockList : any[], socke
 	}
 }
 
-export async function HideProfile(path : string, setProfileDisplayed : any, navigate : any, setbooleffect3 : any)
+export async function HideProfile(path : string, setProfileDisplayed : any)
 {
+	const navigate = useNavigate();
 	navigate(path);
 	setProfileDisplayed(false);
 	let blur = document.getElementsByClassName('blur');

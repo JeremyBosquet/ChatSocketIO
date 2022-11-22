@@ -16,6 +16,8 @@ export class RoomService {
     }
   }
   async updateRoom(roomId: string, data: any): Promise<any> {
+   // await this.roomRepository.update(roomId, {playerA: {..., status: 'ready'}});
+
     return await this.roomRepository.update(roomId, data);
   }
   async clearDatabase() {

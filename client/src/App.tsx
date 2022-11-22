@@ -13,7 +13,7 @@ import axios from "axios";
 import Social from "./Components/Social/Social";
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
-import { getUser } from "./Redux/authSlice";
+import { getUser, setSocketSocial } from "./Redux/authSlice";
 import { setSocket } from "./Redux/chatSlice";
 import ChannelPage from "./Pages/ChannelPage/ChannelPage";
 import DMPage from "./Pages/DMPage/DMPage";
@@ -33,6 +33,9 @@ function App() {
 		newSocket.on('connect', () => {
 			newSocket.emit("connected", {userId: user.id});
 		});
+    
+		const newSocketSocial = io('http://90.66.192.148:7003');
+		dispatch(setSocketSocial(newSocketSocial));
 		//eslint-disable-next-line
 	}, []);
 

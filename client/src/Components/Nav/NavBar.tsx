@@ -22,7 +22,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeGameChat, getSockeSpectate, setSocketGame, setSocketGameChat, setSocketSpectate } from "../../Redux/gameSlice";
 
 function NavBar(props: any) {
-  let navigate = useNavigate();
   let location = useLocation();
   let booleffect = false;
   let tab: any[] = [];
@@ -179,8 +178,6 @@ function NavBar(props: any) {
                 </span>
               </button>
               <Social
-			  socket={props?.socket}
-				setSocket={props?.setSocket}
 				friendList={props?.friendList}
 				SetFriendList={props?.SetFriendList}
 				blockList={props?.blockList}

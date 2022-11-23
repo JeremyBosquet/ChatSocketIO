@@ -7,11 +7,13 @@ interface props {
   room: IRoom | undefined;
 }
 
+
 interface IPlayer {
   id: string;
   name: string;
-  score: number;
   status: string;
+  x: number;
+  y: number;
 }
 
 interface IRoom {
@@ -23,6 +25,33 @@ interface IRoom {
   createdAt: string;
   playerA: IPlayer;
   playerB: IPlayer;
+  scoreA: number;
+  scoreB: number;
+  ball: IBall;
+  settings: ISettings;
+  configurationA: IConfiguration;
+  configurationB: IConfiguration;
+}
+
+interface IConfiguration {
+  difficulty: string;
+  background: string;
+}
+
+interface ISettings {
+  defaultSpeed: number;
+  defaultDirection: number;
+  boardWidth: number;
+  boardHeight: number;
+  ballRadius: number;
+  background: string;
+}
+
+interface IBall {
+  x: number;
+  y: number;
+  speed: number;
+  direction: number;
 }
 
 function GameBoard(props: props) {
@@ -33,7 +62,7 @@ function GameBoard(props: props) {
           {props.room?.playerA.name}
         </div>
         <div className="game-board__player__score">
-          {props.room?.playerA.score}
+          {props.room?.scoreA}
         </div>
       </div>
       <div className="game-board__player">
@@ -41,7 +70,7 @@ function GameBoard(props: props) {
           {props.room?.playerB.name}
         </div>
         <div className="game-board__player__score">
-          {props.room?.playerB.score}
+          {props.room?.scoreB}
         </div>
       </div>
     </div>

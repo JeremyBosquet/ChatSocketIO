@@ -47,20 +47,19 @@ function Channels(props: props) {
 
     return (
     <div className='channels'>
-        <div className='channelsOperations'>
+        {/* <div className='channelsOperations'>
             <FormCreateChannel/>
             <Search searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} getUsersChannel={getUsersChannel}/>
-        </div>
-        <div className='channelInfos'>
+        </div> */}
+        <div className='channelsInfos'>
             {searchChannel === "" ? 
-                <div className='channelInfo'>
-                    <h2>Your channels</h2>
+                <div className='channelsInfo'>
                     {channels.map((channel : any) => (
                         <Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={false}/>
                     ))}
                 </div>
                 :
-                <div className='channelInfo'>
+                <div className='channelsInfo'>
                     <h2>Channel(s) found</h2>
                     {channelsFind.map((channel) => (
                         <Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={true}/>

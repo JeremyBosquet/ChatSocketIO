@@ -2,7 +2,12 @@ import React from "react";
 import axios from "axios";
 import { Socket } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
-export function IsFriend(uuid : string, friendList : any[]) {
+import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage } from "../../Redux/authSlice";
+import {setFriendList, setRequestList, setRequestedList, setProfileDisplayed, setBlockList} from '../../Redux/authSlice'
+import { useDispatch, useSelector } from "react-redux";
+
+export function IsFriend(uuid : string) {
+	const friendList = useSelector(getFriendList);	
 	const userFriends : any[] = friendList;
 	const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
 	if (!test.length)
@@ -10,7 +15,8 @@ export function IsFriend(uuid : string, friendList : any[]) {
 	return false;
 }
 
-export function IsRequested(uuid : string, requestedList : any[]) {
+export function IsRequested(uuid : string) {
+	const requestedList = useSelector(getRequestedList);
 	const userRequested : any[] = requestedList;
 	const test : any[] = userRequested.filter(requested => requested.uuid === uuid);
 	if (!test.length)
@@ -18,7 +24,8 @@ export function IsRequested(uuid : string, requestedList : any[]) {
 	return false;
 }
 
-export function IsRequest(uuid : string, requestList : any[]) {
+export function IsRequest(uuid : string) {
+	const requestList = useSelector(getRequestList);
 	const userRequest : any[] = requestList;
 	const request : any[] = userRequest.filter(request => request.uuid === uuid);
 	if (!request.length)
@@ -26,15 +33,11 @@ export function IsRequest(uuid : string, requestList : any[]) {
 	return false;
 }
 
-export function IsBlocked(uuid : string, blockList: any[]) {
-	const userBlocked : any[] = blockList;
-	const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid);
-	if (!test.length)
-		return true;
-	return false;
-}
-
-export async function AddOrRemoveFriend(uuid : string, friendList: any[], SetRequestedList : any, requestedList : any[], socket : (Socket | undefined), User : any, SetFriendList : any) {
+export async function AddOrRemoveFriend(uuid : string, User : any) {
+	const dispatch = useDispatch();
+	const socket = useSelector(getSocketSocial);
+	const friendList = useSelector(getFriendList);
+	const requestedList = useSelector(getRequestedList);
 	const userFriends : any[] = friendList;
 	const test : any[] = userFriends.filter(friend => friend.uuid === uuid)
 	if (!test.length)
@@ -44,7 +47,7 @@ export async function AddOrRemoveFriend(uuid : string, friendList: any[], SetReq
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
 			}).then((res) => {
-				SetRequestedList([...requestedList, {uuid : uuid}])
+				dispatch(setRequestedList([...requestedList, {uuid : uuid}]));
 				socket?.emit('addFriend', {uuid : uuid, myUUID : User.uuid})
 			}).catch((err) => {
 				console.log(err.response.data.message);
@@ -57,8 +60,8 @@ export async function AddOrRemoveFriend(uuid : string, friendList: any[], SetReq
 				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})
 		}).then((res) => {
-			const users : any[] = friendList.filter(element => element.uuid !== uuid);
-			SetFriendList(users);
+			const users : any[] = friendList.filter((element : any) => element.uuid !== uuid);
+			dispatch(setFriendList(users));
 			socket?.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
 		}).catch((err) => {
 			console.log(err.response.data.message);
@@ -66,8 +69,12 @@ export async function AddOrRemoveFriend(uuid : string, friendList: any[], SetReq
 	}
 }
 
-export async function AcceptFriend(uuid : string, image : any, requestList : any[], SetRequestList : any, SetFriendList : any, friendList: any[], socket : (Socket | undefined), User : any) {
-	const test : any[] = requestList.filter(friend => friend.uuid === uuid)
+export async function AcceptFriend(uuid : string, image : any, User : any) {
+	const dispatch = useDispatch();
+	const socket = useSelector(getSocketSocial);
+	const friendList = useSelector(getFriendList);
+	const requestList = useSelector(getRequestList);
+	const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
 	if (test.length)
 	{
 		await axios.post(`http://90.66.192.148:7000/user/AcceptFriend`, {uuid : uuid}, {
@@ -75,9 +82,9 @@ export async function AcceptFriend(uuid : string, image : any, requestList : any
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
 			}).then((res) => {
-				const request : any[] = requestList.filter(element => element.uuid !== uuid);
-				SetFriendList([...friendList, {uuid : uuid , username : test[0].username, image : image}]);
-				SetRequestList(request);
+				const request : any[] = requestList.filter((element : any) => element.uuid !== uuid);
+				dispatch(setFriendList([...friendList, {uuid : uuid , username : test[0].username, image : image}]));
+				dispatch(setRequestList(request));
 				socket?.emit('acceptFriend', {uuid : uuid, myUUID : User.uuid});
 			}).catch((err) => {
 				console.log(err.response.data.message);
@@ -85,8 +92,11 @@ export async function AcceptFriend(uuid : string, image : any, requestList : any
 	}
 }
 
-export async function DeclineFriendAdd(uuid : string, requestList : any[], SetRequestList : any, socket : (Socket | undefined), User : any) {
-	const test : any[] = requestList.filter(friend => friend.uuid === uuid)
+export async function DeclineFriendAdd(uuid : string, User : any) {
+	const dispatch = useDispatch();
+	const socket = useSelector(getSocketSocial);
+	const requestList = useSelector(getRequestList);
+	const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
 	if (test.length)
 	{
 		await axios.post(`http://90.66.192.148:7000/user/DeclineFriendAdd`, {uuid : uuid}, {
@@ -94,8 +104,8 @@ export async function DeclineFriendAdd(uuid : string, requestList : any[], SetRe
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
 			}).then((res) => {
-				const request : any[] = requestList.filter(element => element.uuid !== uuid);
-				SetRequestList(request);
+				const request : any[] = requestList.filter((element : any) => element.uuid !== uuid);
+				dispatch(setRequestList(request));
 				socket?.emit('DeclineFriendAdd', {uuid : uuid, myUUID : User.uuid});
 			}).catch((err) => {
 				console.log(err.response.data.message);
@@ -103,8 +113,11 @@ export async function DeclineFriendAdd(uuid : string, requestList : any[], SetRe
 	}
 }
 
-export async function CancelFriendAdd(uuid : string, requestedList : any[], SetRequestedList : any, socket : (Socket | undefined), User : any) {
-	const test : any[] = requestedList.filter(friend => friend.uuid === uuid)
+export async function CancelFriendAdd(uuid : string, User : any) {
+	const dispatch = useDispatch();
+	const socket = useSelector(getSocketSocial);
+	const requestedList = useSelector(getRequestedList);
+	const test : any[] = requestedList.filter((friend : any) => friend.uuid === uuid)
 	if (test.length)
 	{
 		await axios.post(`http://90.66.192.148:7000/user/CancelFriendAdd`, {uuid : uuid}, {
@@ -112,8 +125,8 @@ export async function CancelFriendAdd(uuid : string, requestedList : any[], SetR
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
 			}).then((res) => {
-				const requested : any[] = requestedList.filter(element => element.uuid !== uuid);
-				SetRequestedList(requested);
+				const requested : any[] = requestedList.filter((element : any) => element.uuid !== uuid);
+				dispatch(setRequestedList(requested));
 				socket?.emit('CancelFriendAdd', {uuid : uuid, myUUID : User.uuid});
 			}).catch((err) => {
 				console.log(err.response.data.message);
@@ -121,11 +134,13 @@ export async function CancelFriendAdd(uuid : string, requestedList : any[], SetR
 	}
 }
 
-export async function BlockOrUnblockUser(uuid : string, blockList : any[], socket : (Socket | undefined), User : any,
-	friendList : any[], SetFriendList : any,
-	requestList : any[], SetRequestList : any,
-	requestedList : any[], SetRequestedList : any,
-	SetBlockList : any) {
+export async function BlockOrUnblockUser(uuid : string, User : any) {
+	const dispatch = useDispatch();
+	const socket = useSelector(getSocketSocial);
+	const friendList = useSelector(getFriendList);
+	const blockList = useSelector(getBlockList);
+	const requestedList = useSelector(getRequestedList);
+	const requestList = useSelector(getRequestList);
 	const userBlocked : any[] = blockList;
 	const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid)
 	if (!test.length)
@@ -135,13 +150,13 @@ export async function BlockOrUnblockUser(uuid : string, blockList : any[], socke
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
 			}).then((res) => {
-				const users : any[] = friendList.filter(element => element.uuid !== uuid);
-				const request : any[] = requestList.filter(element => element.uuid !== uuid);
-				const requested : any[] = requestedList.filter(element => element.uuid !== uuid);
-				SetFriendList(users);
-				SetBlockList([...blockList,{uuid : uuid}])
-				SetRequestList(request);
-				SetRequestedList(requested);
+				const users : any[] = friendList.filter((element : any) => element.uuid !== uuid);
+				const request : any[] = requestList.filter((element : any) => element.uuid !== uuid);
+				const requested : any[] = requestedList.filter((element : any) => element.uuid !== uuid);
+				dispatch(setFriendList(users));
+				dispatch(setBlockList([...blockList,{uuid : uuid}]));
+				dispatch(setRequestList(request));
+				dispatch(setRequestedList(requested));
 				socket?.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
 				socket?.emit('CancelFriendAdd', {uuid : uuid, myUUID : User.uuid});
 				socket?.emit('DeclineFriendAdd', {uuid : uuid, myUUID : User.uuid});
@@ -156,16 +171,16 @@ export async function BlockOrUnblockUser(uuid : string, blockList : any[], socke
 				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})
 		}).then((res) => {
-			const users : any[] = friendList.filter(element => element.uuid !== uuid);
-			SetFriendList(users);
-			SetBlockList(blockList.filter(user => user.uuid !== uuid));
+			const users : any[] = friendList.filter((element : any) => element.uuid !== uuid);
+			dispatch(setFriendList(users));
+			dispatch(setBlockList(blockList.filter((user : any) => user.uuid !== uuid)));
 		}).catch((err) => {
 			console.log(err.response.data.message);
 		});
 	}
 }
 
-export async function HideProfile(path : string, setProfileDisplayed : any)
+export async function HideProfile(path : string)
 {
 	const navigate = useNavigate();
 	navigate(path);

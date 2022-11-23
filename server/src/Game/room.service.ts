@@ -16,8 +16,6 @@ export class RoomService {
     }
   }
   async updateRoom(roomId: string, data: any): Promise<any> {
-   // await this.roomRepository.update(roomId, {playerA: {..., status: 'ready'}});
-
     return await this.roomRepository.update(roomId, data);
   }
   async clearDatabase() {
@@ -77,7 +75,6 @@ export class RoomService {
       room.playerA = {
         id: playerId,
         name: playerName,
-        score: 0,
         status: 'ready',
         x: 0,
         y: 0,
@@ -86,7 +83,6 @@ export class RoomService {
       room.playerB = {
         id: playerId,
         name: playerName,
-        score: 0,
         status: 'ready',
         x: 0,
         y: 0,

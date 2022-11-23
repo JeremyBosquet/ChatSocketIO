@@ -14,6 +14,7 @@ import GamePlay from '../../Components/GamePlay/GamePlay';
 import GameReady from '../../Components/GameReady/GameReady';
 import GameChatReady from '../../Components/GameChatReady/GameChatReady';
 import KillSocket from '../../Components/KillSocket/KillSocket';
+import Popup from '../../Components/Popup/Popup';
 
 
 interface IPlayer {
@@ -81,14 +82,6 @@ function ChannelPage() {
 	const [room, setRoom] = useState<IRoom>();
 	const [notification, setNotificaton] = useState<Boolean>(false);
 	const [inviteGames, setInviteGames] = useState<IInvites[]>([]);
-
-	const [friendList, SetFriendList] = useState<any[]>([]);
-	const [blockList, SetBlockList] = useState<any[]>([]);
-	const [requestedList, SetRequestedList] = useState<any[]>([]);
-	const [requestList, SetRequestList] = useState<any[]>([]);
-	const [profilePage, setProfilePage] = useState<any>(null);
-	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
-	const [historyList, SetHistoryList] = useState<any[]>([]);
   
 	KillSocket("game");
 	KillSocket("spectate");
@@ -261,63 +254,56 @@ function ChannelPage() {
 	  }, [socketGame, ready, playing, room, notification, user, inviteGames]);
 	
 	return (
-		<div className='main'>
-		<NavBar 
-			socket={undefined}
-			setSocket={undefined}
-			friendList={friendList}
-			SetFriendList={SetFriendList}
-			blockList={blockList}
-			SetBlockList={SetBlockList}
-			requestList={requestList}
-			SetRequestList={SetRequestList}
-			requestedList={requestedList}
-			SetRequestedList={SetRequestedList}
-			setProfilePage={setProfilePage}
-			setProfileDisplayed={setProfileDisplayed}
-			SetHistoryList={SetHistoryList}/>
-			{!inGame ? (
-		<div className='chatPage'>
-			<div className='container'>
-				<div className='selectChannelOrDm'>
-					
-					{logged === false ?
-						<div className='notLogged'>
-							<p>Pending...</p>
+		<>
+			<div className="blur">
+				<NavBar />
+				{!inGame ? (
+					<div className='chatPage'>
+						<div className='container'>
+							<div className='selectChannelOrDm'>
+								
+								{logged === false ?
+									<div className='notLogged'>
+										<p>Pending...</p>
+									</div>
+								:
+								<>
+									<div className="selectMode">
+										<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
+										<button className="selectedButton" onClick={() => handleChangeMode("dm")}>DM</button>
+									</div>
+									<Channels invites={inviteGames} />
+								</>
+							}
+							</div>
 						</div>
- 					:
+					</div>
+				) : (
 					<>
-						<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
-						<button className="selectedButton" onClick={() => handleChangeMode("dm")}>Private Messages</button>
-						<Channels invites={inviteGames} />
+						{!ready && !playing && room ? (
+							<GameChatReady
+							room={room}
+							quitGame={quitGame}
+							socket={socketGame}
+							setReady={setReady}
+							setPlayerId={setPlayerId}
+							setPlayerName={setPlayerName}
+							/>
+							) : null}
+			{playing ? (
+				<GamePlay
+				playerName={playerName}
+				playerId={playerId}
+				socket={socketGame}
+				room={room}
+				/>
+				) : null}
 					</>
-				}
-				</div>
-			</div>
+			)}
 		</div>
-		) : (
-			<>
-				{!ready && !playing && room ? (
-        <GameChatReady
-		  room={room}
-		  quitGame={quitGame}
-          socket={socketGame}
-          setReady={setReady}
-          setPlayerId={setPlayerId}
-          setPlayerName={setPlayerName}
-        />
-      ) : null}
-      {playing ? (
-        <GamePlay
-          playerName={playerName}
-          playerId={playerId}
-          socket={socketGame}
-          room={room}
-        />
-      ) : null}
-			</>
-		)}
-		</div>
+
+		<Popup User={user} />
+		</>
 	);
 }
 

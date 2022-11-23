@@ -8,12 +8,12 @@ import NavBar from "../../Components/Nav/NavBar";
 import "../../Pages/Home/HomePage.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeGameChat, setSocketGame } from "../../Redux/gameSlice";
+import useEventListener from "@use-it/event-listener";
 import KillSocket from "../../Components/KillSocket/KillSocket";
 
 interface IPlayer {
   id: string;
   name: string;
-  score: number;
   status: string;
   x: number;
   y: number;
@@ -35,6 +35,8 @@ interface IRoom {
   createdAt: string;
   playerA: IPlayer;
   playerB: IPlayer;
+  scoreA: number;
+  scoreB: number;
   ball: IBall;
   settings: ISettings;
   configurationA: IConfiguration;
@@ -74,6 +76,14 @@ function GamePlayingPage() {
 	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
 	const [historyList, SetHistoryList] = useState<any[]>([]);
 
+  function test (e:any) {
+    console.log("full", e);
+  }
+  function handleResize (e:any) {
+    console.log("resize", e);
+  }
+  useEventListener("fullscreenchange", test);
+  useEventListener("resize", handleResize);
   
 	KillSocket("chat");
 	KillSocket("spectate");
@@ -135,9 +145,9 @@ function GamePlayingPage() {
       });
       socket?.on("gameEnd", (data: IRoom) => {
         console.log("gameEnd", data);
-        if (data.playerA.score === 10 && !notification)
+        if (data.scoreA === 10 && !notification)
           createNotification("success", "PlayerA a gagner");
-        else if (data.playerB.score === 10 && !notification)
+        else if (data.scoreB === 10 && !notification)
           createNotification("success", "PlayerB a gagner");
         setNotificaton(true);
         setRoom(data);

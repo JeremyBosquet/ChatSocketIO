@@ -18,7 +18,6 @@ import KillSocket from "../../Components/KillSocket/KillSocket";
 interface IPlayer {
   id: string;
   name: string;
-  score: number;
   status: string;
   x: number;
   y: number;
@@ -40,6 +39,8 @@ interface IRoom {
   createdAt: string;
   playerA: IPlayer;
   playerB: IPlayer;
+  scoreA: number;
+  scoreB: number;
   ball: IBall;
   settings: ISettings;
   configurationA: IConfiguration;
@@ -130,9 +131,9 @@ function GameSpectatePage() {
       });
       socket.on("gameEnd", (data: IRoom) => {
         console.log("gameEnd", data);
-        if (data.playerA.score === 10 && !notification)
+        if (data.scoreA === 10 && !notification)
           createNotification("success", "PlayerA a gagner");
-        else if (data.playerB.score === 10 && !notification)
+        else if (data.scoreB === 10 && !notification)
           createNotification("success", "PlayerB a gagner");
         setNotificaton(true);
         setDisplay(false);

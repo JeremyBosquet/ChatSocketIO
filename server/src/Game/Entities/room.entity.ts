@@ -58,6 +58,14 @@ export class Room {
   @Exclude()
   configurationB: IConfiguration;
 
+  @Column()
+  @Exclude()
+  scoreA: number;
+
+  @Column()
+  @Exclude()
+  scoreB: number;
+
   @Column({ nullable: true, type: 'bigint' })
   @Exclude()
   lastActivity: number;

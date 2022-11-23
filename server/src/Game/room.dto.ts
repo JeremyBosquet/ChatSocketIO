@@ -38,7 +38,7 @@ export class SendGameHistoryDto {
 
   @Exclude()
   id: string;
-  @Exclude()
+  @Expose()
   name: string;
   @Exclude()
   owner: string;
@@ -64,6 +64,12 @@ export class SendGameHistoryDto {
 
   @Exclude()
   configurationB: IConfiguration;
+
+  @Exclude()
+  scoreA: number;
+
+  @Exclude()
+  scoreB: number;
 
   @IsNumber()
   @Expose()

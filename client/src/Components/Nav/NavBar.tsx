@@ -177,20 +177,7 @@ function NavBar(props: any) {
                 <AiOutlineClose />
                 </span>
               </button>
-              <Social
-				friendList={props?.friendList}
-				SetFriendList={props?.SetFriendList}
-				blockList={props?.blockList}
-				SetBlockList={props?.SetBlockList}
-				requestList={props?.requestList}
-				SetRequestList={props?.SetRequestList}
-				requestedList={props?.requestedList}
-				SetRequestedList={props?.SetRequestedList}
-				setProfilePage={props?.setProfilePage}
-				setProfileDisplayed={props?.setProfileDisplayed}
-				SetHistoryList={props?.SetHistoryList}
-				setbooleffect3={props?.setbooleffect3}
-				/>
+              <Social/>
             </div>
         </>
     </div>

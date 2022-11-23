@@ -61,21 +61,21 @@ export class RoomGateway {
         //console.log('gameLoop - playing', room.playerA);
         if (room.ball.x + settings.ballRadius < 0 || room.ball.x + settings.ballRadius > 100) {
           if (room.ball.x + settings.ballRadius < 0) {
-            room.playerB.score += 1
+            room.scoreB += 1
             await this.roomService.updateRoom(room.id, {playerB : room.playerB});
           } else if (room.ball.x + settings.ballRadius){
-            room.playerA.score += 1;
+            room.scoreA += 1
             await this.roomService.updateRoom(room.id, {playerA : room.playerA});
           }
-          if (room.playerA.score >= 1 || room.playerB.score >= 1) {
+          if (room.scoreA >= 1 || room.scoreB >= 1) {
             room.status = 'finished';
-            if (room.playerA.score >= 1)
+            if (room.scoreA >= 1)
             { 
               console.log("je donne ton ptn d'xp");
               await this.usersService.addExp(room.playerA.id, 0.42);
               await this.usersService.addExp(room.playerB.id, 0.15);
             }
-            else if (room.playerB.score >= 1)
+            else if (room.scoreB >= 1)
             {
               console.log("je donne ton ptn d'xp");
               await this.usersService.addExp(room.playerB.id, 0.42);
@@ -170,6 +170,7 @@ export class RoomGateway {
         //console.log('rooms : ', client.rooms);
         client.data.roomId = data.roomId;
         client.data.playerId = data.playerId;
+        client.data.playerName = (await this.usersService.findUserByUuid(data.id)).username;
         this.server.in('room-' + room.id).emit('gameInit', room);
       } else {
         this.server
@@ -197,6 +198,8 @@ export class RoomGateway {
           owner: data?.id,
           playerA: null,
           playerB: null,
+          scoreA: 0,
+          scoreB: 0,
           status: 'waiting',
           ball: { x: 50, y: 50, direction: 0, speed: 0.5 },
           settings: {
@@ -214,6 +217,7 @@ export class RoomGateway {
         await client.join('room-' + newRoom.id);
         client.data.roomId = newRoom.id;
         client.data.playerId = data.id;
+        client.data.playerName = (await this.usersService.findUserByUuid(data.id)).username;
         //console.log('crash ici : ', room);
         await this.roomService.addPlayer(room, data?.id, data?.name);
         await this.server
@@ -235,6 +239,7 @@ export class RoomGateway {
               await client.join('room-' + room.id);
               client.data.roomId = room.id;
               client.data.playerId = data.id;
+              client.data.playerName = (await this.usersService.findUserByUuid(data.id)).username;
               // Passer la game en configuration
               await this.server
                 .in('room-' + room.id)
@@ -268,6 +273,8 @@ export class RoomGateway {
             owner: data?.id,
             playerA: null,
             playerB: null,
+            scoreA: 0,
+            scoreB: 0,
             status: 'waiting',
             ball: { x: 50, y: 50, direction: 0, speed: 0.5 },
             settings: {
@@ -287,6 +294,7 @@ export class RoomGateway {
           await client.join('room-' + newRoom.id);
           client.data.roomId = newRoom.id;
           client.data.playerId = data.id;
+          client.data.playerName = (await this.usersService.findUserByUuid(data.id)).username;
           //  //console.log('searching-' + data.id, 'room-' + newRoom.id);
           await this.server
             .in('room-' + newRoom.id)
@@ -320,6 +328,7 @@ export class RoomGateway {
       room.nbPlayers--;
       this.server.to('room-' + room.id).emit('playerDisconnected', room);
       client.data.roomId = null;
+      client.data.playerName = null;
       client.data.playerId = null;
       room.configurationA = null;
       room.configurationB = null;
@@ -386,6 +395,7 @@ export class RoomGateway {
           }
         }
         client.data.roomId = null;
+        client.data.playerName = null;
         client.data.playerId = null;
         client.leave('room-' + room.id);
         room.configurationA = null;
@@ -397,8 +407,10 @@ export class RoomGateway {
           this.server.to('room-' + room.id).emit('gameForceEnd', room);
           if (intervalList[room.id]) clearInterval(intervalList[room.id]);
           roomList[room.id] = null;
-          this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
-          this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
+          if (room.playerA && room.playerA?.id)
+            this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
+          if (room.playerB && room.playerB?.id)
+            this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
           this.roomService.removeFromID(room.id);
         } else {
           room.status = 'waiting'; // remove that
@@ -417,25 +429,20 @@ export class RoomGateway {
     @MessageBody() data: any,
   ): Promise<void> {
     if (client.data?.roomId) {
-      const room = await this.roomService.getRoom(client.data.roomId);
-      //const room = {status: "uwu", playerA: {id: 1, score:0}, playerB: {id: 2, score: 0}};
+      //const room = await this.roomService.getRoom(client.data.roomId);
       if (
         //room &&
         //room.status === 'playing' &&
         data?.id &&
         data?.x != undefined &&
-        data?.y
+        data?.y != undefined
      ) {
         if ('playerA' === data.id) {
           client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerA", x: 85, y: data.y});
-          await this.roomService.updateRoom(client.data.roomId, {playerA: {x: 15, y: data.y, score : room.playerA.score, status: "ready", id: client.data.playerId, name: room.playerA.name}});
+          await this.roomService.updateRoom(client.data.roomId, {playerA: {x: 15, y: data.y, status: "ready", id: client.data.playerId, name: client.data?.playerName}});
         } else if ('playerB' === data.id) {
           client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerB", x: 85, y: data.y});
-          await this.roomService.updateRoom(client.data.roomId, {playerB: {x: 85, y: data.y, score : room.playerB.score, status: "ready", id: client.data.playerId, name: room.playerB.name}});
-          // Update playerB position
-
-
-
+          await this.roomService.updateRoom(client.data.roomId, {playerB: {x: 85, y: data.y, status: "ready", id: client.data.playerId, name: client.data?.playerName}});
         }
       }
     }
@@ -593,6 +600,8 @@ export class RoomGateway {
           owner: user?.uuid,
           playerA: null,
           playerB: null,
+          scoreA: 0,
+          scoreB: 0,
           status: 'waiting|' + data?.ownId + '|' + data?.targetId,
           ball: { x: 50, y: 50, direction: 0, speed: 0.5 },
           settings: {

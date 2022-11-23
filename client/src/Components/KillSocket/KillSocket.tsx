@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeGameChat, getSockeSpectate, setSocketGame, setSocketGameChat, setSocketSpectate } from "../../Redux/gameSlice";
 
@@ -24,18 +24,20 @@ function KillSocket(e : string) {
         dispatch(setSocketGameChat(null));
     }
 
-    if (e == "all")
-    {
-        closeSocketGame();
-        closeSocketSpectate();
-        closeSocketChatGame();
-    }
-    else if (e == "game")
-        closeSocketGame();
-    else if (e == "spectate")
-        closeSocketSpectate();
-    else if (e == "chat")
-        closeSocketChatGame();
+	useEffect(() => {
+		if (e == "all")
+		{
+			closeSocketGame();
+			closeSocketSpectate();
+			closeSocketChatGame();
+		}
+		else if (e == "game")
+			closeSocketGame();
+		else if (e == "spectate")
+			closeSocketSpectate();
+		else if (e == "chat")
+			closeSocketChatGame();
+	}, []);
     return (<></>);
 }
 

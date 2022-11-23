@@ -17,7 +17,6 @@ interface props {
 interface IPlayer {
   id: string;
   name: string;
-  score: number;
   status: string;
   x: number;
   y: number;
@@ -32,6 +31,8 @@ interface IRoom {
   createdAt: string;
   playerA: IPlayer;
   playerB: IPlayer;
+  scoreA: number;
+  scoreB: number;
   ball: IBall;
   settings: ISettings;
   configurationA: IConfiguration;
@@ -190,38 +191,34 @@ function GameSpectate(props: props) {
   useEffect(() => {
     // Check car le resize ne met pas a jour les var du useEffect
     props.socket?.removeListener("playerMovement");
-    props.socket?.on("playerMovement", (room: IRoom) => {
-      setPlayerA({
-        ...playerA,
-        id: "playerA",
-        x: 0.15 * windowsWidth,
-        y: (room.playerA.y / 100) * windowsHeight,
-        percentY: room.playerA.y,
-      });
-      setPlayerB({
-        ...playerB,
-        id: "playerB",
-        x: windowsWidth - boardWidth - 0.15 * windowsWidth,
-        y: (room.playerB.y / 100) * windowsHeight,
-        percentY: room.playerB.y,
-      });
+    props.socket?.on("playerMovement", (data: any) => {
+      //console.log("playerMovement", props.playerId);
+      if (data.player && data.x != undefined && data.y != undefined) {
+        if (data.player === "playerA") {
+          setPlayerA({
+            ...playerA,
+            id: "playerA",
+            x: 0.15 * windowsWidth,
+            y: (data.y / 100) * windowsHeight,
+            percentY: data.y,
+          });
+        } else if ((data.player === "playerB")) {
+          setPlayerB({
+            ...playerB,
+            id: "playerB",
+            x: windowsWidth - 0.15 * windowsWidth,
+            y: (data.y / 100) * windowsHeight,
+            percentY: data.y,
+          });
+        }
+    }
     });
     props.socket?.removeListener("ballMovement");
     props.socket?.on("ballMovement", (room: IRoom) => {
       ball.ref.current?.to({
+        duration: 0.040,
         x: (room.ball.x / 100) * windowsWidth,
         y: (room.ball.y / 100) * windowsHeight,
-        duration: 0.248,
-        onFinish: () => {
-          setBall({
-            ...ball,
-            id: "ball",
-            x: (room.ball.x / 100) * windowsWidth,
-            y: (room.ball.y / 100) * windowsHeight,
-            percentX: room.ball.x,
-            percentY: room.ball.y,
-          });
-        },
       });
     });
   }, [

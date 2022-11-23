@@ -23,7 +23,6 @@ interface props {
 interface IPlayer {
   id: string;
   name: string;
-  score: number;
   status: string;
   x: number;
   y: number;
@@ -38,6 +37,8 @@ interface IRoom {
   createdAt: string;
   playerA: IPlayer;
   playerB: IPlayer;
+  scoreA: number;
+  scoreB: number;
   ball: IBall;
   settings: ISettings;
   configurationA: IConfiguration;

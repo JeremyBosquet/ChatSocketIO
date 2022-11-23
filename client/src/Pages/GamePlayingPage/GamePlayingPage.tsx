@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeGameChat, setSocketGame } from "../../Redux/gameSlice";
 import useEventListener from "@use-it/event-listener";
 import KillSocket from "../../Components/KillSocket/KillSocket";
+import { useParams } from "react-router-dom";
 
 interface IPlayer {
   id: string;
@@ -67,7 +68,7 @@ function GamePlayingPage() {
   const [playerName, setPlayerName] = useState<string>("");
   const [room, setRoom] = useState<IRoom>();
   const [notification, setNotificaton] = useState<Boolean>(false);
-
+  const { roomId } = useParams<{ roomId: string }>();
   const [friendList, SetFriendList] = useState<any[]>([]);
 	const [blockList, SetBlockList] = useState<any[]>([]);
 	const [requestedList, SetRequestedList] = useState<any[]>([]);

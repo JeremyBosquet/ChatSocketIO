@@ -44,8 +44,8 @@ export class RoomGateway {
     this.server.emit('roomCreated', rooms);
   }
 
-  async gameLoop(roomTMP: any): Promise<void> {
-    const room = await this.roomService.getRoom(roomTMP.id);
+  async gameLoop(roomId: string): Promise<void> {
+    const room = await this.roomService.getRoom(roomId);
     //console.log('gameLoop');
     if (room && room.id) {
       const settings = room.settings;
@@ -85,8 +85,12 @@ export class RoomGateway {
             await this.roomService.save(room);
             this.server.emit('roomFinished', room);
             this.server.in('room-' + room.id).emit('gameEnd', room);
-            this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
-            this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
+            const playerA = room.status.split('|')[1];
+            const playerB = room.status.split('|')[2];
+            if (playerA)
+              this.server.emit('gameRemoveInvite', {target: playerA, room:room});
+            if (playerB)
+              this.server.emit('gameRemoveInvite', {target: playerB, room:room});
             clearInterval(intervalList[room.id]);
             //roomList[room.id] = null;
           }
@@ -108,7 +112,6 @@ export class RoomGateway {
               room.ball.y < playerA.y + settings.boardHeight
             ) {
               console.log('gameLoop - collision with playerA');
-              //room.ball.x = playerA.x - settings.boardWidth;
               room.ball.direction = Math.PI - room.ball.direction;
               room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
               room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
@@ -121,7 +124,6 @@ export class RoomGateway {
               room.ball.y < playerB.y + settings.boardHeight
             ) {
               console.log('gameLoop - collision with playerB');
-              //room.ball.x = playerB.x + settings.ballRadius;
               room.ball.direction = Math.PI - room.ball.direction;
               room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
               room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
@@ -131,7 +133,7 @@ export class RoomGateway {
               room.ball.y - settings.ballRadius * 0.75 <= 0 ||
               room.ball.y + settings.ballRadius * 1.5 >= 100
             ) {
-              ////console.log('gameLoop - collision top or bottom');
+              console.log('gameLoop - collision top or bottom');
               if (room.ball.y < 0) {
                 room.ball.y = 0 + settings.ballRadius;
               } else if (room.ball.y + settings.ballRadius > 100) {
@@ -147,7 +149,6 @@ export class RoomGateway {
               room.ball.x += room.ball.speed * 0.2 * Math.cos(room.ball.direction);
               room.ball.y += room.ball.speed * 0.2 * Math.sin(room.ball.direction);
             }
-            room.lastActivity = Date.now();
             this.server.in('room-' + room.id).emit('ballMovement', room);
         }
         room.lastActivity = Date.now();
@@ -317,12 +318,18 @@ export class RoomGateway {
  //   console.log(  'cancelSearching', data?.id, room?.id);
     if (data?.id && data?.name && room) {
       //console.log('cancelSearching');
+      if (room.status.startsWith('waiting|')) {
+        const playerA = room.status.split('|')[1];
+        const playerB = room.status.split('|')[2];
+
+        if (playerA)
+          this.server.emit('gameRemoveInvite', {target: playerA, room:room});
+        if (playerB)
+          this.server.emit('gameRemoveInvite', {target: playerB, room:room});
+      }
       if (room?.playerA?.id == client.data.playerId) room.playerA = null;
       else if (room?.playerB?.id == client.data.playerId) room.playerB = null;
       else {
-        //console.log(
-       //  'error - player not found - (Call tnard car c la merde ou spectateur)',
-       //);
         return;
       }
       room.nbPlayers--;
@@ -342,8 +349,12 @@ export class RoomGateway {
         } 
         else
         {
-          this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
-          this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
+          const playerA = room.status.split('|')[1];
+          const playerB = room.status.split('|')[2];
+          if (playerA)
+            this.server.emit('gameRemoveInvite', {target: playerA, room:room});
+          if (playerB)
+            this.server.emit('gameRemoveInvite', {target: playerB, room:room});
           this.server.in('room-' + room.id).emit('playerLeave');
           // detruire la room car l'autre a quitté
           await this.roomService.removeFromID(room.id);
@@ -353,7 +364,7 @@ export class RoomGateway {
       if (intervalList[room.id]) clearInterval(intervalList[room.id]);
 
       roomList[room.id] = null;
-      this.roomService.save(room);
+      await this.roomService.save(room);
       if (room.nbPlayers == 0) this.roomService.removeFromID(room.id);
     }
   }
@@ -370,6 +381,13 @@ export class RoomGateway {
         //  room.playerA?.id,
         //  room.playerB?.id,
         //);
+        
+        const playerA = room.status.split('|')[1];
+        const playerB = room.status.split('|')[2];
+        if (playerA)
+          this.server.emit('gameRemoveInvite', {target: playerA, room:room});
+        if (playerB)
+          this.server.emit('gameRemoveInvite', {target: playerB, room:room});
         if (room?.playerA?.id == client.data.playerId) room.playerA = null;
         else if (room?.playerB?.id == client.data.playerId) room.playerB = null;
         else {
@@ -388,8 +406,12 @@ export class RoomGateway {
           else
           {
             this.server.in('room-' + room.id).emit('playerLeave');
-            this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
-            this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
+            const playerA = room.status.split('|')[1];
+            const playerB = room.status.split('|')[2];
+            if (playerA)
+              this.server.emit('gameRemoveInvite', {target: playerA, room:room});
+            if (playerB)
+              this.server.emit('gameRemoveInvite', {target: playerB, room:room});
             // detruire la room car l'autre a quitté
             await this.roomService.removeFromID(room.id);
           }
@@ -407,10 +429,12 @@ export class RoomGateway {
           this.server.to('room-' + room.id).emit('gameForceEnd', room);
           if (intervalList[room.id]) clearInterval(intervalList[room.id]);
           roomList[room.id] = null;
-          if (room.playerA && room.playerA?.id)
-            this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
-          if (room.playerB && room.playerB?.id)
-            this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
+          const playerA = room.status.split('|')[1];
+          const playerB = room.status.split('|')[2];
+          if (playerA)
+            this.server.emit('gameRemoveInvite', {target: playerA, room:room});
+          if (playerB)
+            this.server.emit('gameRemoveInvite', {target: playerB, room:room});
           this.roomService.removeFromID(room.id);
         } else {
           room.status = 'waiting'; // remove that
@@ -423,6 +447,7 @@ export class RoomGateway {
       }
     }
   }
+
   @SubscribeMessage('playerMove')
   async handleMove(
     @ConnectedSocket() client: Socket,
@@ -537,7 +562,7 @@ export class RoomGateway {
         roomList[room.id] = "playing";
         this.server.in('room-' + _room?.id).emit('gameStart', _room);
         this.server.in('room-' + _room?.id).emit('playerReady', _room);
-        intervalList[_room.id] = setInterval(() => this.gameLoop(_room), 40);
+        intervalList[_room.id] = setInterval(() => this.gameLoop(_room.id), 40);
       }
       this.server.in('room-' + _room?.id).emit('configurationUpdated', _room);
     }// else //console.log('action not allowed -', room?.id, room?.status);
@@ -562,14 +587,22 @@ export class RoomGateway {
             await this.server.to('room-' + room.id).emit('configuring', room);
             room.status = 'configuring' + "|" + room.playerA.id + "|" + room.playerB.id;
             await this.roomService.save(room);
-            this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
-            this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
+            const playerA = room.status.split('|')[1];
+            const playerB = room.status.split('|')[2];
+            if (playerA)
+              this.server.emit('gameRemoveInvite', {target: playerA, room:room});
+            if (playerB)
+              this.server.emit('gameRemoveInvite', {target: playerB, room:room});
           }
         }
         catch (e) {
           console.log(e);
-          this.server.emit('gameRemoveInvite', {target: room.playerA.id, room:room});
-          this.server.emit('gameRemoveInvite', {target: room.playerB.id, room:room});
+          const playerA = room.status.split('|')[1];
+          const playerB = room.status.split('|')[2];
+          if (playerA)
+            this.server.emit('gameRemoveInvite', {target: playerA, room:room});
+          if (playerB)
+            this.server.emit('gameRemoveInvite', {target: playerB, room:room});
           // Redirect to home
         }
       }

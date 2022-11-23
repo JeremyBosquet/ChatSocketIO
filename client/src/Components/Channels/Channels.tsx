@@ -16,14 +16,16 @@ interface IInvites {
   }
 interface props {
     invites: IInvites[];
+    searchChannel: string;
+    setSearchChannel: any;
+    setChannelsFind: any;
 }
 
 
 function Channels(props: props) {
     const params = useParams();
-    const [searchChannel, setSearchChannel] = useState<string>("");
+    // const [searchChannel, setSearchChannel] = useState<string>("");
     const [init, setInit] = useState<boolean>(false);
-    const [channelsFind, setChannelsFind] = useState<[]>([]);
     const dispatch = useDispatch();
 
     const user = useSelector(getUser);
@@ -46,26 +48,12 @@ function Channels(props: props) {
     }, [init, user])
 
     return (
-    <div className='channels'>
-        {/* <div className='channelsOperations'>
-            <FormCreateChannel/>
-            <Search searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} getUsersChannel={getUsersChannel}/>
-        </div> */}
-        <div className='channelsInfos'>
-            {searchChannel === "" ? 
-                <div className='channelsInfo'>
-                    {channels.map((channel : any) => (
-                        <Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={false}/>
-                    ))}
-                </div>
-                :
-                <div className='channelsInfo'>
-                    <h2>Channel(s) found</h2>
-                    {channelsFind.map((channel) => (
-                        <Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={true}/>
-                    ))}
-                </div>
-            }
+    <>  
+        <div className='channels'>
+            <div className='channelsOperations'>
+                <FormCreateChannel/>
+                <Search searchChannel={props.searchChannel} setSearchChannel={props.setSearchChannel} setChannelsFind={props.setChannelsFind} getUsersChannel={getUsersChannel}/>
+            </div>
             <div className='channelChat'>
                 { params.id !== undefined ? 
                     <ChatChannel invites={props.invites} />
@@ -74,7 +62,7 @@ function Channels(props: props) {
                 }
             </div>
         </div>
-    </div>
+    </>
   );
 }
 

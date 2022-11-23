@@ -4,13 +4,12 @@ import { useNavigate, useNavigation, } from "react-router-dom"
 import { createNotification } from '../notif/Notif';
 import io, { Socket } from 'socket.io-client';
 import { Link, useLocation } from 'react-router-dom';
-import { whoWon } from '../Utils/whoWon';
 import React from 'react';
 //const style = require('./Social.scss');
 import './Social.scss';
 import NavBar from '../Nav/NavBar';
 import {IoPersonRemoveSharp, IoPersonAddSharp, IoSearchSharp} from 'react-icons/io5';
-import { FaUserCircle, FaUserFriends } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 import {ImCross, ImCheckmark} from "react-icons/im";
 import {MdCancelScheduleSend, MdBlock} from "react-icons/md";
 import {CgUnblock} from "react-icons/cg";
@@ -18,6 +17,12 @@ import {CgUnblock} from "react-icons/cg";
 import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage } from "../../Redux/authSlice";
 import {setFriendList, setRequestList, setRequestedList, setProfileDisplayed, setHistoryList, setBlockList, setProfilePage} from '../../Redux/authSlice'
 import { useDispatch, useSelector } from 'react-redux';
+import Show from '../Popup/Show/Show';
+import BlockOrUnblock from '../Popup/BlockOrUnblock/BlockOrUnbloc';
+import AddOrRemove from '../Popup/AddOrRemove/AddOrRemove';
+import Accept from '../Popup/Accept/Accept';
+import Decline from '../Popup/Decline/Decline';
+import Cancel from '../Popup/Cancel/Cancel';
 
 function Social() {
 	let navigate = useNavigate();
@@ -59,131 +64,6 @@ function Social() {
 	const profileDisplayed = useSelector(getProfileDisplayed);
 	const historyList = useSelector(getHistoryList);
 	
-	// function IsBlocked(uuid : string) {
-	// 	const userBlocked : any[] = blockList;
-	// 	const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid);
-	// 	if (!test.length)
-	// 		return true;
-	// 	return false;
-	// }
-
-	// function IsRequested(uuid : string) {
-	// 	const userRequested : any[] = requestedList;
-	// 	const test : any[] = userRequested.filter(requested => requested.uuid === uuid);
-	// 	if (!test.length)
-	// 		return true;
-	// 	return false;
-	// }
-
-	// function IsRequest(uuid : string) {
-	// 	const userRequest : any[] = requestList;
-	// 	const request : any[] = userRequest.filter(request => request.uuid === uuid);
-	// 	if (!request.length)
-	// 		return true;
-	// 	return false;
-	// }
-	// useEffect(() => { // Connect to the socket
-	// 	const newSocket = io('http://90.66.192.148:7003');
-	// 	if (props.setSocket)
-	// 		props.setSocket(newSocket);
-	// }, []);
-
-	// useEffect(() => {
-	// 	if (props.socket) {
-	// 		props.socket.removeAllListeners();
-	// 		props.socket.on("stpUneNotifstpUneNotif", (data: any) => {
-	// 			createNotification("info", "test");
-	// 		});
-	// 		props.socket.on("newFriend", (data: any) => {
-	// 			if (data.uuid === User.uuid && data?.username) {
-	// 				createNotification("info", "New friend request from: " + data.username);
-	// 				axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
-	// 				headers: ({
-	// 					Authorization: 'Bearer ' + localStorage.getItem('token'),
-	// 				})
-	// 				}).then((res) => {
-	// 					requestTab = res.data.usernameList;
-	// 					if (requestTab.length)
-	// 						props.SetRequestList(requestTab);
-	// 					else
-	// 						props.SetRequestList([]);
-	// 				}).catch((err) => {
-	// 					console.log(err.message);
-	// 					// SetRequestList([]);
-	// 				});
-	// 			}
-	// 		});
-	// 		props.socket.on("friendAccepted", (data: any) => {
-	// 			if (data.uuid === User.uuid && data?.username && data?.friendUuid) {
-	// 				createNotification("info", data.username + " accepted your friend request");
-	// 				axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
-	// 				headers: ({
-	// 					Authorization: 'Bearer ' + localStorage.getItem('token'),
-	// 				})
-	// 				}).then((res) => {
-	// 					const requested = props.requestedList.filter((e : any) => e.uuid !== data.friendUuid);
-	// 					props.SetRequestedList(requested);
-	// 					friendTab = res.data.friendList;
-	// 					props.SetFriendList(friendTab);
-	// 				}).catch((err) => {
-	// 					console.log(err.message);
-	// 				});
-	// 			}
-	// 		});
-	// 		props.socket.on("removedOrBlocked", (data: any) => {
-	// 			if (data.uuid === User.uuid && data?.username) {
-	// 				//createNotification("info", data.username + " accepted your friend request");
-	// 				axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
-	// 				headers: ({
-	// 					Authorization: 'Bearer ' + localStorage.getItem('token'),
-	// 				})
-	// 				}).then((res) => {
-	// 					friendTab = res.data.friendList;
-	// 					props.SetFriendList(friendTab);
-	// 				}).catch((err) => {
-	// 					console.log(err.message);
-	// 				});
-	// 			}
-	// 		});
-	// 		props.socket.on("CancelFriend", (data: any) => {
-	// 			if (data.uuid === User.uuid) {
-	// 				axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
-	// 				headers: ({
-	// 					Authorization: 'Bearer ' + localStorage.getItem('token'),
-	// 				})
-	// 				}).then((res) => {
-	// 					requestTab = res.data.usernameList;
-	// 					if (requestTab.length)
-	// 						props.SetRequestList(requestTab);
-	// 					else
-	// 						props.SetRequestList([]);
-	// 				}).catch((err) => {
-	// 					console.log(err.message);
-	// 					//SetRequestList([]);
-	// 				});
-	// 			}
-	// 		});
-	// 		props.socket.on("DeclineFriend", (data: any) => {
-	// 			if (data.uuid === User.uuid) {
-	// 				axios.get(`http://90.66.192.148:7000/user/ListFriendRequested`, {
-	// 				headers: ({
-	// 					Authorization: 'Bearer ' + localStorage.getItem('token'),
-	// 				})
-	// 				}).then((res) => {
-	// 					requestedTab = res.data.ListFriendsRequested;
-	// 					if (requestedTab.length)
-	// 						props.SetRequestedList(requestedTab);
-	// 					else
-	// 						props.SetRequestedList([]);
-	// 				}).catch((err) => {
-	// 					console.log(err.message);
-	// 					//SetRequestList([]);
-	// 				});
-	// 			}
-	// 		});
-	// 	}
-	// }, [props.socket, User]);
-
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem('token')) {
 			await axios.get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
@@ -273,21 +153,6 @@ function Social() {
 			});
 	}
 
-	async function RemoveFriend(uuid : string) {
-		await axios.post(`http://90.66.192.148:7000/user/RemoveFriend`, {uuid : uuid}, {
-				headers: ({
-					Authorization: 'Bearer ' + token,
-				})
-			}).then((res) => {
-				const users : any[] = friendList.filter((element : any) => element.uuid !== uuid);
-				dispatch(setFriendList(users));
-				socket.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
-			}).catch((err) => {
-				console.log(err.response.data.message);
-			});
-	}
-
-
 	async function SearchFriend(username : string) {
 		await axios.get(`http://90.66.192.148:7000/user/SearchFriend/` + username, {
 				headers: ({
@@ -302,248 +167,6 @@ function Social() {
 				console.log(err.response.data.message);
 			});
 	}
-
-
-	async function ShowProfile(uuid : string)
-	{
-		await axios.get(`http://90.66.192.148:7000/api/room/getGameOfUser/` + uuid, {
-		headers: ({
-			Authorization: 'Bearer ' + token,
-		})
-		}).then((res) => {
-			if (res.data && res.data.length)
-				dispatch(setHistoryList(res.data));
-			else if (res.data)
-				dispatch(setHistoryList([]));
-		});
-		await axios.get(`http://90.66.192.148:7000/user/findUser/` + uuid, {
-		headers: ({
-			Authorization: 'Bearer ' + token,
-		})
-		}).then((res) => {
-			if (res && res.data)
-			{
-				// if (location.pathname[location.pathname.length - 1] == '/')
-				// 	navigate(location.pathname + uuid);
-				// else
-				// 	navigate(location.pathname + '/' + uuid);
-				dispatch(setProfilePage(res.data.User));
-				dispatch(setProfileDisplayed(true));
-				let blur = document.getElementsByClassName('blur');
-				for (let i = 0; i < blur.length ; i++)
-					blur[i]?.classList.toggle('active');
-				let popup = document.getElementsByClassName('popup');
-				for (let i = 0; i < popup.length ; i++)
-					popup[i]?.classList.toggle('active');
-			}
-			else
-			dispatch(setProfilePage([]));
-		}).catch((err) => {
-			console.log(err);
-			navigate(location.pathname);
-		});
-	}
-
-	function IsFriend(uuid : string) {
-		const userFriends : any[] = friendList;
-		const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
-		if (!test.length)
-			return true;
-		return false;
-	}	
-
-	async function BlockOrUnblockUser(uuid : string, User : any) {
-		const userBlocked : any[] = blockList;
-		const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid)
-		if (!test.length)
-		{
-			await axios.post(`http://90.66.192.148:7000/user/BlockUser`, {uuid : uuid}, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-				}).then(() => {
-					const users : any[] = friendList.filter((element : any) => element.uuid !== uuid);
-					const request : any[] = requestList.filter((element : any) => element.uuid !== uuid);
-					const requested : any[] = requestedList.filter((element : any) => element.uuid !== uuid);
-					dispatch(setFriendList(users));
-					dispatch(setBlockList([...blockList,{uuid : uuid}]));
-					dispatch(setRequestList(request));
-					dispatch(setRequestedList(requested));
-					socket?.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
-					socket?.emit('CancelFriendAdd', {uuid : uuid, myUUID : User.uuid});
-					socket?.emit('DeclineFriendAdd', {uuid : uuid, myUUID : User.uuid});
-				}).catch((err) => {
-					console.log(err.response.data.message);
-				});
-		}
-		else
-		{
-			await axios.post(`http://90.66.192.148:7000/user/UnblockUser`, {uuid : uuid}, {
-				headers: ({
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})
-			}).then(() => {
-				const users : any[] = friendList.filter((element : any) => element.uuid !== uuid);
-				dispatch(setFriendList(users));
-				dispatch(setBlockList(blockList.filter((user : any) => user.uuid !== uuid)));
-			}).catch((err) => {
-				console.log(err.response.data.message);
-			});
-		}
-	}
-
-	async function AddOrRemoveFriend(uuid : string, User : any) {
-		const userFriends : any[] = friendList;
-		const test : any[] = userFriends.filter(friend => friend.uuid === uuid)
-		if (!test.length)
-		{
-			await axios.post(`http://90.66.192.148:7000/user/AddFriend`, {uuid : uuid}, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-				}).then(() => {
-					dispatch(setRequestedList([...requestedList, {uuid : uuid}]));
-					socket?.emit('addFriend', {uuid : uuid, myUUID : User.uuid})
-				}).catch((err) => {
-					console.log(err.response.data.message);
-				});
-		}
-		else
-		{
-			await axios.post(`http://90.66.192.148:7000/user/RemoveFriend`, {uuid : uuid}, {
-				headers: ({
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})
-			}).then(() => {
-				const users : any[] = friendList.filter((element : any) => element.uuid !== uuid);
-				dispatch(setFriendList(users));
-				socket?.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
-			}).catch((err) => {
-				console.log(err.response.data.message);
-			});
-		}
-	}
-
-	async function AcceptFriend(uuid : string, image : any, User : any) {
-		const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
-		if (test.length)
-		{
-			await axios.post(`http://90.66.192.148:7000/user/AcceptFriend`, {uuid : uuid}, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-				}).then((res) => {
-					const request : any[] = requestList.filter((element : any) => element.uuid !== uuid);
-					dispatch(setFriendList([...friendList, {uuid : uuid , username : test[0].username, image : image}]));
-					dispatch(setRequestList(request));
-					socket?.emit('acceptFriend', {uuid : uuid, myUUID : User.uuid});
-				}).catch((err) => {
-					console.log(err.response.data.message);
-				});
-		}
-	}
-	
-	async function DeclineFriendAdd(uuid : string, User : any) {
-		const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
-		if (test.length)
-		{
-			await axios.post(`http://90.66.192.148:7000/user/DeclineFriendAdd`, {uuid : uuid}, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-				}).then((res) => {
-					const request : any[] = requestList.filter((element : any) => element.uuid !== uuid);
-					dispatch(setRequestList(request));
-					socket?.emit('DeclineFriendAdd', {uuid : uuid, myUUID : User.uuid});
-				}).catch((err) => {
-					console.log(err.response.data.message);
-				});
-		}
-	}
-
-	async function CancelFriendAdd(uuid : string, User : any) {
-		const test : any[] = requestedList.filter((friend : any) => friend.uuid === uuid)
-		if (test.length)
-		{
-			await axios.post(`http://90.66.192.148:7000/user/CancelFriendAdd`, {uuid : uuid}, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-				}).then((res) => {
-					const requested : any[] = requestedList.filter((element : any) => element.uuid !== uuid);
-					dispatch(setRequestedList(requested));
-					socket?.emit('CancelFriendAdd', {uuid : uuid, myUUID : User.uuid});
-				}).catch((err) => {
-					console.log(err.response.data.message);
-				});
-		}
-	}
-
-	async function ShowProfileUseEffect(uuid : string)
-	{
-		await axios.get(`http://90.66.192.148:7000/api/room/getGameOfUser/` + uuid, {
-		headers: ({
-			Authorization: 'Bearer ' + token,
-		})
-		}).then((res) => {
-			if (res.data && res.data.length)
-				dispatch(setHistoryList(res.data));
-			else if (res.data)
-				dispatch(setHistoryList([]));
-		});
-		await axios.get(`http://90.66.192.148:7000/user/findUser/` + uuid, {
-		headers: ({
-			Authorization: 'Bearer ' + token,
-		})
-		}).then((res) => {
-			if (res && res.data)
-			{
-				dispatch(setProfilePage(res.data.User));
-				dispatch(setProfileDisplayed(true));
-				let blur = document.getElementsByClassName('blur');
-				for (let i = 0; i < blur.length ; i++)
-					blur[i]?.classList.toggle('active');
-				let popup = document.getElementsByClassName('popup');
-				for (let i = 0; i < popup.length ; i++)
-					popup[i]?.classList.toggle('active');
-			}
-			else
-				dispatch(setProfilePage([]));
-		}).catch((err) => {
-			console.log(err);
-			navigate('/social');
-		});
-	}
-
-	async function HideProfile()
-	{
-		navigate('/social');
-		setProfileDisplayed(false);
-		let blur = document.getElementById('blur');
-		blur?.classList.toggle('active');
-		let popup = document.getElementById('popup');
-		popup?.classList.toggle('active');
-	}
-
-	async function HideProfileUseEffect()
-	{
-		dispatch(setProfileDisplayed(false));
-		let blur = document.getElementsByClassName('blur');
-		for (let i = 0; i < blur.length ; i++)
-			blur[i]?.classList.toggle('active');
-		let popup = document.getElementsByClassName('popup');
-		for (let i = 0; i < popup.length ; i++)
-			popup[i]?.classList.toggle('active');
-	}
-
-
-	// function IsFriend(uuid : string) {
-	// 	const userFriends : any[] = friendList;
-	// 	const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
-	// 	if (!test.length)
-	// 		return true;
-	// 	return false;
-	// }
 
 	function IsRequested(uuid : string) {
 		const userRequested : any[] = requestedList;
@@ -599,7 +222,6 @@ function Social() {
 			{
 				!(booleffect3) ?
 				(
-					// <div>
 					<>
 					<div className="container blur">
 						<div>
@@ -626,17 +248,17 @@ function Social() {
 												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 												<p> {user.username} </p>
 												<div className='buttons'>
-													<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-													<button onClick={() => (BlockOrUnblockUser(user.uuid, User))} > {IsBlocked(user.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
+													<Show UserUuid={user.uuid}/>
+													<BlockOrUnblock UserUuid={user.uuid} User={User}/>
 												</div>
 												<div>
-												{	
+												{
 													IsRequested(user.uuid) ?
 													(
 														IsRequest(user.uuid) ?
 														(
 															<div className='buttons2'>
-																<button onClick={() => (AddOrRemoveFriend(user.uuid, User))} > {IsFriend(user.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+																<AddOrRemove User={User} UserUuid={user.uuid}/>
 															</div>
 														)
 
@@ -644,15 +266,15 @@ function Social() {
 
 														(
 															<div className='buttons2'>
-																<button onClick={() => (AcceptFriend(user.uuid, user.image, User))} > <span className='green'> <ImCheckmark/>  </span></button>
-																<button onClick={() => (DeclineFriendAdd(user.uuid, User))} ><span className='red'><ImCross/></span> </button>
+																<Accept User={User} UserUuid={user.uuid} UserImg={user.image}/>
+																<Decline User={User} UserUuid={user.uuid} />
 															</div>
 														)
 								
 													)
 													:
 													<div className='buttons2'>
-														<button onClick={() => (CancelFriendAdd(user.uuid, User))} > <MdCancelScheduleSend/> </button>
+														<Cancel User={User} UserUuid={user.uuid} />
 													</div>
 												}
 												</div>
@@ -675,45 +297,21 @@ function Social() {
 							{
 								friendList.length ?
 								(
-									friendList.length > 3 ?
-									(
-										<div id='listFriendScroll'>
-										{
-											friendList.map((user : any) => (
-												<div key={user.uuid} className='mapFriend'> 
-													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-													<p> {user.username} </p>
-													<div className='buttons'>
-														<button onClick={(e) => (RemoveFriend(user.uuid))} > <IoPersonRemoveSharp/> </button>
-														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => (BlockOrUnblockUser(user.uuid, User))}><MdBlock/></button>
-													</div>
+									<div id={friendList.length > 3 ? 'listFriendScroll' : 'listFriend'}>
+									{
+										friendList.map((user : any) => (
+											<div key={user.uuid} className='mapFriend'> 
+												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
+												<p> {user.username} </p>
+												<div className='buttons'>
+													<AddOrRemove User={User} UserUuid={user.uuid}/>
+													<Show UserUuid={user.uuid}/>
+													<BlockOrUnblock UserUuid={user.uuid} User={User}/>
 												</div>
-											))
-										}
-										</div>
-									)
-
-									:
-									
-									(
-										<div id='listFriend'>
-										{
-											friendList.map((user : any) => (
-												<div key={user.uuid} className='mapFriend'> 
-													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-													<p> {user.username} </p>
-													<div className='buttons'>
-														<button onClick={(e) => (RemoveFriend(user.uuid))} > <IoPersonRemoveSharp/> </button>
-														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => (BlockOrUnblockUser(user.uuid, User))}> <MdBlock/> </button>
-													</div>
-												</div>
-											))
-										}
-										</div>
-									)
-
+											</div>
+										))
+									}
+									</div>
 								)
 
 								:
@@ -732,42 +330,21 @@ function Social() {
 								{								
 									requestList.length ?
 									(
-										requestList.length > 3 ?
-										(
-											<div id='listReqScroll'>
-											{
-												requestList.map((user : any, index : number) => (
-												<div key={index} className='mapReq'> 
-													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-													<p> {user?.username} </p>
-													<div className='buttons'>
-														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => BlockOrUnblockUser(user.uuid, User)}> <MdBlock/> </button>
-														<button onClick={(e) => (AcceptFriend(user.uuid, user.image, User))} > <span className='green'><ImCheckmark/></span> </button>
-														<button onClick={(e) => (DeclineFriendAdd(user.uuid, User))} > <span className='red'><ImCross/></span> </button>
-													</div>
-												</div>))
-											}
-											</div>
-										)
-										:
-										(
-											<div id='listReq'>
-											{
-												requestList.map((user : any, index : number) => (
-												<div key={index} className='mapReq'> 
-													<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
-													<p> {user?.username} </p>
-													<div className='buttons'>
-														<button onClick={(e) => (ShowProfile(user.uuid))} > <FaUserCircle/> </button>
-														<button onClick={(e) => BlockOrUnblockUser(user.uuid, User)}> <MdBlock/> </button>
-														<button onClick={(e) => (AcceptFriend(user.uuid, user.image, User))} > <span className='green'><ImCheckmark/></span> </button>
-														<button onClick={(e) => (DeclineFriendAdd(user.uuid, User))} > <span className='red'><ImCross/></span> </button>
-													</div>
-												</div>))
-											}
-											</div>
-										)
+										<div id={requestList.length > 3 ? 'listReqScroll' : 'listReq'}>
+										{
+											requestList.map((user : any, index : number) => (
+											<div key={index} className='mapReq'> 
+												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
+												<p> {user?.username} </p>
+												<div className='buttons'>
+													<Show UserUuid={user.uuid}/>
+													<BlockOrUnblock UserUuid={user.uuid} User={User}/>
+													<Accept User={User} UserUuid={user.uuid} UserImg={user.image}/>
+													<Decline User={User} UserUuid={user.uuid} />
+												</div>
+											</div>))
+										}
+										</div>
 									)
 
 									:

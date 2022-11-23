@@ -259,16 +259,16 @@ function HomePage() {
 							<div id={myHistoryList.length > 3 ? "listMyGameScroll" : "listMyGame"}>
 							{myHistoryList.map((game, index) => (
 								<ul key={index}>
-								{whoWon(User.uuid,game.playerA,game.playerB,game.status) === "Victory" ? (
+								{whoWon(User.uuid, game) === "Victory" ? (
 									<li>
 									<span className="green">
-										{game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid,game.playerA,game.playerB,game.status)}
+										{game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game)}
 									</span>
 									</li>
 								) : (
 									<li>
 									<span className="red">
-										{game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid,game.playerA,game.playerB, game.status)}
+										{game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game)}
 									</span>
 									</li>
 								)}

@@ -70,26 +70,26 @@ function Popup(props: props)
 					<img className="ProfileImg" src={profilePage?.image} alt="user_img" width="384" height="256"/>
 					<h3> {profilePage?.username} </h3>
 					<div className="Buttons">
-					<BlockOrUnblock profilePage={profilePage} User={props.User}/>
+					<BlockOrUnblock UserUuid={""} User={props.User}/>
 					{	IsRequested(profilePage?.uuid) ?
 						(
 							IsRequest(profilePage?.uuid) ? 
 							(
-								<AddOrRemove profilePage={profilePage} User={props.User}/>
+								<AddOrRemove UserUuid={""} User={props.User}/>
 							)
 
 							:
 
 							(
 								<>
-									<Accept profilePage={profilePage} User={props.User}/>
-									<Decline profilePage={profilePage} User={props.User}/>
+									<Accept UserUuid={""} UserImg={undefined} User={props.User}/>
+									<Decline UserUuid={""} User={props.User}/>
 								</>
 							)
 	
 						)
 						:
-							<Cancel profilePage={profilePage} User={props.User}/>
+							<Cancel UserUuid={""} User={props.User}/>
 					}
 					</div> 
 					<div className="expBar">
@@ -104,13 +104,13 @@ function Popup(props: props)
 							{
 								historyList.map((game : any, index : number) => (
 									<ul key={index} >
-										{whoWon(profilePage.uuid, game.playerA, game.playerB, game.status) === 'Victory' ? 
+										{whoWon(profilePage.uuid, game) === 'Victory' ? 
 										
-											<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+											<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game)}</span> </li>
 
 											:
 
-											<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game.playerA, game.playerB, game.status)}</span> </li>
+											<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game)}</span> </li>
 											
 										}
 									</ul>

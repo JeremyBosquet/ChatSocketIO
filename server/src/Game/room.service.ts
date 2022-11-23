@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { Room } from './Entities/room.entity';
 import { SendGameHistoryDto } from './room.dto';
@@ -32,6 +33,7 @@ export class RoomService {
 
   constructor(
     @InjectRepository(Room) private roomRepository: Repository<Room>,
+	private readonly userService: UsersService,
   ) {
     this.clearDatabase();
   }
@@ -108,11 +110,19 @@ export class RoomService {
         (room.playerB !== null && room.playerB.id === uuid && room.status == 'finished'),
     );
     for (let i = 0; i < info.length; i++)
+	{
+		const findA = await this.userService.findUserByUuid(info[i].playerA.id);
+		if (findA)
+			info[i].playerA.name = findA.username;
+		const findB = await this.userService.findUserByUuid(info[i].playerB.id);
+		if (findB)
+			info[i].playerB.name = findB.username;
       tab.push(
         plainToClass(SendGameHistoryDto, info[i], {
           excludeExtraneousValues: true,
         }),
       );
+	}
     tab.reverse();
     return tab;
   }

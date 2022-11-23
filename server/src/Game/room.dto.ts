@@ -65,10 +65,10 @@ export class SendGameHistoryDto {
   @Exclude()
   configurationB: IConfiguration;
 
-  @Exclude()
+  @Expose()
   scoreA: number;
 
-  @Exclude()
+  @Expose()
   scoreB: number;
 
   @IsNumber()

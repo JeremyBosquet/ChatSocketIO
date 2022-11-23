@@ -8,20 +8,41 @@ body {
     flex-direction: column;
     align-items: center;
     .container {
+        display: flex;
         background-color: #2C2C2C;
         box-shadow: 0px 4px 29px 5px rgba(0, 0, 0, 0.25);
         width: 80%;
         margin-top: 70px;
         min-height: 650px;
+        padding: 20px;
 
-        .selectMode {
+        .leftSide {
+            width: 300px;
+        }
+        .channelsInfos {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            
+            .channelsInfo {
+                border: 2px solid black;
+                background-color: #1B1F3B;
+                margin-right: 30px;
+                color: white;
+                
+                h2 {
+                    text-align: center;
+                    color: white;
+                }
+            }
+        }
+
+        .selectChannelOrDm {
             height: 40px;
             background-color: #1F1F1F;
-            width: fit-content;
             padding: 13px 23px;
             display: flex;
             justify-content: space-between;
-            width: 250px;
 
             .selectedButton {
                 background-color: #181818;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Channels from '../../Components/Channels/Channels';
 import NavBar from '../../Components/Nav/NavBar';
 import { getLogged, getUser, setLogged, setUser } from '../../Redux/authSlice';
@@ -15,12 +15,13 @@ import GameReady from '../../Components/GameReady/GameReady';
 import GameChatReady from '../../Components/GameChatReady/GameChatReady';
 import KillSocket from '../../Components/KillSocket/KillSocket';
 import Popup from '../../Components/Popup/Popup';
+import Channel from '../../Components/Channels/Channel/Channel';
+import { getChannels } from '../../Redux/chatSlice';
 
 
 interface IPlayer {
 	id: string;
 	name: string;
-	score: number;
 	status: string;
 	x: number;
 	y: number;
@@ -40,6 +41,8 @@ interface IPlayer {
 	owner: string;
 	status: string;
 	createdAt: string;
+	scoreA: number;
+	scoreB: number;
 	playerA: IPlayer;
 	playerB: IPlayer;
 	ball: IBall;
@@ -82,6 +85,10 @@ function ChannelPage() {
 	const [room, setRoom] = useState<IRoom>();
 	const [notification, setNotificaton] = useState<Boolean>(false);
 	const [inviteGames, setInviteGames] = useState<IInvites[]>([]);
+    const [searchChannel, setSearchChannel] = useState<string>("");
+	const [channelsFind, setChannelsFind] = useState<[]>([]);
+
+	const channels = useSelector(getChannels);
   
 	KillSocket("game");
 	KillSocket("spectate");
@@ -146,6 +153,7 @@ function ChannelPage() {
 		  	socketGame?.removeListener("gameFetchInvite");
 		  
 			socketGame.on("gameRemoveInvite", (data: any) => {
+				console.log("gameRemoveInvite", data);
 				if (data?.target && data?.room)
 				{
 					console.log("gameFetchInvite", data?.target, user.uuid)
@@ -220,9 +228,9 @@ function ChannelPage() {
 			});
 			socketGame?.on("gameEnd", (data: IRoom) => {
 			console.log("gameEnd", data);
-			if (data.playerA.score === 10 && !notification)
+			if (data.scoreA === 10 && !notification)
 			  createNotification("success", "PlayerA a gagner");
-			else if (data.playerB.score === 10 && !notification)
+			else if (data.scoreB === 10 && !notification)
 			  createNotification("success", "PlayerB a gagner");
 			setNotificaton(true);
 			setRoom(undefined);
@@ -260,22 +268,42 @@ function ChannelPage() {
 				{!inGame ? (
 					<div className='chatPage'>
 						<div className='container'>
-							<div className='selectChannelOrDm'>
-								
-								{logged === false ?
+							{ logged === false ?
+								(
 									<div className='notLogged'>
 										<p>Pending...</p>
 									</div>
+								)
 								:
-								<>
-									<div className="selectMode">
-										<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
-										<button className="selectedButton" onClick={() => handleChangeMode("dm")}>DM</button>
+								(
+									<>
+									<div>
+										<div className='leftSide'>
+											<div className='selectChannelOrDm'>
+												<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
+												<button className="selectedButton" onClick={() => handleChangeMode("dm")}>DM</button>
+											</div>
+											<div className='channelsInfos'>
+												{searchChannel === "" ? 
+													<div className='channelsInfo'>
+														{channels.map((channel : any) => (
+															<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={false}/>
+														))}
+													</div>
+													:
+													<div className='channelsInfo'>
+														<h2>Channel(s) found</h2>
+														{channelsFind.map((channel) => (
+															<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={true}/>
+														))}
+													</div>
+												}
+											</div>
+										</div>
 									</div>
-									<Channels invites={inviteGames} />
-								</>
-							}
-							</div>
+										<Channels searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} invites={inviteGames} />
+									</>
+								)}
 						</div>
 					</div>
 				) : (

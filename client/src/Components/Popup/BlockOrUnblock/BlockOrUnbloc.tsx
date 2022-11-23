@@ -1,13 +1,13 @@
 import React from "react"
 import {MdCancelScheduleSend, MdBlock} from "react-icons/md";
-import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/authSlice";
+import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/authSlice";
 import {CgUnblock} from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
 interface props {
-	profilePage: any;
 	User: any;
+	UserUuid : string;
 }
 
 function BlockOrUnblock (props : props) {
@@ -17,9 +17,10 @@ function BlockOrUnblock (props : props) {
 	const blockList = useSelector(getBlockList);
 	const requestedList = useSelector(getRequestedList);
 	const requestList = useSelector(getRequestList);
-	const userBlocked : any[] = blockList;
-
+	const profilePage = useSelector(getProfilePage);
+	
 	async function BlockOrUnblockUser(uuid : string) {
+		const userBlocked : any[] = blockList;
 		const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid)
 		if (!test.length)
 		{
@@ -27,7 +28,7 @@ function BlockOrUnblock (props : props) {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
-				}).then((res) => {
+				}).then(() => {
 					const users : any[] = friendList.filter((element : any) => element.uuid !== uuid);
 					const request : any[] = requestList.filter((element : any) => element.uuid !== uuid);
 					const requested : any[] = requestedList.filter((element : any) => element.uuid !== uuid);
@@ -67,8 +68,11 @@ function BlockOrUnblock (props : props) {
 	}
 
 	return (
-		<button onClick={() => (BlockOrUnblockUser(props.profilePage?.uuid))} > {IsBlocked(props.profilePage?.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
-	)
+		props.UserUuid ?
+			<button onClick={() => (BlockOrUnblockUser(props.UserUuid))} > {IsBlocked(props.UserUuid) ? <MdBlock/>: <CgUnblock/>} </button>
+		:
+			<button onClick={() => (BlockOrUnblockUser(profilePage.uuid))} > {IsBlocked(profilePage.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
+	);
 }
 
 export default BlockOrUnblock;

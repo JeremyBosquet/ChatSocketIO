@@ -1,12 +1,12 @@
 import axios from "axios";
 import React from "react"
 import { useDispatch, useSelector } from "react-redux";
-import {getFriendList, getRequestList, getSocketSocial, setRequestList } from "../../../Redux/authSlice";
+import {getFriendList, getProfilePage, getRequestList, getSocketSocial, setRequestList } from "../../../Redux/authSlice";
 import {ImCross} from "react-icons/im";
 
 interface props{
-	profilePage: any;
-	User : any;
+	User : any,
+	UserUuid : string,
 }
 
 function Decline(props : props){
@@ -14,6 +14,8 @@ function Decline(props : props){
 	const socket = useSelector(getSocketSocial);
 	const friendList = useSelector(getFriendList);
 	const requestList = useSelector(getRequestList);
+	const profilePage = useSelector(getProfilePage);
+	
 
 	async function DeclineFriendAdd(uuid : string) {
 		const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
@@ -33,7 +35,10 @@ function Decline(props : props){
 		}
 	}
 	return (
-		<button onClick={(e) => (DeclineFriendAdd(props.profilePage?.uuid))} > <span className='red'><ImCross/></span> </button>
+		props.UserUuid ?
+			<button onClick={(e) => (DeclineFriendAdd(props.UserUuid))} > <span className='red'><ImCross/></span> </button>
+		:
+			<button onClick={(e) => (DeclineFriendAdd(profilePage.uuid))} > <span className='red'><ImCross/></span> </button>
 	);
 }
 

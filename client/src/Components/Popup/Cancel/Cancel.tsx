@@ -1,18 +1,20 @@
 import axios from "axios";
 import React from "react"
 import { useDispatch, useSelector } from "react-redux";
-import {getFriendList, getRequestedList, getSocketSocial, setRequestedList } from "../../../Redux/authSlice";
+import {getFriendList, getProfilePage, getRequestedList, getSocketSocial, setRequestedList } from "../../../Redux/authSlice";
 import {MdCancelScheduleSend} from "react-icons/md";
 
 interface props{
-	profilePage: any;
-	User : any;
+	User : any,
+	UserUuid : string,
 }
 
 function Cancel(props : props){
 	const dispatch = useDispatch();
 	const socket = useSelector(getSocketSocial);
 	const requestedList = useSelector(getRequestedList);
+	const profilePage = useSelector(getProfilePage);
+	
 
 	async function CancelFriendAdd(uuid : string) {
 		const test : any[] = requestedList.filter((friend : any) => friend.uuid === uuid)
@@ -33,7 +35,10 @@ function Cancel(props : props){
 	}
 
 	return (
-		<button onClick={(e) => (CancelFriendAdd(props.profilePage?.uuid))} > <MdCancelScheduleSend/> </button>	
+		props.UserUuid ?
+			<button onClick={(e) => (CancelFriendAdd(props.UserUuid))} > <MdCancelScheduleSend/> </button>
+		:
+			<button onClick={(e) => (CancelFriendAdd(profilePage.uuid))} > <MdCancelScheduleSend/> </button>	
 	);
 }
 

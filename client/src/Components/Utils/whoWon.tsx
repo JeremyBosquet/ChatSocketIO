@@ -9,17 +9,15 @@ interface IPlayers {
 }
 
 export function whoWon(
-  uuid: string,
-  playerA: IPlayers,
-  playerB: IPlayers,
-  status: string
+	uuid: string,
+	game : any,
 ) {
-  if (uuid && playerA && playerB && status === "finished") {
-    if (playerA.score == playerB.score) return "Draw";
-    if (uuid === playerA.id && playerA.score > playerB.score) return "Victory";
-    else if (uuid === playerB.id && playerB.score > playerA.score)
+  if (uuid && game.playerA && game.playerB && game.status === "finished") {
+    if (game.scoreA == game.scoreB) return "Draw";
+    if (uuid === game.playerA.id && game.scoreA > game.scoreB) return "Victory";
+    else if (uuid === game.playerB.id && game.scoreB > game.scoreA)
       return "Victory";
-    if (uuid === playerA.id) return "Defeat";
+    if (uuid === game.playerA.id) return "Defeat";
     return "Defeat";
   }
 }

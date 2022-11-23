@@ -46,12 +46,12 @@ function App() {
         .get("http://90.66.192.148:7000/status")
         .catch((err) => {
           // Not noice
-          setAPIStatus(false);
+          //setAPIStatus(false);
         })
         .then((res) => {
-          if (res?.data && res.data?.status && res.data.status === "ok")
-            setAPIStatus(true);
-          else setAPIStatus(false);
+         // if (res?.data && res.data?.status && res.data.status === "ok")
+         //  setAPIStatus(true);
+         //else setAPIStatus(false);
         });
     }, 1000);
     return () => clearInterval(interval);
@@ -72,6 +72,7 @@ function App() {
 			{/* <Route path="/social" element={<Protected><Social /></Protected>}></Route> */}
 			{/* <Route path=":UserId" element={<Protected><Social /></Protected>}></Route> */}
 			<Route path="/game/" element={<Protected><GamePlayingPage /></Protected>}></Route>
+			<Route path="/game/:roomId" element={<Protected><GamePlayingPage /></Protected>}></Route>
 			<Route path="/game/spectate" element={<Protected><GameSpectatePage /></Protected>}></Route>
 			<Route path="/game/spectate/:roomId" element={<Protected><GameSpectatePage /></Protected>}></Route>
 			<Route path="/chat/" element={<Protected><ChannelPage /></Protected>}></Route>

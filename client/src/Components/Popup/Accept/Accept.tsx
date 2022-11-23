@@ -1,12 +1,13 @@
 import axios from "axios";
 import React from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/authSlice";
+import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/authSlice";
 import {ImCross, ImCheckmark} from "react-icons/im";
 
 interface props{
-	profilePage: any;
 	User : any;
+	UserUuid : string,
+	UserImg : any,
 }
 
 function Accept(props : props){
@@ -14,6 +15,8 @@ function Accept(props : props){
 	const socket = useSelector(getSocketSocial);
 	const friendList = useSelector(getFriendList);
 	const requestList = useSelector(getRequestList);
+	const profilePage = useSelector(getProfilePage);
+	
 
 	async function AcceptFriend(uuid : string, image : any) {
 		const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
@@ -35,7 +38,10 @@ function Accept(props : props){
 	}
 
 	return (
-		<button onClick={() => (AcceptFriend(props.profilePage?.uuid, props.profilePage?.image))} > <span className='green'><ImCheckmark/></span> </button>
+		props.UserUuid && props.UserImg ?
+			<button onClick={() => (AcceptFriend(props.UserUuid, props.UserImg))} > <span className='green'><ImCheckmark/></span> </button>
+		:
+			<button onClick={() => (AcceptFriend(profilePage.uuid, profilePage.image))} > <span className='green'><ImCheckmark/></span> </button>
 	);
 }
 

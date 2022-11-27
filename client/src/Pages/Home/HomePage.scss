@@ -20,7 +20,7 @@
 	opacity: 0;
 	z-index: 10;
 	//width : 400px; //vtre
-	background: #0582CA;
+	background: #181818;
 	/* animation: name duration timing-function delay iteration-count direction fill-mode; */
 	border-radius: 6px;
 	//text-align: center;
@@ -59,7 +59,7 @@
 		button {
 			padding:4px;
 			height : fit-content;
-			background: linear-gradient(135deg, #003554, #051923);
+			background: #222222;
 			color: #fff;
 			border: 0;
 			outline : none;
@@ -71,23 +71,23 @@
 			box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 			font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 		}
-		.closebtn {
-			opacity: unset;
-			&:hover
-			{
-				transition: 0.2s;
-				color :rgb(255, 255, 255);
-			}
-			background-color: rgba(0, 0, 0, 0);
-			border : none;
-			outline : none;
-			color : #c50000;
-			position: absolute;
-			top: 10px;
-			right: 25px;
-			font-size: 30px;
-			margin-left: 50px;
-		}
+		// .closebtn {
+		// 	opacity: unset;
+		// 	&:hover
+		// 	{
+		// 		transition: 0.2s;
+		// 		color :rgb(255, 255, 255);
+		// 	}
+		// 	background-color: rgba(0, 0, 0, 0);
+		// 	border : none;
+		// 	outline : none;
+		// 	color : #c50000;
+		// 	position: absolute;
+		// 	top: 10px;
+		// 	right: 25px;
+		// 	font-size: 30px;
+		// 	margin-left: 50px;
+		// }
 	}
 
 	.closeProfile {
@@ -97,7 +97,6 @@
 		opacity: unset;
 		&:hover
 		{
-			transition: 0.3s;
 			color :rgb(255, 255, 255);
 		}
 		background-color: rgba(0, 0, 0, 0);
@@ -110,14 +109,14 @@
 	.expBar
 	{
 		width : 100%;
-		background: linear-gradient(135deg, #003554, #051923);
+		background: #222222;
 		height: 35px;
 		top : -35px;
 		position: relative;
 		border-radius: 4px;
 		.exp{
 			--expAmount : 0%;
-			background: linear-gradient(90deg, rgba(255,0,0,1) 35%, rgba(255,248,0,1) 100%);
+			background: linear-gradient(90deg, #8E2DE2, #4A00E0);
 			width : var(--expAmount);
 			border: #000000;
 			height: 35px;
@@ -135,7 +134,7 @@
 		}
 	}
 	#listGameParent{
-		background: linear-gradient(135deg, #003554, #051923);
+		background: #222222;
 		padding: 10px;
 		margin-bottom: 20px;
 		border-radius: 5px;
@@ -143,28 +142,30 @@
 			width: 15px;         /* width of the entire scrollbar */
 		}
 		::-webkit-scrollbar-track {
-			background: #0582CA; 
+			background: #ffffff; 
 			border-radius: 10px;      /* color of the tracking area */
 		}
 		
 		::-webkit-scrollbar-thumb {
-			background: linear-gradient(135deg, #003554, #051923);    /* color of the scroll thumb */
+			background: var(--black);    /* color of the scroll thumb */
 			border-radius: 10px;       /* roundness of the scroll thumb */
-			border: 1px solid #0582CA; /* creates padding around scroll thumb */
+			border: 1px solid #fff; /* creates padding around scroll thumb */
 		}
 		#listGameScroll{
-  			scrollbar-color: #051923 #0582CA;
+  			scrollbar-color: var(--black) #ffffff;
 			
 			overflow:hidden;
 			overflow-y:scroll;
-			height: 85px;
+			height: 90px;
 
 			.green{
-				color :#2fbb00
+				//color :#2fbb00
+				color :rgb(255, 255, 255);
 			}
 
 			.red{
-				color :#bf0000
+				//color :#bf0000
+				color : rgb(255, 255, 255);
 			}
 
 			li{
@@ -177,15 +178,17 @@
 		}
 
 		#listGame{
-			height: 85px;
+			height: 90px;
 			overflow: hidden;
 
 			.green{
-				color :#2fbb00
+				//color :#2fbb00
+				color :rgb(255, 255, 255);
 			}
 
 			.red{
-				color :#bf0000
+				//color :#bf0000
+				color : rgb(255, 255, 255);
 			}
 
 			li{
@@ -205,7 +208,7 @@
 
 .main
 {
-  --light_blue : #02254b;
+  --black : #181818;
 //   background: #222222;
   height: 100vh;
   overflow: hidden;
@@ -214,7 +217,6 @@
 
 .HomePage #myProfile {
 	display: flex;
-	height: 300px;
 	.userInfo
 	{
 		width: 100%;
@@ -240,14 +242,17 @@
 	.expBar
 	{
 		width : 100%;
-		background: var(--light_blue);
+		background: var(--black);
 		height: 35px;
 		top : 70px;
 		position: relative;
 		border-radius: 4px;
 		.myExp{
 			--expAmount : 0%;
-			background: linear-gradient(90deg, rgba(255,0,0,1) 35%, rgba(255,248,0,1) 100%);
+			//background-color: #4158D0;
+			background: linear-gradient(90deg, #8E2DE2, #4A00E0);
+
+			//background: linear-gradient(135deg, rgb(120, 136, 152) , rgb(47, 79, 80));
 			width : var(--expAmount);
 			border: #000000;
 			height: 35px;
@@ -270,7 +275,7 @@
 		top : 112px;
 		position: relative;
 		//margin-left : 180px;
-		background: var(--light_blue);
+		background: var(--black);
 		padding: 10px;
 		//margin-bottom: 20px;
 		border-radius: 5px;
@@ -283,22 +288,24 @@
 		}
 		
 		::-webkit-scrollbar-thumb {
-			background: var(--light_blue);    /* color of the scroll thumb */
+			background: var(--black);    /* color of the scroll thumb */
 			border-radius: 10px;       /* roundness of the scroll thumb */
 			border: 1px solid #ffffff; /* creates padding around scroll thumb */
 		}
 		#listMyGameScroll{
-  			scrollbar-color: var(--light_blue) #ffffff;
+  			scrollbar-color: var(--black) #ffffff;
 			overflow:hidden;
 			overflow-y:scroll;
-			height: 85px;
+			height: 90px;
 
 			.green{
-				color :#2fbb00
+				//color :#2fbb00
+				color :rgb(255, 255, 255);
 			}
 
 			.red{
-				color :#bf0000
+				//color :#bf0000
+				color : rgb(255, 255, 255);
 			}
 
 			li{
@@ -312,15 +319,17 @@
 		}
 
 		#listMyGame{
-			height: 85px;
+			height: 90px;
 			overflow: hidden;
 
 			.green{
-				color :#2fbb00
+				//color :#2fbb00
+				color :rgb(255, 255, 255);
 			}
 
 			.red{
-				color :#bf0000
+				//color :#bf0000
+				color : rgb(255, 255, 255);
 			}
 
 			li{
@@ -338,7 +347,7 @@
 	top: 70%;
 	left: 50%;
 	transform: translate(-50%, -50%);
-	background: #0582CA;
+	background: var(--black);
 	border: none;
 	width: 200px;
 	height: 100px;
@@ -366,6 +375,10 @@
 		width: 75%;
 		h3 {
 			font-size : 25px;
+		}
+		.ProfileImg {
+			width: 100px;
+			height: 100px;
 		}
 	}
 	.HomePage {

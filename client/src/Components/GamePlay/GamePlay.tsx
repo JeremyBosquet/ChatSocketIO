@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import GameBoard from "../GameBoard/GameBoard";
 import "./GamePlay.scss";
-import { Stage, Layer, Rect, Circle, Text } from "react-konva";
+import { Stage, Layer, Rect, Circle, Text, Image} from "react-konva";
+import useImage from 'use-image';
 import Konva from "konva";
 import useEventListener from "@use-it/event-listener";
 
@@ -82,6 +83,7 @@ g
 */
 
 function GamePlay(props: props) {
+  const [image] = (props?.room?.settings?.background == "background1" ? useImage("https://cdn.discordapp.com/attachments/581532648095219716/1045003732577947709/image.png") : useImage('https://cdn.discordapp.com/attachments/581532648095219716/1045003732577947709/image.png'));
   const [windowsWidth, setWindowsWidth] = useState(window.innerWidth);
   const [windowsHeight, setWindowsHeight] = useState(window.innerHeight - 200); // game board
   const [boardWidth, setBoardWidth] = useState<number>(
@@ -296,7 +298,7 @@ function GamePlay(props: props) {
           className="gameMainCanvas"
         >
           <Layer>
-            <Rect width={windowsWidth} height={windowsHeight} x={0} y={0} fill="gray" />
+            <Image width={windowsWidth} height={windowsHeight} image={image} x={0} y={0} fill="gray" />
 
             {
               <Rect

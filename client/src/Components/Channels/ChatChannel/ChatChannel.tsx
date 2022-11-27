@@ -5,12 +5,15 @@ import SendMessage from './SendMessage/SendMessage';
 import Player from './Player/Player';
 import Messages from './Messages/Messages';
 import { Imessage } from './interfaces/messages';
-import './ChatChannel.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { getUser, setUser } from '../../../Redux/authSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
+import './ChatChannel.scss'
+import { MdPublic } from 'react-icons/md';
+import { IoMdLock } from 'react-icons/io';
+import { BsFillShieldLockFill } from 'react-icons/bs';
 
 interface Ichannel {
   uuid: string;
@@ -158,16 +161,26 @@ function ChatChannel(props: props) {
 
   return (
     <>
-      <div>
         <div className='ChatChannel'>
           {
             !channel?.name ? <h2>Select a channel</h2> :
             <>
               <div className='ChatChannelInfos'>
-                <h2>{channel.name}</h2>
-                <h3>{channel.visibility === "private" ? channel.code : null}</h3>
+                <p>{channel.name}</p>
+                {channel.visibility === "public" ?
+                  (<MdPublic className='channelIcon' />)
+                : channel.visibility === "private" ?
+                  (
+                    <div className='privateInfos'>
+                      <p>{channel.code}</p>
+                      <IoMdLock className='channelIcon' />
+                    </div>
+                  )
+                : channel.visibility === "protected" ?
+                  (<BsFillShieldLockFill className='channelIcon' />)
+                : 
+                (channel.visibility)}
               </div>
-              {/* Print messages */}
               <Messages userId={user.uuid} messages={messages} users={users} setUsers={setUsers}/>
               <div className='sendMessage'>
                   <SendMessage channelId={selectedChannel} user={user}/>
@@ -175,7 +188,6 @@ function ChatChannel(props: props) {
             </>
           }
         </div>
-      </div>
       <div className='playersList'>
         <h2>Players</h2>
         <div className='messages'>

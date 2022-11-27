@@ -40,5 +40,9 @@
 			"password": "jerem",
 			"name": "bruh"
 		}
-	]
+	],
+	"files.associations": {
+		"history.h": "c",
+		"minishell.h": "c"
+	}
 }

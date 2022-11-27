@@ -5,7 +5,7 @@ import SendMessage from './SendMessage/SendMessage';
 import Player from './Player/Player';
 import Messages from './Messages/Messages';
 import { Imessage } from './interfaces/messages';
-import './ChatChannel.scss'
+import './DMChannel.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
@@ -99,7 +99,7 @@ function DMChannel() {
   return (
     <>
       <div>
-        <div className='ChatChannel'>
+        <div className='DMChannel'>
             <div> 
               {name ? <h2>{name}</h2> : <h2>Select a DM</h2>}
             </div>

@@ -25,14 +25,14 @@ export class AppService {
     if (findUser[0]) {
       this.userService.IsLoggedIn(findUser[0].uuid);
       const payload = { uuid: findUser[0].uuid };
-      const token = this.jwtService.sign(payload);
+      const token = this.jwtService.sign(payload, {expiresIn: '2d'});
       console.log(token);
 
       return token;
     } 
 	else {
 		let userLogin = user.login;
-		let userImg = user.image_url;
+		let userImg = user.image.link;
 		if (!userLogin)
 			userLogin = "John Doe";
 		if (!userImg)
@@ -74,7 +74,7 @@ export class AppService {
       const newUser = this.userRepository.create(form);
       await this.userRepository.save(newUser);
       const payload = { uuid: newUuid };
-      const token = this.jwtService.sign(payload);
+      const token = this.jwtService.sign(payload , {expiresIn: '2d'});
       console.log(token);
       return token;
     }

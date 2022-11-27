@@ -4,7 +4,7 @@ import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { useState } from 'react';
 import React from 'react';
 import { createNotification } from '../../notif/Notif';
-
+import './Search.scss'
 interface props {
     searchChannel: string;
     setSearchChannel: any;
@@ -13,7 +13,6 @@ interface props {
 }
 
 function Search(props: props) {
-    const [privateJoin, setPrivateJoin] = useState<boolean>(false);
     const user = useSelector(getUser);
     const socket = useSelector(getSocket);
 
@@ -51,32 +50,21 @@ function Search(props: props) {
         .then((res) => {
             if (res)
             {
-                setPrivateJoin(false);
                 props.getUsersChannel(user.uuid);
                 socket?.emit('joinPermanent', { channelId: res.data.channelId });
-                console.log('la join emit')
+                createNotification("success", "You have successfully join the private channel.");
             }
         }).catch((err) => {
             createNotification("error", err.response.data.message);
-            // console.log(err.response.data.message); //set in notification
         })
     }
     
   return (
     <>
-        <input type="text" value={props.searchChannel} onChange={e => handleSearch(e)}/>
-        <div className='channelsPrivateJoin'>
-                <button onClick={() => setPrivateJoin(!privateJoin)}>Join private</button>
-                {
-                    privateJoin ? 
-                        <form onSubmit={handleJoinPrivate}>
-                            <input name="joinPrivate" placeholder='Private code'></input>
-                            <button type="submit">Join</button>
-                        </form>
-                    :
-                    null                
-                }
-            </div>
+        <form onSubmit={handleJoinPrivate} className="searchChannel">
+            <input name="joinPrivate" className="searchInput" type="text" value={props.searchChannel} onChange={e => handleSearch(e)} placeholder="Channel's name/private code"/>
+            <button className="searchButton" type="submit">Join private</button>
+        </form>
     </>
   );
 }

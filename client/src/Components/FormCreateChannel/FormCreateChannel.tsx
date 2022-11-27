@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, setChannels } from '../../Redux/chatSlice';
 import React from 'react';
 import { createNotification } from '../notif/Notif';
+import './FormCreateChannel.scss';
 
 function FormCreateChannel() {
   const [channelName, setChannelName] = useState<string>("");

@@ -50,7 +50,7 @@ export class RoomGateway {
     if (room && room.id) {
       const settings = room.settings;
       if (room.status === 'paused') {
-        this.roomService.removeFromID(room.id);
+        this.roomService.updateRoom(room.id, {status: 'destroy'});
         clearInterval(intervalList[room.id]);
         roomList[room.id] = null;
       } else if (room.status === 'waiting') {
@@ -231,7 +231,7 @@ export class RoomGateway {
           //console.log('-- roomFound', roomFound);
           if (!roomFound && room.status == 'waiting') {
             if (room.nbPlayers == 0) {
-              this.roomService.removeFromID(room.id);
+              await this.roomService.updateRoom(room.id, {status: 'destroy'});
             } else if (
               room.nbPlayers ==
               1 /*&& room?.playerA?.id != data?.id && room?.playerB?.id != data?.id*/
@@ -357,7 +357,7 @@ export class RoomGateway {
             this.server.emit('gameRemoveInvite', {target: playerB, room:room});
           this.server.in('room-' + room.id).emit('playerLeave');
           // detruire la room car l'autre a quitté
-          await this.roomService.removeFromID(room.id);
+          await this.roomService.updateRoom(room.id, {status: 'destroy'});
         }
       }
       room.status = 'waiting';
@@ -365,7 +365,8 @@ export class RoomGateway {
 
       roomList[room.id] = null;
       await this.roomService.save(room);
-      if (room.nbPlayers == 0) this.roomService.removeFromID(room.id);
+      if (room.nbPlayers == 0) 
+        await this.roomService.updateRoom(room.id, {status: 'destroy'});
     }
   }
 
@@ -413,7 +414,7 @@ export class RoomGateway {
             if (playerB)
               this.server.emit('gameRemoveInvite', {target: playerB, room:room});
             // detruire la room car l'autre a quitté
-            await this.roomService.removeFromID(room.id);
+            await this.roomService.updateRoom(room.id, {status: 'destroy'});
           }
         }
         client.data.roomId = null;
@@ -435,14 +436,15 @@ export class RoomGateway {
             this.server.emit('gameRemoveInvite', {target: playerA, room:room});
           if (playerB)
             this.server.emit('gameRemoveInvite', {target: playerB, room:room});
-          this.roomService.removeFromID(room.id);
+          await this.roomService.updateRoom(room.id, {status: 'destroy'});
         } else {
           room.status = 'waiting'; // remove that
           //console.log('disconnect -', room.id, room.nbPlayers);
           if (intervalList[room.id]) clearInterval(intervalList[room.id]);
           roomList[room.id] = null;
           this.roomService.save(room); // remove that
-          if (room.nbPlayers == 0) this.roomService.removeFromID(room.id);
+          if (room.nbPlayers == 0) 
+            await this.roomService.updateRoom(room.id, {status: 'destroy'});
         }
       }
     }

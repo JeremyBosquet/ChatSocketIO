@@ -65,8 +65,6 @@ export class ChatGateway {
         client.data.userId = data.userId;
         client.data.username = (await this.chatService.getUser(data.userId)).username;
         client.data.channelId = data.channelId;
-
-        console.log(client.data);
         
         this.server.emit('joinFromServer', data);
         const sockets = await this.server.in(data.channelId).fetchSockets()

@@ -16,6 +16,7 @@ interface props {
   setReady: (ready: boolean) => void;
   setPlayerId: (playerId: string) => void;
   setPlayerName: (playerName: string) => void;
+  setDisplay: (display: boolean) => void;
 }
 
 interface IPlayer {
@@ -70,13 +71,12 @@ function GameReady(props: props) {
   const [tmpUser, setTmpUser] = useState<any>(null);
   const [tmpUserBoolean, setTmpUserBoolean] = useState<boolean>(false);
   const [configuringDisplay, setConfiguringDisplay] = useState<boolean>(false);
-  const [settings, setSettings] = useState<IConfiguration>();
-  const [settingsBis, setSettingsBis] = useState<IConfiguration>();
+  const [settings, setSettings] = useState<IConfiguration>({difficulty: "easy", background: "background1", confirmed: false});
+  const [settingsBis, setSettingsBis] = useState<IConfiguration>({difficulty: "easy", background: "background1", confirmed: false});
   const [notification, setNotificaton] = useState<Boolean>(false);
   const socket = useSelector(getSockeGame);
 
   // const [propsOn, setPropsOn] = useState<boolean>(false);
-
   useEffect(() => {
     if (searching && !tmpUserBoolean) {
       setTmpUserBoolean(true);
@@ -107,6 +107,7 @@ function GameReady(props: props) {
       setSearchingDisplay(false);
       setConfiguringDisplay(true);
     });
+
     socket?.on("configurationUpdated", (data: IRoom) => {
       console.log(
         "receive configurationUpdated",
@@ -128,7 +129,7 @@ function GameReady(props: props) {
       setSearching(true);
       setTmpUserBoolean(true);
       setConfiguringDisplay(false);
-      setSettings(undefined);
+      setSettings({difficulty: "easy", background: "background1", confirmed: false});
     });
   }, [
     notification,
@@ -172,6 +173,7 @@ function GameReady(props: props) {
     props.setPlayerName(tmpUser.name);
     setNotificaton(false);
     setSearching(true);
+    props.setDisplay(false);
   }
   return (
     <div>
@@ -186,7 +188,7 @@ function GameReady(props: props) {
         <div>
           <ScaleLoader
             className="loading-spinner"
-            color={"#123abc"}
+            color={"#FFFFFF"}
             loading={true}
             height={65}
             speedMultiplier={0.75}
@@ -203,6 +205,7 @@ function GameReady(props: props) {
                 setConfiguringDisplay(false);
                 setSearching(false);
                 setTmpUserBoolean(false);
+                props.setDisplay(true);
               } /*Cancel search*/
             }
             className="cancel-button"
@@ -218,8 +221,9 @@ function GameReady(props: props) {
             <div className="ChannelRoomFormInput-Difficulty">
               <label htmlFor="Difficulty">Difficulty </label>
               <select
+                disabled={settings?.confirmed}
                 className="game-config-select"
-                defaultValue="undefined"
+                defaultValue="easy"
                 id="Difficulty"
                 onChange={(e) => {
                   if (e.target.value === "undefined") return;
@@ -238,9 +242,6 @@ function GameReady(props: props) {
                   });
                 }}
               >
-                <option key="undefined" disabled value="undefined">
-                  Select a difficulty
-                </option>
                 <option key="easy" value="easy">
                   Easy
                 </option>
@@ -255,8 +256,9 @@ function GameReady(props: props) {
             <div className="ChannelRoomFormInput-Background">
               <label htmlFor="Background">Background </label>
               <select
+                disabled={settings?.confirmed}
                 className="game-config-select"
-                defaultValue="undefined"
+                defaultValue="background1"
                 id="Background"
                 onChange={(e) => {
                   if (e.target.value === "undefined") return;
@@ -275,9 +277,6 @@ function GameReady(props: props) {
                   });
                 }}
               >
-                <option key="undefined" disabled value="undefined">
-                  Select a background
-                </option>
                 <option key="background1" value="background1">
                   Background 1
                 </option>
@@ -297,12 +296,14 @@ function GameReady(props: props) {
                   setSearching(false);
                   setTmpUserBoolean(false);
                   setConfiguringDisplay(false);
-                  setSettings(undefined);
+                  setSettings({difficulty: "easy", background: "background1", confirmed: false});
+                  props.setDisplay(true);
                 } /*Cancel search*/
               }
             >
               Cancel
             </button>
+            {!settings?.confirmed ? (
             <button
               className="game-config-button"
               onClick={
@@ -323,6 +324,7 @@ function GameReady(props: props) {
             >
               Ready
             </button>
+            ) : null}
           </div>
           <div className="game-config-secondary">
             <p>Configuration of the other player</p>

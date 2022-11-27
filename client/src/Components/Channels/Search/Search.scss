@@ -1,0 +1,48 @@
+.searchBar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    padding: 5px 0px;
+    color: white;
+    justify-content: space-around;
+
+    .searchChannel {
+        display: flex;
+        flex-direction: column;
+        width: 80%;
+        
+        .searchInput {
+            border: none;
+            outline: none;
+            height: 20px;
+            padding: 2px;
+            color: #1f1f1f;
+            background-color: rgb(220, 220, 220);
+            color: #181818;
+        }
+
+        .searchButton {
+            height: 20px;
+            border: none;
+            margin-top: 5px;
+            background-color: #454545;
+            color: #ffffff;
+            cursor: pointer;
+            transition-duration: 0.2s;
+
+            &:hover {
+                background-color: #313131;
+                transform: scale(1.01);
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    .chatPage .container .leftSide .topActions .searchBar input {
+        width: 100%;
+    }
+}

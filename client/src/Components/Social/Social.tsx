@@ -8,17 +8,12 @@ import React from 'react';
 //const style = require('./Social.scss');
 import './Social.scss';
 import NavBar from '../Nav/NavBar';
-import {IoPersonRemoveSharp, IoPersonAddSharp, IoSearchSharp} from 'react-icons/io5';
-import { FaUserCircle } from "react-icons/fa";
-import {ImCross, ImCheckmark} from "react-icons/im";
-import {MdCancelScheduleSend, MdBlock} from "react-icons/md";
-import {CgUnblock} from "react-icons/cg";
 // import { AddOrRemoveFriend, CancelFriendAdd, AcceptFriend, DeclineFriendAdd, BlockOrUnblockUser} from "../../Components/Utils/socialCheck"
 import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage } from "../../Redux/authSlice";
 import {setFriendList, setRequestList, setRequestedList, setProfileDisplayed, setHistoryList, setBlockList, setProfilePage} from '../../Redux/authSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import Show from '../Popup/Show/Show';
-import BlockOrUnblock from '../Popup/BlockOrUnblock/BlockOrUnbloc';
+import BlockOrUnblock from '../Popup/BlockOrUnblock/BlockOrUnblock';
 import AddOrRemove from '../Popup/AddOrRemove/AddOrRemove';
 import Accept from '../Popup/Accept/Accept';
 import Decline from '../Popup/Decline/Decline';

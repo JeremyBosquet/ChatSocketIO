@@ -12,13 +12,21 @@ import { createNotification } from "../../Components/notif/Notif";
 import React from "react";
 import NavBar from "../../Components/Nav/NavBar";
 import KillSocket from "../../Components/KillSocket/KillSocket";
+import {IoIosFolderOpen} from "react-icons/io"
+import {BsArrowRightCircleFill} from 'react-icons/bs'
+import {Tb2Fa} from 'react-icons/tb'
+import {ImCross, ImCheckmark} from "react-icons/im";
+import './Settings.scss'
+import { useDispatch } from "react-redux";
+import { setUserImg, setUserUsername } from "../../Redux/authSlice";
 
 function Settings() {
-  KillSocket("all");
+  //KillSocket("all");
   let navigate = useNavigate();
   let booleffect = false;
   const [changename, setChangename] = useState<string>();
   const [changeavatar, setChangeavatar] = useState<any>();
+  const [fileName, setFileName] = useState<string>("");
 
   const [QrCode, setQrCode] = useState<Blob>();
   const [TurnedOff, setTurnedOff] = useState<boolean>(false);
@@ -26,13 +34,6 @@ function Settings() {
   const token = localStorage.getItem("token");
 
   const [booleffect2, setbooleffect2] = useState<boolean>(true);
-  const firstrender = useRef<boolean>(true);
-
-  // const IsLoggedIn = useSelector(getLogged);
-  // const IsTwoAuthConnected = useSelector(getConnected);
-  // const IsTwoAuthActivated = useSelector(getActivated);
-  // const User = useSelector(getUser);
-  // const dispatch = useDispatch();
 
   const [User, setUser] = useState<any>();
   const [IsLoggedIn, setLogged] = useState<boolean>();
@@ -40,14 +41,7 @@ function Settings() {
   const [IsTwoAuthConnected, setConnected] = useState<boolean>();
 
 
-  const [friendList, SetFriendList] = useState<any[]>([]);
-	const [blockList, SetBlockList] = useState<any[]>([]);
-	const [requestedList, SetRequestedList] = useState<any[]>([]);
-	const [requestList, SetRequestList] = useState<any[]>([]);
-	const [profilePage, setProfilePage] = useState<any>(null);
-	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
-	const [historyList, SetHistoryList] = useState<any[]>([]);
-
+	const dispatch = useDispatch();
   async function GetLoggedInfoAndUser() {
     if (localStorage.getItem("token")) {
       await axios
@@ -74,8 +68,9 @@ function Settings() {
           },
         })
         .then((res) => {
-          setUser(res.data.User);
-          console.log(res.data.User);
+			setUser(res.data.User);
+			dispatch(setUserImg(res.data.User.image));
+			dispatch(setUserUsername(res.data.User.username));
         })
         .catch((err) => {
           console.log(err.message);
@@ -110,13 +105,13 @@ function Settings() {
         console.log(res.data.message);
         GetLoggedInfoAndUser();
         createNotification("success", "two auth auth succefully deactivated");
+		setTurnedOff(false);
       })
       .catch((err) => {
         console.log(err.message);
 
         createNotification("error", err.response.data.message);
       });
-    setTurnedOff(false);
   };
   const ChangeUsername = async (event: any) => {
     event.preventDefault();
@@ -143,35 +138,44 @@ function Settings() {
         );
       });
   };
+
+  const AvatarFile = async (event : any) => {
+	setChangeavatar(event.target.files[0]);
+	setFileName(event.target.files[0].name);
+  }
   const ChangeAvatar = async (event: any) => {
     event.preventDefault();
     //console.log(changeavatar);
-    const data = new FormData();
-    data.append("file", changeavatar, changeavatar.name);
-    console.log(data.get("file"));
-    await axios({
-      method: "post",
-      url: `http://90.66.192.148:7000/user/changeAvatar`,
-      data: data,
-      headers: {
-        Authorization: "Bearer " + token,
-        "Content-Type": "multipart/form-data",
-      },
-    })
-      .then((res) => {
-        console.log(res);
-        console.log(res.data.message);
-        GetLoggedInfoAndUser();
-        createNotification("success", "Avatar succefully changed");
-        //setMessageAvatar("Avatar succefuly changed");
-      })
-      .catch((err) => {
-        console.log(err);
-        console.log(err.response.statusText);
-        createNotification("error", err.response.statusText);
-        //setMessageAvatar("");
-      })
-      .finally(() => {});
+	if (changeavatar)
+	{
+		const data = new FormData();
+		data.append("file", changeavatar, changeavatar.name);
+		setFileName("");
+		setChangeavatar(undefined)
+		console.log(data.get("file"));
+		await axios({
+		method: "post",
+		url: `http://90.66.192.148:7000/user/changeAvatar`,
+		data: data,
+		headers: {
+			Authorization: "Bearer " + token,
+			"Content-Type": "multipart/form-data",
+		},
+		})
+		.then((res) => {
+			console.log(res);
+			console.log(res.data.message);
+			GetLoggedInfoAndUser();
+			createNotification("success", "Avatar succefully changed");
+			//setMessageAvatar("Avatar succefuly changed");
+		})
+		.catch((err) => {
+			console.log(err);
+			console.log(err.response.statusText);
+			createNotification("error", err.response.statusText);
+			//setMessageAvatar("");
+		});
+	}
   };
 
   const GetQrCode = async (event: any) => {
@@ -246,161 +250,141 @@ function Settings() {
     }
   }, []);
   return (
-    <div>
-      {!booleffect2 ? (
-        <div>
-          {User ? (
-            <div>
-              {!(User === undefined) ? (
-                <div>
-                  <NavBar 
-					socket={null}
-					setSocket={null}
-					friendList={friendList}
-					SetFriendList={SetFriendList}
-					blockList={blockList}
-					SetBlockList={SetBlockList}
-					requestList={requestList}
-					SetRequestList={SetRequestList}
-					requestedList={requestedList}
-					SetRequestedList={SetRequestedList}
-					setProfilePage={setProfilePage}
-					setProfileDisplayed={setProfileDisplayed}
-					SetHistoryList={SetHistoryList}/>
-                  <p> Current username : {User.username} </p>
-                  <form onSubmit={ChangeUsername}>
-                    <p>
-                      New Username : &nbsp;
-                      <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        required
-                        minLength={1}
-                        maxLength={16}
-                        onChange={(e) => setChangename(e.target.value)}
-                      />
-                      <button type="submit">Submit</button>
-                    </p>
-                  </form>
-                  <p>
-                    Current Avatar :
-                    <img
-                      src={User.image}
-                      alt="user_img"
-                      width="96"
-                      height="64"
-                    />
-                    <br></br>
-                  </p>
-                  <form onSubmit={ChangeAvatar}>
-                    <p>
-                      New Avatar : &nbsp;
-                      <input
-                        type="file"
-                        id="avatar"
-                        name="avatar"
-                        required
-                        onChange={(e) =>
-                          e.target.files != null
-                            ? setChangeavatar(e.target.files[0])
-                            : ""
-                        }
-                      />
-                      <button type="submit">Submit</button>
-                    </p>
-                  </form>
-                  <div>
-                    {!IsTwoAuthActivated && !QrCode ? (
-                      <div>
-                        <button onClick={(e) => GetQrCode(e)}>
-                          Activate two auth login{" "}
-                        </button>
-                        <br></br>
-                      </div>
-                    ) : (
-                      <p></p>
-                    )}
-                  </div>
-                  <div>
-                    {!IsTwoAuthActivated ? (
-                      QrCode ? (
-                        <div>
-                          <img src={URL.createObjectURL(QrCode)} alt="QrCode" />
-                          <br></br>
-                          <form onSubmit={ActivateTwoAuth}>
-                            <p>
-                              {" "}
-                              Please enter your 6 digit code after scanning the
-                              QRCODE in the Google Authenticator app : &nbsp;
-                              <input
-                                type="text"
-                                id="code"
-                                name="code"
-                                required
-                                onChange={(e) => setAuthCode(e.target.value)}
-                              />
-                              <button type="submit">Submit</button>
-                            </p>
-                          </form>
-                        </div>
-                      ) : (
-                        <p></p>
-                      )
-                    ) : (
-                      <div>
-                        <button onClick={setOfAuthStatus}>
-                          {" "}
-                          Desactivate two auth{" "}
-                        </button>
-                        <br></br>
-                        <div>
-                          <div>
-                            {TurnedOff ? (
-                              <div>
-                                <form onSubmit={DeactivatedTwoAuth}>
-                                  <p>
-                                    {" "}
-                                    Please enter your 6 digit code to deactivate
-                                    two auth authentication : &nbsp;
-                                    <input
-                                      type="text"
-                                      id="code"
-                                      name="code"
-                                      required
-                                      onChange={(e) =>
-                                        setAuthCode(e.target.value)
-                                      }
-                                    />
-                                    <button type="submit">Submit</button>
-                                  </p>
-                                </form>
-                              </div>
-                            ) : (
-                              <p></p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <button onClick={() => navigate("/")}> Home </button>
-                </div>
-              ) : (
-                <div>
-                  <button onClick={() => navigate("/")}> Home </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div>
-              <button onClick={() => navigate("/")}> Home </button>
-            </div>
-          )}
-        </div>
-      ) : (
-        <p> Loading .... </p>
-      )}
+    <div className="SettingsPage">
+    {
+		!booleffect2 ? 
+		(
+			<>
+			{
+				User ? 
+				(
+					<div className="Container">
+						<div id="UsernameGroup">
+							<h3> Current username : {User.username} </h3>
+							<div className="line"></div>
+							<h3>
+								New Username
+							</h3>
+							<form id="UsernameForm" onSubmit={ChangeUsername}>
+								<input
+								type="text"
+								id="name"
+								name="name"
+								required
+								minLength={1}
+								maxLength={16}
+								onChange={(e) => setChangename(e.target.value)}
+								/>
+								<button className="clickset" type="submit"><span><BsArrowRightCircleFill/></span></button>
+							</form>
+						</div>
+						<div id="AvatarGroup">
+							<h3>
+								Current Avatar :
+							</h3>
+							<img
+								src={User.image}
+								alt="user_img"
+								width="96"
+								height="64"
+							/>
+							<div className="line"></div>
+							<h3>
+								New Avatar
+							</h3>
+							<form id="AvatarForm" onSubmit={ChangeAvatar}>
+								<label htmlFor="avatar"><IoIosFolderOpen/></label>
+								<input
+								type="file"
+								id="avatar"
+								name="avatar"
+								required
+								onChange={(e) =>
+									e.target.files != null
+									? AvatarFile(e)
+									: null
+								}
+								/>
+								<p> {fileName}</p>
+								<button className="clickset" type="submit" ><span><BsArrowRightCircleFill/></span></button>
+							</form>
+						</div>
+						<div id="QrCodeGroup">
+							<div id="Activate2auth">
+							{
+								!IsTwoAuthActivated && !QrCode ? 
+								(
+									// <div>
+									<button className="clickset" onClick={(e) => GetQrCode(e)}> <span><Tb2Fa/></span></button>
+									// </div>
+								)
+								:
+									null
+							}
+							</div>
+							{!IsTwoAuthActivated ? (
+								QrCode ? (
+									<div id="QrCodeOpened">
+										<img src={URL.createObjectURL(QrCode)} alt="QrCode" />
+										<h3>
+											Please enter your 6 digit code after scanning the
+											QR Code in the Google Authenticator app :
+										</h3>
+										<form onSubmit={ActivateTwoAuth}>
+											<input
+												type="text"
+												id="code"
+												name="code"
+												required
+												onChange={(e) => setAuthCode(e.target.value)}
+											/>
+											<button className="clickset" type="submit"><span><BsArrowRightCircleFill/></span></button>
+											<button onClick={() => setQrCode(undefined)}> <span id="cancel2auth"><ImCross/></span> </button>
+										</form>
+									</div>
+								) :
+								null
+							) 
+							: (
+								<div id="TwoAuthActivated">
+									{TurnedOff ? (
+										<>
+										<h3>
+										Please enter your 6 digit code to deactivate two auth authentication : &nbsp;
+										</h3>
+										<form onSubmit={DeactivatedTwoAuth}>
+											<input
+												type="text"
+												id="code"
+												name="code"
+												required
+												onChange={(e) =>
+												setAuthCode(e.target.value)
+												}
+											/>
+											<button className="clickset" type="submit"><span><BsArrowRightCircleFill/></span></button>
+											<button onClick={() => setTurnedOff(false)}> <span id="cancelDesac"><ImCross/></span> </button>
+										</form>
+										</>
+									) :
+										<button onClick={setOfAuthStatus}>
+											<h3>Desactivate two auth</h3>
+										</button>
+									}
+								</div>
+							)}
+							
+						</div>
+					</div>
+				)
+			:
+				null
+			}
+			</>
+		)  
+	  :
+        <h3> Loading .... </h3>
+    }
     </div>
   );
 }

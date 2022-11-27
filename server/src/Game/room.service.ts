@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { InformationEvent } from 'http';
 import { UsersService } from 'src/users/users.service';
 import { Repository } from 'typeorm';
 import { Room } from './Entities/room.entity';
@@ -23,7 +24,7 @@ export class RoomService {
     console.log('Clear database in progress :');
     const list = await this.roomRepository.find();
     for (let i = 0; i < list.length; i++) {
-      if (list[i].status != 'finished') {
+      if (list[i].status != 'finished' && list[i].status != 'destroy') {
         console.log('Clearing room', list[i].id);
         await this.roomRepository.remove(list[i]);
       } else console.log('Finished room', list[i].id);
@@ -111,6 +112,7 @@ export class RoomService {
     );
     for (let i = 0; i < info.length; i++)
 	{
+		console.log(info[i].lastActivity);
 		const findA = await this.userService.findUserByUuid(info[i].playerA.id);
 		if (findA)
 			info[i].playerA.name = findA.username;
@@ -123,7 +125,17 @@ export class RoomService {
         }),
       );
 	}
-    tab.reverse();
+	for (let j = 0 ;j < tab.length; j++)
+	{
+		if (tab[j] && tab[j + 1] && tab[j].lastActivity < tab[j + 1].lastActivity)
+		{
+			let temp = tab[j];
+			tab[j] = tab[j + 1];
+			tab[j + 1] = temp;
+			j = 0;
+		}
+	}
+    //tab.reverse();
     return tab;
   }
 }

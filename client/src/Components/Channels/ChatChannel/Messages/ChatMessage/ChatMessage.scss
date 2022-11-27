@@ -1,6 +1,6 @@
 .message {
-    background-color: #ECECEC;
-    padding: 0px 10px;
+    background-color: #D9D9D9;
+    padding: 12px;
     margin: 3px;
     border-radius: 10px;
     min-width: 150px;
@@ -8,6 +8,8 @@
     width: fit-content;
     color: black;
     animation: visible 0.2s;
+    border-radius: 15px 15px 15px 0px;
+    overflow-wrap: anywhere;
 
     .messageUser {
         font-weight: bold;
@@ -22,8 +24,10 @@
 .sender {
     align-self: flex-end;
     text-align: right;
-    background-color: #00A4F8;
+    background-color: #181818;
     color: white;
+    border-radius: 15px 15px 0px 15px;
+    padding: 12px;
 
     .messageContent {
         text-align: left;

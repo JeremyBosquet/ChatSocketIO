@@ -11,10 +11,11 @@
 		width : 240px;
 	}
 	button {
+		cursor: pointer;
 		padding: 0;
 		border: none;
 		background: none;
-		color : #0582CA;
+		color : #ffffff;
 		font-size: large;
 	}
 	h3{
@@ -28,15 +29,6 @@
 		display: flex;
 		justify-content: center;
 		margin-bottom:15px;
-		p{
-			position: absolute;
-			right : 60px;
-			top : 115px;
-			//bottom : 10px;
-			// bottom :0px;
-			// left : 135px;
-			color : #0582CA;
-		}
 		height: 40px;
 		[type=text]{
 			margin-top: 10px;
@@ -73,14 +65,14 @@
 		}
 		
 		::-webkit-scrollbar-track {
-			background: #0582CA;  
+			background: #ffffff;  
 			border-radius: 10px;      /* color of the tracking area */
 		}
 		
 		::-webkit-scrollbar-thumb {
-			background: linear-gradient(135deg, #003554, #051923);   /* color of the scroll thumb */
+			background: #181818;   /* color of the scroll thumb */
 			border-radius: 10px;       /* roundness of the scroll thumb */
-			border: 1px solid #0582CA; /* creates padding around scroll thumb */
+			border: 1px solid #ffffff; /* creates padding around scroll thumb */
 		}
 		#listSearchScroll{
 			p{
@@ -92,6 +84,7 @@
 			}
 			.buttons {
 				button{
+					cursor: pointer;
 					margin-right: 6px;
 				}
 				//width :fit-content;
@@ -103,6 +96,7 @@
 			}
 			.buttons2 {
 				button{
+					cursor: pointer;
 					margin-right: 6px;
 				}
 				width :fit-content;
@@ -138,6 +132,7 @@
 			}
 			.buttons {
 				button{
+					cursor: pointer;
 					margin-right: 6px;
 				}
 				position: relative;
@@ -146,6 +141,7 @@
 			}
 			.buttons2 {
 				button{
+					cursor: pointer;
 					margin-right: 6px;
 					font-size: 22px;
 				}
@@ -179,14 +175,14 @@
 		}
 		
 		::-webkit-scrollbar-track {
-			background: #0582CA;  
+			background: #ffffff;  
 			border-radius: 10px;      /* color of the tracking area */
 		}
 		
 		::-webkit-scrollbar-thumb {
-			background: linear-gradient(135deg, #003554, #051923);   /* color of the scroll thumb */
+			background: #181818;   /* color of the scroll thumb */
 			border-radius: 10px;       /* roundness of the scroll thumb */
-			border: 1px solid #0582CA; /* creates padding around scroll thumb */
+			border: 1px solid #ffffff; /* creates padding around scroll thumb */
 		}
 		#listReqScroll{
 			p{
@@ -198,6 +194,7 @@
 			}
 			.buttons {
 				button{
+					cursor: pointer;
 					margin-right: 6px;
 				}
 				position: relative;
@@ -232,6 +229,7 @@
 			}
 			.buttons {
 				button{
+					cursor: pointer;
 					margin-right: 6px;
 				}
 				position: relative;
@@ -262,14 +260,14 @@
 		}
 		
 		::-webkit-scrollbar-track {
-			background: #0582CA;  
+			background: #ffffff;  
 			border-radius: 10px;      /* color of the tracking area */
 		}
 		
 		::-webkit-scrollbar-thumb {
-			background: linear-gradient(135deg, #003554, #051923);   /* color of the scroll thumb */
+			background: #181818;   /* color of the scroll thumb */
 			border-radius: 10px;       /* roundness of the scroll thumb */
-			border: 1px solid #0582CA; /* creates padding around scroll thumb */
+			border: 1px solid #ffffff; /* creates padding around scroll thumb */
 		}
 		#listFriendScroll{
 			p{
@@ -282,6 +280,7 @@
 			.buttons {
 				button{
 					margin-right: 6px;
+					cursor: pointer;
 				}
 				width :fit-content;
 				position: relative;
@@ -319,6 +318,7 @@
 			.buttons {
 				button{
 					margin-right: 6px;
+					cursor: pointer;
 				}
 				position: relative;
 				bottom : 55px;

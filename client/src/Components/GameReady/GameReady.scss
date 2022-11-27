@@ -3,7 +3,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #f44336;
+    background: var(--black);
     color: white;
     font-size: 16px;
     padding: 16px 32px;
@@ -22,16 +22,16 @@
 }
 
 .play-button:hover {
-  background-color: #e53935;
+  background-color: var(--black);
 }
 
 .play-button:active {
-    background-color: #d32f2f;
+    background-color: var(--black);
     box-shadow: 0 5px #666;
 }
 
 .play-button:disabled {
-    background-color: #e53935;
+    background-color: var(--black);
     cursor: not-allowed;
 }
 
@@ -40,7 +40,7 @@
 }
 
 .play-button:disabled:active {
-    background-color: #e53935;
+    background-color: var(--black);
 }
 
 .cancel-button {
@@ -48,7 +48,7 @@
     top: 65%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #f44336;
+    background-color: var(--black);
     color: white;
     font-size: 16px;
     padding: 16px 32px;
@@ -66,35 +66,13 @@
     box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
 }
 
-.cancel-button:hover {
-  background-color: #e53935;
-}
-
-.cancel-button:active {
-    background-color: #d32f2f;
-    box-shadow: 0 5px #666;
-}
-
-.cancel-button:disabled {
-    background-color: #e53935;
-    cursor: not-allowed;
-}
-
-.cancel-button:disabled:hover {
-    background-color: #e53935;
-}
-
-.cancel-button:disabled:active {
-    background-color: #e53935;
-}
-
 .waiting-text {
     position: absolute;
     top: 59%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 20px;
-    color: #f44336;
+    color: var(--black);
     font-weight: bold;
 }
 
@@ -115,7 +93,7 @@
     top: 50%;
     left: 25%;
     transform: translate(-50%, -50%);
-    background-color: #f44336;
+    background-color: var(--black);
     color: white;
     font-size: 16px;
     padding: 16px 32px;
@@ -133,30 +111,10 @@
     box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
 }
 
-.game-config:hover {
-  background-color: #e53935;
-}
 
-.game-config:active {
-    background-color: #d32f2f;
-    box-shadow: 0 5px #666;
-}
-
-.game-config:disabled {
-    background-color: #e53935;
-    cursor: not-allowed;
-}
-
-.game-config:disabled:hover {
-    background-color: #e53935;
-}
-
-.game-config:disabled:active {
-    background-color: #e53935;
-}
 
 .game-config-input {
-    background-color: #f44336;
+    background-color: #222222;
     color: white;
     font-size: 16px;
     padding: 16px 32px;
@@ -172,28 +130,6 @@
     -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
     -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
     box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-}
-
-.game-config-input:hover {
-  background-color: #e53935;
-}
-
-.game-config-input:active {
-    background-color: #d32f2f;
-    box-shadow: 0 5px #666;
-}
-
-.game-config-input:disabled {
-    background-color: #e53935;
-    cursor: not-allowed;
-}
-
-.game-config-input:disabled:hover {
-    background-color: #e53935;
-}
-
-.game-config-input:disabled:active {
-    background-color: #e53935;
 }
 
 .game-config-input:focus {
@@ -209,7 +145,7 @@
 }
 
 .game-config-select {
-    background-color: #f44336;
+    background-color: #222222;
     color: white;
     font-size: 16px;
     padding: 16px 32px;
@@ -225,24 +161,10 @@
     -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
     -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
     box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-}
-
-.game-config-select:hover {
-  background-color: #e53935;
-}
-
-.game-config-select:active {
-    background-color: #d32f2f;
-    box-shadow: 0 5px #666;
-}
-
-.game-config-select:disabled {
-    background-color: #e53935;
-    cursor: not-allowed;
 }
 
 .game-config-button {
-    background-color: #f44336;
+    background-color: #222222;
     color: white;
     font-size: 16px;
     padding: 16px 32px;
@@ -260,33 +182,12 @@
     box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
 }
 
-.game-config-button:hover {
-  background-color: #e53935;
-}
-
-.game-config-button:active {
-    background-color: #d32f2f;
-    box-shadow: 0 5px #666;
-}
-
-.game-config-button:disabled {
-    background-color: #e53935;
-    cursor: not-allowed;
-}
-
-.game-config-button:disabled:hover {
-    background-color: #e53935;
-}
-
-.game-config-button:disabled:active {
-    background-color: #e53935;
-}
 .game-config-secondary {
     position: absolute;
     top: 50%;
     left: 75%;
     transform: translate(-50%, -50%);
-    background-color: #f44336;
+    background-color: var(--black);
     color: white;
     font-size: 16px;
     padding: 16px 32px;
@@ -304,24 +205,8 @@
     box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
 }
 
-.game-config-secondary:hover {
-  background-color: #e53935;
-}
-
-.game-config-secondary:active {
-    background-color: #d32f2f;
-    box-shadow: 0 5px #666;
-}
-
-.game-config-secondary:disabled {
-    background-color: #e53935;
-    cursor: not-allowed;
-}
-
-.game-config-secondary:disabled:hover {
-    background-color: #e53935;
-}
-
-.game-config-secondary:disabled:active {
-    background-color: #e53935;
+@media screen and (max-width: 500px) {
+	.play-button {
+		top : 70%;
+	}
 }

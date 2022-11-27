@@ -2,14 +2,12 @@ import axios from 'axios';
 import React from 'react';
 import { useEffect, useState } from 'react';
 import FormCreateChannel from '../FormCreateChannel/FormCreateChannel';
-import Channel from './Channel/Channel';
-import Search from './Search/Search';
-import './Channels.scss';
 import ChatChannel from './ChatChannel/ChatChannel';
 import { useDispatch, useSelector } from 'react-redux';
 import { getChannels, setChannels } from '../../Redux/chatSlice';
 import { useParams } from 'react-router-dom';
 import { getUser } from '../../Redux/authSlice';
+import './Channels.scss';
 interface IInvites {
     requestFrom: string;
     roomId: string;
@@ -51,14 +49,11 @@ function Channels(props: props) {
     <>  
         <div className='channels'>
             <div className='channelsOperations'>
-                <FormCreateChannel/>
-                <Search searchChannel={props.searchChannel} setSearchChannel={props.setSearchChannel} setChannelsFind={props.setChannelsFind} getUsersChannel={getUsersChannel}/>
+                {/* <FormCreateChannel/> */}
             </div>
             <div className='channelChat'>
                 { params.id !== undefined ? 
-                    <ChatChannel invites={props.invites} />
-                        :
-                    <p>Select a channel</p>
+                    <ChatChannel invites={props.invites} /> : null
                 }
             </div>
         </div>

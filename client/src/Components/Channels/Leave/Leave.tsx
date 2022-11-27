@@ -41,7 +41,7 @@ function Leave(props: props) {
     
   return (
     <>
-        <button className='leaveChannelButton' onClick={e => handleLeave(props.channelId)}>Leave</button>
+        <button className='channelMenuButton' onClick={e => handleLeave(props.channelId)}>Leave</button>
     </>
   );
 }

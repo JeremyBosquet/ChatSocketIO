@@ -29,7 +29,7 @@ export async function getExp(uuid : string, setProfileExp : any)
 	});
 }
 
-export async function getMyExp(uuid : string, setProfileExp : any)
+export async function getMyExp(uuid : string, setProfileExp : any, setUser : any)
 {
 	await axios.get(`http://90.66.192.148:7000/user/getExp/` + uuid, {
 		headers: {
@@ -53,6 +53,7 @@ export async function getMyExp(uuid : string, setProfileExp : any)
 		for (let i = 0; elem[i]; i++) {
 			(elem[i] as HTMLElement).style.setProperty('--expAmount', '00%');
 		}
+		setUser(undefined);
 		console.log(err.message);
 	});
 }

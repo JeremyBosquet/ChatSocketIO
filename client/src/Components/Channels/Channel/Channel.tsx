@@ -10,11 +10,15 @@ import Manage from '../Manage/Manage';
 import { useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
+import './Channel.scss';
+import { MdPublic } from 'react-icons/md';
+import { IoMdLock } from 'react-icons/io';
+import { BsFillShieldLockFill } from 'react-icons/bs';
 
 interface props {
-    channel: any;
-    setSearchChannel: any;
-    foundChannel: boolean;
+	channel: any;
+	setSearchChannel: any;
+	foundChannel: boolean;
 }
 
 function Channel(props: props) {
@@ -30,53 +34,69 @@ function Channel(props: props) {
   const [manageMode, setManageMode] = useState<boolean>(false);
 
   const formatedDate = (d: any) => {
-    const newDate = new Date(d);
-    return (newDate.toLocaleDateString());
+	const newDate = new Date(d);
+	return (newDate.toLocaleDateString());
   }
   
   const handleSelectChannel = (id: string) => {
-    if (!props.foundChannel && selectedChannel !== "" && selectedChannel !== id) {
-      socket?.emit('leave', { userId: user.uuid, channelId: selectedChannel });
-    }
-    if (!props.foundChannel && selectedChannel !== id)
-      navigate('/chat/channel/' + id);
-      // dispatch(setSelectedChannel(id))
+	if (!props.foundChannel && selectedChannel !== "" && selectedChannel !== id) {
+	  socket?.emit('leave', { userId: user.uuid, channelId: selectedChannel });
+	}
+	if (!props.foundChannel && selectedChannel !== id)
+	  navigate('/chat/channel/' + id);
   }
 
    function isOwner() {
-    const userFinded = props.channel.users.find((userFind: any) => userFind.id === user.uuid);
-    return (userFinded && userFinded.role === "owner");
+	const userFinded = props.channel.users.find((userFind: any) => userFind.id === user.uuid);
+	return (userFinded && userFinded.role === "owner");
   }
 
   return (
-    <>
-    {
-      manageMode ?
-        <Manage channel={props.channel} setToggleMenu={setToggleMenu} setManageMode={setManageMode}/>
-      : 
-        null
-    }
-        <div key={props.channel["id"]} onClick={e => handleSelectChannel(props.channel["id"])}>
-            <hr></hr>
-                <p>{props.channel["name"]} - {props.channel["visibility"]}</p>
-                <p>{formatedDate(props.channel["createdAt"])}</p>
-                { props.foundChannel ? 
-                  <Join channelId={props.channel["id"]} channelVisibility={props.channel["visibility"]} setSearchChannel={props.setSearchChannel} />
-                  :
-                  <>
-                    <button ref={ref} onClick={e => setToggleMenu(!toggleMenu)}>+</button>
-                    <ControlledMenu 
-                      anchorRef={ref}
-                      state={toggleMenu ? 'open' : 'closed'}
-                    >
-                      { isOwner() ? <button onClick={e => setManageMode(true)}>Manage channel</button> : null }
-                      <Leave channelId={props.channel["id"]} setSearchChannel={props.setSearchChannel} />
-                    </ControlledMenu>
-                  </>
-                }
-            <hr></hr>
-        </div>
-    </>
+	<>
+	{ manageMode ? 
+		<Manage channel={props.channel} setToggleMenu={setToggleMenu} setManageMode={setManageMode}/> : null 
+	}
+		<div key={props.channel["id"]} onClick={e => handleSelectChannel(props.channel["id"])} className="channel">
+			<div className="channelInfoName">
+				<p>{props.channel["name"]}</p>
+				<p>{props.channel["visibility"] === "public" ?
+					(<MdPublic className='channelIcon' />)
+				: props.channel["visibility"] === "private" ?
+					(<IoMdLock className='channelIcon' />)
+				: props.channel["visibility"] === "protected" ?
+					(<BsFillShieldLockFill className='channelIcon' />)
+				: 
+				(props.channel["visibility"])
+				}</p>
+			</div>
+			<div className="channelInfoDate">
+				<p>{formatedDate(props.channel["createdAt"])}</p>
+				{ props.foundChannel ? 
+					<Join channelId={props.channel["id"]} channelVisibility={props.channel["visibility"]} setSearchChannel={props.setSearchChannel} />
+				:
+					<>
+					<div>
+						<button ref={ref} onClick={e => setToggleMenu(!toggleMenu)} className="developChannel">{toggleMenu ? '-' : '+'}</button>
+						{ toggleMenu ?
+						(<ControlledMenu 
+							anchorRef={ref}
+							state={toggleMenu ? 'open' : 'closed'}
+							className="channelMenu"
+							direction='left'
+							viewScroll='close'
+						>
+							{ isOwner() ? <button className='channelMenuButton' onClick={e => setManageMode(true)}>Manage channel</button> : null }
+							<Leave channelId={props.channel["id"]} setSearchChannel={props.setSearchChannel} />
+						</ControlledMenu>)
+						:
+						(null)}
+					</div>
+					</>
+				}
+			</div>
+
+		</div>
+	</>
   );
 }
 

@@ -71,8 +71,8 @@ function App() {
 			<Route path="/twoAuth" element={<Protected><TwoAuth /></Protected>}></Route>
 			{/* <Route path="/social" element={<Protected><Social /></Protected>}></Route> */}
 			{/* <Route path=":UserId" element={<Protected><Social /></Protected>}></Route> */}
-			<Route path="/game/" element={<Protected><GamePlayingPage /></Protected>}></Route>
-			<Route path="/game/:roomId" element={<Protected><GamePlayingPage /></Protected>}></Route>
+			{/*</Routes>Route path="/game/" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}
+			{/*</Routes>Route path="/game/:roomId" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}
 			<Route path="/game/spectate" element={<Protected><GameSpectatePage /></Protected>}></Route>
 			<Route path="/game/spectate/:roomId" element={<Protected><GameSpectatePage /></Protected>}></Route>
 			<Route path="/chat/" element={<Protected><ChannelPage /></Protected>}></Route>

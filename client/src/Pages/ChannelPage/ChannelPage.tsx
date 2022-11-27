@@ -16,7 +16,11 @@ import GameChatReady from '../../Components/GameChatReady/GameChatReady';
 import KillSocket from '../../Components/KillSocket/KillSocket';
 import Popup from '../../Components/Popup/Popup';
 import Channel from '../../Components/Channels/Channel/Channel';
-import { getChannels } from '../../Redux/chatSlice';
+import { getChannels, setChannels } from '../../Redux/chatSlice';
+import { GrAdd } from 'react-icons/gr';
+import { IoAdd } from 'react-icons/io5';
+import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
+import Search from '../../Components/Channels/Search/Search';
 
 
 interface IPlayer {
@@ -122,6 +126,15 @@ function ChannelPage() {
 		if (newMode === "dm")
 			navigate("/chat/dm")
 	}
+
+	    
+    const getUsersChannel = async (userId: any) => {
+        await axios.get("http://90.66.192.148:7000/api/chat/channels/user/" + userId)
+        .then((res) => {
+            if (res)
+                dispatch(setChannels(res.data));
+        })
+    }
 
 	// Game part
 	useEffect(() => {
@@ -277,11 +290,15 @@ function ChannelPage() {
 								:
 								(
 									<>
-									<div>
 										<div className='leftSide'>
-											<div className='selectChannelOrDm'>
-												<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
-												<button className="selectedButton" onClick={() => handleChangeMode("dm")}>DM</button>
+											<div className='topActions'>
+												<div className='selectChannelOrDm'>
+													<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
+													<button className="selectedButton" onClick={() => handleChangeMode("dm")}>DM</button>
+												</div>
+												<div className="searchBar">
+													<Search searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} getUsersChannel={getUsersChannel}/>
+												</div>
 											</div>
 											<div className='channelsInfos'>
 												{searchChannel === "" ? 
@@ -290,17 +307,17 @@ function ChannelPage() {
 															<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={false}/>
 														))}
 													</div>
-													:
+												:
 													<div className='channelsInfo'>
-														<h2>Channel(s) found</h2>
 														{channelsFind.map((channel) => (
 															<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={true}/>
 														))}
+														{ channelsFind.length === 0 ? (<p className="noChannel">No channel found.</p>) :null}
 													</div>
 												}
 											</div>
+											<button className='createChannelButton' onClick={() => null}><IoAdd className='createChannelIcons' /></button>
 										</div>
-									</div>
 										<Channels searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} invites={inviteGames} />
 									</>
 								)}

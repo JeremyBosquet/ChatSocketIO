@@ -20,6 +20,7 @@ import "./NavBar.scss";
 import Social from "../Social/Social";
 import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeGameChat, getSockeSpectate, setSocketGame, setSocketGameChat, setSocketSpectate } from "../../Redux/gameSlice";
+import Settings from "../../Pages/Settings/Settings";
 
 function NavBar(props: any) {
   let location = useLocation();
@@ -27,6 +28,8 @@ function NavBar(props: any) {
   let tab: any[] = [];
   const [compt, setCompt] = useState<number>(0);
   const [booleffect2, setbooleffect2] = useState<boolean>(true);
+  const [socialOpened, setSocialOpened] = useState<boolean>(false);
+  const [settingsOpened, setSettingsOpened] = useState<boolean>(false);
 
   const [User, setUser] = useState<any>();
   const [IsLoggedIn, setLogged] = useState<boolean>();
@@ -77,12 +80,43 @@ function NavBar(props: any) {
 
 
   /* Set the width of the side navigation to 250px */
-  function openNav() {
-		const openOrClose = document.getElementById("mySidenav");
+  function openSocial() {
+	  	if (socialOpened)
+		  	setSocialOpened(false);
+		else
+			setSocialOpened(true);
+		if (settingsOpened)
+		{
+			const openOrClose = document.getElementById("mySidenavSettings");
+			openOrClose?.classList.toggle("active");
+			const revealOrHide = document.getElementById("navButtons");
+			revealOrHide?.classList.toggle("hidden");
+			setSettingsOpened(false);
+		}
+		const openOrClose = document.getElementById("mySidenavSocial");
 		openOrClose?.classList.toggle("active");
 		const revealOrHide = document.getElementById("navButtons");
 		revealOrHide?.classList.toggle("hidden");
   }
+
+  function openSettings() {
+	if (settingsOpened)
+		setSettingsOpened(false);
+	else
+		setSettingsOpened(true);
+	if (socialOpened)
+	{
+		const openOrClose = document.getElementById("mySidenavSocial");
+		openOrClose?.classList.toggle("active");
+		const revealOrHide = document.getElementById("navButtons");
+		revealOrHide?.classList.toggle("hidden");
+		setSocialOpened(false);
+	}
+	const openOrClose = document.getElementById("mySidenavSettings");
+	openOrClose?.classList.toggle("active");
+	const revealOrHide = document.getElementById("navButtons");
+	revealOrHide?.classList.toggle("hidden");
+}
 
   useEffect(() => {
     if (!booleffect) {
@@ -135,7 +169,7 @@ function NavBar(props: any) {
 			
 			<>
                 {friendRequest ? (
-                  <button id="social" className="click" onClick={() => {openNav()}}>
+                  <button id="social" className="click" onClick={() => {openSocial()}}>
                         <FaUserFriends className="icon"/>
                     {/* <button id='menu_text' onClick={() => {
                     socket?.disconnect();
@@ -144,7 +178,7 @@ function NavBar(props: any) {
                   }}> Social({compt}) </button> */}
                   </button>
                 ) : (
-                  <button id="social" className="click" onClick={() => {openNav()}}>
+                  <button id="social" className="click" onClick={() => {openSocial()}}>
                         <FaUserFriends className="icon"/>
                     {/* <button id='menu_text' onClick={() => {
                   socket?.disconnect();
@@ -155,29 +189,37 @@ function NavBar(props: any) {
                 )}
               </>
 
-              <NavLink to="/game" id="game" className="click" onClick={() => handleClickNav("/game")}>
+              {/* <NavLink to="/game" id="game" className="click" onClick={() => handleClickNav("/game")}>
                 <IoGameController className="icon"/>
-              </NavLink>
+              </NavLink> */}
               
               <NavLink to="/game/spectate" id="spectate" className="click" onClick={() => handleClickNav("/game/spectate")}>
                 <BsFillEyeFill className="icon"/>
               </NavLink>
 
-			  <NavLink to="/settings" id="settings" className="click">
+			  <button id="settings" className="click" onClick={() => {openSettings()}}>
                 <IoMdSettings className="icon"/>
-              </NavLink>
+              </button>
 
               <NavLink to="/logout" id="logout" className="click">
                 <IoLogOutSharp className="icon"/>
               </NavLink>
             </div>
-            <div id="mySidenav" className="sidenav">
-              <button className="closebtn" onClick={() => openNav()}>
+            <div id="mySidenavSocial" className="sidenavSocial">
+              <button className="closebtn" onClick={() => openSocial()}>
                 <span>
                 <AiOutlineClose />
                 </span>
               </button>
               <Social/>
+            </div>
+			<div id="mySidenavSettings" className="sidenavSettings">
+              <button className="closebtn" onClick={() => openSettings()}>
+                <span>
+                <AiOutlineClose />
+                </span>
+              </button>
+			  <Settings/>
             </div>
         </>
     </div>

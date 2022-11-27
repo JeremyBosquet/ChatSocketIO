@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getSocket } from "../../../../Redux/chatSlice";
 import React from 'react';
+import './SendMessage.scss'
 
 interface props {
     channelId: string;
@@ -21,9 +22,9 @@ function SendMessage(props : props) {
     }
 
   return (
-    <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Enter message" value={message} onChange={(e) => setMessage(e.target.value)}></input>
-        <button type="submit">Send</button>
+    <form className="sendForm" onSubmit={handleSubmit}>
+        <input className="sendInput" type="text" placeholder="Enter message" value={message} onChange={(e) => setMessage(e.target.value)}></input>
+        <button className="sendButton" type="submit">Send</button>
     </form>
   );
 }

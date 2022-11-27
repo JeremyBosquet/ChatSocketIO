@@ -5,7 +5,7 @@ import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getPr
 import { setProfileDisplayed} from '../../Redux/authSlice'
 import { whoWon } from "../Utils/whoWon";
 import ClosePopup from "./ClosePopup/ClosePopup";
-import BlockOrUnblock from "./BlockOrUnblock/BlockOrUnbloc";
+import BlockOrUnblock from "./BlockOrUnblock/BlockOrUnblock";
 import AddOrRemove from "./AddOrRemove/AddOrRemove";
 import Accept from "./Accept/Accept";
 import Decline from "./Decline/Decline";

@@ -72,33 +72,11 @@ function GameChatReady(props: props) {
   const [tmpUser, setTmpUser] = useState<any>(null);
   const [tmpUserBoolean, setTmpUserBoolean] = useState<boolean>(false);
   const [configuringDisplay, setConfiguringDisplay] = useState<boolean>(false);
-  const [settings, setSettings] = useState<IConfiguration>();
-  const [settingsBis, setSettingsBis] = useState<IConfiguration>();
+  const [settings, setSettings] = useState<IConfiguration>({difficulty: "easy", background: "background1", confirmed: false});
+  const [settingsBis, setSettingsBis] = useState<IConfiguration>({difficulty: "easy", background: "background1", confirmed: false});
   const [notification, setNotificaton] = useState<Boolean>(false);
   const socket = useSelector(getSockeGameChat);
 
-  // const [propsOn, setPropsOn] = useState<boolean>(false);
-
-  //useEffect(() => {
-  //  if (searching && !tmpUserBoolean) {
-  //    setTmpUserBoolean(true);
-  //    console.log("hey");
-  //    console.log("say searching", tmpUser);
-  //    socket?.on("searching-" + tmpUser.id, (data: IRoom) => {
-  //      console.log("receive searching", data);
-  //      setSearchingDisplay(true);
-//
-  //      setNotificaton(false);
-  //      setRoom(data);
-  //    });
-  //    socket?.emit("searching", tmpUser);
-  //    console.log("emit searching", socket);
-  //  }
-  //}, [searching, tmpUser, tmpUserBoolean, socket]);
-  //useEffect(() => {
-  //if (!propsOn) {
-  //  console.log("propsOn");
-  //setPropsOn(true);
   useEffect(() => {
     socket?.removeListener("configuring");
     socket?.removeListener("configurationUpdated");
@@ -130,7 +108,7 @@ function GameChatReady(props: props) {
       setSearching(true);
       setTmpUserBoolean(true);
       setConfiguringDisplay(false);
-      setSettings(undefined);
+      setSettings({difficulty: "easy", background: "background1", confirmed: false});
       props.quitGame();
     });
   }, [
@@ -177,11 +155,11 @@ function GameChatReady(props: props) {
   }, []);
   return (
     <div>
-      {searchingDisplay ? (
+      {searchingDisplay /*|| props.room.playerB == undefined */? (
         <div>
           <ScaleLoader
             className="loading-spinner"
-            color={"#123abc"}
+            color={"#FFFFFF"}
             loading={true}
             height={65}
             speedMultiplier={0.75}
@@ -207,7 +185,7 @@ function GameChatReady(props: props) {
           </button>
         </div>
       ) : null}
-      {configuringDisplay ? (
+      {configuringDisplay /*&& props.room.playerB != undefined*/ ? (
         <div>
           <div className="game-config">
             <p>Configuring the game...</p>
@@ -215,7 +193,7 @@ function GameChatReady(props: props) {
               <label htmlFor="Difficulty">Difficulty </label>
               <select
                 className="game-config-select"
-                defaultValue="undefined"
+                defaultValue="easy"
                 id="Difficulty"
                 onChange={(e) => {
                   if (e.target.value === "undefined") return;
@@ -234,9 +212,6 @@ function GameChatReady(props: props) {
                   });
                 }}
               >
-                <option key="undefined" disabled value="undefined">
-                  Select a difficulty
-                </option>
                 <option key="easy" value="easy">
                   Easy
                 </option>
@@ -252,7 +227,7 @@ function GameChatReady(props: props) {
               <label htmlFor="Background">Background </label>
               <select
                 className="game-config-select"
-                defaultValue="undefined"
+                defaultValue="background1"
                 id="Background"
                 onChange={(e) => {
                   if (e.target.value === "undefined") return;
@@ -271,9 +246,6 @@ function GameChatReady(props: props) {
                   });
                 }}
               >
-                <option key="undefined" disabled value="undefined">
-                  Select a background
-                </option>
                 <option key="background1" value="background1">
                   Background 1
                 </option>
@@ -293,12 +265,13 @@ function GameChatReady(props: props) {
                   setSearching(false);
                   setTmpUserBoolean(false);
                   setConfiguringDisplay(false);
-                  setSettings(undefined);
+                  setSettings({difficulty: "easy", background: "background1", confirmed: false});
                 } /*Cancel search*/
               }
             >
               Cancel
             </button>
+            {!settings.confirmed ? (
             <button
               className="game-config-button"
               onClick={
@@ -319,6 +292,9 @@ function GameChatReady(props: props) {
             >
               Ready
             </button>
+            ) : (
+              null)
+            }
           </div>
           <div className="game-config-secondary">
             <p>Configuration of the other player</p>

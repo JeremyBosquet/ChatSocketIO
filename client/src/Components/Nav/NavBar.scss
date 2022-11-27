@@ -65,6 +65,7 @@
 {
 	display: flex;
   margin: 4px;
+  margin-left: 10px;
   padding: 0;
   background: none;
   color: #ffffff;
@@ -147,7 +148,7 @@
 
 
 /* The side navigation menu */
-.sidenav {
+.sidenavSocial {
 	//display: flex;
 	//justify-content: right;
 	visibility: hidden;
@@ -163,7 +164,44 @@
 	padding-top: 40px;
 }
 
-.NavBar .sidenav.active {
+.sidenavSettings {
+	//display: flex;
+	//justify-content: right;
+	visibility: hidden;
+	margin-top: 60px;
+	height: 100%; /* 100% Full-height */
+	width: 260px; /* 0 width - change this with JavaScript */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Stay on top */
+	top: 0; /* Stay at the top */
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.85); /* Black*/
+	overflow-x: hidden; /* Disable horizontal scroll */
+	padding-top: 40px;
+}
+
+.NavBar .sidenavSocial.active {
+	visibility: visible;
+	  .closebtn {
+		opacity: unset;
+		&:hover
+		{
+			transition: 0.3s;
+			color :rgb(255, 255, 255);
+		}
+		background-color: rgba(0, 0, 0, 0);
+		border : none;
+		outline : none;
+		color : #818181;
+		position: absolute;
+		top: 10px;
+		right: 25px;
+		font-size: 30px;
+		margin-left: 50px;
+	}
+}
+
+.NavBar .sidenavSettings.active {
 	visibility: visible;
 	  .closebtn {
 		opacity: unset;
@@ -185,7 +223,7 @@
 }
   /* Style page content - use this if you want to push the page content to the right when you open the side navigation *
   
-  /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+  /* On smaller screens, where height is less than 450px, change the style of the sidenavSocial (less padding and a smaller font size) */
 
   @media screen and (max-width: 550px) {
 	.NavBar 
@@ -197,12 +235,21 @@
 		// background: linear-gradient(135deg, #9a0dfe, #637dfb);
 		// box-shadow: 0 2px 12px 0 rgba(91, 41, 191, 0.5);
 	}
-	.sidenav {
+	.sidenavSocial {
 		margin-top: 9px;
 		width: 100%;
 		//height: 100%;
 		height: unset;
 		position : relative;
+		overflow-x: unset;
+		padding-top: unset;
+	}
+	.sidenavSettings {
+		margin-top: 100px;
+		width: 100%;
+		//height: 100%;
+		height: unset;
+		//position : relative;
 		overflow-x: unset;
 		padding-top: unset;
 	}

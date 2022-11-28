@@ -290,6 +290,9 @@ function ChannelPage() {
 								:
 								(
 									<>
+										<div className="backButtonDiv">
+											<button className="backButton" onClick={() => navigate('/chat/')}>Back</button>
+										</div>
 										<div className='leftSide'>
 											<div className='topActions'>
 												<div className='selectChannelOrDm'>

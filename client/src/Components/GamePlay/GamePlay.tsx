@@ -83,7 +83,9 @@ g
 */
 
 function GamePlay(props: props) {
-  const [image] = (props?.room?.settings?.background == "background1" ? useImage("https://cdn.discordapp.com/attachments/581532648095219716/1045003732577947709/image.png") : useImage('https://cdn.discordapp.com/attachments/581532648095219716/1045003732577947709/image.png'));
+  let windowsHeightDefault = window.innerHeight;
+  let windowsWidthDefault = window.innerWidth;
+  const [image] = (props?.room?.settings?.background == "background1" ? useImage("") : useImage(''));
   const [windowsWidth, setWindowsWidth] = useState(window.innerWidth);
   const [windowsHeight, setWindowsHeight] = useState(window.innerHeight - 200); // game board
   const [boardWidth, setBoardWidth] = useState<number>(
@@ -176,10 +178,16 @@ function GamePlay(props: props) {
         y: (100 * _player.y) / windowsHeight,
       });
       if (props.room?.playerA.name === props.playerName)
+      {
+        playerA.ref.current?.position({ y: _player.y, x: playerA.x });
         setPlayerA({ ...playerA, y: _player.y, percentY: ((100 * _player.y) / windowsHeight) });
+      }
       else
+      {
+        playerB.ref.current?.position({ y: _player.y, x: playerB.x });
         setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight) });
-    }
+      }
+      }
     mouseMoveBool = !mouseMoveBool;
     },
     [
@@ -241,6 +249,9 @@ function GamePlay(props: props) {
       y: (playerB.percentY / 100) * windowsHeight,
       percentY: playerB.percentY,
     });
+    ball.ref.current?.position({ x: ball.x, y: ball.y });
+    playerA.ref.current?.position({ x: playerA.x, y: playerA.y });
+    playerB.ref.current?.position({ x: playerB.x, y: playerB.y });
   }
   useEventListener("resize", handleResize);
   // handle full 
@@ -259,6 +270,10 @@ function GamePlay(props: props) {
             y: (data.y / 100) * windowsHeight,
             percentY: data.y,
           });
+          playerA.ref.current?.position({
+            x: 0.15 * windowsWidth,
+            y: (data.y / 100) * windowsHeight,
+          });
         } else if ((data.player === "playerB")) {
           setPlayerB({
             ...playerB,
@@ -267,18 +282,22 @@ function GamePlay(props: props) {
             y: (data.y / 100) * windowsHeight,
             percentY: data.y,
           });
+          playerB.ref.current?.position({
+            x: windowsWidth - 0.15 * windowsWidth,
+            y: (data.y / 100) * windowsHeight,
+          });
         }
     }
     });
-    props.socket?.removeListener("ballMovement");
-    props.socket?.on("ballMovement", (room: IRoom) => {
-      ball.ref.current?.to({
-        duration: 0.040,
-        x: (room.ball.x / 100) * windowsWidth,
-        y: (room.ball.y / 100) * windowsHeight,
-      });
-    });
-  }, [
+  //  props.socket?.removeListener("ballMovement");
+  //  props.socket?.on("ballMovement", (room: IRoom) => {
+  //    ball.ref.current?.to({
+  //      duration: 0.040,
+  //      x: (room.ball.x / 100) * windowsWidth,
+  //      y: (room.ball.y / 100) * windowsHeight,
+  //    });
+  //  });
+   }, [
     props.socket,
     props.playerId,
     playerA,
@@ -296,15 +315,18 @@ function GamePlay(props: props) {
           width={windowsWidth}
           height={windowsHeight}
           className="gameMainCanvas"
+          pixelRatio={1}
         >
-          <Layer>
+          <Layer listening={false}>
             <Image width={windowsWidth} height={windowsHeight} image={image} x={0} y={0} fill="gray" />
 
             {
               <Rect
                 ref={playerA.ref}
-                x={playerA.x}
-                y={playerA.y}
+                x={windowsWidthDefault * 0.15 - boardWidth}
+                y={windowsHeightDefault * 0.5 - boardHeight / 2}
+                /*x={playerA.x}
+                y={playerA.y}*/
                 width={boardWidth}
                 height={boardHeight}
                 fill="blue"
@@ -312,9 +334,11 @@ function GamePlay(props: props) {
             }
             {
               <Rect
+                x={windowsWidthDefault * 0.85}
+                y={windowsHeightDefault * 0.5 - boardHeight / 2}
                 ref={playerB.ref}
-                x={playerB.x}
-                y={playerB.y}
+                //x={playerB.x}
+                //y={playerB.y}
                 width={boardWidth}
                 height={boardHeight}
                 fill="green"
@@ -323,17 +347,17 @@ function GamePlay(props: props) {
             {
               <Circle
                 ref={ball.ref}
-                x={ball.x}
-                y={ball.y}
+                /*x={ball.x}
+                y={ball.y}*/
                 draggable
-                onDragMove={(e) => {
+                /*onDragMove={(e) => {
                   console.log("DragEnd", e.target.x(), e.target.y());
                   props.socket?.emit("ballMove", {
                     id: ball.id,
                     x: (100 * e.target.x()) / windowsWidth,
                     y: (100 * e.target.y()) / windowsHeight,
                   });
-                }}
+                }}*/
                 radius={ball.radius}
                 fill="red"
               />

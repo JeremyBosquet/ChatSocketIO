@@ -261,7 +261,7 @@ function Social() {
 
 														(
 															<div className='buttons2'>
-																<Accept User={User} UserUuid={user.uuid} UserImg={user.image}/>
+																<Accept User={User} UserUuid={user.uuid} UserImg={user?.image}/>
 																<Decline User={User} UserUuid={user.uuid} />
 															</div>
 														)
@@ -334,7 +334,7 @@ function Social() {
 												<div className='buttons'>
 													<Show UserUuid={user.uuid}/>
 													<BlockOrUnblock UserUuid={user.uuid} User={User}/>
-													<Accept User={User} UserUuid={user.uuid} UserImg={user.image}/>
+													<Accept User={User} UserUuid={user.uuid} UserImg={user?.image}/>
 													<Decline User={User} UserUuid={user.uuid} />
 												</div>
 											</div>))

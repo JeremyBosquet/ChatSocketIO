@@ -18,6 +18,10 @@ body {
         min-height: 650px;
         padding: 20px;
 
+        .backButtonDiv {
+            display: none;
+        }
+
         .leftSide {
             width: 300px;
             margin-right: 20px;
@@ -110,7 +114,12 @@ body {
             flex-direction: column;
             align-items: center;
 
+            .backButtonDiv {
+                display: unset;
+            }
+            
             .leftSide {
+                display: none;
                 margin: 0;
                 width: 100%;
                 
@@ -140,12 +149,16 @@ body {
                     }
                 }
             }
-        } 
 
+        } 
+        
     }
 }
 
 @media screen and (max-width: 525px) {
+    .hideSmall {
+        display: none;
+    }
     .chatPage {
         .container {
             .topActions {

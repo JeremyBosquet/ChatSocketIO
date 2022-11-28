@@ -3,14 +3,11 @@ import { useEffect, useState } from "react";
 import SignIn from "./Components/Auth/Signin";
 import GetToken from "./Components/Auth/GetToken";
 import HomePage from "./Pages/Home/HomePage";
-import Profile from "./Pages/Profile/Profile";
 import NotFound from "./Pages/NotFound";
 import Logout from "./Components/Auth/Logout";
 import Settings from "./Pages/Settings/Settings";
 import TwoAuth from "./Pages/TwoAuth";
-import GamePlayingPage from "./Pages/GamePlayingPage/GamePlayingPage";
 import axios from "axios";
-import Social from "./Components/Social/Social";
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
 import { getUser, setSocketSocial } from "./Redux/authSlice";
@@ -97,3 +94,4 @@ function App() {
 export default App;
 
 /* <Route path="/chat" element={<ChatPage />}></Route> */
+

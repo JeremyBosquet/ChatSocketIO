@@ -67,7 +67,7 @@ export class RoomGateway {
             room.scoreA += 1
             await this.roomService.updateRoom(room.id, {playerA : room.playerA});
           }
-          if (room.scoreA >= 1 || room.scoreB >= 1) {
+          if (room.scoreA >= 1000 || room.scoreB >= 1000) {
             room.status = 'finished';
             if (room.scoreA >= 1)
             { 

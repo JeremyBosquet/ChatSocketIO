@@ -112,7 +112,6 @@ export class RoomService {
     );
     for (let i = 0; i < info.length; i++)
 	{
-		console.log(info[i].lastActivity);
 		const findA = await this.userService.findUserByUuid(info[i].playerA.id);
 		if (findA)
 			info[i].playerA.name = findA.username;

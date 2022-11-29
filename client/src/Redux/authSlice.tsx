@@ -15,6 +15,7 @@ const initialState = {
   profileDisplayed : false,
   userImg : undefined,
   UserUsername : "",
+  connectedList : [],
 };
 
 export const authSlice = createSlice({
@@ -64,10 +65,13 @@ export const authSlice = createSlice({
 	setUserUsername: (state: any, action: any) => {
 		state.userUsername = action.payload;
 	},
+	setConnectedList: (state: any, action: any) => {
+		state.connectedList = action.payload;
+	},
   },
 });
 
-export const { setUser, setLogged, setConnected, setActivated, setSocketSocial, setFriendList, setBlockList, setHistoryList, setProfileDisplayed, setProfilePage, setRequestList, setRequestedList, setUserImg, setUserUsername } = authSlice.actions;
+export const { setUser, setLogged, setConnected, setActivated, setSocketSocial, setFriendList, setBlockList, setHistoryList, setProfileDisplayed, setProfilePage, setRequestList, setRequestedList, setUserImg, setUserUsername, setConnectedList } = authSlice.actions;
 
 export const getUser = (state: any) => state.auth.user;
 export const getLogged = (state: any) => state.auth.logged;
@@ -83,5 +87,6 @@ export const getProfilePage = (state: any) => state.auth.profilePage;
 export const getProfileDisplayed = (state: any) => state.auth.profileDisplayed;
 export const getUserImg = (state: any) => state.auth.userImg;
 export const getUserUsername = (state: any) => state.auth.userUsername;
+export const getConnectedList = (state: any) => state.auth.connectedList;
 
 export default authSlice.reducer;

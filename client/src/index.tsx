@@ -11,12 +11,12 @@ const root = ReactDOM.createRoot(
 (window as any).global = window;
 
 root.render(
-  <React.StrictMode>
+//   <React.StrictMode>
   <Provider store={store}>
     <ToastContainer />
     <App />
     </Provider>
-  </React.StrictMode>
+//   </React.StrictMode>
 );
 
 

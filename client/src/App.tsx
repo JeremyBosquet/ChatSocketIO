@@ -10,50 +10,85 @@ import TwoAuth from "./Pages/TwoAuth";
 import axios from "axios";
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
-import { getUser, setSocketSocial } from "./Redux/authSlice";
-import { setSocket } from "./Redux/chatSlice";
+import { getConnectedList, getSocketSocial, getUser, setConnectedList, setSocketSocial, setUser } from "./Redux/authSlice";
+import { getSocket, setSocket } from "./Redux/chatSlice";
 import ChannelPage from "./Pages/ChannelPage/ChannelPage";
 import DMPage from "./Pages/DMPage/DMPage";
 import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import Protected from "./Protected";
+import TestPage from "./Pages/test";
+//import TestPage from "./Pages/test";
+//import './Pages/PhaserGame'
 
 function App() {
   const [APIStatus, setAPIStatus] = useState<boolean>(true);
 	const dispatch = useDispatch();
 	const user = useSelector(getUser);
-
+	const socketSocial = useSelector(getSocketSocial);
+	const socketChat = useSelector(getSocket);
+	const ConnectedList = useSelector(getConnectedList);
+	
 	useEffect(() => { // Connect to the socket
-		const newSocket = io('http://90.66.192.148:4001');
-		dispatch(setSocket(newSocket));
-		newSocket.on('connect', () => {
-			newSocket.emit("connected", {userId: user.id});
-		});
-    
-		const newSocketSocial = io('http://90.66.192.148:7003');
-		dispatch(setSocketSocial(newSocketSocial));
+		if (!socketChat)
+		{
+			const newSocket = io('http://90.66.192.148:4001');
+			dispatch(setSocket(newSocket));
+		}
+		// socketSocial?.removeAllListeners();
+		
 		//eslint-disable-next-line
 	}, []);
-
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      const result = await axios
-        .get("http://90.66.192.148:7000/status")
-        .catch((err) => {
-          // Not noice
-          //setAPIStatus(false);
-        })
-        .then((res) => {
-         // if (res?.data && res.data?.status && res.data.status === "ok")
-         //  setAPIStatus(true);
-         //else setAPIStatus(false);
-        });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [APIStatus]);
-
+	useEffect(() => {
+		const socketSet = async () => {
+			await axios.get(`http://90.66.192.148:7000/user`, {
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("token"),
+				},
+			})
+			.then((res) => {
+				if (res.data.User)
+				{
+					socketSocial?.close();
+					console.log("get user and emit socket");
+					const newSocketSocial = io('http://90.66.192.148:7003');
+					dispatch(setSocketSocial(newSocketSocial));
+					dispatch(setUser(res.data.User));
+				}
+			})
+			
+		}
+		socketSet();
+	}, []);
+	useEffect(() => {
+		if (user)
+			socketSocial?.emit("connected", {uuid: user.uuid});
+	}, [socketSocial]);
+	useEffect(() => {
+		console.log("update socket on")
+		if (socketSocial)
+		{
+			socketSocial?.removeListener("listUsersConnected");
+			console.log('la')
+			socketSocial.on('listUsersConnected', (data : any) => {
+				dispatch(setConnectedList(data.users));
+				console.log("erererererer" , ConnectedList)
+			})
+			
+			socketSocial?.removeListener("connectedToServer");
+			socketSocial.on('connectedToServer', (data : any) => {
+				console.log("test")
+				dispatch(setConnectedList([...ConnectedList, data]));
+			})
+			
+			//socketSocial?.removeListener("disconnectFromServer");
+			socketSocial.on('disconnectFromServer', (data : any) => {
+				console.log("Oui salade: ", ConnectedList.filter((user: any) => user.uuid !== data.uuid))
+				dispatch(setConnectedList(ConnectedList.filter((user: any) => user.uuid !== data.uuid)));
+			})
+		}
+	}, [socketSocial, ConnectedList]);
   return (
     <Router>
       {APIStatus ? (
@@ -77,6 +112,7 @@ function App() {
 			<Route path="/chat/channel/:id" element={<Protected><ChannelPage /></Protected>}></Route>
 			<Route path="/chat/dm" element={<Protected><DMPage /></Protected>}></Route>
 			<Route path="/chat/dm/:id" element={<Protected><DMPage /></Protected>}></Route>
+			<Route path="/test" element={<Protected><TestPage /></Protected>}></Route>
 			<Route path="*" element={<NotFound />}></Route>
     </Routes>
       ) : (

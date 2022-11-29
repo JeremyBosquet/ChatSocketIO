@@ -370,7 +370,7 @@
 	}
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 502px) {
 	.popup{
 		width: 75%;
 		h3 {
@@ -387,6 +387,9 @@
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+			h3 {
+				text-align: center;
+			}
 			.userInfo {
 				align-items: center;
 				width: 80%;

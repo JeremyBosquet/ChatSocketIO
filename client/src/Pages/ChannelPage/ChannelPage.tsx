@@ -76,6 +76,7 @@ interface IPlayer {
   }
 
 function ChannelPage() {
+	const params = useParams();
 	const logged = useSelector(getLogged);
     const user = useSelector(getUser);
     const dispatch = useDispatch();
@@ -290,10 +291,14 @@ function ChannelPage() {
 								:
 								(
 									<>
-										<div className="backButtonDiv">
-											<button className="backButton" onClick={() => navigate('/chat/')}>Back</button>
-										</div>
-										<div className='leftSide'>
+										{params.id ?
+											(
+												<div className="backButtonDiv">
+													<button className="backButton" onClick={() => navigate('/chat/')}>Back</button>
+												</div>
+											) : null
+										}
+										<div className={params.id ? 'leftSide hideSmall' : 'leftSide'}>
 											<div className='topActions'>
 												<div className='selectChannelOrDm'>
 													<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>

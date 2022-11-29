@@ -9,7 +9,7 @@ import NavBar from "../../Components/Nav/NavBar";
 import {getMyExp} from '../../Components/Utils/getExp'
 import { whoWon } from "../../Components/Utils/whoWon";
 import KillSocket from "../../Components/KillSocket/KillSocket";
-import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage, getUserImg, getUserUsername, setUserUsername, setUserImg } from "../../Redux/authSlice";
+import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage, getUserImg, getUserUsername, setUserUsername, setUserImg, getConnectedList } from "../../Redux/authSlice";
 import {setFriendList, setRequestList, setRequestedList, setProfileDisplayed} from '../../Redux/authSlice'
 import Popup from "../../Components/Popup/Popup";
 import io, { Socket } from "socket.io-client";
@@ -83,12 +83,6 @@ function HomePage() {
 //   const [socket, setSocket] = useState<Socket>();
   const [myHistoryList, SetMyHistoryList] = useState<any[]>([]);
 
-  const [checkedProfile, setCheckedProfile] = useState<boolean>(false);
-  const [checkedSettings, setCheckedSettings] = useState<boolean>(false);
-  const [checkedLogout, setCheckedLogout] = useState<boolean>(false);
-  const [checkedGame, setCheckedGame] = useState<boolean>(false);
-  const [checkedSpectate, setCheckedSpectate] = useState<boolean>(false);
-  const [checkedSocial, setCheckedSocial] = useState<boolean>(false);
   const [User, setUser] = useState<any>();
   const [friendRequest, setFriendRequest] = useState<number>();
   const [myProfileExp, setMyProfileExp] = useState<any>();
@@ -110,6 +104,7 @@ function HomePage() {
 	const requestedList = useSelector(getRequestedList);
 	const userImg = useSelector(getUserImg);
 	const userUsername = useSelector(getUserUsername);
+	const test = useSelector(getConnectedList);
 	useEffect(() => {
 		// Connect to the socketGame
 		console.log("socketGame", socketGame);
@@ -372,21 +367,21 @@ function HomePage() {
         });
     }
     setbooleffect2(false);
-  }
+}
 
-  useEffect(() => {
-    if (!booleffect.current) {
-      GetLoggedInfoAndUser();
-      booleffect.current = true;
+useEffect(() => {
+	if (!booleffect.current) {
+		GetLoggedInfoAndUser();
+		booleffect.current = true;
     }
-  }, []);
+}, []);
 
   return (
     <div className="HomePage main">
       {!booleffect2 && !ready && !playing  ? (
-        <>
+		  <>
           {!User ? (
-            <div>
+			  <div>
               <button id="login" onClick={() => navigate("/login")}>
                 login
               </button>
@@ -394,6 +389,15 @@ function HomePage() {
           ) : (
 			<>
 			<div className='blur'>
+			<>
+					{test?.map((item: any, index: number) => {
+						return (
+							<div key={index}>
+								<h2>{item.uuid}</h2>
+							</div>
+						);
+					})}
+				</>
 				<NavBar/>
 				{display ? (
 				<div id="myProfile">

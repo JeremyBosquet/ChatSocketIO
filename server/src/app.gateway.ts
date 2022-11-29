@@ -18,31 +18,37 @@ export class AppGateway {
 
   @SubscribeMessage('connected')
   async connected(@MessageBody() data: any,@ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
+	console.log("connected", data);
 	if (await this.UsersService.findUserByUuid(data.uuid))
 	{
+		// console.log('hereerer');
+		console.log(client.id);
 		client.data.uuid = data.uuid;
 		//this.UsersService.IsLoggedIn(data.uuid)
 		const sockets = await this.server.fetchSockets()
 
         let users = [];
         for (const socket of sockets) {
-            users.push({uuid : socket.data.uuid});
-        }
-		this.server.to(client.id).emit('listUsersConnected', {users : users});
-		this.server.emit('connectedToServer', {uuid : data.uuid});
+			if (socket.data.uuid)
+				if (!(await users.find((user) => (user.uuid === socket.data.uuid))))
+					users.push({uuid : socket.data.uuid});
+		}
+		// console.log(users);
+		client.emit('listUsersConnected', {users : users});
+		await this.server.emit('connectedToServer', {uuid : data.uuid});
 	}
     return;
   }
 
   @SubscribeMessage('disconnect')
-  async disconnect(@MessageBody() data: any,@ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
+  async handleDisconnect(@ConnectedSocket() client: Socket): Promise<void> {
+	console.log("Bonsoir", client.data)
 	if (await this.UsersService.findUserByUuid(client.data.uuid))
 	{
 		//this.UsersService.IsntLoggedIn(client.data.uuid);
-		this.server.emit('disconnectFromServer', {uuid : client.data.uuid});
-		client.data.uuid = null;
+		await this.server.emit('disconnectFromServer', {uuid : client.data.uuid});
+		client.data.uuid = "";
 	}
-    return;
   }
 
   @SubscribeMessage('addFriend')

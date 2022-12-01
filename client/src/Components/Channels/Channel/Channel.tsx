@@ -14,6 +14,7 @@ import './Channel.scss';
 import { MdPublic } from 'react-icons/md';
 import { IoMdLock } from 'react-icons/io';
 import { BsFillShieldLockFill } from 'react-icons/bs';
+import DevelopButton from './DevelopButton/DevelopButton';
 
 interface props {
 	channel: any;
@@ -56,45 +57,29 @@ function Channel(props: props) {
 	{ manageMode ? 
 		<Manage channel={props.channel} setToggleMenu={setToggleMenu} setManageMode={setManageMode}/> : null 
 	}
-		<div key={props.channel["id"]} onClick={e => handleSelectChannel(props.channel["id"])} className="channel">
-			<div className="channelInfoName">
-				<p>{props.channel["name"]}</p>
-				<p>{props.channel["visibility"] === "public" ?
-					(<MdPublic className='channelIcon' />)
-				: props.channel["visibility"] === "private" ?
-					(<IoMdLock className='channelIcon' />)
-				: props.channel["visibility"] === "protected" ?
-					(<BsFillShieldLockFill className='channelIcon' />)
-				: 
-				(props.channel["visibility"])
-				}</p>
-			</div>
-			<div className="channelInfoDate">
-				<p>{formatedDate(props.channel["createdAt"])}</p>
-				{ props.foundChannel ? 
-					<Join channelId={props.channel["id"]} channelVisibility={props.channel["visibility"]} setSearchChannel={props.setSearchChannel} />
-				:
-					<>
-					<div>
-						<button ref={ref} onClick={e => setToggleMenu(!toggleMenu)} className="developChannel">{toggleMenu ? '-' : '+'}</button>
-						{ toggleMenu ?
-						(<ControlledMenu 
-							anchorRef={ref}
-							state={toggleMenu ? 'open' : 'closed'}
-							className="channelMenu"
-							direction='left'
-							viewScroll='close'
-						>
-							{ isOwner() ? <button className='channelMenuButton' onClick={e => setManageMode(true)}>Manage channel</button> : null }
-							<Leave channelId={props.channel["id"]} setSearchChannel={props.setSearchChannel} />
-						</ControlledMenu>)
-						:
-						(null)}
-					</div>
-					</>
-				}
-			</div>
+		<div>
+			<div key={props.channel["id"]} onClick={e => handleSelectChannel(props.channel["id"])} className="channel">
+				<div className="channelInfoName">
+					<p>{props.channel["name"]}</p>
+					<p>{props.channel["visibility"] === "public" ?
+						(<MdPublic className='channelIcon' />)
+						: props.channel["visibility"] === "private" ?
+						(<IoMdLock className='channelIcon' />)
+						: props.channel["visibility"] === "protected" ?
+						(<BsFillShieldLockFill className='channelIcon' />)
+						: 
+						(props.channel["visibility"])
+					}</p>
+				</div>
+				<div className="channelInfoDate">
+					<p>{formatedDate(props.channel["createdAt"])}</p>
+					{ props.foundChannel ? 
+						<Join channelId={props.channel["id"]} channelVisibility={props.channel["visibility"]} setSearchChannel={props.setSearchChannel} />
+						: null }
+						<DevelopButton channel={props.channel} setSearchChannel={props.setSearchChannel} foundChannel={props.foundChannel} setManageMode={setManageMode} />
+				</div>
 
+			</div>
 		</div>
 	</>
   );

@@ -14,17 +14,6 @@
         transform: scale(1.01);
     }
 
-    .developChannel {
-        border: none;
-        width: 20px;
-        height: 20px;
-        background-color: #b3b2b2;
-        cursor: pointer;
-        color: #1c1c1c;
-        text-align: center;
-        font-size: 18px;
-    }
-
     .channelInfoName {
         display: flex;
         justify-content: space-between;
@@ -39,33 +28,46 @@
         display: flex;
         justify-content: space-between;
     }
+}
 
-    .szh-menu {
-        width: 100px;
-        display: flex;
-        flex-direction: column;
-        align-self: flex-start;
-        border: none;
-        background-color: #00000000;
-        
-        .channelMenuButton {
-            width: 100%;
-            padding: 10px 0px;
-            background-color: #2B2B2B;
-            border: 1px solid #666666;
-            border-top: none;
+
+.channelMenu {
+    // width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    border: none;
+    background-color: #00000000;
+    
+    .channelMenuButton {
+        width: 100%;
+        padding: 10px 10px;
+        background-color: #2B2B2B;
+        border: 1px solid #666666;
+        border-top: none;
+        color: #b3b2b2;
+        cursor: pointer;
+        transition-duration: 0.2s;
+
+        &:hover {
+            background-color: #1F1F1F;
             color: #b3b2b2;
-            cursor: pointer;
-            transition-duration: 0.2s;
+        }
 
-            &:hover {
-                background-color: #1F1F1F;
-                color: #b3b2b2;
-            }
-
-            &:nth-child(2) {
-                border-top: 1px solid #666666;
-            }
+        &:nth-child(2) {
+            border-top: 1px solid #666666;
         }
     }
+}
+
+.developChannel {
+    border: none;
+    width: 20px;
+    height: 20px;
+    background-color: #b3b2b2;
+    cursor: pointer;
+    color: #1c1c1c;
+    text-align: center;
+    font-size: 18px;
+    position: relative;
 }

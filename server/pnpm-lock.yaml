@@ -10,12 +10,14 @@ specifiers:
   '@nestjs/passport': ^9.0.0
   '@nestjs/platform-express': ^9.2.1
   '@nestjs/platform-socket.io': ^9.2.1
+  '@nestjs/schedule': ^2.1.0
   '@nestjs/schematics': ^9.0.3
   '@nestjs/serve-static': ^3.0.0
   '@nestjs/testing': ^9.2.1
   '@nestjs/typeorm': ^9.0.1
   '@nestjs/websockets': ^9.2.1
   '@types/bcrypt': ^5.0.0
+  '@types/cron': ^2.0.0
   '@types/express': ^4.17.14
   '@types/jest': ^28.1.8
   '@types/multer': ^1.4.7
@@ -29,6 +31,7 @@ specifiers:
   class-transformer: ^0.5.1
   class-validator: ^0.13.2
   cookie-parser: ^1.4.6
+  cron: ^2.1.0
   dotenv: ^16.0.3
   ejs: ^3.1.8
   eslint: ^8.28.0
@@ -47,6 +50,7 @@ specifiers:
   reflect-metadata: ^0.1.13
   rimraf: ^3.0.2
   rxjs: ^7.5.7
+  schedule: link:@types/nestjs/schedule
   socket.io: ^4.5.4
   source-map-support: ^0.5.21
   supertest: ^6.3.1
@@ -67,6 +71,7 @@ dependencies:
   '@nestjs/passport': 9.0.0_6o47igfla2pj7yzh7agpvpttka
   '@nestjs/platform-express': 9.2.1_hjcqpoaebdr7gdo5hgc22hthbe
   '@nestjs/platform-socket.io': 9.2.1_42isbbudhcffzta22k2c5s5mdu
+  '@nestjs/schedule': 2.1.0_dntc3uqqknzoduyjojusds5kla
   '@nestjs/serve-static': 3.0.0_hjcqpoaebdr7gdo5hgc22hthbe
   '@nestjs/typeorm': 9.0.1_izmi35gqaoyigs7xe3dmeulnea
   '@nestjs/websockets': 9.2.1_4q5kozuneek2jh7gdynwjkbxs4
@@ -91,6 +96,7 @@ dependencies:
   reflect-metadata: 0.1.13
   rimraf: 3.0.2
   rxjs: 7.5.7
+  schedule: link:@types/nestjs/schedule
   socket.io: 4.5.4
   typeorm: 0.3.10_pg@8.8.0+ts-node@10.9.1
   uuid: 9.0.0
@@ -100,6 +106,7 @@ devDependencies:
   '@nestjs/cli': 9.1.5
   '@nestjs/schematics': 9.0.3_typescript@4.9.3
   '@nestjs/testing': 9.2.1_wdbvfsxfdwzlwdfiyh2gynjl4m
+  '@types/cron': 2.0.0
   '@types/express': 4.17.14
   '@types/jest': 28.1.8
   '@types/multer': 1.4.7
@@ -107,6 +114,7 @@ devDependencies:
   '@types/supertest': 2.0.12
   '@typescript-eslint/eslint-plugin': 5.45.0_czs5uoqkd3podpy6vgtsxfc7au
   '@typescript-eslint/parser': 5.45.0_hsf322ms6xhhd4b5ne6lb74y4a
+  cron: 2.1.0
   eslint: 8.28.0
   eslint-config-prettier: 8.5.0_eslint@8.28.0
   eslint-plugin-prettier: 4.2.1_cwlo2dingkvfydnaculr42urve
@@ -562,6 +570,20 @@ packages:
       - supports-color
       - utf-8-validate
 
+  /@nestjs/schedule/2.1.0_dntc3uqqknzoduyjojusds5kla:
+    resolution: {integrity: sha512-4Xaw56WiW3VsxEPPnj/iDtfjcO+sUZyYAeRxD0gnF5havncxjAnv52Iw7UH3DuzzUA784xPGgGje3Fq0Gu925g==}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0
+      '@nestjs/core': ^7.0.0 || ^8.0.0 || ^9.0.0
+      reflect-metadata: ^0.1.12
+    dependencies:
+      '@nestjs/common': 9.2.1_x6yqyveuahcdef4z4mxykmuv6a
+      '@nestjs/core': 9.2.1_bvdidj5ygy55apqvtr2jzdleii
+      cron: 2.0.0
+      reflect-metadata: 0.1.13
+      uuid: 8.3.2
+    dev: false
+
   /@nestjs/schematics/9.0.3_ar2on76c45aosuucycxzxivxgm:
     resolution: {integrity: sha512-kZrU/lrpVd2cnK8I3ibDb3Wi1ppl3wX3U3lVWoL+DzRRoezWKkh8upEL4q0koKmuXnsmLiu3UPxFeMOrJV7TSA==}
     peerDependencies:
@@ -791,6 +813,13 @@ packages:
   /@types/cors/2.8.12:
     resolution: {integrity: sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==}
 
+  /@types/cron/2.0.0:
+    resolution: {integrity: sha512-xZM08fqvwIXgghtPVkSPKNgC+JoMQ2OHazEvyTKnNf7aWu1aB6/4lBbQFrb03Td2cUGG7ITzMv3mFYnMu6xRaQ==}
+    dependencies:
+      '@types/luxon': 3.1.0
+      '@types/node': 18.11.9
+    dev: true
+
   /@types/eslint-scope/3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
     dependencies:
@@ -854,6 +883,10 @@ packages:
     dependencies:
       '@types/node': 18.11.9
     dev: false
+
+  /@types/luxon/3.1.0:
+    resolution: {integrity: sha512-gCd/HcCgjqSxfMrgtqxCgYk/22NBQfypwFUG7ZAyG/4pqs51WLTcUzVp1hqTbieDYeHS3WoVEh2Yv/2l+7B0Vg==}
+    dev: true
 
   /@types/mime/3.0.1:
     resolution: {integrity: sha512-Y4XFY5VJAuw0FgAqPNd6NNoV44jbq9Bz2L7Rh/J6jLTiHBSBJa9fxqQIvkIld4GsoDOcCbvzOUAbLPsSKKg+uA==}
@@ -1735,6 +1768,18 @@ packages:
 
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+
+  /cron/2.0.0:
+    resolution: {integrity: sha512-RPeRunBCFr/WEo7WLp8Jnm45F/ziGJiHVvVQEBSDTSGu6uHW49b2FOP2O14DcXlGJRLhwE7TIoDzHHK4KmlL6g==}
+    dependencies:
+      luxon: 1.28.0
+    dev: false
+
+  /cron/2.1.0:
+    resolution: {integrity: sha512-Hq7u3P8y7UWYvsZbSKHHJDVG0VO9O7tp2qljxzTScelcTODBfCme8AIhnZsFwmQ9NchZ3hr2uNr+s3DSms7q6w==}
+    dependencies:
+      luxon: 1.28.0
+    dev: true
 
   /cross-spawn/7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
@@ -2940,6 +2985,9 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
+
+  /luxon/1.28.0:
+    resolution: {integrity: sha512-TfTiyvZhwBYM/7QdAVDh+7dBTBA29v4ik0Ce9zda3Mnf8on1S5KJI8P2jKFZ8+5C0jhmr0KwJEO/Wdpm0VeWJQ==}
 
   /macos-release/2.5.0:
     resolution: {integrity: sha512-EIgv+QZ9r+814gjJj0Bt5vSLJLzswGmSUbUpbi9AIr/fsN2IWFBl2NucV9PAiek+U1STK468tEkxmVYUtuAN3g==}

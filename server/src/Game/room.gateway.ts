@@ -14,6 +14,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { time } from 'console';
 import { exit } from 'process';
 import { UsersService } from 'src/users/users.service';
+import { date } from 'joi';
+import { Interval } from '@nestjs/schedule';
 
 interface Irooms {
   id: string;
@@ -32,6 +34,9 @@ interface Iready {
 
 const intervalList = [];
 const roomList = [];
+let lastTime = Date.now();
+let averageTime = 0;
+const lasttimestamp = [];
 @WebSocketGateway(7002, { cors: '*:*' })
 export class RoomGateway {
   constructor(private roomService: RoomService, private usersService: UsersService) {}
@@ -43,10 +48,123 @@ export class RoomGateway {
     const rooms = await this.roomService.getRooms();
     this.server.emit('roomCreated', rooms);
   }
+  //@Interval(1000 / 60)
+  //async update() {
+  //  const rooms = await this.roomService.getRooms();
+  //  for (let i = 0; i < rooms.length; i++) {
+  //    const room = rooms[i];
+  //    const settings = room.settings;
+  //    if (room.status == 'playing') {
+  //      //console.log('gameLoop', Date.now() - lastTime, Math.round(averageTime));
+  //      if (averageTime == 0) averageTime = Date.now() - lastTime;
+  //      else averageTime = (averageTime + Date.now() - lastTime) / 2;
+  //      lastTime = Date.now();
+  //      if (room.ball.x + settings.ballRadius < 0 || room.ball.x + settings.ballRadius > 100) {
+  //        if (room.ball.x + settings.ballRadius < 0) {
+  //          room.scoreB += 1
+  //          this.roomService.updateRoom(room.id, { playerB: room.playerB });
+  //        } else if (room.ball.x + settings.ballRadius) {
+  //          room.scoreA += 1
+  //          this.roomService.updateRoom(room.id, { playerA: room.playerA });
+  //        }
+  //        if (room.scoreA >= 1000 || room.scoreB >= 1000) {
+  //          room.status = 'finished';
+  //          if (room.scoreA >= 1) {
+  //            console.log("je donne ton ptn d'xp");
+  //            this.usersService.addExp(room.playerA.id, 0.42);
+  //            this.usersService.addExp(room.playerB.id, 0.15);
+  //          }
+  //          else if (room.scoreB >= 1) {
+  //            console.log("je donne ton ptn d'xp");
+  //            this.usersService.addExp(room.playerB.id, 0.42);
+  //            this.usersService.addExp(room.playerA.id, 0.15);
+  //          }
+  //          // console.log("wsh c fini ")
+  //          this.roomService.save(room);
+  //          this.server.emit('roomFinished', room);
+  //          this.server.in('room-' + room.id).emit('gameEnd', room);
+  //          const playerA = room.status.split('|')[1];
+  //          const playerB = room.status.split('|')[2];
+  //          if (playerA)
+  //            this.server.emit('gameRemoveInvite', { target: playerA, room: room });
+  //          if (playerB)
+  //            this.server.emit('gameRemoveInvite', { target: playerB, room: room });
+  //          clearInterval(intervalList[room.id]);
+  //          //roomList[room.id] = null;
+  //        }
+  //        room.ball.direction = Math.random() * 2 * Math.PI;
+  //        room.ball.x = 50;
+  //        room.ball.y = 50;
+  //        room.ball.speed = room.settings.defaultSpeed;
+  //        this.roomService.updateRoom(room.id, { ball: room.ball });
+  //        this.server.in('room-' + room.id).emit('ballMovement', room);
+  //        this.server.in('room-' + room.id).emit('roomUpdated', room);
+  //      } else {
+  //        // Check collision with playerA and playerB
+  //        const playerA = room.playerA;
+  //        const playerB = room.playerB;
+  //        if (
+  //          room.ball.x + settings.ballRadius > playerA.x &&
+  //          room.ball.x - settings.ballRadius < playerA.x + settings.boardWidth &&
+  //          room.ball.y > playerA.y &&
+  //          room.ball.y < playerA.y + settings.boardHeight
+  //        ) {
+  //          console.log('gameLoop - collision with playerA');
+  //          room.ball.direction = Math.PI - room.ball.direction;
+  //          room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
+  //          room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
+  //          room.ball.speed += 0.15;
+  //        }
+  //        else if (
+  //          room.ball.x - settings.ballRadius < playerB.x + settings.boardWidth &&
+  //          room.ball.x + settings.ballRadius > playerB.x &&
+  //          room.ball.y > playerB.y &&
+  //          room.ball.y < playerB.y + settings.boardHeight
+  //        ) {
+  //          console.log('gameLoop - collision with playerB');
+  //          room.ball.direction = Math.PI - room.ball.direction;
+  //          room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
+  //          room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
+  //          room.ball.speed += 0.15;
+  //        }
+  //        else if (
+  //          room.ball.y - settings.ballRadius * 0.75 <= 0 ||
+  //          room.ball.y + settings.ballRadius * 1.5 >= 100
+  //        ) {
+  //          console.log('gameLoop - collision top or bottom');
+  //          if (room.ball.y < 0) {
+  //            room.ball.y = 0 + settings.ballRadius;
+  //          } else if (room.ball.y + settings.ballRadius > 100) {
+  //            room.ball.y = 100 - settings.ballRadius;
+  //          }
+  //          room.ball.direction = -room.ball.direction;
+  //          room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
+  //          room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
+  //          room.ball.speed += 0.15;
+  //        }
+  //        else {
+  //          room.ball.x += room.ball.speed * 0.2 * Math.cos(room.ball.direction);
+  //          room.ball.y += room.ball.speed * 0.2 * Math.sin(room.ball.direction);
+  //        }
+  //        this.server.in('room-' + room.id).emit('ballMovement', room);
+  //      }
+  //      room.lastActivity = Date.now();
+  //      this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
+  //    }
+  //  }
+  //}
+
+  async emit(event: string, data: any) {
+    this.server.emit(event, data);
+  }
+
+  async emitToRoom(roomId: string, event: string, data: any) {
+    this.server.in('room-' + roomId).emit(event, data);
+  }
 
   async gameLoop(roomId: string): Promise<void> {
     const room = await this.roomService.getRoom(roomId);
-    //console.log('gameLoop');
+    console.log('gameLoop');
     if (room && room.id) {
       const settings = room.settings;
       if (room.status === 'paused') {
@@ -451,10 +569,10 @@ export class RoomGateway {
   }
 
   @SubscribeMessage('playerMove')
-  async handleMove(
+  handleMove(
     @ConnectedSocket() client: Socket,
     @MessageBody() data: any,
-  ): Promise<void> {
+  ) {
     if (client.data?.roomId) {
       //const room = await this.roomService.getRoom(client.data.roomId);
       if (
@@ -466,10 +584,10 @@ export class RoomGateway {
      ) {
         if ('playerA' === data.id) {
           client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerA", x: 85, y: data.y});
-          await this.roomService.updateRoom(client.data.roomId, {playerA: {x: 15, y: data.y, status: "ready", id: client.data.playerId, name: client.data?.playerName}});
+          this.roomService.updateRoom(client.data.roomId, {playerA: {x: 15, y: data.y, status: "ready", id: client.data.playerId, name: client.data?.playerName}});
         } else if ('playerB' === data.id) {
           client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerB", x: 85, y: data.y});
-          await this.roomService.updateRoom(client.data.roomId, {playerB: {x: 85, y: data.y, status: "ready", id: client.data.playerId, name: client.data?.playerName}});
+          this.roomService.updateRoom(client.data.roomId, {playerB: {x: 85, y: data.y, status: "ready", id: client.data.playerId, name: client.data?.playerName}});
         }
       }
     }
@@ -564,7 +682,7 @@ export class RoomGateway {
         roomList[room.id] = "playing";
         this.server.in('room-' + _room?.id).emit('gameStart', _room);
         this.server.in('room-' + _room?.id).emit('playerReady', _room);
-        intervalList[_room.id] = setInterval(() => this.gameLoop(_room.id), 40);
+        //intervalList[_room.id] = setInterval(() => this.gameLoop(_room.id), 40);
       }
       this.server.in('room-' + _room?.id).emit('configurationUpdated', _room);
     }// else //console.log('action not allowed -', room?.id, room?.status);

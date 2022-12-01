@@ -189,7 +189,9 @@ function ChatChannel(props: props) {
           }
         </div>
       <div className='playersList'>
-        <h2>Players</h2>
+        <div className='playersTitle'>
+          <p>Players</p>
+        </div>
         <div className='messages'>
           {users?.map((user : any) => ( 
             user.print === undefined && user.print !== false ?

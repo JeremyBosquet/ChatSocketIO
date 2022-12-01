@@ -24,9 +24,11 @@ specifiers:
   '@use-it/event-listener': ^0.1.7
   '@vitejs/plugin-react': ^2.2.0
   axios: ^0.27.2
+  grid-align: ^1.0.1
   konva: ^8.3.14
   node-sass-chokidar: ^2.0.0
   phaser: 3.55.2
+  phaser-utility: ^1.0.7
   pixi.js: ^6.5.8
   react: ^18.2.0
   react-calendar: ^4.0.0
@@ -68,9 +70,11 @@ dependencies:
   '@types/vite-plugin-react-svg': 0.2.2_sass@1.56.1
   '@use-it/event-listener': 0.1.7_react@18.2.0
   axios: 0.27.2
+  grid-align: 1.0.1
   konva: 8.3.14
   node-sass-chokidar: 2.0.0
   phaser: 3.55.2
+  phaser-utility: 1.0.7
   pixi.js: 6.5.8
   react: 18.2.0
   react-calendar: 4.0.0_biqbaboplfbrettd7655fr4n2y
@@ -6847,6 +6851,10 @@ packages:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
     dev: false
 
+  /grid-align/1.0.1:
+    resolution: {integrity: sha512-LJTQMbIq/ujdcYVmXwLfVw6Cu253eM+TYEh4OdjBACfjIvk64p1WcUACmyDDo4CQ2M7AgcsVbjorXJhpcI1pAg==}
+    dev: false
+
   /gzip-size/6.0.0:
     resolution: {integrity: sha512-ax7ZYomf6jqPTQ4+XCpUGyXKHk5WweS+e05MBO4/y3WJ5RkmPXNKvX+bx1behVILVwr6JSQvZAku021CHPXG3Q==}
     engines: {node: '>=10'}
@@ -9291,6 +9299,10 @@ packages:
 
   /performance-now/2.1.0:
     resolution: {integrity: sha512-7EAHlyLHI56VEIdK57uwHdHKIaAGbnXPiw0yWbarQZOKaKpvUIgW0jWRVLiatnM+XXlSwsanIBH/hzGMJulMow==}
+    dev: false
+
+  /phaser-utility/1.0.7:
+    resolution: {integrity: sha512-MNBHgtQwWSAdZbAEIzGtrKp/750cq24ZuXPIARMOysOJngpe5dT7B+kKcBFXyTbgUoIuThFKviISamnksDTgyA==}
     dev: false
 
   /phaser/3.55.2:

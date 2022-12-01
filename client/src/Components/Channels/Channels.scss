@@ -4,10 +4,15 @@
     
     .playersList {
         min-width: 280px;
-        border: 2px solid black;
-        background-color: #1B1F3B;
+        // min-height: 50px;
+        background-color: #1F1F1F;
         height: min-content;
-        h2 {
+        .playersTitle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60px;
+            font-size: 24px;
             text-align: center;
             color: white;
         }

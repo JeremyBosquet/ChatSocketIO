@@ -21,12 +21,13 @@ import { RoomModule } from './Game/room.module';
 import { AppGateway } from './app.gateway';
 import { DM } from './Chat/Entities/dm.entity';
 import { Room } from './Game/Entities/room.entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
+      imports: [ConfigModule, ScheduleModule.forRoot()],
       useFactory: (configService: ConfigService) => ({
         type: 'postgres',
         host: configService.get('DB_HOST'),

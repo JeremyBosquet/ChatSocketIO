@@ -136,7 +136,7 @@ function GamePlay(props: props) {
   const mousemove = 
     (e: any) => {
       if (mouseMoveBool) {
-        //console.log("Emit");
+        console.log("Emit");
         const _player = { id: "", x: 0, y: 0 };
         if (props.room?.playerA.name === props.playerName) {
           _player.id = playerA.id;
@@ -159,6 +159,7 @@ function GamePlay(props: props) {
           id: _player.id,
           x: (100 * _player.x) / windowsWidth,
           y: (100 * _player.y) / windowsHeight,
+          timestamp: Date.now(),
         });
         if (props.room?.playerA.name === props.playerName) {
           playerA.ref.current?.position({ y: _player.y, x: playerA.x });
@@ -237,9 +238,10 @@ function GamePlay(props: props) {
           y: (data.y / 100) * windowsHeight,
           percentY: data.y,
         });
-        playerA.ref.current?.position({
+        playerA.ref.current?.to({
           x: 0.15 * windowsWidth,
           y: (data.y / 100) * windowsHeight,
+          duration: 1000 / 60,
         });
       } else if ((data.player === "playerB")) {
         setPlayerB({
@@ -249,9 +251,10 @@ function GamePlay(props: props) {
           y: (data.y / 100) * windowsHeight,
           percentY: data.y,
         });
-        playerB.ref.current?.position({
+        playerB.ref.current?.to({
           x: windowsWidth - 0.15 * windowsWidth,
           y: (data.y / 100) * windowsHeight,
+          duration: 1000 / 60,
         });
       }
     }

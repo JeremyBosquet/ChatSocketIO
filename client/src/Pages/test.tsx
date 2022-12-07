@@ -15,7 +15,8 @@ function TestPage() {
             backgroundColor: '#282c34',
             scale: {
                 mode: Phaser.Scale.FIT,
-                autoCenter: Phaser.Scale.CENTER_BOTH,
+                //autoCenter: Phaser.Scale.CENTER_BOTH,
+                
                 // Do not change item position when resizing
                 // https://photonstorm.github.io/phaser3-docs/Phaser.Scale.ScaleManager.html#setResizeCallback__anchor
                 width: window.innerWidth,

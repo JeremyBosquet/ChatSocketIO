@@ -2,6 +2,22 @@
 	display: flex;
 	justify-content: space-around;
 	background: rgba(0, 0, 0, 0);
+	.status {
+		.Green {
+			color : green;
+		}
+		.Red {
+			color : red;
+		}
+		background: none;
+		position: absolute;
+		z-index: 3;
+		top : 28px;
+		left : 26px;
+		font-size: 32px;
+		// display: flex;
+		// justify-content: space-around;
+	}
 	.box
 	{
 		margin-top: 10px;

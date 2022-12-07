@@ -6,10 +6,12 @@ import { RoomGateway } from './room.gateway';
 import { Room } from './Entities/room.entity';
 import { UsersService } from 'src/users/users.service';
 import { UserModel } from 'src/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Room, UserModel])],
-  controllers: [RoomController],
-  providers: [RoomService, RoomGateway, UsersService],
+  imports: [TypeOrmModule.forFeature([Room, UserModel]), ScheduleModule.forRoot(),],
+  controllers: [RoomController], 
+  providers: [RoomGateway, RoomService, UsersService],
 })
+
 export class RoomModule {}

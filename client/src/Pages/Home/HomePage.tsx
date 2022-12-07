@@ -19,6 +19,7 @@ import "../../Pages/Home/HomePage.scss";
 import { getSockeGame, getSockeGameChat, setSocketGame } from "../../Redux/gameSlice";
 import useEventListener from "@use-it/event-listener";
 import { useParams } from "react-router-dom";
+import { getSocket } from "../../Redux/chatSlice";
 
 interface IPlayer {
 	id: string;
@@ -70,9 +71,6 @@ interface IPlayer {
 function HomePage() {
   const navigate = useNavigate();
   let tab: any[] = [];
-  let requestTab: any[] = [];
-  let friendTab: any[] = [];
-	let requestedTab: any[] = [];
   const nbButton: number = 6;
   const [compt, setCompt] = useState<number>(0);
   //const [user, setUser] = useState<any>();
@@ -197,100 +195,6 @@ function HomePage() {
 		}
 	  }, [socketGame, ready, playing, room, notification]);
 
-  useEffect(() => {
-	if (socket) {
-		socket.removeAllListeners();
-		socket.on("newFriend", (data: any) => {
-			if (data.uuid === User.uuid && data?.username) {
-				createNotification("info", "New friend request from: " + data.username);
-				axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
-				headers: ({
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})
-				}).then((res) => {
-					requestTab = res.data.usernameList;
-					if (requestTab.length)
-						dispatch(setRequestList(requestTab));
-					else
-						dispatch(setRequestList([]));
-				}).catch((err) => {
-					console.log(err.message);
-					// SetRequestList([]);
-				});
-			}
-		});
-		socket.on("friendAccepted", (data: any) => {
-			if (data.uuid === User.uuid && data?.username && data?.friendUuid) {
-				createNotification("info", data.username + " accepted your friend request");
-				axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
-				headers: ({
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})
-				}).then((res) => {
-					const requested = requestedList.filter((e : any) => e.uuid !== data.friendUuid);
-					dispatch(setRequestedList(requested));
-					friendTab = res.data.friendList;
-					dispatch(setFriendList(friendTab));
-				}).catch((err) => {
-					console.log(err.message);
-				});
-			}
-		});
-		socket.on("removedOrBlocked", (data: any) => {
-			if (data.uuid === User.uuid && data?.username) {
-				//createNotification("info", data.username + " accepted your friend request");
-				axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
-				headers: ({
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})
-				}).then((res) => {
-					friendTab = res.data.friendList;
-					dispatch(setFriendList(friendTab));
-				}).catch((err) => {
-					console.log(err.message);
-				});
-			}
-		});
-		socket.on("CancelFriend", (data: any) => {
-			if (data.uuid === User.uuid) {
-				axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
-				headers: ({
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})
-				}).then((res) => {
-					requestTab = res.data.usernameList;
-					if (requestTab.length)
-						dispatch(setRequestList(requestTab));
-					else
-						dispatch(setRequestList([]));
-				}).catch((err) => {
-					console.log(err.message);
-					//SetRequestList([]);
-				});
-			}
-		});
-		socket.on("DeclineFriend", (data: any) => {
-			if (data.uuid === User.uuid) {
-				axios.get(`http://90.66.192.148:7000/user/ListFriendRequested`, {
-				headers: ({
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})
-				}).then((res) => {
-					requestedTab = res.data.ListFriendsRequested;
-					if (requestedTab.length)
-						dispatch(setRequestedList(requestedTab));
-					else
-						dispatch(setRequestedList([]));
-				}).catch((err) => {
-					console.log(err.message);
-					//SetRequestList([]);
-				});
-			}
-		});
-	}
-
-  }, [socket, User]);
-
 	useEffect (() => {
 		if (firstrender2.current)
 		{
@@ -389,15 +293,6 @@ useEffect(() => {
           ) : (
 			<>
 			<div className='blur'>
-			<>
-					{test?.map((item: any, index: number) => {
-						return (
-							<div key={index}>
-								<h2>{item.uuid}</h2>
-							</div>
-						);
-					})}
-				</>
 				<NavBar/>
 				{display ? (
 				<div id="myProfile">
@@ -420,19 +315,25 @@ useEffect(() => {
 							<div id={myHistoryList.length > 3 ? "listMyGameScroll" : "listMyGame"}>
 							{myHistoryList.map((game, index) => (
 								<ul key={index}>
-								{whoWon(User.uuid, game) === "Victory" ? (
+								{/* {whoWon(User.uuid, game) === "Victory" ? ( */}
 									<li>
-									<span className="green">
-										{game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game)}
-									</span>
+									<p id="playerName">
+										{game.playerA.name} vs {game.playerB.name}
+									</p>
+									<p id="playerStatus">
+										|&nbsp;&nbsp;{whoWon(User.uuid, game)}
+									</p>
+									<p id="playerScore">
+										|&nbsp;&nbsp;{game.scoreA} - {game.scoreB}
+									</p>
 									</li>
-								) : (
+								{/* ) : (
 									<li>
 									<span className="red">
-										{game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid, game)}
+										{game.playerA.name} vs {game.playerB.name} | {whoWon(User.uuid, game)} | {game.scoreA} - {game.scoreB}
 									</span>
 									</li>
-								)}
+								)} */}
 								</ul>
 							))}
 							</div>
@@ -442,7 +343,6 @@ useEffect(() => {
 					</div>
 				</div>
 				) : (null)}
-			</div>
 			<GameReady
 			socket={socketGame}
 			setDisplay={setDisplay}
@@ -450,6 +350,7 @@ useEffect(() => {
 			setPlayerId={setPlayerId}
 			setPlayerName={setPlayerName}
 			/>
+			</div>
 			</>
           )}
 		<Popup User={User} />

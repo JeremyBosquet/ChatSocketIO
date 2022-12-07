@@ -612,14 +612,14 @@ export class UsersService {
     }
 
     const containsName = (user: UserModel, username: string) => {
-      if (user.username.includes(username)) return true;
+      if (user.username.includes(username) || user.trueUsername.includes(username))
+	  	return true;
       return false;
     };
 
     const find = await this.userRepository.find();
     return find.filter(
-      (user) =>
-        (containsName(user, username) && !containsPlayer(user)) === true,
+      (user) => (containsName(user, username) && !containsPlayer(user)) === true,
     );
   }
 

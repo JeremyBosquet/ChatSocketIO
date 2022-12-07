@@ -50,109 +50,119 @@ export class RoomGateway {
   }
   //@Interval(1000 / 60)
   //async update() {
-  //  const rooms = await this.roomService.getRooms();
-  //  for (let i = 0; i < rooms.length; i++) {
-  //    const room = rooms[i];
-  //    const settings = room.settings;
-  //    if (room.status == 'playing') {
-  //      //console.log('gameLoop', Date.now() - lastTime, Math.round(averageTime));
-  //      if (averageTime == 0) averageTime = Date.now() - lastTime;
-  //      else averageTime = (averageTime + Date.now() - lastTime) / 2;
-  //      lastTime = Date.now();
-  //      if (room.ball.x + settings.ballRadius < 0 || room.ball.x + settings.ballRadius > 100) {
-  //        if (room.ball.x + settings.ballRadius < 0) {
-  //          room.scoreB += 1
-  //          this.roomService.updateRoom(room.id, { playerB: room.playerB });
-  //        } else if (room.ball.x + settings.ballRadius) {
-  //          room.scoreA += 1
-  //          this.roomService.updateRoom(room.id, { playerA: room.playerA });
-  //        }
-  //        if (room.scoreA >= 1000 || room.scoreB >= 1000) {
-  //          room.status = 'finished';
-  //          if (room.scoreA >= 1) {
-  //            console.log("je donne ton ptn d'xp");
-  //            this.usersService.addExp(room.playerA.id, 0.42);
-  //            this.usersService.addExp(room.playerB.id, 0.15);
-  //          }
-  //          else if (room.scoreB >= 1) {
-  //            console.log("je donne ton ptn d'xp");
-  //            this.usersService.addExp(room.playerB.id, 0.42);
-  //            this.usersService.addExp(room.playerA.id, 0.15);
-  //          }
-  //          // console.log("wsh c fini ")
-  //          this.roomService.save(room);
-  //          this.server.emit('roomFinished', room);
-  //          this.server.in('room-' + room.id).emit('gameEnd', room);
-  //          const playerA = room.status.split('|')[1];
-  //          const playerB = room.status.split('|')[2];
-  //          if (playerA)
-  //            this.server.emit('gameRemoveInvite', { target: playerA, room: room });
-  //          if (playerB)
-  //            this.server.emit('gameRemoveInvite', { target: playerB, room: room });
-  //          clearInterval(intervalList[room.id]);
-  //          //roomList[room.id] = null;
-  //        }
-  //        room.ball.direction = Math.random() * 2 * Math.PI;
-  //        room.ball.x = 50;
-  //        room.ball.y = 50;
-  //        room.ball.speed = room.settings.defaultSpeed;
-  //        this.roomService.updateRoom(room.id, { ball: room.ball });
-  //        this.server.in('room-' + room.id).emit('ballMovement', room);
-  //        this.server.in('room-' + room.id).emit('roomUpdated', room);
-  //      } else {
-  //        // Check collision with playerA and playerB
-  //        const playerA = room.playerA;
-  //        const playerB = room.playerB;
-  //        if (
-  //          room.ball.x + settings.ballRadius > playerA.x &&
-  //          room.ball.x - settings.ballRadius < playerA.x + settings.boardWidth &&
-  //          room.ball.y > playerA.y &&
-  //          room.ball.y < playerA.y + settings.boardHeight
-  //        ) {
-  //          console.log('gameLoop - collision with playerA');
-  //          room.ball.direction = Math.PI - room.ball.direction;
-  //          room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
-  //          room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
-  //          room.ball.speed += 0.15;
-  //        }
-  //        else if (
-  //          room.ball.x - settings.ballRadius < playerB.x + settings.boardWidth &&
-  //          room.ball.x + settings.ballRadius > playerB.x &&
-  //          room.ball.y > playerB.y &&
-  //          room.ball.y < playerB.y + settings.boardHeight
-  //        ) {
-  //          console.log('gameLoop - collision with playerB');
-  //          room.ball.direction = Math.PI - room.ball.direction;
-  //          room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
-  //          room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
-  //          room.ball.speed += 0.15;
-  //        }
-  //        else if (
-  //          room.ball.y - settings.ballRadius * 0.75 <= 0 ||
-  //          room.ball.y + settings.ballRadius * 1.5 >= 100
-  //        ) {
-  //          console.log('gameLoop - collision top or bottom');
-  //          if (room.ball.y < 0) {
-  //            room.ball.y = 0 + settings.ballRadius;
-  //          } else if (room.ball.y + settings.ballRadius > 100) {
-  //            room.ball.y = 100 - settings.ballRadius;
-  //          }
-  //          room.ball.direction = -room.ball.direction;
-  //          room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
-  //          room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
-  //          room.ball.speed += 0.15;
-  //        }
-  //        else {
-  //          room.ball.x += room.ball.speed * 0.2 * Math.cos(room.ball.direction);
-  //          room.ball.y += room.ball.speed * 0.2 * Math.sin(room.ball.direction);
-  //        }
-  //        this.server.in('room-' + room.id).emit('ballMovement', room);
-  //      }
-  //      room.lastActivity = Date.now();
-  //      this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
-  //    }
-  //  }
+  //  const rooms = {};
+  //  console.log('gameLoop', Date.now() - lastTime, Math.round(averageTime));
+  //  if (averageTime == 0) averageTime = Date.now() - lastTime;
+  //  else averageTime = (averageTime + Date.now() - lastTime) / 2;
+  //  lastTime = Date.now();
   //}
+  @Interval(1000 / 60)
+  async update() {
+    const rooms = await this.roomService.getRooms();
+    //if (Date.now() - lastTime > 1000 / 59)
+    //  console.log('gameLoop', Date.now() - lastTime, Math.round(averageTime));
+    if (averageTime == 0) averageTime = Date.now() - lastTime;
+    else averageTime = (averageTime + Date.now() - lastTime) / 2;
+    lastTime = Date.now();
+    for (let i = 0; i < rooms.length; i++) {
+      const room = rooms[i];
+      //console.log(room);
+      if (room && room?.status == 'playing' && room?.settings) {
+        const settings = room.settings;
+        if (room.ball.x + settings.ballRadius < 0 || room.ball.x + settings.ballRadius > 100) {
+          if (room.ball.x + settings.ballRadius < 0) {
+            room.scoreB += 1
+            this.roomService.updateRoom(room.id, { scoreB: room.scoreB });
+          } else if (room.ball.x + settings.ballRadius) {
+            room.scoreA += 1
+            this.roomService.updateRoom(room.id, { scoreA: room.scoreA });
+          }
+          if (room.scoreA >= 1000 || room.scoreB >= 1000) {
+            room.status = 'finished';
+            if (room.scoreA >= 1) {
+              console.log("je donne ton ptn d'xp");
+              this.usersService.addExp(room.playerA.id, 0.42);
+              this.usersService.addExp(room.playerB.id, 0.15);
+            }
+            else if (room.scoreB >= 1) {
+              console.log("je donne ton ptn d'xp");
+              this.usersService.addExp(room.playerB.id, 0.42);
+              this.usersService.addExp(room.playerA.id, 0.15);
+            }
+            // console.log("wsh c fini ")
+            this.roomService.save(room);
+            this.server.emit('roomFinished', room);
+            this.server.in('room-' + room.id).emit('gameEnd', room);
+            const playerA = room.status.split('|')[1];
+            const playerB = room.status.split('|')[2];
+            if (playerA)
+              this.server.emit('gameRemoveInvite', { target: playerA, room: room });
+            if (playerB)
+              this.server.emit('gameRemoveInvite', { target: playerB, room: room });
+            clearInterval(intervalList[room.id]);
+            //roomList[room.id] = null;
+          }
+          room.ball.direction = Math.random() * 2 * Math.PI;
+          room.ball.x = 50;
+          room.ball.y = 50;
+          room.ball.speed = room.settings.defaultSpeed;
+          this.roomService.updateRoom(room.id, { ball: room.ball });
+          this.server.in('room-' + room.id).emit('ballMovement', room);
+          this.server.in('room-' + room.id).emit('roomUpdated', room);
+        } else {
+          // Check collision with playerA and playerB
+          const playerA = room.playerA;
+          const playerB = room.playerB;
+          if (
+            room.ball.x + settings.ballRadius > playerA.x &&
+            room.ball.x - settings.ballRadius < playerA.x + settings.boardWidth &&
+            room.ball.y > playerA.y &&
+            room.ball.y < playerA.y + settings.boardHeight
+          ) {
+            console.log('gameLoop - collision with playerA');
+            room.ball.direction = Math.PI - room.ball.direction;
+            room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
+            room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
+            room.ball.speed += 0.15;
+          }
+          else if (
+            room.ball.x - settings.ballRadius < playerB.x + settings.boardWidth &&
+            room.ball.x + settings.ballRadius > playerB.x &&
+            room.ball.y > playerB.y &&
+            room.ball.y < playerB.y + settings.boardHeight
+          ) {
+            console.log('gameLoop - collision with playerB');
+            room.ball.direction = Math.PI - room.ball.direction;
+            room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
+            room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
+            room.ball.speed += 0.15;
+          }
+          else if (
+            room.ball.y - settings.ballRadius * 0.75 <= 0 ||
+            room.ball.y + settings.ballRadius * 1.5 >= 100
+          ) {
+            console.log('gameLoop - collision top or bottom');
+            if (room.ball.y < 0) {
+              room.ball.y = 0 + settings.ballRadius;
+            } else if (room.ball.y + settings.ballRadius > 100) {
+              room.ball.y = 100 - settings.ballRadius;
+            }
+            room.ball.direction = -room.ball.direction;
+            room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
+            room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
+            room.ball.speed += 0.15;
+          }
+          else {
+            room.ball.x += room.ball.speed * 0.2 * Math.cos(room.ball.direction);
+            room.ball.y += room.ball.speed * 0.2 * Math.sin(room.ball.direction);
+          }
+          this.server.in('room-' + room.id).emit('ballMovement', room);
+        }
+        room.lastActivity = Date.now();
+        this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
+      }
+    }
+  }
 
   async emit(event: string, data: any) {
     this.server.emit(event, data);
@@ -507,6 +517,52 @@ export class RoomGateway {
           this.server.emit('gameRemoveInvite', {target: playerA, room:room});
         if (playerB)
           this.server.emit('gameRemoveInvite', {target: playerB, room:room});
+        if (room?.playerB?.id == client.data.playerId && room.status == 'playing')
+        {
+          const _tmp = {
+            id: uuidv4(),
+            configurationA: room.configurationA,
+            configurationB: room.configurationB,
+            name: room.name,
+            nbPlayers: room.nbPlayers,
+            owner: room.owner,
+            playerA: room.playerA,
+            playerB: room.playerB,
+            scoreA: room.scoreA,
+            scoreB: room.scoreB,
+            status: room.status,
+            ball: room.ball,
+            settings: room.settings,
+            lastActivity: Date.now(),
+          };
+          _tmp.scoreA++;
+          _tmp.scoreB = -1;
+          _tmp.status = 'finished';
+          await this.roomService.save(_tmp);
+        }
+        else if (room?.playerA?.id == client.data.playerId && room.status == 'playing')
+        {
+          const _tmp = {
+            id: uuidv4(),
+            configurationA: room.configurationA,
+            configurationB: room.configurationB,
+            name: room.name,
+            nbPlayers: room.nbPlayers,
+            owner: room.owner,
+            playerA: room.playerA,
+            playerB: room.playerB,
+            scoreA: room.scoreA,
+            scoreB: room.scoreB,
+            status: room.status,
+            ball: room.ball,
+            settings: room.settings,
+            lastActivity: Date.now(),
+          };
+          _tmp.scoreB++;
+          _tmp.scoreA = -1;
+          _tmp.status = 'finished';
+          await this.roomService.save(_tmp);
+        }
         if (room?.playerA?.id == client.data.playerId) room.playerA = null;
         else if (room?.playerB?.id == client.data.playerId) room.playerB = null;
         else {
@@ -554,6 +610,9 @@ export class RoomGateway {
             this.server.emit('gameRemoveInvite', {target: playerA, room:room});
           if (playerB)
             this.server.emit('gameRemoveInvite', {target: playerB, room:room});
+          // Make the other player win
+          //if (room.playerA?.id == client.data.playerId) {
+            
           await this.roomService.updateRoom(room.id, {status: 'destroy'});
         } else {
           room.status = 'waiting'; // remove that
@@ -670,7 +729,8 @@ export class RoomGateway {
         _room.settings.ballRadius = 1;
         _room.settings.boardWidth = 2.5;
         _room.settings.boardHeight = 15;
-        _room.ball.speed = _room.settings.defaultSpeed;
+        _room.ball.speed = _room.settings.defaultSpeed /* 10*/;
+        _room.settings.defaultSpeed = _room.settings.defaultSpeed /*/ 10*/;
         _room.status = 'playing';
         _room.playerA.x = 15;
         _room.playerA.y = 50;

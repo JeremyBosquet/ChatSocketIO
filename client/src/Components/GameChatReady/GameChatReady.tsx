@@ -303,7 +303,7 @@ function GameChatReady(props: props) {
               {settingsBis?.difficulty ? (
                 <p>{settingsBis.difficulty}</p>
               ) : (
-                <p>Not set</p>
+                <p>Easy</p>
               )}
             </div>
             <div className="ChannelRoomFormInput-Background">
@@ -311,7 +311,7 @@ function GameChatReady(props: props) {
               {settingsBis?.background ? (
                 <p>{settingsBis.background}</p>
               ) : (
-                <p>Not set</p>
+                <p>Background1</p>
               )}
             </div>
             Ready : {settingsBis?.confirmed ? <p>Yes</p> : <p>No</p>}

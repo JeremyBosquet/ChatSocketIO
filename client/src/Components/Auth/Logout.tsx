@@ -1,12 +1,14 @@
 import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   redirect,
   useNavigate,
   useLocation,
   useParams,
 } from "react-router-dom";
+import { getSocketSocial } from "../../Redux/authSlice";
 import { createNotification } from "../notif/Notif";
 
 function Logout() {
@@ -14,42 +16,29 @@ function Logout() {
   let location = useLocation();
   let booleffect = false;
 
-  const [User, setUser] = useState<any>();
-  const [IsLoggedIn, setLogged] = useState<boolean>();
-  const [IsTwoAuthActivated, setActivated] = useState<boolean>();
-  const [IsTwoAuthConnected, setConnected] = useState<boolean>();
+  const socketSocial = useSelector(getSocketSocial);
 
   async function GetLoggedInfo() {
-    if (localStorage.getItem("token")) {
-      await axios
-        .get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          setLogged(res.data.IsLoggedIn);
-          setActivated(res.data.isTwoFactorAuthenticationEnabled);
-          setConnected(res.data.isSecondFactorAuthenticated);
-        })
-        .catch((err) => {
-          console.log(err.message);
-          setLogged(false);
-        });
-    }
+    await axios.get(`http://90.66.192.148:7000/user`, {
+		headers: {
+			Authorization: "Bearer " + localStorage.getItem("token"),
+		},
+	})
+	.then((res) => {
+		if (res.data.User)
+			socketSocial?.emit("logout", res.data.User.uuid);
+	})
   }
 
   async function CallLogout() {
-    const token = localStorage.getItem("token");
     await axios
       .get(`http://90.66.192.148:7000/logout`, {
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       })
       .then((res) => {
         GetLoggedInfo();
-        setUser("{}");
         localStorage.clear();
         createNotification("success", "User disconnected");
         navigate("/");
@@ -61,7 +50,6 @@ function Logout() {
   }
   useEffect(() => {
     if (!booleffect) {
-      GetLoggedInfo();
       CallLogout();
       booleffect = true;
     }

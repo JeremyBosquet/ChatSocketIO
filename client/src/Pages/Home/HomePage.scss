@@ -34,7 +34,15 @@
 		top : 50px;
 		position: relative;
 		left: 110px;
-		top : -70px;
+		top : -75px;
+	}
+	h4 {
+		//font-size: px;
+		color :rgb(129, 129, 129);
+		top : 50px;
+		position: relative;
+		left: 110px;
+		top : -74px;
 	}
 	.ProfileImg {
 		width: 100px;
@@ -52,7 +60,7 @@
 		width : 10%;
 		position: relative;
 		left : 110px;
-		top : -75px;
+		top : -77px;
 		height: auto;
 		margin-top : 10px;
 		//margin-left : 10px;
@@ -168,6 +176,7 @@
 				color : rgb(255, 255, 255);
 			}
 
+			
 			li{
 				list-style-type: none;
 				display : flex;
@@ -296,8 +305,34 @@
   			scrollbar-color: var(--black) #ffffff;
 			overflow:hidden;
 			overflow-y:scroll;
-			height: 95px;
+			height: 158px;
+			color : #ffffff;
 
+			li{
+				list-style-type: none;
+				display : flex;
+				flex-direction: row;
+				// position: relative;
+				font-size: 25px;
+				margin-bottom: 2px;
+				margin-right: 0px;
+				#playerName {
+					width: 50%;
+				}
+				#playerStatus {
+					width: 30%;
+				}
+				#playerScore {
+					width: 20%;
+				}
+			}
+			
+		}
+
+		#listMyGame{
+			height: 90px;
+			overflow: hidden;
+			color :rgb(255, 255, 255);
 			.green{
 				//color :#2fbb00
 				color :rgb(255, 255, 255);
@@ -311,31 +346,20 @@
 			li{
 				list-style-type: none;
 				display : flex;
-				//position: relative;
+				flex-direction: row;
+				// position: relative;
 				font-size: 25px;
 				margin-bottom: 2px;
 				margin-right: 0px;
-			}
-		}
-
-		#listMyGame{
-			height: 90px;
-			overflow: hidden;
-
-			.green{
-				//color :#2fbb00
-				color :rgb(255, 255, 255);
-			}
-
-			.red{
-				//color :#bf0000
-				color : rgb(255, 255, 255);
-			}
-
-			li{
-				list-style-type: none;
-				position: relative;
-				font-size: 25px;
+				#playerName {
+					width: 50%;
+				}
+				#playerStatus {
+					width: 30%;
+				}
+				#playerScore {
+					width: 20%;
+				}
 			}
 		}
 	}
@@ -394,6 +418,24 @@
 				align-items: center;
 				width: 80%;
 				margin: 0;
+			}
+			#listMyGameParent {
+				height: 185px;
+			}
+			#listMyGameParent p {
+				font-size: 16px;
+			}
+			#listMyGameParent li {
+				flex-direction: column;
+			}
+			#playerName {
+				width: unset;
+			}
+			#playerStatus {
+				width: 40px;
+			}
+			#playerScore {
+				width: 40px;
 			}
 		}
 	}

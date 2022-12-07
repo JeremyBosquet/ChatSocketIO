@@ -6,11 +6,13 @@ import { getSocket, setChannels } from '../../Redux/chatSlice';
 import React from 'react';
 import { createNotification } from '../notif/Notif';
 import './FormCreateChannel.scss';
+import { IoAdd } from 'react-icons/io5';
 
 function FormCreateChannel() {
   const [channelName, setChannelName] = useState<string>("");
   const [visibility, setVisibility] = useState<string>("public");
   const [password, setPassword] = useState<string>("");
+  const [open, setOpen] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 
@@ -86,6 +88,7 @@ function FormCreateChannel() {
         setChannelName("");
         setVisibility("public");
         setPassword("");
+        setOpen(false);
       }
     }
     ).catch((error : any) => {
@@ -97,20 +100,32 @@ function FormCreateChannel() {
   }
 
   return (
-      <div>
-        <form className="ChannelCreateForm" onSubmit={handleSubmit}>
-          <input className="FormCreateChannelInput" type="text" value={channelName} onChange={e => setChannelName(e.target.value)} placeholder="Channel's name"></input>
-          <select className="FormCreateChannelSelect" name="visibility" value={visibility} onChange={changeVisibility}>
-            <option value="public">Public</option>
-            <option value="protected">Protected by password</option>
-            <option value="private">Private</option>
-          </select>
-          {visibility === "protected" ? (
-            <input className="FormCreateChannelSelect" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Channel's password"></input>
-          ) : null}
-          <button className="FormCreateChannelButtom" type="submit">Create channel</button>
-        </form>
-      </div>
+    <>
+      <button className='createChannelButton' onClick={() => setOpen(true)}><IoAdd className='createChannelIcons' /></button>
+      {
+        open ? (
+          <div className='CreateChannel'>
+            <div className='CreateChannelContainer'>
+              <div className='CreateChannelInfos'>
+                <p className="FormCreateChannelTitle">Create a channel</p>
+                <p className="FormCreateChannelClose" onClick={() => setOpen(false )}>X</p>
+              </div>
+              <form className="ChannelCreateForm" onSubmit={handleSubmit}>
+                <input className="FormCreateChannelInput" type="text" value={channelName} onChange={e => setChannelName(e.target.value)} placeholder="Channel's name" required></input>
+                <select className="FormCreateChannelSelect" name="visibility" value={visibility} onChange={changeVisibility}>
+                  <option value="public">Public</option>
+                  <option value="protected">Protected by password</option>
+                  <option value="private">Private</option>
+                </select>
+                {visibility === "protected" ? (
+                  <input className="FormCreateChannelInput" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Channel's password" required></input>
+                ) : null}
+                <button className="FormCreateChannelButton" type="submit">Create channel</button>
+              </form>
+            </div>
+          </div>
+      ) : null}
+  </>
   );
 }
 

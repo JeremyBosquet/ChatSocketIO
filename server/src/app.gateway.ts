@@ -18,9 +18,9 @@ export class AppGateway {
 
   @SubscribeMessage('connected')
   async connected(@MessageBody() data: any,@ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
-	console.log("connected", data);
-	if (await this.UsersService.findUserByUuid(data.uuid))
-	{
+	  if (await this.UsersService.findUserByUuid(data.uuid))
+	  {
+		console.log("connected", data);
 		// console.log('hereerer');
 		console.log(client.id);
 		client.data.uuid = data.uuid;
@@ -30,23 +30,34 @@ export class AppGateway {
         let users = [];
         for (const socket of sockets) {
 			if (socket.data.uuid)
-				if (!(await users.find((user) => (user.uuid === socket.data.uuid))))
-					users.push({uuid : socket.data.uuid});
+			if (!(await users.find((user) => (user.uuid === socket.data.uuid))))
+			users.push({uuid : socket.data.uuid});
 		}
-		// console.log(users);
-		client.emit('listUsersConnected', {users : users});
-		await this.server.emit('connectedToServer', {uuid : data.uuid});
+		this.server.to(client.id).emit('listUsersConnected', {users : users});
+		client.broadcast.emit('connectedToServer', {uuid : data.uuid});
+		console.log(users);
+
 	}
     return;
   }
 
   @SubscribeMessage('disconnect')
   async handleDisconnect(@ConnectedSocket() client: Socket): Promise<void> {
-	console.log("Bonsoir", client.data)
-	if (await this.UsersService.findUserByUuid(client.data.uuid))
-	{
+	  if (await this.UsersService.findUserByUuid(client.data.uuid))
+	  {
+		console.log("Bonsoir", client.data)
 		//this.UsersService.IsntLoggedIn(client.data.uuid);
-		await this.server.emit('disconnectFromServer', {uuid : client.data.uuid});
+		this.server.emit('disconnectFromServer', {uuid : client.data.uuid});
+		client.data.uuid = "";
+	}
+  }
+
+  @SubscribeMessage('logout')
+  async handleLogout(@ConnectedSocket() client: Socket): Promise<void> {
+	  if (await this.UsersService.findUserByUuid(client.data.uuid))
+	  {
+		console.log("Bonsoir", client.data)
+		this.server.emit('disconnectFromServer', {uuid : client.data.uuid});
 		client.data.uuid = "";
 	}
   }

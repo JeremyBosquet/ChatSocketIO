@@ -9,7 +9,7 @@ import React from 'react';
 import './Social.scss';
 import NavBar from '../Nav/NavBar';
 // import { AddOrRemoveFriend, CancelFriendAdd, AcceptFriend, DeclineFriendAdd, BlockOrUnblockUser} from "../../Components/Utils/socialCheck"
-import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage } from "../../Redux/authSlice";
+import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage, getConnectedList } from "../../Redux/authSlice";
 import {setFriendList, setRequestList, setRequestedList, setProfileDisplayed, setHistoryList, setBlockList, setProfilePage} from '../../Redux/authSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import Show from '../Popup/Show/Show';
@@ -18,6 +18,9 @@ import AddOrRemove from '../Popup/AddOrRemove/AddOrRemove';
 import Accept from '../Popup/Accept/Accept';
 import Decline from '../Popup/Decline/Decline';
 import Cancel from '../Popup/Cancel/Cancel';
+import {GoPrimitiveDot} from 'react-icons/go'
+import { isOnline } from '../Utils/isOnline';
+//import RxDotFilled from 'react-icons/rx'
 
 function Social() {
 	let navigate = useNavigate();
@@ -31,14 +34,7 @@ function Social() {
 	const [friendRequest, setFriendRequest] = useState<number>();
 	//const [requestList, SetRequestList] = useState<any[]>([]);
 	const firstrender = useRef<boolean>(true);
-	//const [socket, setSocket] = useState<Socket>();
-	// const [friendList, SetFriendList] = useState<any[]>([]);
-	// const [blockList, SetBlockList] = useState<any[]>([]);
-	// const [requestedList, SetRequestedList] = useState<any[]>([]);
 	const [searchList, SetsearchList] = useState<any[]>([]);
-	// const [historyList, SetHistoryList] = useState<any[]>([]);
-	//const [profilePage, setProfilePage] = useState<any>(null);
-	//const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
 	const [searchFriend, SetsearchFriend] = useState<string>();
 	const [friendStatus, SetfriendStatus] = useState<string>();
 
@@ -55,6 +51,7 @@ function Social() {
 	const blockList = useSelector(getBlockList);
 	const requestedList = useSelector(getRequestedList);
 	const requestList = useSelector(getRequestList);
+	const ConnectedList = useSelector(getConnectedList);
 	const profilePage = useSelector(getProfilePage);
 	const profileDisplayed = useSelector(getProfileDisplayed);
 	const historyList = useSelector(getHistoryList);
@@ -239,9 +236,17 @@ function Social() {
 										<div id={searchList.length > 3 ? "listSearchScroll" : "listSearch"}>
 										{
 											searchList.map((user, index) => (
-											<div key={user.uuid} className='mapSearch'> 
+											<div key={user.uuid} className='mapSearch'>
 												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 												<p> {user.username} </p>
+												<div className='status'>
+												{
+													ConnectedList.find((userInList : any) => userInList.uuid === user.uuid) ?
+														<span className={"Green"}> <GoPrimitiveDot/> </span>
+													:
+														<span className={"Red"}> <GoPrimitiveDot/> </span>
+												}
+												</div>
 												<div className='buttons'>
 													<Show UserUuid={user.uuid}/>
 													<BlockOrUnblock UserUuid={user.uuid} User={User}/>
@@ -298,6 +303,14 @@ function Social() {
 											<div key={user.uuid} className='mapFriend'> 
 												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 												<p> {user.username} </p>
+												<div className='status'>
+												{
+													ConnectedList.find((userInList : any) => userInList.uuid === user.uuid) ?
+													<span className={"Green"}> <GoPrimitiveDot/> </span>
+												:
+													<span className={"Red"}> <GoPrimitiveDot/> </span>
+												}
+												</div>
 												<div className='buttons'>
 													<AddOrRemove User={User} UserUuid={user.uuid}/>
 													<Show UserUuid={user.uuid}/>
@@ -331,6 +344,14 @@ function Social() {
 											<div key={index} className='mapReq'> 
 												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 												<p> {user?.username} </p>
+												<div className='status'>
+												{
+													ConnectedList.find((userInList : any) => userInList.uuid === user.uuid) ?
+														<span className={"Green"}> <GoPrimitiveDot/> </span>
+													:
+														<span className={"Red"}> <GoPrimitiveDot/> </span>
+												}
+												</div>
 												<div className='buttons'>
 													<Show UserUuid={user.uuid}/>
 													<BlockOrUnblock UserUuid={user.uuid} User={User}/>

@@ -83,11 +83,13 @@ g
 */
 
 function GamePlay(props: props) {
+  let maxWidth = 1000;
+  let maxHeight = 500;
   let windowsHeightDefault = window.innerHeight;
   let windowsWidthDefault = window.innerWidth;
   const [image] = (props?.room?.settings?.background == "background1" ? useImage("") : useImage(''));
-  const [windowsWidth, setWindowsWidth] = useState(window.innerWidth);
-  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight - 200); // game board
+  const [windowsWidth, setWindowsWidth] = useState(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
+  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight > maxHeight ? maxHeight : window.innerHeight); // game board
   const [boardWidth, setBoardWidth] = useState<number>(
     props.room?.settings.boardWidth
       ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -155,6 +157,7 @@ function GamePlay(props: props) {
         if (_player.y < 0) _player.y = 0;
         if (_player.y + boardHeight > windowsHeight)
           _player.y = windowsHeight - boardHeight;
+
         props.socket?.emit("playerMove", {
           id: _player.id,
           x: (100 * _player.x) / windowsWidth,
@@ -175,8 +178,8 @@ function GamePlay(props: props) {
 
   useEventListener("mousemove", mousemove);
   function handleResize() {
-    setWindowsWidth(window.innerWidth);
-    setWindowsHeight(window.innerHeight - 100);
+    setWindowsWidth(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
+    setWindowsHeight(window.innerHeight > maxHeight ? maxHeight : window.innerHeight);
     setBoardWidth(
       props.room?.settings.boardWidth
         ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -238,10 +241,9 @@ function GamePlay(props: props) {
           y: (data.y / 100) * windowsHeight,
           percentY: data.y,
         });
-        playerA.ref.current?.to({
+        playerA.ref.current?.position({
           x: 0.15 * windowsWidth,
           y: (data.y / 100) * windowsHeight,
-          duration: 1000 / 60,
         });
       } else if ((data.player === "playerB")) {
         setPlayerB({
@@ -251,10 +253,9 @@ function GamePlay(props: props) {
           y: (data.y / 100) * windowsHeight,
           percentY: data.y,
         });
-        playerB.ref.current?.to({
+        playerB.ref.current?.position({
           x: windowsWidth - 0.15 * windowsWidth,
           y: (data.y / 100) * windowsHeight,
-          duration: 1000 / 60,
         });
       }
     }
@@ -262,7 +263,8 @@ function GamePlay(props: props) {
   props.socket?.removeListener("ballMovement");
   props.socket?.on("ballMovement", (room: IRoom) => {
     ball.ref.current?.to({
-      duration: 0.040,
+      // Duration 1000 / 60 = 16.666666666666668
+      duration: 1 / 240,
       x: (room.ball.x / 100) * windowsWidth,
       y: (room.ball.y / 100) * windowsHeight,
     });

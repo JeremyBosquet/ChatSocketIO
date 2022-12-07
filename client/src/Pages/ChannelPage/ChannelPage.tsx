@@ -290,45 +290,45 @@ function ChannelPage() {
 								)
 								:
 								(
-									<>
-										{params.id ?
-											(
-												<div className="backButtonDiv">
-													<button className="backButton" onClick={() => navigate('/chat/')}>Back</button>
-												</div>
-											) : null
-										}
-										<div className={params.id ? 'leftSide hideSmall' : 'leftSide'}>
-											<div className='topActions'>
-												<div className='selectChannelOrDm'>
-													<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
-													<button className="selectedButton" onClick={() => handleChangeMode("dm")}>DM</button>
-												</div>
-												<div className="searchBar">
-													<Search searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} getUsersChannel={getUsersChannel}/>
-												</div>
+								<>
+									{params.id ?
+										(
+											<div className="backButtonDiv">
+												<button className="backButton" onClick={() => navigate('/chat/')}>Back</button>
 											</div>
-											<div className='channelsInfos'>
-												{searchChannel === "" ? 
-													<div className='channelsInfo'>
-														{channels.map((channel : any) => (
-															<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={false}/>
-														))}
-													</div>
-												:
-													<div className='channelsInfo'>
-														{channelsFind.map((channel) => (
-															<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={true}/>
-														))}
-														{ channelsFind.length === 0 ? (<p className="noChannel">No channel found.</p>) :null}
-													</div>
-												}
+										) : null
+									}
+									<div className={params.id ? 'leftSide hideSmall' : 'leftSide'}>
+										<div className='topActions'>
+											<div className='selectChannelOrDm'>
+												<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
+												<button className="selectedButton" onClick={() => handleChangeMode("dm")}>DM</button>
 											</div>
-											<button className='createChannelButton' onClick={() => null}><IoAdd className='createChannelIcons' /></button>
+											<div className="searchBar">
+												<Search searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} getUsersChannel={getUsersChannel}/>
+											</div>
 										</div>
-										<Channels searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} invites={inviteGames} />
-									</>
-								)}
+										<div className='channelsInfos'>
+											{searchChannel === "" ? 
+												<div className='channelsInfo'>
+													{channels.map((channel : any) => (
+														<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={false}/>
+													))}
+												</div>
+											:
+												<div className='channelsInfo'>
+													{channelsFind.map((channel) => (
+														<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={true}/>
+													))}
+													{ channelsFind.length === 0 ? (<p className="noChannel">No channel found.</p>) :null}
+												</div>
+											}
+										</div>
+										<FormCreateChannel />
+									</div>
+									<Channels searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} invites={inviteGames} />
+								</>
+							)}
 						</div>
 					</div>
 				) : (

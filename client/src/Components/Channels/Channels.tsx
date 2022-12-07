@@ -48,9 +48,8 @@ function Channels(props: props) {
     return (
     <>  
         <div className='channels'>
-            <div className='channelsOperations'>
-                {/* <FormCreateChannel/> */}
-            </div>
+            {/* <div className='channelsOperations'>
+            </div> */}
             <div className='channelChat'>
                 { params.id !== undefined ? 
                     <ChatChannel invites={props.invites} /> : null

@@ -55,6 +55,26 @@ body {
                         margin: 15px;
                         text-align: center;
                     }
+
+                    /* width */
+                    &::-webkit-scrollbar {
+                        width: 5px;
+                    }
+                    
+                    /* Track */
+                    &::-webkit-scrollbar-track {
+                        background: #131313;
+                    }
+                    
+                    /* Handle */
+                    &::-webkit-scrollbar-thumb {
+                        background: #888;
+                    }
+                    
+                    /* Handle on hover */
+                    &::-webkit-scrollbar-thumb:hover {
+                        background: #555;
+                    }
                 }   
             }
 
@@ -156,9 +176,6 @@ body {
 }
 
 @media screen and (max-width: 525px) {
-    .hideSmall {
-        display: none;
-    }
     .chatPage {
         .container {
             .topActions {
@@ -169,5 +186,19 @@ body {
                 }
             }
         }
+    }
+}
+
+@media screen and (max-width: 1000px) { 
+    .chatPage {
+        .container {
+            min-height: auto;
+        }
+    }
+    .chatPage .container .leftSide .channelsInfos .channelsInfo {
+        height: 300px;
+    }
+    .hideSmall {
+        display: none;
     }
 }

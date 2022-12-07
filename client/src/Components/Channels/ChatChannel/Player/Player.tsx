@@ -68,7 +68,11 @@ function Player(props : props) {
 
   return (
     <div className='player' key={props.user?.uuid}>
-      <p>{connected ? <span className="connected"></span> : <span className="disconnected"></span>} {props.user?.username}</p>
+      <div style={{display: "flex"}}>
+        {connected ? <span className="connected"></span> : <span className="disconnected"></span>}
+        <p style={{maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis"}}>{props.user?.username}</p>
+      </div>
+      <button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button>
       {
         me?.uuid !== props.user?.uuid && hasInvited(props.user?.uuid) ?
           <button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button>

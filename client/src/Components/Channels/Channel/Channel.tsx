@@ -75,7 +75,7 @@ function Channel(props: props) {
 					<p>{formatedDate(props.channel["createdAt"])}</p>
 					{ props.foundChannel ? 
 						<Join channelId={props.channel["id"]} channelVisibility={props.channel["visibility"]} setSearchChannel={props.setSearchChannel} />
-						: null }
+					: null }
 						<DevelopButton channel={props.channel} setSearchChannel={props.setSearchChannel} foundChannel={props.foundChannel} setManageMode={setManageMode} />
 				</div>
 

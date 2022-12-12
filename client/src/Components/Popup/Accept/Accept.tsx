@@ -22,7 +22,7 @@ function Accept(props : props){
 		const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
 		if (test.length)
 		{
-			await axios.post(`http://90.66.192.148:7000/user/AcceptFriend`, {uuid : uuid}, {
+			await axios.post(`http://90.66.199.176:7000/user/AcceptFriend`, {uuid : uuid}, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})

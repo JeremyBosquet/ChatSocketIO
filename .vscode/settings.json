@@ -2,7 +2,7 @@
     "sqltools.connections": [
 		{
 			"previewLimit": 50,
-			"server": "90.66.192.148",
+			"server": "90.66.199.176",
 			"port": 5432,
 			"driver": "PostgreSQL",
 			"name": "jeremy",
@@ -12,7 +12,7 @@
 		},
 		{
 			"previewLimit": 50,
-			"server": "90.66.192.148",
+			"server": "90.66.199.176",
 			"port": 5432,
 			"driver": "PostgreSQL",
 			"name": "test",

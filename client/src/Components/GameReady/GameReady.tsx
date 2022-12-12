@@ -145,7 +145,7 @@ function GameReady(props: props) {
 
   const getUser = async () => {
     const messages = await axios
-      .get(`http://90.66.192.148:7000/user`, {
+      .get(`http://90.66.199.176:7000/user`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },

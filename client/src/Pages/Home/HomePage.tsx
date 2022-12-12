@@ -20,6 +20,7 @@ import { getSockeGame, getSockeGameChat, setSocketGame } from "../../Redux/gameS
 import useEventListener from "@use-it/event-listener";
 import { useParams } from "react-router-dom";
 import { getSocket } from "../../Redux/chatSlice";
+import { modifyScores } from "../../Components/Utils/modifyScores";
 
 interface IPlayer {
 	id: string;
@@ -82,6 +83,7 @@ function HomePage() {
   const [myHistoryList, SetMyHistoryList] = useState<any[]>([]);
 
   const [User, setUser] = useState<any>();
+  const [trueUsername, setTrueUsername] = useState<string>("");
   const [friendRequest, setFriendRequest] = useState<number>();
   const [myProfileExp, setMyProfileExp] = useState<any>();
   const socketGame = useSelector(getSockeGame);
@@ -93,6 +95,8 @@ function HomePage() {
   const [notification, setNotificaton] = useState<Boolean>(false);
   const [display, setDisplay] = useState<boolean>(true);
 
+  const [scoreA, setScoreA] = useState<number[]>([]);
+	const [scoreB, setScoreB] = useState<number[]>([]);
 
 	KillSocket("chat");
 	KillSocket("spectate");
@@ -108,7 +112,7 @@ function HomePage() {
 		console.log("socketGame", socketGame);
 		if (socketGame)
 		  socketGame?.close();
-		const newSocket = io("http://90.66.192.148:7002");
+		const newSocket = io("http://90.66.199.176:7002");
 		dispatch(setSocketGame(newSocket));
 	  }, []);
 	
@@ -208,22 +212,8 @@ function HomePage() {
 
   async function GetLoggedInfoAndUser() {
     if (localStorage.getItem("token")) {
-      await axios
-        .get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          // setLogged(res.data.IsLoggedIn);
-          // setActivated(res.data.isTwoFactorAuthenticationEnabled);
-          // setConnected(res.data.isSecondFactorAuthenticated);
-        })
-        .catch((err) => {
-          console.log(err.message);
-          setUser(undefined);
-        });
-      await axios.get(`http://90.66.192.148:7000/user`, {
+		console.log("GetLoggedInfoAndUser");
+      await axios.get(`http://90.66.199.176:7000/user`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -232,9 +222,10 @@ function HomePage() {
 			setUser(res.data.User);
 			dispatch(setUserImg(res.data.User.image));
 			dispatch(setUserUsername(res.data.User.username));
+			setTrueUsername(res.data.User.trueUsername);
 			axios
 			  .get(
-				`http://90.66.192.148:7000/api/room/getGameOfUser/` +
+				`http://90.66.199.176:7000/api/room/getGameOfUser/` +
 				  res.data.User.uuid,
 				{
 				  headers: {
@@ -253,7 +244,7 @@ function HomePage() {
 				console.log(err.message);
 				setUser(undefined);
 		});
-      await axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
+      await axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -274,11 +265,20 @@ function HomePage() {
 }
 
 useEffect(() => {
-	if (!booleffect.current) {
 		GetLoggedInfoAndUser();
-		booleffect.current = true;
-    }
 }, []);
+
+useEffect(() => {
+	if (booleffect.current)
+		return;
+	if (User && myHistoryList.length)
+	{
+		myHistoryList.map((game, index) => {
+			modifyScores(User.uuid, game, setScoreA, setScoreB, scoreA, scoreB, index, index==(myHistoryList.length-1) ? true : false)
+		});
+	booleffect.current = true;
+	}
+}, [myHistoryList]);
 
   return (
     <div className="HomePage main">
@@ -305,6 +305,7 @@ useEffect(() => {
 					/>
 					<div className="userInfo">
 						<h3> {userUsername} </h3>
+						<h4> @{trueUsername} </h4>
 						<div className="expBar">
 							<span className="myExp"> </span>
 							<p>{myProfileExp}</p>
@@ -312,7 +313,7 @@ useEffect(() => {
 						<div id="listMyGameParent">
 							{myHistoryList.length ?
 							(
-							<div id={myHistoryList.length > 3 ? "listMyGameScroll" : "listMyGame"}>
+								<div id={myHistoryList.length > 3 ? "listMyGameScroll" : "listMyGame"}>
 							{myHistoryList.map((game, index) => (
 								<ul key={index}>
 								{/* {whoWon(User.uuid, game) === "Victory" ? ( */}
@@ -324,7 +325,7 @@ useEffect(() => {
 										|&nbsp;&nbsp;{whoWon(User.uuid, game)}
 									</p>
 									<p id="playerScore">
-										|&nbsp;&nbsp;{game.scoreA} - {game.scoreB}
+										|&nbsp;&nbsp;{scoreA[index]} - {scoreB[index]}
 									</p>
 									</li>
 								{/* ) : (

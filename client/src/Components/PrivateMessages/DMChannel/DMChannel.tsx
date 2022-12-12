@@ -33,7 +33,7 @@ function DMChannel() {
   const dispatch = useDispatch();
 
   const getUsersChannel = async (userId: any) => {
-    await axios.get("http://90.66.192.148:7000/api/chat/dms/user/" + userId)
+    await axios.get("http://90.66.199.176:7000/api/chat/dms/user/" + userId)
     .then((res) => {
         if (res)
           dispatch(setChannels(res.data));
@@ -41,7 +41,7 @@ function DMChannel() {
   }
 
   const getMessages = async () => {
-    await axios.get(`http://90.66.192.148:7000/api/chat/dm/messages/` + selectedChannelDM + '/' + user.uuid)
+    await axios.get(`http://90.66.199.176:7000/api/chat/dm/messages/` + selectedChannelDM + '/' + user.uuid)
     .then(res => {
       if (res.data)
         setMessages(res.data);
@@ -54,7 +54,7 @@ function DMChannel() {
   
   useEffect(() => {
     const getChannel = async () => {
-      const dm = (await axios.get(`http://90.66.192.148:7000/api/chat/dm/` + selectedChannelDM)).data;
+      const dm = (await axios.get(`http://90.66.199.176:7000/api/chat/dm/` + selectedChannelDM)).data;
       setDm(dm);
       setUsers(dm.users);
     }
@@ -71,7 +71,7 @@ function DMChannel() {
   useEffect(() => {
     const getName = async () => {
       const userId = dm?.users[0]?.id === user.uuid ? dm?.users[1]?.id : dm?.users[0]?.id;
-      const u = (await axios.get(`http://90.66.192.148:7000/api/chat/user/` + userId)).data;
+      const u = (await axios.get(`http://90.66.199.176:7000/api/chat/user/` + userId)).data;
       if (u?.username)
         setName(u.username);
     }

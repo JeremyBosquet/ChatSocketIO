@@ -36,7 +36,7 @@ export class AppService {
 		if (!userLogin)
 			userLogin = "John Doe";
 		if (!userImg)
-			userImg = `http://90.66.192.148:7000/unknow.png`;
+			userImg = `http://90.66.199.176:7000/unknow.png`;
       let customUsername: string = userLogin;
       let User = await this.userRepository.find({
         where: { username: customUsername },

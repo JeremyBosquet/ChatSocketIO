@@ -19,7 +19,7 @@ function Logout() {
   const socketSocial = useSelector(getSocketSocial);
 
   async function GetLoggedInfo() {
-    await axios.get(`http://90.66.192.148:7000/user`, {
+    await axios.get(`http://90.66.199.176:7000/user`, {
 		headers: {
 			Authorization: "Bearer " + localStorage.getItem("token"),
 		},
@@ -32,7 +32,7 @@ function Logout() {
 
   async function CallLogout() {
     await axios
-      .get(`http://90.66.192.148:7000/logout`, {
+      .get(`http://90.66.199.176:7000/logout`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },

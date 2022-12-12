@@ -45,7 +45,7 @@ function ChatChannel(props: props) {
   const navigate = useNavigate();
 
   const getUsersChannel = async (userId: any) => {
-    await axios.get("http://90.66.192.148:7000/api/chat/channels/user/" + userId)
+    await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + userId)
     .then((res) => {
         if (res)
           dispatch(setChannels(res.data));
@@ -53,7 +53,7 @@ function ChatChannel(props: props) {
   }
 
   const getMessages = async () => {
-    await axios.get(`http://90.66.192.148:7000/api/chat/messages/` + selectedChannel + '/' + user.uuid)
+    await axios.get(`http://90.66.199.176:7000/api/chat/messages/` + selectedChannel + '/' + user.uuid)
     .then(res => {
       if (res.data)
         setMessages(res.data);
@@ -70,14 +70,14 @@ function ChatChannel(props: props) {
     if (params.id !== undefined) 
     {
       const getMutedUsers = async () => {
-        await axios.get(`http://90.66.192.148:7000/api/chat/mutes/` + selectedChannel)
+        await axios.get(`http://90.66.199.176:7000/api/chat/mutes/` + selectedChannel)
         .then(res => {
           if (res.data)
             setMutedUsers(res.data);
         });
       }
       const getChannel = async () => {
-        const channel = (await axios.get(`http://90.66.192.148:7000/api/chat/channel/` + selectedChannel)).data;
+        const channel = (await axios.get(`http://90.66.199.176:7000/api/chat/channel/` + selectedChannel)).data;
         if (channel)
         {
           console.log(channel);

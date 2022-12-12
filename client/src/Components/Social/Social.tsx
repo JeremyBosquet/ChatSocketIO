@@ -58,7 +58,7 @@ function Social() {
 	
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem('token')) {
-			await axios.get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
+			await axios.get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -71,7 +71,7 @@ function Social() {
 				console.log(err.message);
 				setUser(undefined);
 			});
-			await axios.get(`http://90.66.192.148:7000/user`, {
+			await axios.get(`http://90.66.199.176:7000/user`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -83,7 +83,7 @@ function Social() {
 				createNotification('error', 'User not found');
 				navigate("/");
 			});
-			await axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
+			await axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -110,7 +110,7 @@ function Social() {
 	}
 
 	async function ListFriends() {
-		await axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
+		await axios.get(`http://90.66.199.176:7000/user/ListFriends`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -122,7 +122,7 @@ function Social() {
 	}
 
 	async function ListRequested() {
-		await axios.get(`http://90.66.192.148:7000/user/ListFriendRequested`, {
+		await axios.get(`http://90.66.199.176:7000/user/ListFriendRequested`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -134,7 +134,7 @@ function Social() {
 	}
 
 	async function ListBlocked() {
-		await axios.get(`http://90.66.192.148:7000/user/ListUsersBlocked`, {
+		await axios.get(`http://90.66.199.176:7000/user/ListUsersBlocked`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -146,7 +146,7 @@ function Social() {
 	}
 
 	async function SearchFriend(username : string) {
-		await axios.get(`http://90.66.192.148:7000/user/SearchFriend/` + username, {
+		await axios.get(`http://90.66.199.176:7000/user/SearchFriend/` + username, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -342,7 +342,7 @@ function Social() {
 										{
 											requestList.map((user : any, index : number) => (
 											<div key={index} className='mapReq'> 
-												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
+												<img className="icon" src={user.image} alt="user_img" width="36" height="27"/>
 												<p> {user?.username} </p>
 												<div className='status'>
 												{

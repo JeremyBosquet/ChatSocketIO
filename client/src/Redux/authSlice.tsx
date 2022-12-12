@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Socket } from "socket.io-client";
 
 const initialState = {
   user: {},
@@ -11,7 +12,7 @@ const initialState = {
   requestedList : [],
   requestList: [],
   historyList: [],
-  profilePage: null,
+  profilePage: [],
   profileDisplayed : false,
   userImg : undefined,
   UserUsername : "",
@@ -23,49 +24,49 @@ export const authSlice = createSlice({
   initialState,
 
   reducers: {
-    setLogged: (state: any, action: any) => {
+    setLogged: (state: any, action: PayloadAction<boolean>) => {
       state.logged = action.payload;
     },
-    setUser: (state: any, action: any) => {
+    setUser: (state: any, action: PayloadAction<{}>) => {
       state.user = action.payload;
     },
-    setConnected: (state: any, action: any) => {
+    setConnected: (state: any, action: PayloadAction<boolean>) => {
       state.connected = action.payload;
     },
-    setActivated: (state: any, action: any) => {
+    setActivated: (state: any, action: PayloadAction<boolean>) => {
       state.activated = action.payload;
     },
-    setSocketSocial: (state: any, action: any) => {
+    setSocketSocial: (state: any, action: PayloadAction<Socket>) => {
       state.socket = action.payload;
     },
-	setFriendList: (state: any, action: any) => {
+	setFriendList: (state: any, action: PayloadAction<any[]>) => {
 		state.friendList = action.payload;
 	},
-	setBlockList: (state: any, action: any) => {
+	setBlockList: (state: any, action: PayloadAction<any[]>) => {
 		state.blockList = action.payload;
 	},
-	setRequestedList: (state: any, action: any) => {
+	setRequestedList: (state: any, action: PayloadAction<any[]>) => {
 		state.requestedList = action.payload;
 	},
-	setRequestList: (state: any, action: any) => {
+	setRequestList: (state: any, action: PayloadAction<any[]>) => {
 		state.requestList = action.payload;
 	},
-	setHistoryList: (state: any, action: any) => {
+	setHistoryList: (state: any, action: PayloadAction<any[]>) => {
 		state.historyList = action.payload;
 	},
-	setProfilePage: (state: any, action: any) => {
+	setProfilePage: (state: any, action: PayloadAction<any[]>) => {
 		state.profilePage = action.payload;
 	},
-	setProfileDisplayed: (state: any, action: any) => {
+	setProfileDisplayed: (state: any, action: PayloadAction<boolean>) => {
 		state.profileDisplayed = action.payload;
 	},
-	setUserImg: (state: any, action: any) => {
+	setUserImg: (state: any, action: PayloadAction<any>) => {
 		state.userImg = action.payload;
 	},
-	setUserUsername: (state: any, action: any) => {
+	setUserUsername: (state: any, action: PayloadAction<string>) => {
 		state.userUsername = action.payload;
 	},
-	setConnectedList: (state: any, action: any) => {
+	setConnectedList: (state: any, action: PayloadAction<any[]>) => {
 		state.connectedList = action.payload;
 	},
   },

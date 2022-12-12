@@ -35,6 +35,7 @@
 		position: relative;
 		left: 110px;
 		top : -75px;
+		width: fit-content;
 	}
 	h4 {
 		//font-size: px;
@@ -79,30 +80,9 @@
 			box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 			font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 		}
-		// .closebtn {
-		// 	opacity: unset;
-		// 	&:hover
-		// 	{
-		// 		transition: 0.2s;
-		// 		color :rgb(255, 255, 255);
-		// 	}
-		// 	background-color: rgba(0, 0, 0, 0);
-		// 	border : none;
-		// 	outline : none;
-		// 	color : #c50000;
-		// 	position: absolute;
-		// 	top: 10px;
-		// 	right: 25px;
-		// 	font-size: 30px;
-		// 	margin-left: 50px;
-		// }
 	}
 
 	.closeProfile {
-		position: absolute;
-		right : 10px;
-		top : 10px;
-		opacity: unset;
 		&:hover
 		{
 			color :rgb(255, 255, 255);
@@ -110,9 +90,13 @@
 		background-color: rgba(0, 0, 0, 0);
 		border : none;
 		outline : none;
-		color : #000000;
+		color : #818181;
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		//left : 150px;
 		font-size: 30px;
-		margin-left: 50px;
+		height: 35px;
 	}
 	.expBar
 	{
@@ -247,6 +231,12 @@
 		top: 50px;
 		color: #fff;
 		font-size: 26px;
+	}
+	h4 {
+		position: relative;
+		top: 50px;
+		color: rgb(129, 129, 129);
+		font-size: 15px;
 	}
 	.expBar
 	{

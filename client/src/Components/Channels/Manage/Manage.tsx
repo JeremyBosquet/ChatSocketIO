@@ -43,7 +43,7 @@ function Manage(props: props) {
 
     const removePassword = (visibility === "public") ? true : false;
 
-    await axios.post("http://90.66.192.148:7000/api/chat/channel/edit", {
+    await axios.post("http://90.66.199.176:7000/api/chat/channel/edit", {
       channelId: props.channel.id,
       userId: user.uuid,
       removePassword: removePassword,

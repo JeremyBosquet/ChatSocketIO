@@ -85,11 +85,9 @@ g
 function GamePlay(props: props) {
   let maxWidth = 1000;
   let maxHeight = 500;
-  let windowsHeightDefault = window.innerHeight;
-  let windowsWidthDefault = window.innerWidth;
   const [image] = (props?.room?.settings?.background == "background1" ? useImage("") : useImage(''));
   const [windowsWidth, setWindowsWidth] = useState(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
-  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight > maxHeight ? maxHeight : window.innerHeight); // game board
+  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight > maxHeight - 200 ? maxHeight : window.innerHeight - 200); // game board
   const [boardWidth, setBoardWidth] = useState<number>(
     props.room?.settings.boardWidth
       ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -117,7 +115,7 @@ function GamePlay(props: props) {
   });
   const [playerA, setPlayerA] = useState<ICanvasBoard>({
     id: "playerA",
-    x: 0.15 * windowsWidth,
+    x: 0.01 * windowsWidth,
     y: props.room?.playerA.y
       ? (props.room?.playerA.y / 100) * windowsHeight
       : windowsHeight / 2 - boardHeight / 2,
@@ -126,13 +124,22 @@ function GamePlay(props: props) {
   });
   const [playerB, setPlayerB] = useState<ICanvasBoard>({
     id: "playerB",
-    x: windowsWidth - 0.15 * windowsWidth,
+    x: (windowsWidth - 0.0175 * windowsWidth),
     y: props.room?.playerB.y
       ? (props.room?.playerB.y / 100) * windowsHeight
       : windowsHeight / 2 - boardHeight / 2,
     percentY: 50,
     ref: React.createRef<Konva.Rect>(),
   });
+  let uwu = false;
+  useEffect (() => {
+    if (!uwu)
+    {
+      playerA.ref.current?.position({ x: playerA.x, y: playerA.y });
+      playerB.ref.current?.position({ x: playerB.x, y: playerB.y });
+      uwu = true;
+    }
+  }, [])
 
   let mouseMoveBool = true;
   const mousemove = 
@@ -179,7 +186,7 @@ function GamePlay(props: props) {
   useEventListener("mousemove", mousemove);
   function handleResize() {
     setWindowsWidth(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
-    setWindowsHeight(window.innerHeight > maxHeight ? maxHeight : window.innerHeight);
+    setWindowsHeight(window.innerHeight > maxHeight + 200 ? maxHeight : window.innerHeight - 200);
     setBoardWidth(
       props.room?.settings.boardWidth
         ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -212,14 +219,14 @@ function GamePlay(props: props) {
     setPlayerA({
       ...playerA,
       id: "playerA",
-      x: (0.15 * windowsWidth) - boardWidth,
+      x: (0.01 * windowsWidth),
       y: (playerA.percentY / 100) * windowsHeight,
       percentY: playerA.percentY,
     });
     setPlayerB({
       ...playerB,
       id: "playerB",
-      x: windowsWidth - 0.15 * windowsWidth,
+      x: (windowsWidth - 0.0175 * windowsWidth),
       y: (playerB.percentY / 100) * windowsHeight,
       percentY: playerB.percentY,
     });
@@ -237,24 +244,24 @@ function GamePlay(props: props) {
         setPlayerA({
           ...playerA,
           id: "playerA",
-          x: 0.15 * windowsWidth,
+          x: 0.01 * windowsWidth,
           y: (data.y / 100) * windowsHeight,
           percentY: data.y,
         });
         playerA.ref.current?.position({
-          x: 0.15 * windowsWidth,
+          x: 0.01 * windowsWidth,
           y: (data.y / 100) * windowsHeight,
         });
       } else if ((data.player === "playerB")) {
         setPlayerB({
           ...playerB,
           id: "playerB",
-          x: windowsWidth - 0.15 * windowsWidth,
+          x: windowsWidth - 0.0175 * windowsWidth,
           y: (data.y / 100) * windowsHeight,
           percentY: data.y,
         });
         playerB.ref.current?.position({
-          x: windowsWidth - 0.15 * windowsWidth,
+          x: windowsWidth - 0.0175 * windowsWidth,
           y: (data.y / 100) * windowsHeight,
         });
       }
@@ -285,8 +292,8 @@ function GamePlay(props: props) {
             {
               <Rect
                 ref={playerA.ref}
-                x={windowsWidthDefault * 0.15 - boardWidth}
-                y={windowsHeightDefault * 0.5 - boardHeight / 2}
+                //x={windowsWidthDefault * 0.15 - boardWidth}
+                //y={windowsHeightDefault * 0.5 - boardHeight / 2}
                 width={boardWidth}
                 height={boardHeight}
                 fill="blue"
@@ -294,8 +301,8 @@ function GamePlay(props: props) {
             }
             {
               <Rect
-                x={windowsWidthDefault * 0.85}
-                y={windowsHeightDefault * 0.5 - boardHeight / 2}
+                //x={windowsWidthDefault * 0.85}
+                //y={windowsHeightDefault * 0.5 - boardHeight / 2}
                 ref={playerB.ref}
                 width={boardWidth}
                 height={boardHeight}

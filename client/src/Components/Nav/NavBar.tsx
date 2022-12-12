@@ -20,7 +20,7 @@ import "./NavBar.scss";
 import Social from "../Social/Social";
 import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeGameChat, getSockeSpectate, setSocketGame, setSocketGameChat, setSocketSpectate } from "../../Redux/gameSlice";
-import Settings from "../../Pages/Settings/Settings";
+import Settings from "../Settings/Settings";
 
 function NavBar(props: any) {
   let location = useLocation();
@@ -43,7 +43,7 @@ function NavBar(props: any) {
 
     if (localStorage.getItem("token")) {
       await axios
-        .get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
+        .get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -58,7 +58,7 @@ function NavBar(props: any) {
           setLogged(false);
         });
       await axios
-        .get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
+        .get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },

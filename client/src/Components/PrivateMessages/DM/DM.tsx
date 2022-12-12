@@ -31,7 +31,7 @@ function DM(props: props) {
   useEffect(() => {
     const getName = async () => {
       const userId = props.dm.users[0]?.id === user.uuid ? props.dm.users[1]?.id : props.dm.users[0]?.id;
-      const u = (await axios.get(`http://90.66.192.148:7000/api/chat/user/` + userId)).data;
+      const u = (await axios.get(`http://90.66.199.176:7000/api/chat/user/` + userId)).data;
       if (u?.username)
         setName(u.username);
     }

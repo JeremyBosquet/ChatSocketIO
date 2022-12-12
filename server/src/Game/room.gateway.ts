@@ -43,6 +43,26 @@ export class RoomGateway {
   @WebSocketServer()
   server;
 
+  generateDirection() : number {
+    // Generate a random direction between 310 and 50 degrees or 130 and 230 degrees (in radians)
+    // If the direction is too close to the vertical axis, change it
+    let direction = Math.random() * Math.PI;
+    if (direction > Math.PI / 2 - Math.PI / 8 && direction < Math.PI / 2 + Math.PI / 8) direction = Math.PI / 2 + Math.PI / 8;
+    if (direction > 3 * Math.PI / 2 - Math.PI / 8 && direction < 3 * Math.PI / 2 + Math.PI / 8) direction = 3 * Math.PI / 2 + Math.PI / 8;
+    if (direction > Math.PI - Math.PI / 8 && direction < Math.PI + Math.PI / 8) direction = Math.PI + Math.PI / 8;
+    return direction;
+  }
+
+  newDirection(oldDirection: number) : number{
+    // The new direction is the old direction plus a random angle between -45 and 45 degrees (in radians)
+    let direction = oldDirection + (Math.random() - 0.5) * Math.PI / 4;
+    // If the direction is too close to the vertical axis, change it
+    if (direction > Math.PI / 2 - Math.PI / 8 && direction < Math.PI / 2 + Math.PI / 8) return oldDirection;
+    if (direction > 3 * Math.PI / 2 - Math.PI / 8 && direction < 3 * Math.PI / 2 + Math.PI / 8) return oldDirection;
+    if (direction > Math.PI - Math.PI / 8 && direction < Math.PI + Math.PI / 8) return oldDirection;
+    return direction; 
+  }
+
   @SubscribeMessage('roomCreated')
   async handleConnect(@MessageBody() data: Irooms[]): Promise<void> {
     const rooms = await this.roomService.getRooms();
@@ -69,8 +89,8 @@ export class RoomGateway {
       //console.log(room);
       if (room && room?.status == 'playing' && room?.settings) {
         const settings = room.settings;
-        if (room.ball.x + settings.ballRadius < 0 || room.ball.x + settings.ballRadius > 100) {
-          if (room.ball.x + settings.ballRadius < 0) {
+        if (room.ball.x + settings.ballRadius <= 1 || room.ball.x + settings.ballRadius >= 99.5) {
+          if (room.ball.x + settings.ballRadius <= 1) {
             room.scoreB += 1
             this.roomService.updateRoom(room.id, { scoreB: room.scoreB });
           } else if (room.ball.x + settings.ballRadius) {
@@ -100,9 +120,9 @@ export class RoomGateway {
             if (playerB)
               this.server.emit('gameRemoveInvite', { target: playerB, room: room });
             clearInterval(intervalList[room.id]);
-            //roomList[room.id] = null;
+            //roomList[room.id] = null;g
           }
-          room.ball.direction = Math.random() * 2 * Math.PI;
+          room.ball.direction = this.generateDirection();
           room.ball.x = 50;
           room.ball.y = 50;
           room.ball.speed = room.settings.defaultSpeed;
@@ -120,21 +140,21 @@ export class RoomGateway {
             room.ball.y < playerA.y + settings.boardHeight
           ) {
             console.log('gameLoop - collision with playerA');
-            room.ball.direction = Math.PI - room.ball.direction;
-            room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
-            room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
+            room.ball.direction = this.newDirection(Math.PI - room.ball.direction);
+            room.ball.x += room.ball.speed * 0.3 * Math.cos(room.ball.direction);
+            room.ball.y += room.ball.speed * 0.3 * Math.sin(room.ball.direction);
             room.ball.speed += 0.15;
           }
           else if (
-            room.ball.x - settings.ballRadius < playerB.x + settings.boardWidth &&
+            room.ball.x - settings.ballRadius < playerB.x &&
             room.ball.x + settings.ballRadius > playerB.x &&
             room.ball.y > playerB.y &&
             room.ball.y < playerB.y + settings.boardHeight
           ) {
             console.log('gameLoop - collision with playerB');
-            room.ball.direction = Math.PI - room.ball.direction;
-            room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
-            room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
+            room.ball.direction = this.newDirection(Math.PI - room.ball.direction);
+            room.ball.x += room.ball.speed * 0.3 * Math.cos(room.ball.direction);
+            room.ball.y += room.ball.speed * 0.3 * Math.sin(room.ball.direction);
             room.ball.speed += 0.15;
           }
           else if (
@@ -147,9 +167,9 @@ export class RoomGateway {
             } else if (room.ball.y + settings.ballRadius > 100) {
               room.ball.y = 100 - settings.ballRadius;
             }
-            room.ball.direction = -room.ball.direction;
-            room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
-            room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
+            room.ball.direction = this.newDirection(-room.ball.direction);
+            room.ball.x += room.ball.speed * 0.3 * Math.cos(room.ball.direction);
+            room.ball.y += room.ball.speed * 0.3 * Math.sin(room.ball.direction);
             room.ball.speed += 0.15;
           }
           else {
@@ -172,7 +192,7 @@ export class RoomGateway {
     this.server.in('room-' + roomId).emit(event, data);
   }
 
-  async gameLoop(roomId: string): Promise<void> {
+ /* async gameLoop(roomId: string): Promise<void> {
     const room = await this.roomService.getRoom(roomId);
     console.log('gameLoop');
     if (room && room.id) {
@@ -240,7 +260,7 @@ export class RoomGateway {
               room.ball.y < playerA.y + settings.boardHeight
             ) {
               console.log('gameLoop - collision with playerA');
-              room.ball.direction = Math.PI - room.ball.direction;
+              room.ball.direction = this.newDirection(Math.PI - room.ball.direction);
               room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
               room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
               room.ball.speed += 0.15;
@@ -252,7 +272,7 @@ export class RoomGateway {
               room.ball.y < playerB.y + settings.boardHeight
             ) {
               console.log('gameLoop - collision with playerB');
-              room.ball.direction = Math.PI - room.ball.direction;
+              room.ball.direction = this.newDirection(Math.PI - room.ball.direction);
               room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
               room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
               room.ball.speed += 0.15;
@@ -267,15 +287,15 @@ export class RoomGateway {
               } else if (room.ball.y + settings.ballRadius > 100) {
                 room.ball.y = 100 - settings.ballRadius;
               }
-              room.ball.direction = -room.ball.direction;
+              room.ball.direction = this.newDirection(-room.ball.direction);
               room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
               room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
               room.ball.speed += 0.15;
             }
             else
             {
-              room.ball.x += room.ball.speed * 0.2 * Math.cos(room.ball.direction);
-              room.ball.y += room.ball.speed * 0.2 * Math.sin(room.ball.direction);
+              room.ball.x += room.ball.speed * 0.8 * Math.cos(room.ball.direction);
+              room.ball.y += room.ball.speed * 0.8 * Math.sin(room.ball.direction);
             }
             this.server.in('room-' + room.id).emit('ballMovement', room);
         }
@@ -283,7 +303,7 @@ export class RoomGateway {
         await this.roomService.updateRoom(room.id, {ball : room.ball, lastActivity : room.lastActivity});
       }
     }
-  }
+  }*/
 
   @SubscribeMessage('joinRoomSpectate')
   async joinRoomSpectate(
@@ -642,11 +662,11 @@ export class RoomGateway {
         data?.y != undefined
      ) {
         if ('playerA' === data.id) {
-          client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerA", x: 85, y: data.y});
-          this.roomService.updateRoom(client.data.roomId, {playerA: {x: 15, y: data.y, status: "ready", id: client.data.playerId, name: client.data?.playerName}});
+          client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerA", x: 1, y: data.y});
+          this.roomService.updateRoom(client.data.roomId, {playerA: {x: 1, y: data.y, status: "ready", id: client.data.playerId, name: client.data?.playerName}});
         } else if ('playerB' === data.id) {
-          client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerB", x: 85, y: data.y});
-          this.roomService.updateRoom(client.data.roomId, {playerB: {x: 85, y: data.y, status: "ready", id: client.data.playerId, name: client.data?.playerName}});
+          client.to('room-' + client.data.roomId).emit('playerMovement', {player: "playerB", x: 99.5, y: data.y});
+          this.roomService.updateRoom(client.data.roomId, {playerB: {x: 99, y: data.y, status: "ready", id: client.data.playerId, name: client.data?.playerName}});
         }
       }
     }
@@ -724,17 +744,19 @@ export class RoomGateway {
             _room.settings.defaultSpeed = 6;
           _room.settings.background = _room.configurationB.background;
         }
-        _room.settings.defaultDirection = Math.random() * Math.PI * 2;
+        //_room.settings.defaultDirection = Math.random() * Math.PI * 2;
+        // Start in an angle between 45 and 135 degrees and 225 and 315 degrees
+        _room.settings.defaultDirection = this.generateDirection();
         _room.ball.direction = _room.settings.defaultDirection;
         _room.settings.ballRadius = 1;
-        _room.settings.boardWidth = 2.5;
+        _room.settings.boardWidth = 0.75;
         _room.settings.boardHeight = 15;
         _room.ball.speed = _room.settings.defaultSpeed /* 10*/;
         _room.settings.defaultSpeed = _room.settings.defaultSpeed /*/ 10*/;
         _room.status = 'playing';
-        _room.playerA.x = 15;
+        _room.playerA.x = 1;
         _room.playerA.y = 50;
-        _room.playerB.x = 85;
+        _room.playerB.x = 99;
         _room.playerB.y = 50;
         this.server.emit('roomStarted', _room);
         room.lastActivity = Date.now();

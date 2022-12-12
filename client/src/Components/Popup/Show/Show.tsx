@@ -14,17 +14,7 @@ function Show(props : props) {
 	const dispatch = useDispatch();
 	async function ShowProfile(uuid : string)
 	{
-		await axios.get(`http://90.66.192.148:7000/api/room/getGameOfUser/` + uuid, {
-		headers: ({
-			Authorization: 'Bearer ' + localStorage.getItem('token'),
-		})
-		}).then((res) => {
-			if (res.data && res.data.length)
-				dispatch(setHistoryList(res.data));
-			else if (res.data)
-				dispatch(setHistoryList([]));
-		});
-		await axios.get(`http://90.66.192.148:7000/user/findUser/` + uuid, {
+		await axios.get(`http://90.66.199.176:7000/user/findUser/` + uuid, {
 		headers: ({
 			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		})
@@ -45,7 +35,7 @@ function Show(props : props) {
 					popup[i]?.classList.toggle('active');
 			}
 			else
-			dispatch(setProfilePage([]));
+				dispatch(setProfilePage([]));
 		}).catch((err) => {
 			console.log(err);
 			navigate(location.pathname);

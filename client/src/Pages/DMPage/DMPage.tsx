@@ -3,7 +3,9 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import KillSocket from '../../Components/KillSocket/KillSocket';
+import NavBar from '../../Components/Nav/NavBar';
 import { createNotification } from '../../Components/notif/Notif';
+import Popup from '../../Components/Popup/Popup';
 import PrivateMessages from '../../Components/PrivateMessages/PrivateMessages';
 import { getLogged, getUser, setLogged, setUser } from '../../Redux/authSlice';
 import { getMode } from '../../Redux/chatSlice';
@@ -23,7 +25,7 @@ function DMPage() {
 	useEffect(() => {
 		const getUserInfos = async () => {
 			await axios
-			.get(`http://90.66.192.148:7000/user`, {
+			.get(`http://90.66.199.176:7000/user`, {
 			  headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			  },
@@ -50,24 +52,31 @@ function DMPage() {
 			return ;
 	}
 	return (
-		<div className='chatPage'>
-			<div className='container'>
-				<div className='selectChannelOrDm'>
-					
-					{logged === false ?
-						<div className='notLogged'>
-							<p>Pending...</p>
-						</div>
- 					:
-					<>
-						<button className={mode === "channel" ? "selectedButton" : null + ' selectButton'} onClick={() => handleChangeMode("channels")}>Channels</button>
-						<button className={mode === "dm" ? "selectedButton" : null + ' selectButton'} onClick={() => handleChangeMode("dm")}>Private Messages</button>
-						<PrivateMessages />
-					</>
-				}
+		<>
+		<div className="blur">
+			<NavBar/>
+			<div className='chatPage'>
+				<div className='container'>
+					<div className='selectChannelOrDm'>
+						
+						{logged === false ?
+							<div className='notLogged'>
+								<p>Pending...</p>
+							</div>
+						:
+						<>
+							
+							<button className={mode === "channel" ? "selectedButton" : null + ' selectButton'} onClick={() => handleChangeMode("channels")}>Channels</button>
+							<button className={mode === "dm" ? "selectedButton" : null + ' selectButton'} onClick={() => handleChangeMode("dm")}>Private Messages</button>
+							<PrivateMessages />
+						</>
+					}
+					</div>
 				</div>
 			</div>
 		</div>
+		<Popup User={user} />
+		</>
 	);
 }
 

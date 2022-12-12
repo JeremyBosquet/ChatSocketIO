@@ -605,9 +605,10 @@ export class UsersService {
     return 0;
   }
 
-  async findUserByUsername(username: string, UserUuid: string) {
+  async findUsersByUsername(username: string, UserUuid: string) {
     function containsPlayer(oneUser: UserModel) {
-      if (oneUser.uuid === UserUuid) return true;
+      if (oneUser.uuid === UserUuid)
+	  	return true;
       return false;
     }
 
@@ -621,6 +622,20 @@ export class UsersService {
     return find.filter(
       (user) => (containsName(user, username) && !containsPlayer(user)) === true,
     );
+  }
+
+  async findUserByUsername(username: string, Useruuid : string) {
+	const find = (await this.userRepository.find()).filter((user) => user.username === username)[0];
+	if (find)
+	{
+		for (let i = 0; i < find.blocked.length; i++)
+			if (find.blocked[i].uuid === Useruuid)
+				return (2);
+		for (let i = 0; i < find.blockedby.length; i++)
+			if (find.blockedby[i].uuid === Useruuid)
+				return (3);
+	}
+    return find;
   }
 
   async ChangeUsername(uuid: string, newName: string) {

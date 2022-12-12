@@ -27,7 +27,7 @@ function Admin(props : props) {
     if (!params.id)
       navigate('/chat/channel');
 
-    await axios.post(`http://90.66.192.148:7000/api/chat/channel/setadmin/`, {
+    await axios.post(`http://90.66.199.176:7000/api/chat/channel/setadmin/`, {
       channelId: selectedChannel,
       target: targetId,
       owner: me.uuid
@@ -44,7 +44,7 @@ function Admin(props : props) {
   }
 
   const unsetAdmin = async (targetId: string) => {
-    await axios.post(`http://90.66.192.148:7000/api/chat/channel/unsetadmin/`, {
+    await axios.post(`http://90.66.199.176:7000/api/chat/channel/unsetadmin/`, {
       channelId: selectedChannel,
       target: targetId,
       owner: me.uuid

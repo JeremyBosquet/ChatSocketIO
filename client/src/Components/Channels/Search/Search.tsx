@@ -22,7 +22,7 @@ function Search(props: props) {
         props.setSearchChannel(e.target.value);
 
         const getUsersChannel = async (e: any) => {
-            await axios.get("http://90.66.192.148:7000/api/chat/channels/user/" + user.uuid)
+            await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + user.uuid)
             .then((res) => {
                 if (res)
                     dispatch(setChannels(res.data));
@@ -32,7 +32,7 @@ function Search(props: props) {
         if (e.target.value === "")
             getUsersChannel(user.uuid)
         else {
-            await axios.get("http://90.66.192.148:7000/api/chat/channels/byname/" + e.target.value + "/" + user.uuid)
+            await axios.get("http://90.66.199.176:7000/api/chat/channels/byname/" + e.target.value + "/" + user.uuid)
             .then((res) => {
                 if (res)
                     props.setChannelsFind(res.data);
@@ -46,7 +46,7 @@ function Search(props: props) {
             code: e.target.joinPrivate.value,
             userId: user.uuid
         }
-        await axios.post("http://90.66.192.148:7000/api/chat/channel/join/code", data)
+        await axios.post("http://90.66.199.176:7000/api/chat/channel/join/code", data)
         .then((res) => {
             if (res)
             {

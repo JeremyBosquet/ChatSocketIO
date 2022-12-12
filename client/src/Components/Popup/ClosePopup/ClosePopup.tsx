@@ -19,7 +19,7 @@ function ClosePopup(props : props) {
 	}
 
 	return (
-		<button className="closeProfile" onClick={() =>  HideProfile()}>  <span><AiOutlineClose /></span> </button>
+		<button className="closeProfile"  onClick={() =>  HideProfile()}> <span><AiOutlineClose /></span></button>
 	)
 }
 

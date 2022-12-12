@@ -34,7 +34,7 @@ function FormCreateRoom(props: props) {
     }
     console.log(e.target.name.value);
     axios
-      .post(`http://90.66.192.148:7000/api/room/createRoom`, {
+      .post(`http://90.66.199.176:7000/api/room/createRoom`, {
         name: roomName,
         nbPlayers: NbPlayers,
         owner: Owner,

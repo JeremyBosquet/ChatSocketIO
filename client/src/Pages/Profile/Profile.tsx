@@ -5,10 +5,13 @@ import { redirect, useNavigate, useLocation } from "react-router-dom";
 import { createNotification } from "../../Components/notif/Notif";
 import { whoWon } from "../../Components/Utils/whoWon";
 import React from "react";
+import './Profile.scss';
 
 import "./Profile.scss";
 import NavBar from "../../Components/Nav/NavBar";
 import KillSocket from "../../Components/KillSocket/KillSocket";
+import { getExp, getExpProfile } from "../../Components/Utils/getExp";
+import { modifyScores } from "../../Components/Utils/modifyScores";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 
@@ -17,8 +20,8 @@ function Profile() {
   let booleffect = false;
   const token = localStorage.getItem("token");
   KillSocket("all");
+  const booleffect3 = useRef<boolean>(false);
   const [booleffect2, setbooleffect2] = useState<boolean>(true);
-  const [myHistoryList, SetMyHistoryList] = useState<any[]>([]);
   const firstrender = useRef<boolean>(true);
 
   // const IsTwoAuthConnected = useSelector(getConnected);
@@ -27,155 +30,125 @@ function Profile() {
   // const User = useSelector(getUser);
   // const dispatch = useDispatch();
 
-  const [User, setUser] = useState<any>();
-  const [IsLoggedIn, setLogged] = useState<boolean>();
-  const [IsTwoAuthActivated, setActivated] = useState<boolean>();
-  const [IsTwoAuthConnected, setConnected] = useState<boolean>();
+  const [userProfile, setUserProfile] = useState<any>();
+  const [historyList, SetHistoryList] = useState<any[]>([]);
+  const [profileExp, setProfileExp] = useState<any>(0.00);
 
-  const [friendList, SetFriendList] = useState<any[]>([]);
-	const [blockList, SetBlockList] = useState<any[]>([]);
-	const [requestedList, SetRequestedList] = useState<any[]>([]);
-	const [requestList, SetRequestList] = useState<any[]>([]);
-	const [profilePage, setProfilePage] = useState<any>(null);
-	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
-	const [historyList, SetHistoryList] = useState<any[]>([]);
+  const [scoreA, setScoreA] = useState<number[]>([]);
+	const [scoreB, setScoreB] = useState<number[]>([]);
 
-  function goHome() {
-    navigate("/");
-  }
 
-  async function GetLoggedInfoAndUser() {
+  async function GetUserProfile(username : string) {
     if (localStorage.getItem("token")) {
-      await axios
-        .get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          setLogged(res.data.IsLoggedIn);
-          setActivated(res.data.isTwoFactorAuthenticationEnabled);
-          setConnected(res.data.isSecondFactorAuthenticated);
-        })
-        .catch((err) => {
-          console.log(err.message);
-        });
-
-      await axios
-        .get(`http://90.66.192.148:7000/user`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          setUser(res.data.User);
-          axios
-            .get(
-              `http://90.66.192.148:7000/api/room/getGameOfUser/` +
-                res.data.User.uuid,
-              {
-                headers: {
-                  Authorization: "Bearer " + token,
-                },
-              }
-            )
-            .then((res) => {
-              if (res.data && res.data.length) SetHistoryList(res.data);
-              else if (res.data) SetHistoryList([]);
-            });
-          console.log(res.data.User);
-        })
-        .catch((err) => {
-          console.log(err);
-          setUser(undefined);
-          createNotification("error", "User not found");
-          navigate("/");
-        });
-    } else {
-      createNotification("error", "User not found");
-      navigate("/");
+		await axios.get(`http://90.66.199.176:7000/user/SearchProfile/` + username, {
+			headers: ({
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+			})
+			}).then((res) => {
+				if (res.data && res.data.User)
+				{
+					// if (location.pathname[location.pathname.length - 1] == '/')
+					// 	navigate(location.pathname + uuid);
+					// else
+					// 	navigate(location.pathname + '/' + uuid);
+					setUserProfile(res.data.User);
+					axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + res.data.User.uuid,
+					{
+						headers: {
+						Authorization: "Bearer " + token,
+						},
+					}).then((res) => {
+						if (res.data && res.data.length)
+							SetHistoryList(res.data);
+						else if (res.data)
+							SetHistoryList([]);
+					});
+				}
+				else
+					navigate('/');
+			}).catch((err) => {
+				console.log(err)
+				navigate('/');
+			});
     }
     setbooleffect2(false);
   }
   useEffect((): any => {
     if (!booleffect) {
-      GetLoggedInfoAndUser();
+		let username = location.pathname.split('/')[2];
+		GetUserProfile(username);
       booleffect = true;
     }
   }, []);
 
+	useEffect((): any => {
+		if (userProfile)
+			getExpProfile(userProfile.uuid, setProfileExp);
+	}, [userProfile]);
+
+  	useEffect(() => {
+		if (booleffect3.current)
+			return;
+		if (userProfile && historyList.length)
+		{
+			historyList.map((game, index) => {
+				modifyScores(userProfile.uuid, game, setScoreA, setScoreB, scoreA, scoreB, index, index==(historyList.length-1) ? true : false)
+			});
+			booleffect3.current = true;
+		}
+	}, [historyList, userProfile]);
+
   return (
     <div className="profilePage">
-      <div className="container">
-        {
-          <>
-            <NavBar 
-			socket={null}
-			setSocket={null}
-			friendList={friendList}
-			SetFriendList={SetFriendList}
-			blockList={blockList}
-			SetBlockList={SetBlockList}
-			requestList={requestList}
-			SetRequestList={SetRequestList}
-			requestedList={requestedList}
-			SetRequestedList={SetRequestedList}
-			setProfilePage={setProfilePage}
-			setProfileDisplayed={setProfileDisplayed}
-			SetHistoryList={SetHistoryList}/>
-            <>
-              {!booleffect2 ? (
-                <>
-                  {User ? (
-                    <div className="userProfile">
-                      {
-                        <div>
-                          <h1> Hello {User?.username} </h1>
-                          <img
-                            src={User?.image}
-                            alt="user_img"
-                            width="384"
-                            height="256"
-                          />
-                          <br></br>
-                          <div id="listParent">
-                            {myHistoryList.length ? (
-                              <div id="list">
-                                {historyList.map((game, index) => (
-                                  <ul key={index}>
-                                    {whoWon(User.uuid,game.playerA,game.playerB,game.status) === "Victory" ? (
-                                      <li>
-                                        <span className="green">
-                                          {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid,game.playerA,game.playerB,game.status)}
-                                        </span>
-                                      </li>
-                                    ) : (
-                                      <li>
-                                        <span className="red">
-                                          {game.playerA.name} vs {game.playerB.name} / {whoWon(User.uuid,game.playerA,game.playerB, game.status)}
-                                        </span>
-                                      </li>
-                                    )}
-                                  </ul>
-                                ))}
-                              </div>
-                            ) : null}
-                          </div>
-                          <button onClick={() => navigate("/")}> Home </button>
-                          <button onClick={() => navigate("/logout")}>
-                            {" "}
-                            Logout{" "}
-                          </button>
-                        </div>
-                      }
-                    </div>
-                  ) : null}
-                </>
-              ) : null}
-            </>
-          </>
-        }
-      </div>
+	{
+		!booleffect2 ? (
+			<div className='blur'>
+				<NavBar/>
+				<div id="userProfile">
+					<img
+					src={userProfile?.image}
+					alt="user_img"
+					className="userImg"
+					width="384"
+					height="256"
+					/>
+					<h3> {userProfile?.username} </h3>
+					<h4> @{userProfile?.trueUsername} </h4>
+					<div className="expBar">
+						<span className="Exp"> </span>
+						<p>{profileExp}</p>
+					</div>
+					<div id="listMyGameParent">
+					{
+						historyList.length ?
+						(
+							<div id={historyList.length > 3 ? "listMyGameScroll" : "listMyGame"}>
+							{historyList.map((game, index) => (
+								<ul key={index}>
+									<li>
+									<p id="playerName">
+										{game.playerA.name} vs {game.playerB.name}
+									</p>
+									<p id="playerStatus">
+										|&nbsp;&nbsp;{whoWon(userProfile.uuid, game)}
+									</p>
+									<p id="playerScore">
+										|&nbsp;&nbsp;{scoreA[index]} - {scoreB[index]}
+									</p>
+									</li>
+								</ul>
+							))}
+							</div>
+						)
+						: null
+					}
+					</div>
+				</div>
+			</div>
+			)
+			: 
+				null
+	}
     </div>
   );
 }

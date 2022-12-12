@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import SignIn from "../../Components/Auth/Signin";
+import SignIn from "../Auth/Signin";
 import { redirect, useNavigate, useLocation } from "react-router-dom";
 //import { userInfo } from 'os';
 // import { useDispatch, useSelector } from 'react-redux';
@@ -8,10 +8,10 @@ import { redirect, useNavigate, useLocation } from "react-router-dom";
 // import {NotificationContainer, NotificationManager} from 'react-notification';
 // import { ToastContainer, toast } from 'react-toastify';
 // import "react-toastify/dist/ReactToastify.css";
-import { createNotification } from "../../Components/notif/Notif";
+import { createNotification } from "../notif/Notif";
 import React from "react";
-import NavBar from "../../Components/Nav/NavBar";
-import KillSocket from "../../Components/KillSocket/KillSocket";
+import NavBar from "../Nav/NavBar";
+import KillSocket from "../KillSocket/KillSocket";
 import {IoIosFolderOpen} from "react-icons/io"
 import {BsArrowRightCircleFill} from 'react-icons/bs'
 import {Tb2Fa} from 'react-icons/tb'
@@ -45,7 +45,7 @@ function Settings() {
   async function GetLoggedInfoAndUser() {
     if (localStorage.getItem("token")) {
       await axios
-        .get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
+        .get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -62,7 +62,7 @@ function Settings() {
           setUser("{}");
         });
       await axios
-        .get(`http://90.66.192.148:7000/user`, {
+        .get(`http://90.66.199.176:7000/user`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -93,7 +93,7 @@ function Settings() {
     event.preventDefault();
     await axios
       .post(
-        `http://90.66.192.148:7000/2fa/turn-off`,
+        `http://90.66.199.176:7000/2fa/turn-off`,
         { twoFactorAuthenticationCode: authCode },
         {
           headers: {
@@ -118,7 +118,7 @@ function Settings() {
     console.log(changename);
     await axios
       .post(
-        `http://90.66.192.148:7000/user/changeUsername`,
+        `http://90.66.199.176:7000/user/changeUsername`,
         { newName: changename },
         {
           headers: {
@@ -155,7 +155,7 @@ function Settings() {
 		console.log(data.get("file"));
 		await axios({
 		method: "post",
-		url: `http://90.66.192.148:7000/user/changeAvatar`,
+		url: `http://90.66.199.176:7000/user/changeAvatar`,
 		data: data,
 		headers: {
 			Authorization: "Bearer " + token,
@@ -182,7 +182,7 @@ function Settings() {
     event.preventDefault();
     await axios
       .post(
-        `http://90.66.192.148:7000/2fa/generate`,
+        `http://90.66.199.176:7000/2fa/generate`,
         {},
         {
           headers: {
@@ -204,7 +204,7 @@ function Settings() {
     event.preventDefault();
     await axios
       .post(
-        `http://90.66.192.148:7000/2fa/turn-on`,
+        `http://90.66.199.176:7000/2fa/turn-on`,
         { twoFactorAuthenticationCode: authCode },
         {
           headers: {
@@ -224,7 +224,7 @@ function Settings() {
 
     await axios
       .post(
-        `http://90.66.192.148:7000/2fa/authenticate`,
+        `http://90.66.199.176:7000/2fa/authenticate`,
         { twoFactorAuthenticationCode: authCode },
         {
           headers: {
@@ -272,7 +272,7 @@ function Settings() {
 								name="name"
 								required
 								minLength={1}
-								maxLength={16}
+								maxLength={10}
 								onChange={(e) => setChangename(e.target.value)}
 								/>
 								<button className="clickset" type="submit"><span><BsArrowRightCircleFill/></span></button>

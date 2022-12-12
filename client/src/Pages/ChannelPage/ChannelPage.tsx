@@ -101,7 +101,7 @@ function ChannelPage() {
 	useEffect(() => {
 		const getUserInfos = async () => {
 			await axios
-			.get(`http://90.66.192.148:7000/user`, {
+			.get(`http://90.66.199.176:7000/user`, {
 			  headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			  },
@@ -130,7 +130,7 @@ function ChannelPage() {
 
 	    
     const getUsersChannel = async (userId: any) => {
-        await axios.get("http://90.66.192.148:7000/api/chat/channels/user/" + userId)
+        await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + userId)
         .then((res) => {
             if (res)
                 dispatch(setChannels(res.data));
@@ -142,7 +142,7 @@ function ChannelPage() {
 		// Connect to the socket
 		if (socketGame)
 			socketGame?.close();
-		const newSocket = io("http://90.66.192.148:7002");
+		const newSocket = io("http://90.66.199.176:7002");
 		dispatch(setSocketGameChat(newSocket));
 	}, []);
 

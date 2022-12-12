@@ -137,7 +137,7 @@ export class UsersController {
 
   @Get('SearchFriend/:username')
   @UseGuards(JwtAuthGuard)
-  async SearchFriendByUsername(
+  async SearchFriendsByUsername(
 	@Req() req: any,
 	@Res() res: any,
 	@Param(ValidationPipe) param: SearchDto,
@@ -145,7 +145,7 @@ export class UsersController {
 	const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 	const User = await this.userService.findUserByUuid(Jwt['uuid']);
 	if (User) {
-	  const find = await this.userService.findUserByUsername(
+	  const find = await this.userService.findUsersByUsername(
 		param.username,
 		User.uuid,
 	  );
@@ -168,6 +168,52 @@ export class UsersController {
 	  error: 'NOT_FOUND',
 	});
   }
+
+  @Get('SearchProfile/:username')
+  @UseGuards(JwtAuthGuard)
+  async SearchProfileByUsername(
+	@Req() req: any,
+	@Res() res: any,
+	@Param(ValidationPipe) param: SearchDto,) {
+		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
+		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		if (User) {
+			const find = await this.userService.findUserByUsername(param.username, User.uuid);
+			if (find) {
+				switch (find) {
+					case 2:
+						return res.status(HttpStatus.BAD_REQUEST).json({
+							statusCode: HttpStatus.BAD_REQUEST,
+							message: "You can't access the profile of someone who blocked you",
+							error: 'BAD_REQUEST',
+						});
+					case 3:
+						return res.status(HttpStatus.BAD_REQUEST).json({
+							statusCode: HttpStatus.BAD_REQUEST,
+							message: "You can't access the profile of someoneyou blocked",
+							error: 'BAD_REQUEST',
+							});
+					default :
+						return res.status(HttpStatus.OK).json({
+							statusCode: HttpStatus.OK,
+							message: 'succes',
+							User: plainToClass(SendUserDto, find, {
+							excludeExtraneousValues: true,
+							}) });
+				}
+			}
+			return res.status(HttpStatus.NO_CONTENT).json({
+			statusCode: HttpStatus.NO_CONTENT,
+			message: 'Friend not found',
+			error: 'NO_CONTENT',
+			});
+		}		
+		return res.status(HttpStatus.NOT_FOUND).json({
+		statusCode: HttpStatus.NOT_FOUND,
+		message: 'User not found',
+		error: 'NOT_FOUND',
+		});
+	}
 
   @Get('IsFriend/:uuid')
   @UseGuards(JwtAuthGuard)
@@ -700,7 +746,7 @@ export class UsersController {
 		!newName ||
 		/^\s*$/.test(newName) ||
 		newName.length < 2 ||
-		newName.length > 16
+		newName.length > 10
 	  ) {
 		return res.status(HttpStatus.BAD_REQUEST).json({
 		  statusCode: HttpStatus.BAD_REQUEST,

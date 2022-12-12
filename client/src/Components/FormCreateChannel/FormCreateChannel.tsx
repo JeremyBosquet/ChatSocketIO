@@ -68,14 +68,14 @@ function FormCreateChannel() {
       }
     ]
 
-    axios.post('http://90.66.192.148:7000/api/chat/channel', { name: channelName, owner: {id: user.uuid}, visibility: visibility, password: password, users: defaultUsers, messages: [], mutes: [], bans: [] })
+    axios.post('http://90.66.199.176:7000/api/chat/channel', { name: channelName, owner: {id: user.uuid}, visibility: visibility, password: password, users: defaultUsers, messages: [], mutes: [], bans: [] })
     .then((res : any) => {
       if (res.data ) {
         createNotification("success", "You have successfully created " + channelName + " channel.");
         socket?.emit('channelCreated');
 
         const getUsersChannel = async (userId: any) => {
-          await axios.get("http://90.66.192.148:7000/api/chat/channels/user/" + userId)
+          await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + userId)
           .then((res) => {
               if (res)
                   dispatch(setChannels(res.data));

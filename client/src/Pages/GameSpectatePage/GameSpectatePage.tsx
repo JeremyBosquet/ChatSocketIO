@@ -14,6 +14,8 @@ import "../../Pages/Home/HomePage.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeSpectate, setSocketGame, setSocketSpectate } from "../../Redux/gameSlice";
 import KillSocket from "../../Components/KillSocket/KillSocket";
+import Popup from "../../Components/Popup/Popup";
+import { getUser, setUser } from "../../Redux/authSlice";
 
 interface IPlayer {
   id: string;
@@ -68,6 +70,7 @@ function GameSpectatePage() {
   const [notification, setNotificaton] = useState<Boolean>(false);
   const navigate = useNavigate();
   const { roomId } = useParams<{ roomId: string }>();
+  const user = useSelector(getUser);
   const dispatch = useDispatch();
   const socket = useSelector(getSockeSpectate);
   const [display, setDisplay] = useState<Boolean>(false);
@@ -86,7 +89,7 @@ function GameSpectatePage() {
 
   const getRooms = async (e: any) => {
     const messages = await axios.get(
-      `http://90.66.192.148:7000/api/room/getRoomSpectates`
+      `http://90.66.199.176:7000/api/room/getRoomSpectates`
     );
 
     if (messages?.data) {
@@ -98,7 +101,7 @@ function GameSpectatePage() {
     console.log("socket", socket);
     if (socket)
       socket?.close();
-    const newSocket = io("http://90.66.192.148:7002");
+    const newSocket = io("http://90.66.199.176:7002");
     dispatch(setSocketSpectate(newSocket));
     getRooms(null);
   }, []);
@@ -163,7 +166,7 @@ function GameSpectatePage() {
     const checkId = async () => {
       if (roomId) {
         console.log("room", roomId);
-        const result = await axios.get(`http://90.66.192.148:7000/api/room/checkGame/` + roomId);
+        const result = await axios.get(`http://90.66.199.176:7000/api/room/checkGame/` + roomId);
         if (result.data) {
           setDisplay(true);
         }
@@ -177,44 +180,58 @@ function GameSpectatePage() {
     checkId();
   }, [roomId]);
 
+  useEffect(() => {
+	const getUserInfos = async () => {
+		await axios
+		.get(`http://90.66.199.176:7000/user`, {
+		  headers: {
+			Authorization: "Bearer " + localStorage.getItem("token"),
+		  },
+		})
+		.then((res) => {
+		  dispatch(setUser(res.data.User));
+		})
+		.catch((err) => {
+		  setUser({});
+		  createNotification("error", "User not found");
+		  navigate("/");
+		});
+	}
+
+	if (localStorage.getItem("token"))
+		getUserInfos();
+}, []);
+
   return (
-    <div className="main">
-      { <NavBar 
-			socket={null}
-			setSocket={null}
-			friendList={friendList}
-			SetFriendList={SetFriendList}
-			blockList={blockList}
-			SetBlockList={SetBlockList}
-			requestList={requestList}
-			SetRequestList={SetRequestList}
-			requestedList={requestedList}
-			SetRequestedList={SetRequestedList}
-			setProfilePage={setProfilePage}
-			setProfileDisplayed={setProfileDisplayed}
-			SetHistoryList={SetHistoryList}/> }
-      {!roomId ? (
-        <div>
-          <p>List of game :</p>
-          {rooms.map((room: IRoom) => (
-            <RoomSpectateInfo
-              key={room.id}
-              id={room.id}
-              owner={room.owner}
-              status={room.status}
-              nbPlayers={room.nbPlayers}
-              name={room.name}
-              createdAt={room.createdAt}
-              settings={room.settings}
-            />
-          ))}
-        </div>
-      ) : (
-        <div>
-          {room ? <GameSpectate socket={socket} room={room} /> : null}
-        </div>
-      )}
-    </div>
+	<>
+		<div className='blur'>
+			<div className="main">
+			{ <NavBar /> }
+			{!roomId ? (
+				<div>
+				<p>List of game :</p>
+				{rooms.map((room: IRoom) => (
+					<RoomSpectateInfo
+					key={room.id}
+					id={room.id}
+					owner={room.owner}
+					status={room.status}
+					nbPlayers={room.nbPlayers}
+					name={room.name}
+					createdAt={room.createdAt}
+					settings={room.settings}
+					/>
+				))}
+				</div>
+			) : (
+				<div>
+				{room ? <GameSpectate socket={socket} room={room} /> : null}
+				</div>
+			)}
+			</div>
+		</div>
+		<Popup User={user}/>
+	</>
   );
 }
 

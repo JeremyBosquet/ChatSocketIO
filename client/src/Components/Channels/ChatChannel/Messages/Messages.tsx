@@ -25,7 +25,7 @@ function Messages(props : props) {
            const userFinded = temp.find(user => user.uuid === props.messages[i].userId);``
            if (!userFinded)
            {
-             await axios.get(`http://90.66.192.148:7000/api/chat/user/` + props.messages[i].userId).then(res => {
+             await axios.get(`http://90.66.199.176:7000/api/chat/user/` + props.messages[i].userId).then(res => {
                if (res.data)
                  temp = [...temp, {...res.data, print: false}];
                }).catch(err => console.log(err));

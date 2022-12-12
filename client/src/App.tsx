@@ -5,7 +5,7 @@ import GetToken from "./Components/Auth/GetToken";
 import HomePage from "./Pages/Home/HomePage";
 import NotFound from "./Pages/NotFound";
 import Logout from "./Components/Auth/Logout";
-import Settings from "./Pages/Settings/Settings";
+import Settings from "./Components/Settings/Settings";
 import TwoAuth from "./Pages/TwoAuth";
 import axios from "axios";
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
@@ -20,6 +20,7 @@ import { io } from "socket.io-client";
 import Protected from "./Protected";
 import TestPage from "./Pages/test";
 import { createNotification } from "./Components/notif/Notif";
+import Profile from "./Pages/Profile/Profile";
 //import TestPage from "./Pages/test";
 //import './Pages/PhaserGame'
 
@@ -36,7 +37,7 @@ function App() {
 	useEffect(() => { // Connect to the socket
 		if (!socketChat)
 		{
-			const newSocket = io('http://90.66.192.148:4001');
+			const newSocket = io('http://90.66.199.176:4001');
 			dispatch(setSocket(newSocket));
 		}
 		// socketSocial?.removeAllListeners();
@@ -45,7 +46,7 @@ function App() {
 	}, []);
 	useEffect(() => {
 		const socketSet = async () => {
-			await axios.get(`http://90.66.192.148:7000/user`, {
+			await axios.get(`http://90.66.199.176:7000/user`, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
 				},
@@ -55,7 +56,7 @@ function App() {
 				{
 					socketSocial?.close();
 					console.log("get user and emit socket");
-					const newSocketSocial = io('http://90.66.192.148:7003');
+					const newSocketSocial = io('http://90.66.199.176:7003');
 					dispatch(setSocketSocial(newSocketSocial));
 					dispatch(setUser(res.data.User));
 				}
@@ -80,7 +81,7 @@ function App() {
 			socketSocial.on("newFriend", (data: any) => {
 				if (data.uuid === user.uuid && data?.username) {
 					createNotification("info", "New friend request from: " + data.username);
-					axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
+					axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -100,7 +101,7 @@ function App() {
 			socketSocial.on("friendAccepted", (data: any) => {
 				if (data.uuid === user.uuid && data?.username && data?.friendUuid) {
 					createNotification("info", data.username + " accepted your friend request");
-					axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
+					axios.get(`http://90.66.199.176:7000/user/ListFriends`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -119,7 +120,7 @@ function App() {
 			socketSocial.on("removedOrBlocked", (data: any) => {
 				if (data.uuid === user.uuid && data?.username) {
 					//createNotification("info", data.username + " accepted your friend request");
-					axios.get(`http://90.66.192.148:7000/user/ListFriends`, {
+					axios.get(`http://90.66.199.176:7000/user/ListFriends`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -135,7 +136,7 @@ function App() {
 			socketSocial.removeListener("CancelFriend");
 			socketSocial.on("CancelFriend", (data: any) => {
 				if (data.uuid === user.uuid) {
-					axios.get(`http://90.66.192.148:7000/user/ListFriendRequest`, {
+					axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -154,7 +155,7 @@ function App() {
 			socketSocial.removeListener("DeclineFriend");
 			socketSocial.on("DeclineFriend", (data: any) => {
 				if (data.uuid === user.uuid) {
-					axios.get(`http://90.66.192.148:7000/user/ListFriendRequested`, {
+					axios.get(`http://90.66.199.176:7000/user/ListFriendRequested`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -210,7 +211,7 @@ function App() {
 			{/* <Route path="/profile" element={<Protected><Profile /></Protected>}></Route> */}
 			<Route path="/logout" element={<Protected><Logout /></Protected>}></Route>
 			<Route path="/twoAuth" element={<Protected><TwoAuth /></Protected>}></Route>
-			{/* <Route path="/social" element={<Protected><Social /></Protected>}></Route> */}
+			<Route path="/profile/:Username" element={<Protected><Profile /></Protected>}></Route>
 			{/* <Route path=":UserId" element={<Protected><Social /></Protected>}></Route> */}
 			{/*</Routes>Route path="/game/" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}
 			{/*</Routes>Route path="/game/:roomId" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}

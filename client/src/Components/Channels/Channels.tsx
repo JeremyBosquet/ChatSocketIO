@@ -30,7 +30,7 @@ function Channels(props: props) {
     const channels = useSelector(getChannels);
     
     const getUsersChannel = async (userId: any) => {
-        await axios.get("http://90.66.192.148:7000/api/chat/channels/user/" + userId)
+        await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + userId)
         .then((res) => {
             if (res)
                 dispatch(setChannels(res.data));

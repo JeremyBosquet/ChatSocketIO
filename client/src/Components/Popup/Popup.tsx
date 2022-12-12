@@ -11,6 +11,7 @@ import Accept from "./Accept/Accept";
 import Decline from "./Decline/Decline";
 import Cancel from "./Cancel/Cancel";
 import {getExp} from '../../Components/Utils/getExp'
+import axios from "axios";
 
 interface props {
 	User: any;
@@ -27,7 +28,9 @@ function Popup(props: props)
 	const profileDisplayed = useSelector(getProfileDisplayed);
 	const profilePage = useSelector(getProfilePage);
 	const navigate = useNavigate();
-	const historyList = useSelector(getHistoryList);
+	const [historyList, setHistoryList] = useState<any[]>([]);
+	const [scoreA, setScoreA] = useState<number[]>([]);
+	const [scoreB, setScoreB] = useState<number[]>([]);
 
 	const [ProfileExp, setProfileExp] = useState<any>();
 	const firstrender = useRef<boolean>(true);
@@ -48,6 +51,21 @@ function Popup(props: props)
 		return false;
 	}
 
+	async function History (uuid : string) {
+		await axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + uuid, {
+		headers: ({
+			Authorization: 'Bearer ' + localStorage.getItem('token'),
+		})
+		}).then((res) => {
+			if (res.data && res.data.length)
+			{
+				setHistoryList(res.data);
+			}
+			else
+				(setHistoryList([]));
+		});
+	}
+
 	useEffect (() => {
 	if (firstrender.current)
 	{
@@ -56,7 +74,9 @@ function Popup(props: props)
 	}
 	if (profilePage)
 	{
+		History(profilePage?.uuid);
 		getExp(profilePage?.uuid, setProfileExp);
+		firstrender.current = true;
 	}
 	}), [profilePage];
 

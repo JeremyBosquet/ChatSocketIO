@@ -27,7 +27,7 @@ function GetToken() {
   function GetLoggedInfo() {
     if (localStorage.getItem("token")) {
       axios
-        .get(`http://90.66.192.148:7000/user/getLoggedInfo`, {
+        .get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -53,7 +53,7 @@ function GetToken() {
   async function NotActivated() {
     console.log("Bearer " + localStorage.getItem("token"));
     await axios
-      .get(`http://90.66.192.148:7000/user`, {
+      .get(`http://90.66.199.176:7000/user`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
@@ -75,7 +75,7 @@ function GetToken() {
     const code = queryParams.get("code");
     console.log(code);
     axios
-      .get(`http://90.66.192.148:7000/login/42/return/` + code)
+      .get(`http://90.66.199.176:7000/login/42/return/` + code)
       .then((res) => {
         if (res.data) {
           localStorage.setItem("token", res.data.token);
@@ -92,7 +92,7 @@ function GetToken() {
     // if (!IsTwoAuthActivated)
     // {
     // 	console.log('Bearer ' + localStorage.getItem('token'));
-    // 	await axios.get(`http://90.66.192.148:7000/user`, {
+    // 	await axios.get(`http://90.66.199.176:7000/user`, {
     // 		headers: ({
     // 			Authorization: 'Bearer ' + localStorage.getItem('token'),
     // 		})

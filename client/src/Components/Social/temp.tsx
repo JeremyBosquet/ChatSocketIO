@@ -1,7 +1,7 @@
 import React from "react"
 	// async function ShowProfileUseEffect(uuid : string)
 	// {
-	// 	await axios.get(`http://90.66.192.148:7000/api/room/getGameOfUser/` + uuid, {
+	// 	await axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + uuid, {
 	// 	headers: ({
 	// 		Authorization: 'Bearer ' + token,
 	// 	})
@@ -11,7 +11,7 @@ import React from "react"
 	// 		else if (res.data)
 	// 			dispatch(setHistoryList([]));
 	// 	});
-	// 	await axios.get(`http://90.66.192.148:7000/user/findUser/` + uuid, {
+	// 	await axios.get(`http://90.66.199.176:7000/user/findUser/` + uuid, {
 	// 	headers: ({
 	// 		Authorization: 'Bearer ' + token,
 	// 	})

@@ -17,7 +17,7 @@ function PrivateMessages() {
     
     useEffect(() => {
         const getUsersDM = async (userId: any) => {
-            await axios.get("http://90.66.192.148:7000/api/chat/dm/user/" + userId)
+            await axios.get("http://90.66.199.176:7000/api/chat/dm/user/" + userId)
             .then((res) => {
                 if (res)
                     setDMs(res.data);

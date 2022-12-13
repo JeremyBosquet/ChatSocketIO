@@ -1,0 +1,38 @@
+version: "3.5"
+
+services:
+  front:
+    container_name: front
+    depends_on:
+      - back
+    build:
+      context: ./client
+      args:
+       - url=${FRONT_URL}
+    ports:
+      - "5999:5999"
+    restart: unless-stopped
+  back:
+    container_name: back
+    depends_on:
+      - db
+    build:
+      context: ./server
+      args:
+       - url=${FRONT_URL}
+    ports:
+      - "6000:6000"
+      - "7000:7000"
+      - "7001:7001"
+      - "7002:7002"
+      - "7003:7003"
+      - "4001:4001"
+    restart: unless-stopped
+  db:
+    container_name: db
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: jerem
+    ports:
+      - "5432:5432"

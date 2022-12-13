@@ -13,7 +13,7 @@ import { RoomService } from './room.service';
 import { v4 as uuidv4 } from 'uuid';
 import { time } from 'console';
 import { exit } from 'process';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { date } from 'joi';
 import { Interval } from '@nestjs/schedule';
 
@@ -53,13 +53,8 @@ export class RoomGateway {
     return direction;
   }
 
-  newDirection(oldDirection: number) : number{
-    // The new direction is the old direction plus a random angle between -45 and 45 degrees (in radians)
+  newDirection(oldDirection: number, ratioBetweenBallAndBoard: number) : number{
     let direction = oldDirection + (Math.random() - 0.5) * Math.PI / 4;
-    // If the direction is too close to the vertical axis, change it
-    if (direction > Math.PI / 2 - Math.PI / 8 && direction < Math.PI / 2 + Math.PI / 8) return oldDirection;
-    if (direction > 3 * Math.PI / 2 - Math.PI / 8 && direction < 3 * Math.PI / 2 + Math.PI / 8) return oldDirection;
-    if (direction > Math.PI - Math.PI / 8 && direction < Math.PI + Math.PI / 8) return oldDirection;
     return direction; 
   }
 
@@ -140,7 +135,7 @@ export class RoomGateway {
             room.ball.y < playerA.y + settings.boardHeight
           ) {
             console.log('gameLoop - collision with playerA');
-            room.ball.direction = this.newDirection(Math.PI - room.ball.direction);
+            room.ball.direction = this.newDirection(Math.PI - room.ball.direction, 5);
             room.ball.x += room.ball.speed * 0.3 * Math.cos(room.ball.direction);
             room.ball.y += room.ball.speed * 0.3 * Math.sin(room.ball.direction);
             room.ball.speed += 0.15;
@@ -152,7 +147,7 @@ export class RoomGateway {
             room.ball.y < playerB.y + settings.boardHeight
           ) {
             console.log('gameLoop - collision with playerB');
-            room.ball.direction = this.newDirection(Math.PI - room.ball.direction);
+            room.ball.direction = this.newDirection(Math.PI - room.ball.direction, 5); // changer ca
             room.ball.x += room.ball.speed * 0.3 * Math.cos(room.ball.direction);
             room.ball.y += room.ball.speed * 0.3 * Math.sin(room.ball.direction);
             room.ball.speed += 0.15;
@@ -167,7 +162,7 @@ export class RoomGateway {
             } else if (room.ball.y + settings.ballRadius > 100) {
               room.ball.y = 100 - settings.ballRadius;
             }
-            room.ball.direction = this.newDirection(-room.ball.direction);
+            room.ball.direction =-room.ball.direction;
             room.ball.x += room.ball.speed * 0.3 * Math.cos(room.ball.direction);
             room.ball.y += room.ball.speed * 0.3 * Math.sin(room.ball.direction);
             room.ball.speed += 0.15;

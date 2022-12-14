@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import SignIn from "./Components/Auth/Signin";
 import GetToken from "./Components/Auth/GetToken";
 import HomePage from "./Pages/Home/HomePage";
-import NotFound from "./Pages/NotFound";
+import NotFound from "./Pages/NotFound/NotFound";
 import Logout from "./Components/Auth/Logout";
 import Settings from "./Components/Settings/Settings";
 import TwoAuth from "./Pages/TwoAuth";

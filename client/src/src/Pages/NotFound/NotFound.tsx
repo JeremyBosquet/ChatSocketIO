@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import SignIn from "../Components/Auth/Signin";
+import SignIn from "../../Components/Auth/Signin";
 import { redirect, useNavigate, useLocation } from "react-router-dom";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 import React from "react";
-import KillSocket from "../Components/KillSocket/KillSocket";
+import KillSocket from "../../Components/KillSocket/KillSocket";
+import image404 from './404.png';
+import './NotFound.scss'
 
 function NotFound() {
   let navigate = useNavigate();
@@ -65,8 +67,8 @@ function NotFound() {
   }, []);
 
   return (
-    <div>
-      <p> Page not found </p>
+    <div className="NotFoundPage">
+      <img src={image404} alt="404"></img>
       <button onClick={() => navigate("/")}> Home </button>
     </div>
   );

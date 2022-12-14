@@ -27,6 +27,7 @@ function Logout() {
 	.then((res) => {
 		if (res.data.User)
 			socketSocial?.emit("logout", res.data.User.uuid);
+	}).catch(() => {
 	})
   }
 
@@ -54,7 +55,7 @@ function Logout() {
       booleffect = true;
     }
   }, []);
-  return <div></div>;
+  return null;
 }
 
 export default Logout;

@@ -358,17 +358,33 @@
 .HomePage #login
 {
 	position: absolute;
-	top: 70%;
+	top: 50%;
 	left: 50%;
+	margin-top: 100px;
 	transform: translate(-50%, -50%);
 	background: var(--black);
 	border: none;
-	width: 200px;
-	height: 100px;
+	padding: 10px;
+	outline : none;
+	// width: 200px;
+	// height: 100px;
 	color: rgb(255, 255, 255);
-	font-family:'Times New Roman', Times, serif;
-	font-size: 70px;
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-size: 50px;
 	border-radius: 30px;
+	cursor: pointer;
+	box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.HomePage #loginTitle
+{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: rgb(255, 255, 255);
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-size: 70px;
 }
 
 @media screen and (max-width: 790px) {

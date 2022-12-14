@@ -6,6 +6,7 @@ import { Stage, Layer, Rect, Circle, Text, Image } from "react-konva";
 import useImage from 'use-image';
 import Konva from "konva";
 import useEventListener from "@use-it/event-listener";
+import imager from './zyzz.png';
 
 interface props {
   socket: Socket | undefined;
@@ -77,15 +78,11 @@ interface ICanvasBall {
   percentY: number;
   ref: React.RefObject<Konva.Circle>;
 }
-
-/*
-g
-*/
-
+ 
 function GamePlay(props: props) {
   let maxWidth = 1000;
-  let maxHeight = 500;
-  const [image] = (props?.room?.settings?.background == "background1" ? useImage("") : useImage(''));
+  let maxHeight = 600;
+  const [image] = (props?.room?.settings?.background == "background1" ? useImage(imager) : useImage(imager));
   const [windowsWidth, setWindowsWidth] = useState(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
   const [windowsHeight, setWindowsHeight] = useState(window.innerHeight > maxHeight - 200 ? maxHeight : window.innerHeight - 200); // game board
   const [boardWidth, setBoardWidth] = useState<number>(
@@ -124,7 +121,7 @@ function GamePlay(props: props) {
   });
   const [playerB, setPlayerB] = useState<ICanvasBoard>({
     id: "playerB",
-    x: (windowsWidth - 0.0175 * windowsWidth),
+    x: (windowsWidth - 0.015 * windowsWidth),
     y: props.room?.playerB.y
       ? (props.room?.playerB.y / 100) * windowsHeight
       : windowsHeight / 2 - boardHeight / 2,
@@ -226,7 +223,7 @@ function GamePlay(props: props) {
     setPlayerB({
       ...playerB,
       id: "playerB",
-      x: (windowsWidth - 0.0175 * windowsWidth),
+      x: (windowsWidth - 0.015 * windowsWidth),
       y: (playerB.percentY / 100) * windowsHeight,
       percentY: playerB.percentY,
     });
@@ -256,12 +253,12 @@ function GamePlay(props: props) {
         setPlayerB({
           ...playerB,
           id: "playerB",
-          x: windowsWidth - 0.0175 * windowsWidth,
+          x: windowsWidth - 0.015 * windowsWidth,
           y: (data.y / 100) * windowsHeight,
           percentY: data.y,
         });
         playerB.ref.current?.position({
-          x: windowsWidth - 0.0175 * windowsWidth,
+          x: windowsWidth - 0.015 * windowsWidth,
           y: (data.y / 100) * windowsHeight,
         });
       }
@@ -277,9 +274,8 @@ function GamePlay(props: props) {
     });
   });
   return (
-    <div id="gameMainCanvas">
+    <div id="gameMain">
       <GameBoard socket={props.socket} room={props.room} />
-      <div>
         <Stage
           width={windowsWidth}
           height={windowsHeight}
@@ -296,7 +292,7 @@ function GamePlay(props: props) {
                 //y={windowsHeightDefault * 0.5 - boardHeight / 2}
                 width={boardWidth}
                 height={boardHeight}
-                fill="blue"
+                fill="white"
               />
             }
             {
@@ -306,7 +302,7 @@ function GamePlay(props: props) {
                 ref={playerB.ref}
                 width={boardWidth}
                 height={boardHeight}
-                fill="green"
+                fill="white"
               />
             }
             {
@@ -320,7 +316,6 @@ function GamePlay(props: props) {
           </Layer>
         </Stage>
       </div>
-    </div>
   );
 }
 

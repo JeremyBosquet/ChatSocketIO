@@ -17,6 +17,7 @@ export function modifyScores(uuid: string, game : any, setScoreA : any, setScore
 		{
 			console.log("finished");
 			setScoreA(newScoreATab);
+			setScoreB(newScoreBTab);
 		}
 	}
 }

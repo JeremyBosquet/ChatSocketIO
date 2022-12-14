@@ -25,8 +25,6 @@ function Manage(props: props) {
 
   const dispatch = useDispatch();
 
-  const [error, setError] = useState<string>("");
-
   const handleChange = async () => {
     if (props.channel.visibility === "protected"){
       if (!oldPassword){
@@ -75,6 +73,10 @@ function Manage(props: props) {
     props.setManageMode(false);
   }
 
+  const changeVisibility = (e : any) => {
+    setVisibility(e.target.value);
+  }
+
   return (
     <div className="manageChannel">
       <div className="manageContainer" >
@@ -83,42 +85,38 @@ function Manage(props: props) {
           <span onClick={handleClose}>X</span>
         </div>
         <div className="manageVisibilityChoice">
-          <p>Change visibility</p>
-          <div className="manageVisibilityItem" >
-            <input type="checkbox" name="Private" value="private" onChange={e => setVisibility("private")} checked={visibility === "private"}/>
-            <label>Private</label>
-          </div>
-          <div className="manageVisibilityItem" >
-            <input type='checkbox' name="Protected" value="protected" onChange={e => setVisibility("protected")} checked={visibility === "protected"} />
-            <label>Protected</label>
-          </div>
-          <div className="manageVisibilityItem">
-            <input type="checkbox" name="Public" value="public" onChange={e => setVisibility("public")} checked={visibility === "public"} />
-            <label>Public</label>
-          </div>
-        </div>
-        { props.channel.visibility === "protected" && visibility !== "protected" ? 
-          <div>
-            <p>Old password</p>
-            <input className="manageChangePasswordButton" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)}></input>
-          </div>
-          : null }
-        {
-          visibility === "protected" ?
-          <div className='manageChangePassword'>
-            <p>Change password</p>
-              { props.channel.visibility === "protected" ? 
-              <input className="manageChangePasswordButton" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)}></input>
-              : null }
-              <input className="manageChangePasswordButton" name="password" type="text" placeholder='New password' value={password} onChange={e => setPassword(e.target.value)}></input>
-            </div>
-          :
-          null
-        }
-        { error ? <p>{error}</p> : null }
-        <button className="manageChangeButton" onClick={handleChange}>Change</button>
+          <form className="ChannelCreateForm" onSubmit={handleChange}>
+            <select className="FormCreateChannelSelect" name="visibility" value={visibility} onChange={changeVisibility}>
+              <option value="public">Public</option>
+              <option value="protected">Protected by password</option>
+              <option value="private">Private</option>
+            </select>
+            { 
+              props.channel.visibility === "protected" && visibility !== "protected" ? 
+              <div>
+                <p>Old password</p>
+                <input className="manageChangePasswordButton" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)}></input>
+              </div>
+              : null 
+            }
+            {
+              visibility === "protected" ?
+              <div className='manageChangePassword'>
+                <p>Change password</p>
+                  { props.channel.visibility === "protected" ? 
+                  <input className="manageChangePasswordButton" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)}></input>
+                  : null }
+                  <input className="manageChangePasswordButton" name="password" type="text" placeholder='New password' value={password} onChange={e => setPassword(e.target.value)}></input>
+                </div>
+              :
+              null
+            }
+          </form>
+
+          <button className="manageChangeButton" onClick={handleChange}>Change</button>
       </div>
     </div>
+  </div>
   );
 }
 

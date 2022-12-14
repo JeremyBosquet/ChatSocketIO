@@ -265,31 +265,33 @@ function HomePage() {
 }
 
 useEffect(() => {
-		GetLoggedInfoAndUser();
+	GetLoggedInfoAndUser();
 }, []);
 
-useEffect(() => {
-	if (booleffect.current)
-		return;
-	if (User && myHistoryList.length)
-	{
-		myHistoryList.map((game, index) => {
-			modifyScores(User.uuid, game, setScoreA, setScoreB, scoreA, scoreB, index, index==(myHistoryList.length-1) ? true : false)
-		});
-	booleffect.current = true;
-	}
-}, [myHistoryList]);
+// useEffect(() => {
+// 	// if (booleffect.current)
+// 	// 	return;
+// 	if (User && myHistoryList.length)
+// 	{
+// 		myHistoryList.map((game, index) => {
+// 			modifyScores(User.uuid, game, setScoreA, setScoreB, scoreA, scoreB, index, index==(myHistoryList.length-1) ? true : false)
+// 		});
+// 		booleffect.current = true;
+// 	}
+// }, [myHistoryList, User]);
 
   return (
-    <div className="HomePage main">
+	<>
       {!booleffect2 && !ready && !playing  ? (
+    <div className="HomePage main">
 		  <>
           {!User ? (
-			  <div>
-              <button id="login" onClick={() => navigate("/login")}>
-                login
-              </button>
-            </div>
+			  <>
+				<h1 id="loginTitle">Ft_transcendance</h1>
+				<button id="login" onClick={() => navigate("/login")}>
+					login
+				</button>
+            </>
           ) : (
 			<>
 			<div className='blur'>
@@ -325,7 +327,7 @@ useEffect(() => {
 										|&nbsp;&nbsp;{whoWon(User.uuid, game)}
 									</p>
 									<p id="playerScore">
-										|&nbsp;&nbsp;{scoreA[index]} - {scoreB[index]}
+										|&nbsp;&nbsp;{game.scoreA < 0 ? 0 : game.scoreA} - {game.scoreB < 0 ? 0 : game.scoreB}
 									</p>
 									</li>
 								{/* ) : (
@@ -356,8 +358,9 @@ useEffect(() => {
           )}
 		<Popup User={User} />
         </>
+	</div>
       ) : null}
-	  {!booleffect2 && playing && User ? (
+	{!booleffect2 && playing && User ? (
 		<>
 			<NavBar/>
         	<GamePlay
@@ -368,7 +371,7 @@ useEffect(() => {
         	/>
 			</>
       ) : null}
-	</div>
+	</>
   );
 }
 

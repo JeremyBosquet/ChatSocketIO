@@ -30,14 +30,6 @@ function AddRemoveFriend(props : props) {
 	const dispatch = useDispatch();
 	const blockedUsers = useSelector(getBlockList);
 
-	function IsFriend(uuid : string) {
-        const userFriends : any[] = friendList;
-        const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
-        if (!test.length)
-            return true;
-        return false;
-    }
-
 	async function AddOrRemoveFriend(uuid : string) {
 		if (!isFriend)
 		{
@@ -133,6 +125,14 @@ function AddRemoveFriend(props : props) {
 	}
 
 	useEffect(() => {
+		function isFriend(uuid : string) {
+			const userFriends : any[] = friendList;
+			const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
+			if (!test.length)
+				return true;
+			return false;
+		}
+
 		async function isBlocked(user: IuserDb) {
 			let userFinded = blockedUsers.find((userSearch : any) => userSearch.uuid === user.uuid);
 			if (userFinded)
@@ -178,7 +178,7 @@ function AddRemoveFriend(props : props) {
 		// }
 
 
-		IsFriend(props.user.uuid);
+		isFriend(props.user.uuid);
 		isRequest(props.user);
 		isRequested(props.user);
 		isBlocked(props.user);
@@ -187,7 +187,7 @@ function AddRemoveFriend(props : props) {
 	return (
 		<>
 			{ blocked ?
-				null
+					null
 				:
 				<>
 					{ 

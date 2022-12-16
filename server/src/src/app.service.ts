@@ -1,6 +1,6 @@
 import { Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Ifriends, UserModel } from './typeorm/user.entity';
+import { Ifriends, ILogStatus, UserModel } from './typeorm/user.entity';
 import { Repository } from 'typeorm';
 import { Profile } from 'passport-42';
 import { any, array, number } from 'joi';
@@ -23,10 +23,10 @@ export class AppService {
       (users) => users.id === user.id,
     );
     if (findUser[0]) {
-      this.userService.IsLoggedIn(findUser[0].uuid);
-      const payload = { uuid: findUser[0].uuid };
-      const token = this.jwtService.sign(payload, {expiresIn: '2d'});
-      console.log(token);
+		const payload = { uuid: findUser[0].uuid };
+		const token = this.jwtService.sign(payload, {expiresIn: '2d'});
+		console.log(token);
+		this.userService.IsLoggedIn(findUser[0].uuid, token);
 
       return token;
     } 
@@ -48,6 +48,7 @@ export class AppService {
         });
       }
       let newList: Ifriends[] = [];
+	  let isLoggedIn: ILogStatus[] = [];
       // const newFriend : Ifriends = {
       // 	uuid : "prevent_null",
       // };
@@ -63,7 +64,7 @@ export class AppService {
         twoFactorAuthenticationSecret: 'null',
         isTwoFactorAuthenticationEnabled: false,
         isSecondFactorAuthenticated: false,
-        isLoggedIn: true,
+        isLoggedIn: isLoggedIn,
         friendRequest: newList,
         friends: newList,
         blocked: newList,

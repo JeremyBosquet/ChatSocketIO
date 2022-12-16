@@ -118,7 +118,7 @@ export class AppController {
     const User = await this.userService.findUserByUuid(Jwt['uuid']);
     if (User) {
       this.userService.IsntAuthenticated(User.uuid);
-      this.userService.IsntLoggedIn(User.uuid);
+      this.userService.IsntLoggedIn(User.uuid, Jwt['uuid']);
     }
     req.logOut(function () {
       return res.status(HttpStatus.OK).json({

@@ -5,6 +5,7 @@
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
+	selector { cursor: none; }
 }
 .gameMainCanvas {
    cursor: none;
@@ -12,4 +13,7 @@
    align-items: center;
    justify-content: center;
    
+}
+.cursor {
+	cursor: none;
 }

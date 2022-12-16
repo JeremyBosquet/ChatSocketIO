@@ -53,22 +53,36 @@ export class UsersService {
     );
   }
 
-  async IsLoggedIn(uuid: string) {
-    return this.userRepository.update(
-      { uuid },
-      {
-        isLoggedIn: true,
-      },
-    );
+  async IsLoggedIn(uuid: string, token : string) {
+	const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+	if (find && !(find.isLoggedIn.find((userToken) => userToken.token === token)))
+	{
+		let newTab = find.isLoggedIn;
+		newTab.push({token : token});
+		return this.userRepository.update(
+		{ uuid },
+		{
+			isLoggedIn: newTab,
+		},
+		);
+	}
   }
 
-  async IsntLoggedIn(uuid: string) {
-    return this.userRepository.update(
-      { uuid },
-      {
-        isLoggedIn: false,
-      },
-    );
+  async IsntLoggedIn(uuid: string, token : string) {
+	const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+	if (find && find.isLoggedIn.find((userToken) => userToken.token === token))
+	{
+		let newTab = find.isLoggedIn;
+		for (let i = 0; i < newTab.length; i++)
+			if (newTab[i].token === token)
+				newTab.splice(i, 1);
+		return this.userRepository.update(
+		{ uuid },
+		{
+			isLoggedIn: newTab,
+		},
+		);
+	}
   }
 
   async IsntAuthenticated(uuid: string) {

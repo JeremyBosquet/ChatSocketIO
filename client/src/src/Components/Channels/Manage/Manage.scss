@@ -1,6 +1,6 @@
 .manageChannel {
     position: absolute;
-    z-index: 5;
+    z-index: 101;
     top: 0;
     left: 0;
     width: 100%;
@@ -16,6 +16,16 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        max-height: auto;
+        transition-duration: 0.1s;
+
+        transition: max-height 0.25s ease-in;
+
+        .manageForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
         .manageChannelInfos {
             width: 90%;
@@ -53,21 +63,53 @@
             }
         }
 
-        .manageChangePasswordButton {
-            height: 25px;
+        .manageChangePasswordInput, .manageChangePasswordSelect, .manageChangeButton {
+            height: 30px;
+            padding: 5px;
+            margin: 5px;
+            margin-top: 10px;
             border: none;
+            border-bottom: 4px solid #1c1c1c;
             outline: none;
+            transition-duration: .2s;
+            background-color: white;
+            border-radius: 2px;
+            color: #1c1c1c;
 
-            &:nth-child(3) {
-                margin-left: 10px;
+            &:focus, &:active, &:valid {
+                border-bottom: 4px solid #781cc9;
             }
         }
-
+        .manageChangePasswordSelect, .manageChangeButton {
+            height: 44px;
+        }
+        
         .manageChangeButton {
-            margin-top: auto;
-            width: 150px;
-            height: 40px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #2c2c2c;
+            border-bottom: 4px solid #1c1c1c;
+            margin-bottom: 70px;
+            transition-duration: .2s;
+            
+            &:hover {
+                background-color: #781cc9;
+                color: white;
+                border-bottom: 4px solid #781cc9;
+            }
         }
     }
     
+}
+
+@media screen and (max-width: 550px) {
+    .manageChannel {
+        .manageContainer {
+            width: 90%;
+            // height: 90%;
+            .CreateChannelInfos {
+                font-size: 18px;
+            }
+        }
+    }
 }

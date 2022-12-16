@@ -15,6 +15,10 @@ export interface Ifriends {
   uuid: string;
 }
 
+export interface ILogStatus {
+	token: string;
+  }
+
 @Entity({ name: 'users' })
 export class UserModel {
   @PrimaryGeneratedColumn('uuid')
@@ -49,9 +53,9 @@ export class UserModel {
   @Expose()
   public isTwoFactorAuthenticationEnabled: boolean;
 
-  @Column({ default: false })
+  @Column({ nullable: true, type: 'jsonb' })
   @Expose()
-  isLoggedIn: boolean;
+  isLoggedIn: ILogStatus[];
 
   @CreateDateColumn()
   @Exclude()

@@ -39,6 +39,16 @@
 			"username": "jerem",
 			"password": "jerem",
 			"name": "bruh"
+		},
+		{
+			"previewLimit": 50,
+			"server": "90.66.199.176",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "loukoum",
+			"database": "trantran",
+			"username": "jerem",
+			"password": "jerem"
 		}
 	],
 	"files.associations": {

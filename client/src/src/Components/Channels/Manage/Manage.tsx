@@ -85,28 +85,27 @@ function Manage(props: props) {
           <span onClick={handleClose}>X</span>
         </div>
         <div className="manageVisibilityChoice">
-          <form className="ChannelCreateForm" onSubmit={handleChange}>
-            <select className="FormCreateChannelSelect" name="visibility" value={visibility} onChange={changeVisibility}>
+          <form className="manageForm" onSubmit={handleChange}>
+            <select className="manageChangePasswordSelect" name="visibility" value={visibility} onChange={changeVisibility}>
               <option value="public">Public</option>
               <option value="protected">Protected by password</option>
               <option value="private">Private</option>
             </select>
+            
             { 
               props.channel.visibility === "protected" && visibility !== "protected" ? 
               <div>
-                <p>Old password</p>
-                <input className="manageChangePasswordButton" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)}></input>
+                <input className="manageChangePasswordInput" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)} required></input>
               </div>
               : null 
             }
             {
               visibility === "protected" ?
               <div className='manageChangePassword'>
-                <p>Change password</p>
                   { props.channel.visibility === "protected" ? 
-                  <input className="manageChangePasswordButton" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)}></input>
+                  <input className="manageChangePasswordInput" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)} required></input>
                   : null }
-                  <input className="manageChangePasswordButton" name="password" type="text" placeholder='New password' value={password} onChange={e => setPassword(e.target.value)}></input>
+                  <input className="manageChangePasswordInput" name="password" type="text" placeholder='New password' value={password} onChange={e => setPassword(e.target.value)} required></input>
                 </div>
               :
               null

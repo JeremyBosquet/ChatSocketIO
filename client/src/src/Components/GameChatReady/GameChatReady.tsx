@@ -74,14 +74,28 @@ function GameChatReady(props: props) {
   const [configuringDisplay, setConfiguringDisplay] = useState<boolean>(false);
   const [settings, setSettings] = useState<IConfiguration>({difficulty: "easy", background: "background1", confirmed: false});
   const [settingsBis, setSettingsBis] = useState<IConfiguration>({difficulty: "easy", background: "background1", confirmed: false});
-  const [notification, setNotificaton] = useState<Boolean>(false);
+  //const [notification, setNotificaton] = useState<Boolean>(false);
   const socket = useSelector(getSockeGameChat);
+  const [timeouts, setTimeouts] = useState<number>(20);
 
-  useEffect(() => {
     socket?.removeListener("configuring");
     socket?.removeListener("configurationUpdated");
     socket?.removeListener("playerLeave");
-
+    socket?.on("roomDestroyed", (data: any) => {
+      console.log("Room destroyed");
+      createNotification("info", "Un des deux jouers n'a pas confirmé la configuration");
+      socket?.emit("cancelSearching", { tmpUser, room });
+      setSearchingDisplay(false);
+      setSearching(false);
+      setTmpUserBoolean(false);
+      setConfiguringDisplay(false);
+      setSettings({difficulty: "easy", background: "background1", confirmed: false});
+      props.quitGame();
+    });
+    socket?.on("roomTimeout", (data: any) => {
+      console.log("Timeout", data.time);
+      setTimeouts(data.time);
+    });
     socket?.on("configuring", (data: IRoom) => {
       console.log("receive configuring", data);
       setSearchingDisplay(false);
@@ -103,7 +117,7 @@ function GameChatReady(props: props) {
     socket?.on("playerLeave", () => {
       console.log("receive cancelSearching");
       createNotification("info", "L'autre connard a leave 1");
-      setNotificaton(true);
+      //setNotificaton(true);
       setSearchingDisplay(true);
       setSearching(true);
       setTmpUserBoolean(true);
@@ -111,15 +125,6 @@ function GameChatReady(props: props) {
       setSettings({difficulty: "easy", background: "background1", confirmed: false});
       props.quitGame();
     });
-  }, [
-    notification,
-    tmpUser,
-    tmpUserBoolean,
-    searching,
-    searchingDisplay,
-    configuringDisplay,
-    socket,
-  ]);
   // }
   //}, [propsOn, socket, User, searchingDisplay, configuringDisplay, searching, tmpUserBoolean, settingsBis, settings, room, tmpUser, error, success]);
 
@@ -145,7 +150,7 @@ function GameChatReady(props: props) {
       setSearching(true);
       props.setPlayerId(messages.data.User.uuid);
       props.setPlayerName(messages.data.User.username);
-      setNotificaton(false);
+      //setNotificaton(false);
       setSearchingDisplay(false);
       setConfiguringDisplay(true);
     }

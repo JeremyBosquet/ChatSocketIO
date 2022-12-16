@@ -43,8 +43,8 @@ function Messages(props : props) {
 
   return (
     <div id="messages" className='messages' ref={messageEl}>
-      {props.messages.map((message : Imessage) => (
-        <ChatMessage key={Math.random()} message={message} users={usersChannel} userId={props.userId} setUsers={setUsersChannel}/>
+      {props.messages.map((message : Imessage, index) => (
+        <ChatMessage key={index} message={message} users={usersChannel} userId={props.userId} setUsers={setUsersChannel}/>
       ))}
     </div>
   );

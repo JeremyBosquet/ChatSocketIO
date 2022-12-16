@@ -150,7 +150,7 @@ export class RoomService {
     return await this.roomRepository.save(room);
   }
   async getGameOfUser(uuid: string): Promise<Room[]> {
-    console.log('getGameOfUser', uuid);
+    //console.log('getGameOfUser', uuid);
     const tab: Room[] = [];
     const info = (await this.roomRepository.find()).filter(
       (room) =>
@@ -160,6 +160,8 @@ export class RoomService {
         (room.playerB !== null && room.playerB.id === uuid && room.status == 'finished'),
     );
     for (let i = 0; i < info.length; i++) {
+      if (info[i].playerA?.id && info[i].playerB.id)
+      {
       const findA = await this.userService.findUserByUuid(info[i].playerA.id);
       if (findA)
         info[i].playerA.name = findA.username;
@@ -171,6 +173,7 @@ export class RoomService {
           excludeExtraneousValues: true,
         }),
       );
+    }
     }
 	// return tab sorted from bigger tab.LastActivity to smaller tab.LastActivity
 	return tab.sort((a, b) => b.lastActivity - a.lastActivity);

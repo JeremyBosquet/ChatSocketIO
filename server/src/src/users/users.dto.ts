@@ -69,3 +69,9 @@ export class ExpDto {
 	@Expose()
 	exp: number;
   }
+
+  export class TokenDto {
+	@IsNotEmpty()
+	@Expose()
+	token: string;
+  }

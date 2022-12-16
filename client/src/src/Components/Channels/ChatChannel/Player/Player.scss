@@ -5,7 +5,7 @@
     align-items: center;
     text-align: center;
     width: auto;
-    background-color: #454ADE;
+    background-color: #181818;
     border-bottom: 1px solid black;
     color: white;
     font-size: 20px;
@@ -50,20 +50,35 @@
         }
     }
 
-    .playerActions {        
+    .playerActions {  
         .actionButton {
-            cursor: pointer;
-            display: block;
-            width: 150px;
-            border: none;
-            background-color: #454ADE;
-            color: white;
+            // cursor: pointer;
+            // display: block;
+            // width: 150px;
+            // border: none;
+            // background-color: #454ADE;
+            // color: white;
             font-size: 20px;
+            // padding: 10px 0px;
+            text-decoration: none;
+            margin: 0;
+            padding: 10px 0px;
+            background-color: #2B2B2B;
+            border: 1px solid #666666;
+            border-top: none;
+            color: #b3b2b2;
+            transition-duration: 0.2s;
             padding: 10px;
+            cursor: pointer;
+
+            &:nth-child(2) {
+                border-top: 1px solid #666666;
+            }
 
             &:hover {
                 transition-duration: 0.2s;
-                background-color: #2d41da;
+                background-color: #1F1F1F;
+                color: #b3b2b2;
             }
         }
     }
@@ -76,6 +91,7 @@
     width: 15px;
     height: 15px;
     transform: translateY(3px);
+    margin-right: 5px;
 }
 
 
@@ -86,4 +102,5 @@
     width: 15px;
     height: 15px;
     transform: translateY(3px);
+    margin-right: 5px;
 }

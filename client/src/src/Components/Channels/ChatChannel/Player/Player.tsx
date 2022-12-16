@@ -1,7 +1,7 @@
 import { Menu, MenuButton } from "@szhsin/react-menu";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getUser } from "../../../../Redux/authSlice";
+import { getBlockList, getUser } from "../../../../Redux/authSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
 import Admin from "./Admin/Admin";
 import Ban from "./Ban/Ban";
@@ -12,6 +12,9 @@ import Mute from "./Mute/Mute";
 import React from 'react';
 import './Player.scss';
 import { getSockeGameChat } from "../../../../Redux/gameSlice";
+import { Link } from "react-router-dom";
+import Block from "./Block/Block";
+import AddRemoveFriend from "./AddRemoveFriend/AddRemoveFriend";
 
 interface IInvites {
   requestFrom: string;
@@ -72,7 +75,7 @@ function Player(props : props) {
         {connected ? <span className="connected"></span> : <span className="disconnected"></span>}
         <p style={{maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis"}}>{props.user?.username}</p>
       </div>
-      <button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button>
+      {/* <button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button> */}
       {
         me?.uuid !== props.user?.uuid && hasInvited(props.user?.uuid) ?
           <button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button>
@@ -81,7 +84,11 @@ function Player(props : props) {
       }
       {
         props.user?.uuid === me.uuid ? null :
-        <Menu className="playerActions" menuButton={<MenuButton>⁝</MenuButton>}> 
+        <Menu 
+          viewScroll="close"
+          className="playerActions" 
+          menuButton={<MenuButton>⁝</MenuButton>}
+        > 
               {(me.role === "admin" && 
                 props.user.role !== 'admin' && 
                 props.user.role !== 'owner') ?
@@ -100,10 +107,12 @@ function Player(props : props) {
                 : null
               }
               <DM user={props.user}/>
-              <InviteGame user={props.user}/>
-              <button className="actionButton">Profile</button>
-              <button className="actionButton">Block</button>
-              <button className="actionButton">Add friend</button>
+              { connected ? <InviteGame user={props.user}/> : null }
+              <Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
+              {/* <button className="actionButton">Profile</button> */}
+              <Block user={props.user}/>
+              <AddRemoveFriend user={props.user}/>
+              {/* <button className="actionButton">Add friend</button> */}
             </Menu>
       }
     </div>

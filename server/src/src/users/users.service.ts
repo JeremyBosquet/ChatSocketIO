@@ -7,6 +7,7 @@ import { any, number } from 'joi';
 import { JwtService } from '@nestjs/jwt';
 import { plainToClass } from 'class-transformer';
 import { User } from 'src/login/user.decorator';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -55,10 +56,21 @@ export class UsersService {
 
   async IsLoggedIn(uuid: string, token : string) {
 	const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
-	if (find && !(find.isLoggedIn.find((userToken) => userToken.token === token)))
+	if (find && find.isLoggedIn)
 	{
+		for (let i = 0; i < find.isLoggedIn.length; i++)
+		{
+			const date = new Date(find.isLoggedIn[i].CreatedAt);
+			date.setDate(date.getDate() + 2);
+			if (date < new Date())
+				find.isLoggedIn.splice(i, 1);
+			else
+				if (await bcrypt.compare(find.isLoggedIn[i].token, token))
+					return;
+		}			
 		let newTab = find.isLoggedIn;
-		newTab.push({token : token});
+		const hashed = await bcrypt.hash(token, 10);
+		newTab.push({token : hashed, CreatedAt : new Date()});
 		return this.userRepository.update(
 		{ uuid },
 		{
@@ -70,11 +82,11 @@ export class UsersService {
 
   async IsntLoggedIn(uuid: string, token : string) {
 	const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
-	if (find && find.isLoggedIn.find((userToken) => userToken.token === token))
+	if (find && find.isLoggedIn)
 	{
 		let newTab = find.isLoggedIn;
 		for (let i = 0; i < newTab.length; i++)
-			if (newTab[i].token === token)
+			if (await bcrypt.compare(token, find.isLoggedIn[i].token))
 				newTab.splice(i, 1);
 		return this.userRepository.update(
 		{ uuid },
@@ -639,7 +651,7 @@ export class UsersService {
   }
 
   async findUserByUsername(username: string, Useruuid : string) {
-	const find = (await this.userRepository.find()).filter((user) => user.username === username)[0];
+	const find = (await this.userRepository.find()).filter((user) => user.trueUsername === username)[0];
 	if (find)
 	{
 		for (let i = 0; i < find.blocked.length; i++)

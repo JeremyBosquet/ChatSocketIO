@@ -32,7 +32,6 @@ function NavBar(props: any) {
   const [settingsOpened, setSettingsOpened] = useState<boolean>(false);
 
   const [User, setUser] = useState<any>();
-  const [IsLoggedIn, setLogged] = useState<boolean>();
   const [IsTwoAuthActivated, setActivated] = useState<boolean>();
   const [IsTwoAuthConnected, setConnected] = useState<boolean>();
   const [friendRequest, setFriendRequest] = useState<number>();
@@ -49,13 +48,11 @@ function NavBar(props: any) {
           },
         })
         .then((res) => {
-          setLogged(res.data.IsLoggedIn);
           setActivated(res.data.isTwoFactorAuthenticationEnabled);
           setConnected(res.data.isSecondFactorAuthenticated);
         })
         .catch((err) => {
           console.log(err.message);
-          setLogged(false);
         });
       await axios
         .get(`http://90.66.199.176:7000/user/ListFriendRequest`, {

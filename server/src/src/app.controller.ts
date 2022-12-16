@@ -95,11 +95,14 @@ export class AppController {
     //console.log(user);
 
     if (user)
+	{
+	console.log(this.userRepository.find());
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
         token: await this.appService.logIn(user),
         message: 'succes',
       });
+	}
     return res
       .status(HttpStatus.FORBIDDEN)
       .json({
@@ -118,7 +121,7 @@ export class AppController {
     const User = await this.userService.findUserByUuid(Jwt['uuid']);
     if (User) {
       this.userService.IsntAuthenticated(User.uuid);
-      this.userService.IsntLoggedIn(User.uuid, Jwt['uuid']);
+      this.userService.IsntLoggedIn(User.uuid, req.headers.authorization.split(' ')[1]);
     }
     req.logOut(function () {
       return res.status(HttpStatus.OK).json({

@@ -13,14 +13,7 @@ function GetToken() {
   const booleffect2 = useRef<boolean>(true);
   const firstrender = useRef<boolean>(true);
 
-  // const IsLoggedIn = useSelector(getLogged);
-  // const IsTwoAuthConnected = useSelector(getConnected);
-  // const IsTwoAuthActivated = useSelector(getActivated);
-  // const User = useSelector(getUser);
-  // const dispatch = useDispatch();
-
   const [User, setUser] = useState<any>();
-  const [IsLoggedIn, setLogged] = useState<boolean>();
   const [IsTwoAuthActivated, setActivated] = useState<boolean>(false);
   const [IsTwoAuthConnected, setConnected] = useState<boolean>();
 
@@ -33,7 +26,6 @@ function GetToken() {
           },
         })
         .then((res) => {
-          setLogged(res.data.IsLoggedIn);
           setActivated(res.data.isTwoFactorAuthenticationEnabled);
           setConnected(res.data.isSecondFactorAuthenticated);
         })

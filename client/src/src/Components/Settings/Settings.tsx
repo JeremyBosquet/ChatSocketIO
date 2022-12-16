@@ -36,7 +36,6 @@ function Settings() {
   const [booleffect2, setbooleffect2] = useState<boolean>(true);
 
   const [User, setUser] = useState<any>();
-  const [IsLoggedIn, setLogged] = useState<boolean>();
   const [IsTwoAuthActivated, setActivated] = useState<boolean>();
   const [IsTwoAuthConnected, setConnected] = useState<boolean>();
 
@@ -51,7 +50,6 @@ function Settings() {
           },
         })
         .then((res) => {
-          setLogged(res.data.IsLoggedIn);
           setActivated(res.data.isTwoFactorAuthenticationEnabled);
           setConnected(res.data.isSecondFactorAuthenticated);
 

@@ -58,19 +58,6 @@ function Social() {
 	
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem('token')) {
-			await axios.get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
-				headers: ({
-					Authorization: 'Bearer ' + token,
-				})
-			}).then((res) => {
-
-				// setLogged(res.data.IsLoggedIn);
-				// setActivated(res.data.isTwoFactorAuthenticationEnabled);
-				// setConnected(res.data.isSecondFactorAuthenticated);
-			}).catch((err) => {
-				console.log(err.message);
-				setUser(undefined);
-			});
 			await axios.get(`http://90.66.199.176:7000/user`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,

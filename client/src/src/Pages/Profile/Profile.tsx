@@ -24,11 +24,6 @@ function Profile() {
   const [booleffect2, setbooleffect2] = useState<boolean>(true);
   const firstrender = useRef<boolean>(true);
 
-  // const IsTwoAuthConnected = useSelector(getConnected);
-  // const IsTwoAuthActivated = useSelector(getActivated);
-  // const IsLoggedIn = useSelector(getLogged);
-  // const User = useSelector(getUser);
-  // const dispatch = useDispatch();
 
   const [userProfile, setUserProfile] = useState<any>();
   const [historyList, SetHistoryList] = useState<any[]>([]);
@@ -86,17 +81,6 @@ function Profile() {
 			getExpProfile(userProfile.uuid, setProfileExp);
 	}, [userProfile]);
 
-  	useEffect(() => {
-		if (booleffect3.current)
-			return;
-		if (userProfile && historyList.length)
-		{
-			historyList.map((game, index) => {
-				modifyScores(userProfile.uuid, game, setScoreA, setScoreB, scoreA, scoreB, index, index==(historyList.length-1) ? true : false)
-			});
-			booleffect3.current = true;
-		}
-	}, [historyList, userProfile]);
 
   return (
     <div className="profilePage">
@@ -133,7 +117,7 @@ function Profile() {
 										|&nbsp;&nbsp;{whoWon(userProfile.uuid, game)}
 									</p>
 									<p id="playerScore">
-										|&nbsp;&nbsp;{scoreA[index]} - {scoreB[index]}
+									|&nbsp;&nbsp;{game.scoreA < 0 ? -game.scoreA : game.scoreA} - {game.scoreB < 0 ? -game.scoreB : game.scoreB}
 									</p>
 									</li>
 								</ul>

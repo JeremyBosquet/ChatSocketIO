@@ -192,7 +192,13 @@ function ChatChannel(props: props) {
         <div className='playersTitle'>
           <p>Players</p>
         </div>
-        <div className='messages'>
+        <div className='players'>
+        <Player key={Math.random()} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers} invites={props.invites}/>
+        <Player key={Math.random()} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers} invites={props.invites}/>
+          <Player key={Math.random()} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers} invites={props.invites}/>
+          <Player key={Math.random()} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers} invites={props.invites}/>
+          <Player key={Math.random()} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers} invites={props.invites}/>
+          <Player key={Math.random()} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers} invites={props.invites}/>
           {users?.map((user : any) => ( 
             user.print === undefined && user.print !== false ?
               <Player key={user.uuid} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} mutedUsers={mutedUsers} invites={props.invites}/>

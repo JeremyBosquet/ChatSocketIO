@@ -16,7 +16,7 @@ import {
   UploadedFile,
   UnsupportedMediaTypeException,
 } from '@nestjs/common';
-import { ExpDto, FriendsDto, SearchDto, SendUserDto } from './users.dto';
+import { ExpDto, FriendsDto, SearchDto, SendUserDto, TokenDto } from './users.dto';
 import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
 import { JwtAuthGuard } from 'src/login/guards/jwt-auth.guard';
@@ -25,6 +25,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { JwtTwoFactorGuard } from 'src/2auth/jwt-two-factor.guard';
 import { plainToClass } from 'class-transformer';
+import * as bcrypt from 'bcrypt';
 
 let nameAvatar: string;
 @Controller('user')
@@ -127,6 +128,34 @@ export class UsersController {
 		isTwoFactorAuthenticationEnabled: User.isTwoFactorAuthenticationEnabled,
 		isSecondFactorAuthenticated: User.isSecondFactorAuthenticated,
 	  });
+	}
+	return res.status(HttpStatus.NOT_FOUND).json({
+	  statusCode: HttpStatus.NOT_FOUND,
+	  message: 'User not found',
+	  error: 'NOT_FOUND',
+	});
+  }
+
+  @Get('CompareToken')
+  @UseGuards(JwtAuthGuard)
+  async CompareToken(@Req() req: any, @Res() res: any) {
+	const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
+	const User = await this.userService.findUserByUuid(Jwt['uuid']);
+	if (User) {
+		for (let i = 0; i < User.isLoggedIn.length; i++)
+		{
+			if (await bcrypt.compare(req.headers.authorization.split(' ')[1], User.isLoggedIn[i].token)) {
+				return res.status(HttpStatus.OK).json({
+				statusCode: HttpStatus.OK,
+				message: 'succes'});
+			}
+		}
+		return res.status(HttpStatus.FORBIDDEN).json({
+			statusCode: HttpStatus.FORBIDDEN,
+			message: 'Token invalid',
+			error: 'FORBIDDEN',
+		});
+
 	}
 	return res.status(HttpStatus.NOT_FOUND).json({
 	  statusCode: HttpStatus.NOT_FOUND,

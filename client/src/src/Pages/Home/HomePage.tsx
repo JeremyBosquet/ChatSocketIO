@@ -89,7 +89,7 @@ function HomePage() {
 	const [playerId, setPlayerId] = useState<string>("");
 	const [playerName, setPlayerName] = useState<string>("");
 	const [room, setRoom] = useState<IRoom>();
-	const [notification, setNotificaton] = useState<Boolean>(false);
+	//const [notification, setNotificaton] = useState<Boolean>(false);
 	const [display, setDisplay] = useState<boolean>(true);
 
 
@@ -113,7 +113,6 @@ function HomePage() {
 		socketGame?.emit("searching");
 	}, [socketGame]);
 
-	const [timeouts, setTimeouts] = useState<Number>(30);
 	socketGame?.removeListener("errorRoomIsFull");
 	socketGame?.removeListener("playerReady");
 	socketGame?.removeListener("gameStart");
@@ -128,22 +127,6 @@ function HomePage() {
 		//Spectator here
 	});
 
-	socketGame?.removeListener("roomDestroyed");
-	socketGame?.on("roomDestroyed", (data: any) => {
-		console.log("Room destroyed");
-		setNotificaton(true);
-		setDisplay(true);
-		setRoom(undefined);
-		setPlaying(false);
-		setReady(false);
-		setPlayerId("");
-		setPlayerName(""); // A voir
-	});
-	socketGame?.removeListener("roomTimeout");
-	socketGame?.on("roomTimeout", (data: any) => {
-		console.log("Timeout", data.timeouts);
-		setTimeouts(data.timeouts);
-	});
 	socketGame?.on("playerReady", (data: IRoom) => {
 		if (ready) {
 			setRoom(data);
@@ -155,14 +138,13 @@ function HomePage() {
 		setRoom(data);
 		setPlaying(true);
 		setReady(false);
-		setNotificaton(false);
+		//setNotificaton(false);
 		setDisplay(false);
 	});
 	socketGame?.on("playerDisconnected", (data: IRoom) => {
 		if (ready) {
-			if (!notification)
 				createNotification("info", "L'autre connard a leave 2");
-			setNotificaton(true);
+			//setNotificaton(true);
 
 			console.log("aPlayerDisconnected : ", data);
 			if (playing) {
@@ -172,11 +154,11 @@ function HomePage() {
 	});
 	socketGame?.on("gameEnd", (data: IRoom) => {
 		console.log("gameEnd", data);
-		if (data.scoreA === 10 && !notification)
+		if (data.scoreA === 10)
 			createNotification("success", "PlayerA a gagner");
-		else if (data.scoreB === 10 && !notification)
+		else if (data.scoreB === 10)
 			createNotification("success", "PlayerB a gagner");
-		setNotificaton(true);
+		//setNotificaton(true);
 		setDisplay(true);
 		setRoom(data);
 		setPlaying(false);
@@ -187,9 +169,8 @@ function HomePage() {
 			"gameForceEnd donc erreur 'sorry l'autre connard a crash'",
 			data
 		);
-		if (!notification)
 			createNotification("info", "L'autre connard a leave 3");
-		setNotificaton(true);
+		//setNotificaton(true);
 		setRoom(data);
 		setPlaying(false);
 		setDisplay(true);
@@ -197,8 +178,8 @@ function HomePage() {
 		setReady(false);
 	});
 	socketGame?.on("roomUpdated", (data: IRoom) => {
-		console.log("roomUpdated", data);
-		setRoom(data);
+		if (room) // update scoreA and scoreB only
+			setRoom({...room, scoreA: data.scoreA, scoreB: data.scoreB});
 	});
 
 	useEffect(() => {
@@ -328,7 +309,7 @@ function HomePage() {
 																				|&nbsp;&nbsp;{whoWon(User.uuid, game)}
 																			</p>
 																			<p id="playerScore">
-																				|&nbsp;&nbsp;{game.scoreA < 0 ? 0 : game.scoreA} - {game.scoreB < 0 ? 0 : game.scoreB}
+																				|&nbsp;&nbsp;{game.scoreA < 0 ? -game.scoreA : game.scoreA} - {game.scoreB < 0 ? -game.scoreB : game.scoreB}
 																			</p>
 																		</li>
 																		{/* ) : (
@@ -364,7 +345,6 @@ function HomePage() {
 			{!booleffect2 && playing && User ? (
 				<>
 					<NavBar />
-					{timeouts}
 					<GamePlay
 						playerName={playerName}
 						playerId={playerId}

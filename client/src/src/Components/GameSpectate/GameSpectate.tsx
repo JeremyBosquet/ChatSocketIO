@@ -136,7 +136,7 @@ function GameSpectate(props: props) {
     percentY: 50,
     ref: React.createRef<Konva.Rect>(),
   });
-  //const [notification, setNotificaton] = useState<Boolean>(false);
+  ////const [notification, setNotificaton] = useState<Boolean>(false);
 
   function handleResize() {
     setWindowsWidth(window.innerWidth / 1.2);

@@ -73,41 +73,50 @@ function GameReady(props: props) {
   const [configuringDisplay, setConfiguringDisplay] = useState<boolean>(false);
   const [settings, setSettings] = useState<IConfiguration>({difficulty: "easy", background: "background1", confirmed: false});
   const [settingsBis, setSettingsBis] = useState<IConfiguration>({difficulty: "easy", background: "background1", confirmed: false});
-  const [notification, setNotificaton] = useState<Boolean>(false);
+  //const [notification, setNotificaton] = useState<Boolean>(false);
   const socket = useSelector(getSockeGame);
+
 
   // const [propsOn, setPropsOn] = useState<boolean>(false);
   useEffect(() => {
     if (searching && !tmpUserBoolean) {
       setTmpUserBoolean(true);
-      console.log("hey");
-      console.log("say searching", tmpUser);
       socket?.on("searching-" + tmpUser.id, (data: IRoom) => {
-        console.log("receive searching", data);
         setSearchingDisplay(true);
-
-        setNotificaton(false);
+        //setNotificaton(false);
         setRoom(data);
       });
       socket?.emit("searching", tmpUser);
       console.log("emit searching", socket);
     }
   }, [searching, tmpUser, tmpUserBoolean, socket]);
-  //useEffect(() => {
-  //if (!propsOn) {
-  //  console.log("propsOn");
-  //setPropsOn(true);
-  useEffect(() => {
+    const [timeouts, setTimeouts] = useState<number>(20);
     socket?.removeListener("configuring");
     socket?.removeListener("configurationUpdated");
     socket?.removeListener("playerLeave");
+    socket?.removeListener("roomDestroyed");
+    socket?.removeListener("roomTimeout");
 
     socket?.on("configuring", (data: IRoom) => {
       console.log("receive configuring", data);
       setSearchingDisplay(false);
       setConfiguringDisplay(true);
     });
-
+    socket?.on("roomDestroyed", (data: any) => {
+      console.log("Room destroyed");
+      createNotification("info", "Un des deux jouers n'a pas confirmé la configuration");
+      socket?.emit("cancelSearching", { tmpUser, room });
+      setSearchingDisplay(false);
+      setSearching(false);
+      setTmpUserBoolean(false);
+      setConfiguringDisplay(false);
+      setSettings({difficulty: "easy", background: "background1", confirmed: false});
+      props.setDisplay(true);
+    });
+    socket?.on("roomTimeout", (data: any) => {
+      console.log("Timeout", data.time);
+      setTimeouts(data.time);
+    });
     socket?.on("configurationUpdated", (data: IRoom) => {
       console.log(
         "receive configurationUpdated",
@@ -124,22 +133,13 @@ function GameReady(props: props) {
     socket?.on("playerLeave", () => {
       console.log("receive cancelSearching");
       createNotification("info", "L'autre connard a leave 1");
-      setNotificaton(true);
+      //setNotificaton(true);
       setSearchingDisplay(true);
       setSearching(true);
       setTmpUserBoolean(true);
       setConfiguringDisplay(false);
       setSettings({difficulty: "easy", background: "background1", confirmed: false});
     });
-  }, [
-    notification,
-    tmpUser,
-    tmpUserBoolean,
-    searching,
-    searchingDisplay,
-    configuringDisplay,
-    socket,
-  ]);
   // }
   //}, [propsOn, socket, User, searchingDisplay, configuringDisplay, searching, tmpUserBoolean, settingsBis, settings, room, tmpUser, error, success]);
 
@@ -171,7 +171,7 @@ function GameReady(props: props) {
     console.log("hey", socket);
     props.setPlayerId(tmpUser.id);
     props.setPlayerName(tmpUser.name);
-    setNotificaton(false);
+    //setNotificaton(false);
     setSearching(true);
     props.setDisplay(false);
   }
@@ -216,8 +216,10 @@ function GameReady(props: props) {
       ) : null}
       {configuringDisplay ? (
         <div>
+        
           <div className="game-config">
             <p>Configuring the game...</p>
+            <p>{timeouts}</p>
             <div className="ChannelRoomFormInput-Difficulty">
               <label htmlFor="Difficulty">Difficulty </label>
               <select

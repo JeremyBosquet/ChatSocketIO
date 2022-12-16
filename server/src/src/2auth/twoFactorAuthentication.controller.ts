@@ -35,11 +35,7 @@ export class TwoFactorAuthenticationController {
     const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
     const User = await this.userService.findUserByUuid(Jwt['uuid']);
     if (User) {
-      const { otpauthUrl } =
-        await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(
-          User.uuid,
-          User.trueUsername,
-        );
+      const { otpauthUrl } = await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(User.uuid, User.trueUsername);
       return this.twoFactorAuthenticationService.pipeQrCodeStream(
         res,
         otpauthUrl,

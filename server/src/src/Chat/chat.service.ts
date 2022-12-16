@@ -116,6 +116,7 @@ export class ChatService {
           let userInfos : any = {
             uuid: user.uuid,
             username: user.username,
+            trueUsername: user.trueUsername,
             image: user.image
           };
 

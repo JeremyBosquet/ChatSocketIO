@@ -13,9 +13,13 @@ export async function getExp(uuid : string, setProfileExp : any)
 		{
 			setProfileExp(res.data.Exp);
 			let elem = document.getElementsByClassName('exp');
-			let cut = res.data.Exp;
+			let cut : number;
+			if (res.data.Exp.length == 4)
+				cut = res.data.Exp.slice(2);
+			else
+				cut = res.data.Exp.slice(3);
 			for (let i = 0; elem[i]; i++) {
-				(elem[i] as HTMLElement).style.setProperty('--expAmount', cut.slice(2) + '%');
+				(elem[i] as HTMLElement).style.setProperty('--expAmount', cut.toString() + '%');
 			}
 		}
 	})
@@ -41,7 +45,11 @@ export async function getExpProfile(uuid : string, setProfileExp : any)
 		{
 			setProfileExp(res.data.Exp);
 			let elem = document.getElementsByClassName('Exp');
-			let cut : number = res.data.Exp.slice(2);
+			let cut : number;
+			if (res.data.Exp.length == 4)
+				cut = res.data.Exp.slice(2);
+			else
+				cut = res.data.Exp.slice(3);
 			cut *= 0.8;
 			for (let i = 0; elem[i]; i++) {
 				(elem[i] as HTMLElement).style.setProperty('--expAmount', cut.toString() + '%');
@@ -70,9 +78,13 @@ export async function getMyExp(uuid : string, setProfileExp : any, setUser : any
 		{
 			setProfileExp(res.data.Exp);
 			let elem = document.getElementsByClassName('myExp');
-			let cut = res.data.Exp;
+			let cut : number;
+			if (res.data.Exp.length == 4)
+				cut = res.data.Exp.slice(2);
+			else
+				cut = res.data.Exp.slice(3);
 			for (let i = 0; elem[i]; i++) {
-				(elem[i] as HTMLElement).style.setProperty('--expAmount', cut.slice(2) + '%');
+				(elem[i] as HTMLElement).style.setProperty('--expAmount', cut.toString() + '%');
 			}
 		}
 	})

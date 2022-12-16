@@ -20,14 +20,7 @@ function TwoAuth() {
   const booleffect2 = useRef<boolean>(true);
   const firstrender = useRef<boolean>(true);
 
-  // const IsTwoAuthConnected = useSelector(getConnected);
-  // const IsTwoAuthActivated = useSelector(getActivated);
-  // const IsLoggedIn = useSelector(getLogged);
-  // const User = useSelector(getUser);
-  // const dispatch = useDispatch();
-
   const [User, setUser] = useState<any>();
-  const [IsLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [IsTwoAuthActivated, setActivated] = useState<boolean>(false);
   const [IsTwoAuthConnected, setConnected] = useState<boolean>(false);
 
@@ -40,7 +33,6 @@ function TwoAuth() {
           },
         })
         .then((res) => {
-          setIsLoggedIn(res.data.IsLoggedIn);
           setActivated(res.data.isTwoFactorAuthenticationEnabled);
           setConnected(res.data.isSecondFactorAuthenticated);
         })
@@ -56,9 +48,8 @@ function TwoAuth() {
   }
 
   function setOfPrint() {
-    console.log("wtf : " + IsLoggedIn);
     console.log(IsTwoAuthActivated);
-    if (IsLoggedIn && IsTwoAuthActivated) setPrint(true);
+    if (IsTwoAuthActivated) setPrint(true);
     else setPrint(false);
   }
 
@@ -109,7 +100,7 @@ function TwoAuth() {
       return;
     }
     if (!booleffect2.current) setOfPrint();
-  }, [IsTwoAuthActivated, IsLoggedIn]);
+  }, [IsTwoAuthActivated]);
   return (
     <div>
       {print ? (

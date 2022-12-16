@@ -73,13 +73,14 @@ export class RoomGateway {
       
       if (room && room?.status == 'configuring') {
         if (room.lastActivity < Date.now() - 20000) {
+          console.log('room ' + room.id + ' destroyed');
           await this.roomService.updateRoom(room.id, {status: 'destroy'});
-          this.server.in(room.id).emit('roomDestroyed', room.id);
+          this.server.in('room-' + room.id).emit('roomDestroyed', room.id);
         }
         //send time to players if the time have taken more than 1 second
         if (Date.now() - lastTime > 1000) {
           lastTime = Date.now();
-          this.server.in('room-' + room.id).emit('roomTimeout', {timeouts : Date.now() - room.lastActivity + 20000});
+          this.server.in('room-' + room.id).emit('roomTimeout', {time: Math.floor((room.lastActivity - Date.now() + 20000) / 1000)});
         }
       }
       else if (room && room?.status == 'playing' && room?.settings) {
@@ -94,12 +95,12 @@ export class RoomGateway {
           }
           if (room.scoreA >= 1000 || room.scoreB >= 1000) {
             room.status = 'finished';
-            if (room.scoreA >= 1) {
+            if (room.scoreA >= 10) {
               console.log("je donne ton ptn d'xp");
               this.usersService.addExp(room.playerA.id, 0.42);
               this.usersService.addExp(room.playerB.id, 0.15);
             }
-            else if (room.scoreB >= 1) {
+            else if (room.scoreB >= 10) {
               console.log("je donne ton ptn d'xp");
               this.usersService.addExp(room.playerB.id, 0.42);
               this.usersService.addExp(room.playerA.id, 0.15);
@@ -121,6 +122,7 @@ export class RoomGateway {
           room.ball.speed = room.settings.defaultSpeed;
           this.roomService.updateRoom(room.id, { ball: room.ball });
           this.server.in('room-' + room.id).emit('ballMovement', room);
+          console.log('playerA.id: ' + room.playerA.id + ' - playerB.id: ' + room.playerB.id);
           this.server.in('room-' + room.id).emit('roomUpdated', room);
         } else {
           const playerA = room.playerA;
@@ -425,6 +427,7 @@ export class RoomGateway {
           _tmp.status = 'finished';
           this.usersService.addExp(room.playerA.id, 0.42);
           await this.roomService.save(_tmp);
+          await this.roomService.updateRoom(room.id, {status: 'destroy'});
         }
         else if (room?.playerA?.id == client.data.playerId && room.status == 'playing')
         {
@@ -449,6 +452,7 @@ export class RoomGateway {
           _tmp.scoreA = -1;
           _tmp.status = 'finished';
           await this.roomService.save(_tmp);
+          await this.roomService.updateRoom(room.id, {status: 'destroy'});
         }
         if (room?.playerA?.id == client.data.playerId) room.playerA = null;
         else if (room?.playerB?.id == client.data.playerId) room.playerB = null;
@@ -483,6 +487,7 @@ export class RoomGateway {
         this.server.to('room-' + room.id).emit('playerDisconnected', room);
         if (room.status == 'playing') {
           this.server.emit('roomFinished', room);
+          room.status = 'destroy'
           this.server.to('room-' + room.id).emit('gameForceEnd', room);
           if (intervalList[room.id]) clearInterval(intervalList[room.id]);
           roomList[room.id] = null;
@@ -500,8 +505,12 @@ export class RoomGateway {
           roomList[room.id] = null;
           this.roomService.save(room); // remove that
           if (room.nbPlayers == 0) 
+          {
             await this.roomService.updateRoom(room.id, {status: 'destroy'});
+            room.status = 'destroy'
+          }
         }
+        await this.roomService.save(room);
       }
     }
   }

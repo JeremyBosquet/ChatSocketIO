@@ -16,6 +16,7 @@ export class ChatController {
             data = {
                 uuid: param.id,
                 username: "User deleted",
+                trueUsername: "unknow",
                 image: ""
             }
         } else
@@ -23,6 +24,7 @@ export class ChatController {
             data = {
                 uuid: user.uuid,
                 username: user.username,
+                trueUsername: user.trueUsername,
                 image: user.image,
             }
         }

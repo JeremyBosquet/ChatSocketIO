@@ -8,6 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import { randomInt } from 'crypto';
 import { UsersService } from './users/users.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AppService {
@@ -25,10 +26,11 @@ export class AppService {
     if (findUser[0]) {
 		const payload = { uuid: findUser[0].uuid };
 		const token = this.jwtService.sign(payload, {expiresIn: '2d'});
-		console.log(token);
+		console.log("moi :" + findUser[0].uuid)
+		console.log("token" + token);
 		this.userService.IsLoggedIn(findUser[0].uuid, token);
 
-      return token;
+      	return token;
     } 
 	else {
 		let userLogin = user.login;
@@ -49,10 +51,6 @@ export class AppService {
       }
       let newList: Ifriends[] = [];
 	  let isLoggedIn: ILogStatus[] = [];
-      // const newFriend : Ifriends = {
-      // 	uuid : "prevent_null",
-      // };
-      //newList.push(newFriend);
       const newUuid: string = uuidv4();
       const form: UserModel = {
         createdAt: new Date(Date.now()),
@@ -77,6 +75,7 @@ export class AppService {
       const payload = { uuid: newUuid };
       const token = this.jwtService.sign(payload , {expiresIn: '2d'});
       console.log(token);
+	  this.userService.IsLoggedIn(findUser[0].uuid, token);
       return token;
     }
   }

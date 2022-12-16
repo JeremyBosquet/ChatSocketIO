@@ -215,7 +215,8 @@ function GamePlay(props: props) {
   useEventListener("mousemove", mousemove);
   function handleResize() {
     setWindowsWidth(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
-    setWindowsHeight(window.innerHeight > maxHeight + 200 ? maxHeight : window.innerHeight - 200);
+    setWindowsHeight(window.innerHeight > windowsWidth * 0.5625/* + 200*/ ? windowsWidth * 0.5625 : window.innerHeight);
+    //setWindowsHeight(t /*- 200*/);
     setBoardWidth(
       props.room?.settings.boardWidth
         ? (props.room?.settings.boardWidth / 100) * windowsWidth

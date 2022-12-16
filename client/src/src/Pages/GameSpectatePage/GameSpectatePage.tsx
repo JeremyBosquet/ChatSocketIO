@@ -67,7 +67,7 @@ interface ISettings {
 function GameSpectatePage() {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [room, setRoom] = useState<IRoom>();
-  const [notification, setNotificaton] = useState<Boolean>(false);
+  //const [notification, setNotificaton] = useState<Boolean>(false);
   const navigate = useNavigate();
   const { roomId } = useParams<{ roomId: string }>();
   const user = useSelector(getUser);
@@ -130,7 +130,7 @@ function GameSpectatePage() {
       });
       socket.on("gameInit", (room: IRoom) => {
         setRoom(room);
-        setNotificaton(false);
+        //setNotificaton(false);
       });
       socket.on("gameEnd", (data: IRoom) => {
         console.log("gameEnd", data);
@@ -138,7 +138,7 @@ function GameSpectatePage() {
           createNotification("success", "PlayerA a gagner");
         else if (data.scoreB === 10 && !notification)
           createNotification("success", "PlayerB a gagner");
-        setNotificaton(true);
+        //setNotificaton(true);
         setDisplay(false);
         setRoom(undefined);
         navigate("/game/spectate");
@@ -150,15 +150,15 @@ function GameSpectatePage() {
         );
         if (!notification)
           createNotification("info", "L'autre connard a leave 3");
-        setNotificaton(true);
+        //setNotificaton(true);
         setDisplay(false);
         setRoom(undefined);
         navigate("/game/spectate");
       });
-      socket.on("roomUpdated", (data: IRoom) => {
-        console.log("roomUpdated", data);
-        setRoom(data);
-      });
+			socket?.on("roomUpdated", (data: IRoom) => {
+				if (room) // update scoreA and scoreB only
+					setRoom({...room, scoreA: data.scoreA, scoreB: data.scoreB});
+			});
     }
   }, [socket, roomId, navigate, notification]);
 

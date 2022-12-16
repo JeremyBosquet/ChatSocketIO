@@ -88,7 +88,7 @@ function ChannelPage() {
 	const [playerId, setPlayerId] = useState<string>("");
 	const [playerName, setPlayerName] = useState<string>("");
 	const [room, setRoom] = useState<IRoom>();
-	const [notification, setNotificaton] = useState<Boolean>(false);
+	//const [notification, setNotificaton] = useState<Boolean>(false);
 	const [inviteGames, setInviteGames] = useState<IInvites[]>([]);
     const [searchChannel, setSearchChannel] = useState<string>("");
 	const [channelsFind, setChannelsFind] = useState<[]>([]);
@@ -153,6 +153,10 @@ function ChannelPage() {
 		setPlayerId("");
 		setPlayerName("");
 		setRoom(undefined);
+		// Re create the socket
+		const newSocket = io("http://90.66.199.176:7002");
+		socketGame?.close();
+		dispatch(setSocketGameChat(newSocket));
 	}
 
 	useEffect(() => {
@@ -221,13 +225,13 @@ function ChannelPage() {
 			setRoom(data);
 			setPlaying(true);
 			setReady(false);
-			setNotificaton(false);
+			//setNotificaton(false);
 			});
 			socketGame?.on("playerDisconnected", (data: IRoom) => {
 			if (ready) {
-			  if (!notification)
+			  //if (!notification)
 				createNotification("info", "L'autre connard a leave 2");
-			  setNotificaton(true);
+			  //setNotificaton(true);
 			  console.log("aPlayerDisconnected : ", data);
 			  if (playing) {
 				setPlaying(false);
@@ -242,11 +246,11 @@ function ChannelPage() {
 			});
 			socketGame?.on("gameEnd", (data: IRoom) => {
 			console.log("gameEnd", data);
-			if (data.scoreA === 10 && !notification)
+			if (data.scoreA === 10)
 			  createNotification("success", "PlayerA a gagner");
-			else if (data.scoreB === 10 && !notification)
+			else if (data.scoreB === 10)
 			  createNotification("success", "PlayerB a gagner");
-			setNotificaton(true);
+			//setNotificaton(true);
 			setRoom(undefined);
 			setPlaying(false);
 			setReady(false);
@@ -258,9 +262,8 @@ function ChannelPage() {
 			  "gameForceEnd donc erreur 'sorry l'autre connard a crash'",
 			  data
 			);
-			if (!notification)
 			  createNotification("info", "L'autre connard a leave 3");
-			setNotificaton(true);
+			//setNotificaton(true);
 			setRoom(undefined);
 			setPlaying(false);
 			setReady(false);
@@ -269,11 +272,18 @@ function ChannelPage() {
 			quitGame();
 			});
 			socketGame?.on("roomUpdated", (data: IRoom) => {
-			console.log("roomUpdated", data);
-			setRoom(data);
+				if (room) // update scoreA and scoreB only
+					setRoom({...room, scoreA: data.scoreA, scoreB: data.scoreB});
 			});
 		}
-	  }, [socketGame, ready, playing, room, notification, user, inviteGames]);
+	  }, [socketGame, ready, playing, room, user, inviteGames]);
+	  
+	useEffect(() => {
+		// If in game or configuring during a url change we need to quit the game
+		if (inGame || ready) {
+			quitGame();
+		}
+	}, [params.id]);
 	
 	return (
 		<>

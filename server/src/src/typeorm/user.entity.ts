@@ -17,6 +17,7 @@ export interface Ifriends {
 
 export interface ILogStatus {
 	token: string;
+	CreatedAt: Date;
   }
 
 @Entity({ name: 'users' })
@@ -54,7 +55,7 @@ export class UserModel {
   public isTwoFactorAuthenticationEnabled: boolean;
 
   @Column({ nullable: true, type: 'jsonb' })
-  @Expose()
+  @Exclude()
   isLoggedIn: ILogStatus[];
 
   @CreateDateColumn()

@@ -134,9 +134,9 @@ function GameSpectatePage() {
       });
       socket.on("gameEnd", (data: IRoom) => {
         console.log("gameEnd", data);
-        if (data.scoreA === 10 && !notification)
+        if (data.scoreA === 10 )
           createNotification("success", "PlayerA a gagner");
-        else if (data.scoreB === 10 && !notification)
+        else if (data.scoreB === 10)
           createNotification("success", "PlayerB a gagner");
         //setNotificaton(true);
         setDisplay(false);
@@ -148,7 +148,6 @@ function GameSpectatePage() {
           "gameForceEnd donc erreur 'sorry l'autre connard a crash'",
           data
         );
-        if (!notification)
           createNotification("info", "L'autre connard a leave 3");
         //setNotificaton(true);
         setDisplay(false);
@@ -160,7 +159,7 @@ function GameSpectatePage() {
 					setRoom({...room, scoreA: data.scoreA, scoreB: data.scoreB});
 			});
     }
-  }, [socket, roomId, navigate, notification]);
+  }, [socket, roomId, navigate]);
 
   useEffect(() => {
     const checkId = async () => {

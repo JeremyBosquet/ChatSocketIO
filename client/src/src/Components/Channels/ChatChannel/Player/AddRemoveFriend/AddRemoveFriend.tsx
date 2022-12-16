@@ -182,6 +182,10 @@ function AddRemoveFriend(props : props) {
 		isRequest(props.user);
 		isRequested(props.user);
 		isBlocked(props.user);
+		console.log("blocked", blocked)
+		console.log("isFriend", isFriend)
+		console.log("isRequest", isRequest)
+		console.log("isRequested", isRequested)
 	}, [blockedUsers, friendList, requestList, requestedList]);
 
 	return (

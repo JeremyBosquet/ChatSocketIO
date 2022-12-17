@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import GameBoard from "../GameBoard/GameBoard";
 import "./GameSpectate.scss";
@@ -6,12 +6,12 @@ import { Stage, Layer, Rect, Circle, Text } from "react-konva";
 import Konva from "konva";
 import useEventListener from "@use-it/event-listener";
 import NavBar from "../Nav/NavBar";
+import useImage from "use-image";
 
 interface props {
   socket: Socket | undefined;
   room: IRoom | undefined;
-  /* playerId: string;
-   playerName: string;*/
+  setRoom: any;
 }
 
 interface IPlayer {
@@ -58,7 +58,6 @@ interface ICanvasBoard {
   y: number;
   id: string;
   percentY: number;
-  ref: React.RefObject<Konva.Rect>;
 }
 
 interface IBall {
@@ -75,8 +74,8 @@ interface ICanvasBall {
   radius: number;
   percentX: number;
   percentY: number;
-  ref: React.RefObject<Konva.Circle>;
 }
+ 
 
 /*
 
@@ -91,8 +90,15 @@ interface ICanvasBall {
 */
 
 function GameSpectate(props: props) {
-  const [windowsWidth, setWindowsWidth] = useState(window.innerWidth / 1.2);
-  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight / 1.4);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+
+  let maxWidth = 1000;
+  let maxHeight = 600;
+
+  const [image] = (props?.room?.settings?.background == "background1" ? useImage("") : useImage(""));
+  const [windowsWidth, setWindowsWidth] = useState(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
+  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight > maxHeight - 200 ? maxHeight : window.innerHeight - 200); // game board
   const [boardWidth, setBoardWidth] = useState<number>(
     props.room?.settings.boardWidth
       ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -116,31 +122,74 @@ function GameSpectate(props: props) {
       : 100,
     percentX: 50,
     percentY: 50,
-    ref: React.createRef<Konva.Circle>(),
   });
   const [playerA, setPlayerA] = useState<ICanvasBoard>({
     id: "playerA",
-    x: 0.15 * windowsWidth,
+    x: 0.01 * windowsWidth,
     y: props.room?.playerA.y
       ? (props.room?.playerA.y / 100) * windowsHeight
       : windowsHeight / 2 - boardHeight / 2,
     percentY: 50,
-    ref: React.createRef<Konva.Rect>(),
   });
   const [playerB, setPlayerB] = useState<ICanvasBoard>({
     id: "playerB",
-    x: windowsWidth - 0.15 * windowsWidth,
+    x: (windowsWidth - 0.015 * windowsWidth),
     y: props.room?.playerB.y
       ? (props.room?.playerB.y / 100) * windowsHeight
       : windowsHeight / 2 - boardHeight / 2,
     percentY: 50,
-    ref: React.createRef<Konva.Rect>(),
   });
-  ////const [notification, setNotificaton] = useState<Boolean>(false);
+  const [timeouts, setTimeouts] = useState<Number>(30);
 
+  function updateDisplay() : void {
+    // Clear context and reprint everything
+    if (contextRef.current)
+    {
+      contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
+      contextRef.current.fillStyle = "black";
+      contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
+      contextRef.current.fillStyle = "white";
+      contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight );
+      contextRef.current.fillStyle = "gray";
+      contextRef.current.font = "30px Arial";
+      // print name of players and score
+      //contextRef.current.fillText(props.room?.playerA.name + " : " + props.room?.scoreA, windowsWidth / 2 - 400, 50);
+      //contextRef.current.fillText(props.room?.playerB.name + " : " + props.room?.scoreB, windowsWidth / 2 + 100, 50);
+      contextRef.current.font = "30px Arial";
+      if (props.room?.scoreA)
+        contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 50, 50);
+      else
+        contextRef.current.fillText("0", windowsWidth / 2 - 50, 50);
+      if (props.room?.scoreB)
+        contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 30, 50);
+      else
+        contextRef.current.fillText("0", windowsWidth / 2 + 30, 50);
+      // Player A
+      contextRef.current.fillStyle = "white";
+      contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
+      // Player B
+      contextRef.current.fillStyle = "white";
+      contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
+      // Ball
+      contextRef.current.beginPath();
+      contextRef.current.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
+      contextRef.current.fillStyle = "white";
+      contextRef.current.fill();
+    }
+  }
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const context = canvas?.getContext("2d");
+    if (context) {
+      contextRef.current = context;
+      updateDisplay();
+    }
+  }, []);
   function handleResize() {
-    setWindowsWidth(window.innerWidth / 1.2);
-    setWindowsHeight(window.innerHeight / 1.4);
+    setWindowsWidth(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
+    setWindowsHeight(window.innerHeight > maxHeight + 200 ? maxHeight - 200 : window.innerHeight);
+    //setWindowsHeight(t /*- 200*/);
     setBoardWidth(
       props.room?.settings.boardWidth
         ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -173,106 +222,65 @@ function GameSpectate(props: props) {
     setPlayerA({
       ...playerA,
       id: "playerA",
-      x: 0.15 * windowsWidth - boardWidth,
+      x: (0.01 * windowsWidth),
       y: (playerA.percentY / 100) * windowsHeight,
       percentY: playerA.percentY,
     });
     setPlayerB({
       ...playerB,
       id: "playerB",
-      x: windowsWidth - boardWidth - 0.15 * windowsWidth,
+      x: (windowsWidth - 0.015 * windowsWidth),
       y: (playerB.percentY / 100) * windowsHeight,
       percentY: playerB.percentY,
     });
+    updateDisplay();
   }
-
   useEventListener("resize", handleResize);
-
-  useEffect(() => {
-    // Check car le resize ne met pas a jour les var du useEffect
-    props.socket?.removeListener("playerMovement");
-    props.socket?.on("playerMovement", (data: any) => {
-      //console.log("playerMovement", props.playerId);
-      if (data.player && data.x != undefined && data.y != undefined) {
-        if (data.player === "playerA") {
-          setPlayerA({
-            ...playerA,
-            id: "playerA",
-            x: 0.15 * windowsWidth,
-            y: (data.y / 100) * windowsHeight,
-            percentY: data.y,
-          });
-        } else if ((data.player === "playerB")) {
-          setPlayerB({
-            ...playerB,
-            id: "playerB",
-            x: windowsWidth - 0.15 * windowsWidth,
-            y: (data.y / 100) * windowsHeight,
-            percentY: data.y,
-          });
-        }
+  // Check car le resize ne met pas a jour les var du useEffect
+    
+  
+  props.socket?.removeListener("playerMovement");
+  props.socket?.on("playerMovement", (data: any) => {
+    if (data.player && data.x != undefined && data.y != undefined) {
+      if (data.player === "playerA") {
+        setPlayerA({
+          ...playerA,
+          id: "playerA",
+          x: 0.01 * windowsWidth,
+          y: (data.y / 100) * windowsHeight,
+          percentY: data.y,
+        });
+      } else if ((data.player === "playerB")) {
+        setPlayerB({
+          ...playerB,
+          id: "playerB",
+          x: windowsWidth - 0.015 * windowsWidth,
+          y: (data.y / 100) * windowsHeight,
+          percentY: data.y,
+        });
+      }
     }
+  });
+  props.socket?.removeListener("ballMovement");
+  props.socket?.on("ballMovement", (room: IRoom) => {
+    setBall({
+      ...ball,
+      id: "ball",
+      x: (room.ball.x / 100) * windowsWidth,
+      y: (room.ball.y / 100) * windowsHeight,
+      percentX: room.ball.x,
+      percentY: room.ball.y,
     });
-    props.socket?.removeListener("ballMovement");
-    props.socket?.on("ballMovement", (room: IRoom) => {
-      ball.ref.current?.to({
-        duration: 0.040,
-        x: (room.ball.x / 100) * windowsWidth,
-        y: (room.ball.y / 100) * windowsHeight,
-      });
-    });
-  }, [
-    props.socket,
-    playerA,
-    playerB,
-    ball,
-    windowsHeight,
-    windowsWidth,
-    boardWidth,
-  ]);
+    updateDisplay();
+  });
+  props.socket?.removeListener("roomUpdated");
+  props.socket?.on("roomUpdated", (data: IRoom) => {
+    if (props.room) // update scoreA and scoreB only
+      props.setRoom({...props.room, scoreA: data.scoreA, scoreB: data.scoreB});
+  });
   return (
-    <div>
-      <GameBoard socket={props.socket} room={props.room} />
-      <div id="gameMainCanvas">
-        <Stage
-          width={windowsWidth}
-          height={windowsHeight}
-          className="gameMainCanvas"
-        >
-          <Layer>
-          <Rect width={windowsWidth} height={windowsHeight} x={0} y={0} fill="gray" />
-            {
-              <Rect
-                ref={playerA.ref}
-                x={playerA.x}
-                y={playerA.y}
-                width={boardWidth}
-                height={boardHeight}
-                fill="blue"
-              />
-            }
-            {
-              <Rect
-                ref={playerB.ref}
-                x={playerB.x}
-                y={playerB.y}
-                width={boardWidth}
-                height={boardHeight}
-                fill="green"
-              />
-            }
-            {
-              <Circle
-                ref={ball.ref}
-                x={ball.x}
-                y={ball.y}
-                radius={ball.radius}
-                fill="red"
-              />
-            }
-          </Layer>
-        </Stage>
-      </div>
+    <div id="gameMain" className="cursor">
+      <canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
     </div>
   );
 }

@@ -70,7 +70,7 @@ export class RoomService {
   async getRoomSpectates(): Promise<Room[]> {
     if (roomList.length > 0) 
     {
-      const _roomList = roomList.filter((room) => room.status == 'spectate');
+      const _roomList = roomList.filter((room) => room.status == 'playing');
       return _roomList;
     }
     else {

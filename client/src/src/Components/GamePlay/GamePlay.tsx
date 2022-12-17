@@ -86,7 +86,7 @@ function GamePlay(props: props) {
 
   const [image] = (props?.room?.settings?.background == "background1" ? useImage(imager) : useImage(imager));
   const [windowsWidth, setWindowsWidth] = useState(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
-  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight > maxHeight - 200 ? maxHeight : window.innerHeight - 200); // game board
+  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight > maxHeight /*- 200*/ ? maxHeight : window.innerHeight /*- 200*/); // game board
   const [boardWidth, setBoardWidth] = useState<number>(
     props.room?.settings.boardWidth
       ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -215,7 +215,7 @@ function GamePlay(props: props) {
   useEventListener("mousemove", mousemove);
   function handleResize() {
     setWindowsWidth(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
-    setWindowsHeight(window.innerHeight > windowsWidth * 0.5625/* + 200*/ ? windowsWidth * 0.5625 : window.innerHeight);
+    setWindowsHeight(window.innerHeight > maxHeight/* + 200*/ ? maxHeight : window.innerHeight);
     //setWindowsHeight(t /*- 200*/);
     setBoardWidth(
       props.room?.settings.boardWidth

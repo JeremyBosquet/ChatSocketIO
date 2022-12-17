@@ -45,6 +45,18 @@ function App() {
 		//eslint-disable-next-line
 	}, []);
 	useEffect(() => {
+		async function ListFriends() {
+			await axios.get(`http://90.66.199.176:7000/user/ListFriends`, {
+					headers: ({
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					})
+				}).then((res) => {
+					dispatch(setFriendList(res.data.friendList));
+				}).catch((err) => {
+					console.log(err.message);
+				});
+		}
+		
 		const socketSet = async () => {
 			await axios.get(`http://90.66.199.176:7000/user`, {
 				headers: {
@@ -59,6 +71,8 @@ function App() {
 					const newSocketSocial = io('http://90.66.199.176:7003');
 					dispatch(setSocketSocial(newSocketSocial));
 					dispatch(setUser(res.data.User));
+					
+					ListFriends();
 				}
 			})
 				
@@ -69,7 +83,6 @@ function App() {
 		if (user && !booleffect && socketSocial)
 		{
 			setBooleffect(true);
-			console.log('"oleffect"');
 			socketSocial.emit("connected", {uuid: user.uuid});
 		}
 	}, [socketSocial, user]);
@@ -77,7 +90,8 @@ function App() {
 	useEffect(() => {
 		if (user && socketSocial)
 		{
-			socketSocial.removeListener("mewFriend");
+
+			socketSocial.removeListener("newFriend");
 			socketSocial.on("newFriend", (data: any) => {
 				if (data.uuid === user.uuid && data?.username) {
 					createNotification("info", "New friend request from: " + data.username);

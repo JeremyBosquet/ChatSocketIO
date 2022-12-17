@@ -74,15 +74,6 @@ function GameSpectatePage() {
   const dispatch = useDispatch();
   const socket = useSelector(getSockeSpectate);
   const [display, setDisplay] = useState<Boolean>(false);
-
-  const [friendList, SetFriendList] = useState<any[]>([]);
-	const [blockList, SetBlockList] = useState<any[]>([]);
-	const [requestedList, SetRequestedList] = useState<any[]>([]);
-	const [requestList, SetRequestList] = useState<any[]>([]);
-	const [profilePage, setProfilePage] = useState<any>(null);
-	const [profileDisplayed, setProfileDisplayed] = useState<boolean>(false);
-	const [historyList, SetHistoryList] = useState<any[]>([]);
-
   
 	KillSocket("game");
 	KillSocket("chat");
@@ -124,7 +115,8 @@ function GameSpectatePage() {
       socket.removeListener("roomUpdated");
       socket.removeListener("gameInit");
       socket.removeListener("errorRoomNotFound");
-      socket?.emit("joinRoomSpectate", { roomId: roomId });
+      //console.log("id", user.id);
+      socket?.emit("joinRoomSpectate", { roomId: roomId, id: user?.uuid });
       socket?.on("errorRoomNotFound", (room: IRoom) => {
         navigate("/game/spectate");
       });
@@ -224,7 +216,7 @@ function GameSpectatePage() {
 				</div>
 			) : (
 				<div>
-				{room ? <GameSpectate socket={socket} room={room} /> : null}
+				{room ? <GameSpectate setRoom={setRoom} socket={socket} room={room} /> : null}
 				</div>
 			)}
 			</div>

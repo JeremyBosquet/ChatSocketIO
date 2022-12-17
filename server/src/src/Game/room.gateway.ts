@@ -125,7 +125,7 @@ export class RoomGateway {
           console.log('playerA.id: ' + room.playerA.id + ' - playerB.id: ' + room.playerB.id);
           this.server.in('room-' + room.id).emit('roomUpdated', room);
         } else {
-          const playerA = room.playerA;
+          /*const playerA = room.playerA;
           const playerB = room.playerB;
           if (
             room.ball.x + settings.ballRadius > playerA.x &&
@@ -170,7 +170,7 @@ export class RoomGateway {
             room.ball.x += room.ball.speed * 0.2 * Math.cos(room.ball.direction);
             room.ball.y += room.ball.speed * 0.2 * Math.sin(room.ball.direction);
           }
-          this.server.in('room-' + room.id).emit('ballMovement', room);
+          this.server.in('room-' + room.id).emit('ballMovement', room);*/
         }
         room.lastActivity = Date.now();
         this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
@@ -192,7 +192,7 @@ export class RoomGateway {
         //console.log('rooms : ', client.rooms);
         client.data.roomId = data.roomId;
         client.data.playerId = data.playerId;
-        client.data.playerName = (await this.usersService.findUserByUuid(data.id)).username;
+        client.data.playerName = (await this.usersService.findUserByUuid(data.id))?.username;
         this.server.in('room-' + room.id).emit('gameInit', room);
       } else {
         this.server

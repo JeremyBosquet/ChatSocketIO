@@ -7,6 +7,7 @@ import { getSocket } from "../../../../../Redux/chatSlice";
 import { Iuser, IuserDb } from "../../interfaces/users";
 import React, { useEffect, useState } from 'react';
 import { createNotification } from "../../../../notif/Notif";
+import { IsFriend } from "../../../../Utils/socialCheck";
 
 interface props {
 		user: IuserDb;
@@ -125,15 +126,20 @@ function AddRemoveFriend(props : props) {
 	}
 
 	useEffect(() => {
-		function isFriend(uuid : string) {
+		function IsFriend(uuid : string) {
 			const userFriends : any[] = friendList;
 			const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
-			if (!test.length)
+			console.log(test)
+			if (test.length)
+			{
+				setIsFriend(true);
 				return true;
+			}
+			setIsFriend(false);
 			return false;
 		}
 
-		async function isBlocked(user: IuserDb) {
+		async function IsBlocked(user: IuserDb) {
 			let userFinded = blockedUsers.find((userSearch : any) => userSearch.uuid === user.uuid);
 			if (userFinded)
 			{
@@ -144,7 +150,7 @@ function AddRemoveFriend(props : props) {
 			return (false);
 		}
 
-		async function isRequest(user: IuserDb) {
+		async function IsRequest(user: IuserDb) {
 			let userFinded = requestList.find((userSearch : any) => userSearch.uuid === user.uuid);
 			if (userFinded)
 			{
@@ -155,7 +161,7 @@ function AddRemoveFriend(props : props) {
 			return (false);
 		}
 
-		async function isRequested(user: IuserDb) {
+		async function IsRequested(user: IuserDb) {
 			let userFinded = requestedList.find((userSearch : any) => userSearch.uuid === user.uuid);
 			if (userFinded)
 			{
@@ -166,26 +172,12 @@ function AddRemoveFriend(props : props) {
 			return (false);
 		}
 
-		// async function isBlockedBy(user: IuserDb) {
-		// 	let userFinded = blockedByList.find((userSearch : any) => userSearch.uuid === user.uuid);
-		// 	if (userFinded)
-		// 	{
-		// 		setIsBlockedBy(true);
-		// 		return (true);
-		// 	}
-		// 	setIsBlockedBy(false);
-		// 	return (false);
-		// }
 
-
-		isFriend(props.user.uuid);
-		isRequest(props.user);
-		isRequested(props.user);
-		isBlocked(props.user);
-		console.log("blocked", blocked)
-		console.log("isFriend", isFriend)
-		console.log("isRequest", isRequest)
-		console.log("isRequested", isRequested)
+		console.log()
+		IsFriend(props.user.uuid);
+		IsRequest(props.user);
+		IsRequested(props.user);
+		IsBlocked(props.user);
 	}, [blockedUsers, friendList, requestList, requestedList]);
 
 	return (

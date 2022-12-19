@@ -74,9 +74,10 @@ export class DMsService {
         for (const user of dm.users) {
           let userInfos : any = await this.getUser(user.id);
           let filteredUserInfos = {
-            id: userInfos.uuid,
+            uuid: userInfos.uuid,
             username: userInfos.username,
-            image: userInfos.image
+            image: userInfos.image,
+            trueUsername: userInfos.trueUsername
           }
           users.push(filteredUserInfos);
         }

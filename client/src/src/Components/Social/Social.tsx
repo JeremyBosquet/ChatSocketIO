@@ -180,19 +180,6 @@ function Social() {
 		}
 	}, []);
 
-	useEffect(() => {
-
-		if (!booleffect2.current) {
-			// if (((location.pathname === '/social') || (location.pathname === '/social/')) && profileDisplayed)
-			// 	HideProfileUseEffect();
-			// else if (!(location.pathname === '/social') && !(location.pathname === '/social/') && !profileDisplayed)
-			// 	ShowProfileUseEffect(location.pathname.slice(8));
-			// console.log(location.pathname)
-			// console.log(!profileDisplayed)
-			booleffect2.current = true;
-		}
-	}, [location.pathname]);
-
 	return (
 		<div className='SocialPage'>
 		{

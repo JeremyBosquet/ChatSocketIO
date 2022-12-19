@@ -34,7 +34,7 @@ export class AppGateway {
 					users.push({uuid : socket.data.uuid});
 		}
 		this.server.to(client.id).emit('listUsersConnected', {users : users});
-		client.broadcast.emit('connectedToServer', {uuid : data.uuid});
+		client.broadcast.emit('connectedToServer', {users : users});
 		console.log(users);
 
 	}
@@ -89,6 +89,30 @@ export class AppGateway {
     @ConnectedSocket() client: Socket,
   ): Promise<WsResponse<any>> {
     this.server.emit('removedOrBlocked', {
+      uuid: data.uuid,
+      username: (await this.UsersService.findUserByUuid(data.myUUID)).username,
+    });
+    return;
+  }
+
+  @SubscribeMessage('Unblock')
+  async Unblock(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: Socket,
+  ): Promise<WsResponse<any>> {
+    this.server.emit('Unblocked', {
+      uuid: data.uuid,
+      username: (await this.UsersService.findUserByUuid(data.myUUID)).username,
+    });
+    return;
+  }
+
+  @SubscribeMessage('Block')
+  async Block(
+    @MessageBody() data: any,
+    @ConnectedSocket() client: Socket,
+  ): Promise<WsResponse<any>> {
+    this.server.emit('Block', {
       uuid: data.uuid,
       username: (await this.UsersService.findUserByUuid(data.myUUID)).username,
     });

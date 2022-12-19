@@ -38,11 +38,11 @@ export class RoomService {
     const list = await this.roomRepository.find();
     for (let i = 0; i < list.length; i++) {
       if (list[i].status != 'finished' && list[i].status != 'destroy') {
-        console.log('Clearing room', list[i].id);
+        //console.log('Clearing room', list[i].id);
         await this.roomRepository.remove(list[i]);
-      } else console.log('Finished room', list[i].id);
+      } //else console.log('Finished room', list[i].id);
     }
-    console.log('done');
+    //console.log('done');
   }
 
   constructor(

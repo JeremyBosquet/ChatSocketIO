@@ -7,10 +7,11 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  Long,
 } from 'typeorm';
 
 import { Exclude, Expose } from 'class-transformer';
-
+import bytea from 'postgres-bytea';
 export interface Ifriends {
   uuid: string;
 }
@@ -34,14 +35,17 @@ export class UserModel {
   @Expose()
   trueUsername: string;
 
-  @Column()
+  @Column({
+    type: 'bytea',
+  })
   @Expose()
-  image: string;
+  image: Uint8Array;
 
   @Column()
   @Expose()
   id: number;
 
+  
   @Column({ nullable: true })
   @Exclude()
   twoFactorAuthenticationSecret: string;

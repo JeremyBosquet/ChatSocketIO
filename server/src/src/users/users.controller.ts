@@ -15,6 +15,10 @@ import {
   UseInterceptors,
   UploadedFile,
   UnsupportedMediaTypeException,
+  MaxFileSizeValidator,
+  ParseFilePipe,
+  FileTypeValidator,
+  ParseFilePipeBuilder,
 } from '@nestjs/common';
 import { ExpDto, FriendsDto, SearchDto, SendUserDto, TokenDto } from './users.dto';
 import { UsersService } from './users.service';
@@ -26,6 +30,10 @@ import { extname } from 'path';
 import { JwtTwoFactorGuard } from 'src/2auth/jwt-two-factor.guard';
 import { plainToClass } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
+import { fileTypeFromFile } from 'file-type';
+import got from 'got';
+import {fileTypeFromStream} from 'file-type';
+
 
 let nameAvatar: string;
 @Controller('user')
@@ -851,59 +859,56 @@ export class UsersController {
 
   @Post('changeAvatar')
   @UseGuards(JwtTwoFactorGuard)
-  @UseInterceptors(
-	FileInterceptor('file', {
-	  limits: {
-		fileSize: 1e6,
-	  },
-	  fileFilter: function fileFilter(req, file, cb) {
-		if (
-		  file.mimetype !== 'image/jpg' &&
-		  file.mimetype !== 'image/png' &&
-		  file.mimetype !== 'image/jpeg'
-		) {
-		  return cb(
-			new UnsupportedMediaTypeException(
-			  'No files other than jpg/png/jpeg are accepted',
-			),
-			false,
-		  );
-		}
-		cb(null, true);
-	  },
-	  storage: diskStorage({
-		destination: 'src/uploads/avatar',
-		filename: async function (req, file, cb) {
-		  const type = '.' + file.mimetype.split('/')[1];
-		  cb(null, (nameAvatar = Date().replace(/ /g, '') + type));
+  @UseInterceptors(FileInterceptor('file', {
+	  fileFilter: function fileFilter(req, file : Express.Multer.File, cb) {
+		  const whitelist = [
+			  'image/png',
+			  'image/jpeg',
+			  'image/jpg',
+			]
+			if (!whitelist.includes(file.mimetype))
+				return cb(
+					new UnsupportedMediaTypeException('No files other than jpg/png/jpeg are accepted'), false);
+			cb(null, true);
 		},
-	  }),
+		//storage: diskStorage({
+		//	destination: 'src/uploads/avatar',
+		//	filename: async function (req, file, cb) {
+		//		const type = '.' + file.mimetype.split('/')[1];
+		//		cb(null, (nameAvatar = Date().replace(/ /g, '') + type));
+		//	},
+		//}),
+		limits: {
+			fileSize: 1e6,
+		},
 	}),
   )
-  async ChangeAvatar(
-	@UploadedFile() file: Express.Multer.File,
-	@Req() req: any,
-	@Res() res: any,
-  ) {
+  async ChangeAvatar(@UploadedFile() file: Express.Multer.File,@Req() req: any,@Res() res: any) {
 	const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 	const User = await this.userService.findUserByUuid(Jwt['uuid']);
-	//const newAvatar = Avatar["newAvatar"]
+	console.log(file);
+	if (file.mimetype === 'image/png') {
+		if (file.buffer[0] !== 0x89 || file.buffer[1] !== 0x50 || file.buffer[2] !== 0x4E || file.buffer[3] !== 0x47 || file.buffer[4] !== 0x0D || file.buffer[5] !== 0x0A || file.buffer[6] !== 0x1A || file.buffer[7] !== 0x0A)
+			console.log('Invalid image file');
+	} else if (file.mimetype === 'image/jpeg') {
+		if (file.buffer[0] !== 0xFF || file.buffer[1] !== 0xD8 || file.buffer[2] !== 0xFF)
+			console.log('Invalid image file');
+	} else if (file.mimetype === 'image/jpg') {
+		if (file.buffer[0] !== 0xFF || file.buffer[1] !== 0xD8 || file.buffer[2] !== 0xFF)
+			console.log('Invalid image file');
+	} else {
+		console.log('Invalid image file');
+	}
 	if (User) {
-	  const type = '.' + file.mimetype.split('/')[1];
-	  if (
-		!(
-		  (await this.userService.ChangeAvatar(
-			User.uuid,
-			`${process.env.BACK}`.concat(nameAvatar),
-		  )) + type
-		)
-	  ) {
-		return res.status(HttpStatus.NOT_FOUND).json({
-		  statusCode: HttpStatus.NOT_FOUND,
-		  message: 'User not found',
-		  error: 'NOT_FOUND',
-		});
-	  }
+	//   if (
+	// 	!(await this.userService.ChangeAvatar(User.uuid,`${process.env.BACK}`.concat(nameAvatar)))
+	//   ) {
+	// 	return res.status(HttpStatus.NOT_FOUND).json({
+	// 	  statusCode: HttpStatus.NOT_FOUND,
+	// 	  message: 'User not found',
+	// 	  error: 'NOT_FOUND',
+	// 	});
+	//   }
 	  return res.status(HttpStatus.OK).json({
 		statusCode: HttpStatus.OK,
 		message: 'succes',

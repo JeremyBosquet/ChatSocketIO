@@ -21,7 +21,6 @@ interface props {
 
 function Channels(props: props) {
     const params = useParams();
-    // const [searchChannel, setSearchChannel] = useState<string>("");
     const [init, setInit] = useState<boolean>(false);
     const dispatch = useDispatch();
 

@@ -11,11 +11,7 @@ import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
-
-interface Ichannel {
-  id: string;
-  users: IuserDb[];
-}
+import { IoMdLock } from 'react-icons/io';
 
 function DMChannel() {
   const [messages, setMessages] = useState<Imessage[]>([]);
@@ -70,7 +66,7 @@ function DMChannel() {
 
   useEffect(() => {
     const getName = async () => {
-      const userId = dm?.users[0]?.id === user.uuid ? dm?.users[1]?.id : dm?.users[0]?.id;
+      const userId = dm?.users[0]?.uuid === user.uuid ? dm?.users[1]?.uuid : dm?.users[0]?.uuid;
       const u = (await axios.get(`http://90.66.199.176:7000/api/chat/user/` + userId)).data;
       if (u?.username)
         setName(u.username);
@@ -83,6 +79,7 @@ function DMChannel() {
   useEffect(() => {
     if (socket)
     {
+
       socket.removeListener('messageFromServer');
       socket.on('messageFromServer', (message: Imessage) => {
         setMessages(messages => [...messages, message]);
@@ -90,6 +87,7 @@ function DMChannel() {
       
       socket.removeListener('usersConnected');
       socket.on('usersConnected', (usersConnected: Iuser[]) => {
+        console.log(usersConnected)
         setUsersConnected(usersConnected);
       });
     }
@@ -98,24 +96,31 @@ function DMChannel() {
 
   return (
     <>
-      <div>
-        <div className='DMChannel'>
-            <div> 
-              {name ? <h2>{name}</h2> : <h2>Select a DM</h2>}
+      <div className='ChatChannel'>
+      {
+          !name ? <h2>Select a channel</h2> :
+          <>
+            <div className='ChatChannelInfos'>
+              <p>{name}</p>
+              <IoMdLock className='channelIcon' />
             </div>
-            {/* Print messages */}
-            <Messages userId={user.uuid} messages={messages} users={users} setUsers={setUsers}/>
+            <Messages userId={user.uuid} messages={messages} users={users} setUsers={setUsers} setMessages={setMessages}/>
             <div className='sendMessage'>
               <SendMessage channelId={selectedChannelDM} user={user}/>
             </div>
-        </div>
+          </>
+        }
       </div>
       <div className='playersList'>
-        <h2>Players</h2>
-        <div className='messages'>
+        <div className='playersTitle'>
+					<p>Players</p>
+				</div>
+        <div className='players'>
           {users?.map((user : any) => ( 
-            <Player key={user.uuid} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} />
-          ))}
+						user.print === undefined && user.print !== false ?
+							<Player key={user.uuid} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} />
+						: null
+					))}
         </div>
       </div>
     </>

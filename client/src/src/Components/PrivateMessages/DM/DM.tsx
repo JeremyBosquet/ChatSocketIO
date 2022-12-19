@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
+import { IoMdLock } from 'react-icons/io';
 
 interface props {
     dm: any;
@@ -41,10 +42,11 @@ function DM(props: props) {
 
   return (
     <>
-      <div key={props.dm["id"]} onClick={e => handleSelectChannel(props.dm["id"])}>
-          <hr></hr>
-              <p>{name}</p>
-          <hr></hr>
+      <div key={props.dm["id"]} onClick={e => handleSelectChannel(props.dm["id"])} className="channel">
+        <div className="channelInfoName">
+            <p>{name}</p>
+            <p><IoMdLock className='channelIcon' /></p>
+          </div>
       </div>
     </>
   );

@@ -1,26 +1,27 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import './Channels.scss';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from '../../Redux/authSlice';
 import DM from './DM/DM';
 import DMChannel from './DMChannel/DMChannel';
 import { useParams } from 'react-router-dom';
 import React from 'react';
+import { setDMs } from '../../Redux/chatSlice';
 
 function PrivateMessages() {
     const params = useParams();
     const [init, setInit] = useState<boolean>(false);
-    const [dms, setDMs] = useState<[]>([]);
-
-    const user = useSelector(getUser);
+    const dispatch = useDispatch();
     
+    const user = useSelector(getUser);
+
     useEffect(() => {
         const getUsersDM = async (userId: any) => {
             await axios.get("http://90.66.199.176:7000/api/chat/dm/user/" + userId)
             .then((res) => {
                 if (res)
-                    setDMs(res.data);
+                    dispatch(setDMs(res.data));
                     setInit(true);
             })
         }
@@ -28,24 +29,16 @@ function PrivateMessages() {
         if (!init)
             getUsersDM(user.uuid);
         //eslint-disable-next-line
-    }, [init])
+    }, [init, user])
 
     return (
     <div className='channels'>
-        <div className='channelInfos'> 
-            <div className='channelInfo'>
-                <h2>Private Messages</h2>
-                {dms.map((dm : any) => (
-                    <DM key={dm["id"]} dm={dm} />
-                ))}
-            </div>
-            <div className='channelChat'>
-                { params.id !== undefined ? 
-                    <DMChannel />
-                        :
-                    <p>Select a player</p>
-                }
-            </div>
+        <div className='channelChat'>
+            { params.id !== undefined ? 
+                <DMChannel />
+                    :
+                null
+            }
         </div>
     </div>
   );

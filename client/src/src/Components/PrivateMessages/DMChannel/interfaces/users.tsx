@@ -1,8 +1,9 @@
 export interface Iuser {
-    id: string;
+    uuid: string;
     userId: string;
     username: string;
     channelId: string;
+    trueUsername: string;
 }
 
 export interface IuserDb {
@@ -10,4 +11,5 @@ export interface IuserDb {
     username: string;
     image: string;
     role: string;
+    trueUsername: string;
 }

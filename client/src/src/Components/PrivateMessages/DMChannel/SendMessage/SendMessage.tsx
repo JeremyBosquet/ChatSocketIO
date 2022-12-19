@@ -4,28 +4,28 @@ import { getSocket } from "../../../../Redux/chatSlice";
 import React from 'react';
 
 interface props {
-    channelId: string;
-    user: {uuid: string};
+	channelId: string;
+	user: {uuid: string};
 }
 
 function SendMessage(props : props) {
-    const [message, setMessage] = useState<string>("");
-    const socket = useSelector(getSocket);
+	const [message, setMessage] = useState<string>("");
+	const socket = useSelector(getSocket);
 
-    const handleSubmit = (e : any) => {
-        e.preventDefault();
-        if (message === "")
-          return ;
-        socket?.emit('message', { userId: props.user.uuid, message: message, channelId: props.channelId, type: "dm" });
-        setMessage("");
-    }
+	const handleSubmit = (e : any) => {
+		e.preventDefault();
+		if (message === "")
+			return ;
+		socket?.emit('message', { userId: props.user.uuid, message: message, channelId: props.channelId, type: "dm" });
+		setMessage("");
+  	}
 
-  return (
-    <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Enter message" value={message} onChange={(e) => setMessage(e.target.value)}></input>
-        <button type="submit">Send</button>
-    </form>
-  );
+	return (
+		<form className="sendForm" onSubmit={handleSubmit}>
+			<input className="sendInput" type="text" placeholder="Enter message" value={message} onChange={(e) => setMessage(e.target.value)}></input>
+			<button className="sendButton" type="submit">Send</button>
+		</form>
+	);
 }
 
 export default SendMessage;

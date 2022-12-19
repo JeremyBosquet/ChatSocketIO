@@ -167,33 +167,33 @@ function ChatChannel(props: props) {
 
 	return (
 		<>
-				<div className='ChatChannel'>
-					{
-						!channel?.name ? <h2>Select a channel</h2> :
-						<>
-							<div className='ChatChannelInfos'>
-								<p>{channel.name}</p>
-								{channel.visibility === "public" ?
-									(<MdPublic className='channelIcon' />)
-								: channel.visibility === "private" ?
-									(
-										<div className='privateInfos'>
-											<p>{channel.code}</p>
-											<IoMdLock className='channelIcon' />
-										</div>
-									)
-								: channel.visibility === "protected" ?
-									(<BsFillShieldLockFill className='channelIcon' />)
-								: 
-								(channel.visibility)}
-							</div>
-							<Messages userId={user.uuid} messages={messages} users={users} setUsers={setUsers}/>
-							<div className='sendMessage'>
-									<SendMessage channelId={selectedChannel} user={user}/>
-							</div>
-						</>
-					}
-				</div>
+			<div className='ChatChannel'>
+				{
+					!channel?.name ? <h2>Select a channel</h2> :
+					<>
+						<div className='ChatChannelInfos'>
+							<p>{channel.name}</p>
+							{channel.visibility === "public" ?
+								(<MdPublic className='channelIcon' />)
+							: channel.visibility === "private" ?
+								(
+									<div className='privateInfos'>
+										<p>{channel.code}</p>
+										<IoMdLock className='channelIcon' />
+									</div>
+								)
+							: channel.visibility === "protected" ?
+								(<BsFillShieldLockFill className='channelIcon' />)
+							: 
+							(channel.visibility)}
+						</div>
+						<Messages userId={user.uuid} messages={messages} users={users} setUsers={setUsers} setMessages={setMessages}/>
+						<div className='sendMessage'>
+							<SendMessage channelId={selectedChannel} user={user}/>
+						</div>
+					</>
+				}
+			</div>
 			<div className='playersList'>
 				<div className='playersTitle'>
 					<p>Players</p>

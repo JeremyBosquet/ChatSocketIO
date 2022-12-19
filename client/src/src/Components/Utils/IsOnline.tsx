@@ -16,7 +16,6 @@ function IsOnline(props : Props) {
 			setIsConnected(ConnectedList.find((userInList : any) => userInList.uuid === props?.uuid) ? true : false);
 		else
 			setIsConnected(false);
-		console.log(ConnectedList);
 	}, [ConnectedList]);
 
   return (

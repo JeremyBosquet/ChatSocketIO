@@ -26,6 +26,10 @@ body {
             align-items: center;
             justify-content: center;
 
+            .backIcon {
+                position: relative;
+                top: 3px;
+            }
             .backButton {
                 width: 100%;
                 height: 30px;

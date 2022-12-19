@@ -10,7 +10,7 @@ import TwoAuth from "./Pages/TwoAuth";
 import axios from "axios";
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
-import { getConnectedList, getRequestedList, getSocketSocial, getUser, setConnectedList, setFriendList, setRequestedList, setRequestList, setSocketSocial, setUser } from "./Redux/authSlice";
+import { getConnectedList, getRequestedList, getSocketSocial, getUser, setBlockedByList, setConnectedList, setFriendList, setRequestedList, setRequestList, setSocketSocial, setUser, setBlockList } from "./Redux/authSlice";
 import { getSocket, setSocket } from "./Redux/chatSlice";
 import ChannelPage from "./Pages/ChannelPage/ChannelPage";
 import DMPage from "./Pages/DMPage/DMPage";
@@ -56,8 +56,34 @@ function App() {
 				}).catch((err) => {
 					console.log(err.message);
 				});
+
+			await axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
+			headers: ({
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+			})}).then((res) => {
+				let blockedByList : any[] = res.data.ListBlockedBy;
+				if (blockedByList)
+				{
+					dispatch(setBlockedByList(blockedByList));
+				}
+				else
+					dispatch(setBlockedByList([]));
+			});
+
+			await axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
+			headers: ({
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
+			})}).then((res) => {
+				let blockedByList : any[] = res.data.ListBlockedBy;
+				if (blockedByList)
+				{
+					dispatch(setBlockedByList(blockedByList));
+				}
+				else
+					dispatch(setBlockedByList([]));
+			});
 		}
-		
+
 		const socketSet = async () => {
 			await axios.get(`http://90.66.199.176:7000/user`, {
 				headers: {
@@ -148,6 +174,42 @@ function App() {
 					});
 				}
 			});
+			socketSocial.removeListener("Unblocked");
+			socketSocial.on("Unblocked", (data: any) => {
+				if (data.uuid === user.uuid && data?.username) {
+					//createNotification("info", data.username + " accepted your friend request");
+					axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
+					headers: ({
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					})}).then((res) => {
+						let blockedByList : any[] = res.data.ListBlockedBy;
+						if (blockedByList)
+						{
+							dispatch(setBlockedByList(blockedByList));
+							return ;
+						}
+					});
+					dispatch(setBlockedByList([]));
+				}
+			});
+			socketSocial.removeListener("Block");
+			socketSocial.on("Block", (data: any) => {
+				if (data.uuid === user.uuid && data?.username) {
+					//createNotification("info", data.username + " accepted your friend request");
+					axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
+					headers: ({
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					})}).then((res) => {
+						let blockedByList : any[] = res.data.ListBlockedBy;
+						if (blockedByList)
+						{
+							dispatch(setBlockedByList(blockedByList));
+							return ;
+						}
+					});
+					dispatch(setBlockedByList([]));
+				}
+			});
 			socketSocial.removeListener("CancelFriend");
 			socketSocial.on("CancelFriend", (data: any) => {
 				if (data.uuid === user.uuid) {
@@ -204,11 +266,9 @@ function App() {
 				let blockedList : any[] = res.data.ListUsersblocked;
 				if (blockedList)
 				{
-					console.log("salami" , listUsers);
 					for (let i = 0; i < blockedList.length; i++) {
 						listUsers = listUsers.filter((e : any) => e.uuid !== blockedList[i].uuid);
 					}
-					console.log("salennemi" , listUsers);
 				}
 			});
 			await axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
@@ -219,52 +279,40 @@ function App() {
 				let blockedByList : any[] = res.data.ListBlockedBy;
 				if (blockedByList)
 				{
-					console.log("frite" , listUsers);
 					for (let i = 0; i < blockedByList.length; i++) {
 						listUsers = listUsers.filter((e : any) => e.uuid !== blockedByList[i].uuid);
 					}
-					console.log("steak" , listUsers);
 				}
 			});
 			setBooleffect2(true);
+		}
+		async function callFilter(data : any, special : boolean) {
+			await filterBlockedUsers(data);
+			if (special)
+				listUsers = listUsers.filter((user: any) => user.uuid !== data.uuid);
+			dispatch(setConnectedList(listUsers));
 		}
 		if (socketSocial)
 		{
 			console.log('la')
 			socketSocial?.removeListener("listUsersConnected");
 			socketSocial.on('listUsersConnected', (data : any) => {
-					filterBlockedUsers(data);
-					if (booleffect2)
-					{
-						console.log("listUsers: ", listUsers);
-						dispatch(setConnectedList(listUsers));
-						console.log("erererererer" , ConnectedList);
-					}
+					callFilter(data, false);
 				}
 			)
 			
 			socketSocial?.removeListener("connectedToServer");
 			socketSocial.on('connectedToServer', (data : any) => {
-				filterBlockedUsers(data);
-				if (booleffect2)
-				{
-					console.log("test")
-					dispatch(setConnectedList(listUsers));
-				}
+				callFilter(data, false);
 			})
 			
 			socketSocial?.removeListener("disconnectFromServer");
 			socketSocial.on('disconnectFromServer', (data : any) => {
-				filterBlockedUsers(data);
-				if (booleffect2)
-				{
-					listUsers = listUsers.filter((user: any) => user.uuid !== data.uuid);
-					console.log("Oui salade: ", listUsers);
-					dispatch(setConnectedList(listUsers));
-				}
+				listUsers = listUsers.filter((user: any) => user.uuid !== data.uuid);
+				dispatch(setConnectedList(listUsers));
 			})
 		}
-	}, [socketSocial, ConnectedList, booleffect2]);
+	}, [socketSocial, ConnectedList]);
   return (
     <Router>
       {APIStatus ? (

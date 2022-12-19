@@ -160,6 +160,7 @@ export async function BlockOrUnblockUser(uuid : string, User : any) {
 				socket?.emit('removeOrBlock', {uuid : uuid, myUUID : User.uuid})
 				socket?.emit('CancelFriendAdd', {uuid : uuid, myUUID : User.uuid});
 				socket?.emit('DeclineFriendAdd', {uuid : uuid, myUUID : User.uuid});
+				socket?.emit('Block', {uuid : uuid, myUUID : User.uuid});
 			}).catch((err) => {
 				console.log(err.response.data.message);
 			});
@@ -174,6 +175,7 @@ export async function BlockOrUnblockUser(uuid : string, User : any) {
 			const users : any[] = friendList.filter((element : any) => element.uuid !== uuid);
 			dispatch(setFriendList(users));
 			dispatch(setBlockList(blockList.filter((user : any) => user.uuid !== uuid)));
+			socket?.emit('Unblock', {uuid : uuid, myUUID : User.uuid});
 		}).catch((err) => {
 			console.log(err.response.data.message);
 		});

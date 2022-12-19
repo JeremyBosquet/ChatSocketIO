@@ -1,7 +1,7 @@
 import { Menu, MenuButton } from "@szhsin/react-menu";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getBlockList, getUser } from "../../../../Redux/authSlice";
+import { getBlockedByList, getBlockList, getUser } from "../../../../Redux/authSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
 import Admin from "./Admin/Admin";
 import Ban from "./Ban/Ban";
@@ -33,6 +33,32 @@ function Player(props : props) {
   const [connected, setConnected] = useState<boolean>(false);
   const me = useSelector(getUser);
   const socketGame = useSelector(getSockeGameChat);
+  const blockList = useSelector(getBlockList);
+  const blockedByList = useSelector(getBlockedByList);
+  const [blocked, setBlocked] = useState<boolean>(false);
+  const [blockedBy, setBlockedBy] = useState<boolean>(false);
+
+  async function isBlocked(user: IuserDb) {
+    let userFinded = blockList.find((blockedUser: any) => blockedUser.uuid === user.uuid);
+    if (userFinded)
+    {
+      setBlocked(true);
+      return (true);
+    }
+    setBlocked(false);
+    return (false);
+  }
+
+  async function isBlockedBy(user: IuserDb) { //TODO a faire quand adonis aura fait la blockByList
+    let userFinded = blockedByList.find((blocked: any) => blocked.uuid === user.uuid);
+    if (userFinded)
+    {
+      setBlockedBy(true);
+      return (true);
+    }
+    setBlockedBy(false);
+    return (false);
+  }
 
   useEffect(() => {
     async function isConnected(user: IuserDb) {
@@ -45,10 +71,20 @@ function Player(props : props) {
       setConnected(false);
       return (false);
     }
-    
+
+    isBlocked(props.user);
+    isBlockedBy(props.user);
     isConnected(props.user);
     //eslint-disable-next-line
   }, [props.usersConnected])
+
+  useEffect(() => {
+    isBlocked(props.user);
+  }, [blockList])
+
+  useEffect(() => {
+    isBlockedBy(props.user);
+  }, [blockedByList])
 
   const hasInvited = (userId: string) => {
     let invite = props.invites.find((u: any) => u.requestFrom === userId);
@@ -72,7 +108,7 @@ function Player(props : props) {
   return (
     <div className='player' key={props.user?.uuid}>
       <div style={{display: "flex"}}>
-        {connected ? <span className="connected"></span> : <span className="disconnected"></span>}
+        {connected && !blocked && !blockedBy ? <span className="connected"></span> : <span className="disconnected"></span>}
         <p style={{maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis"}}>{props.user?.username}</p>
       </div>
       {
@@ -82,7 +118,7 @@ function Player(props : props) {
           null
       }
       {
-        props.user?.uuid === "" ? null :
+        props.user?.uuid === me.uuid ? null :
         <Menu 
           viewScroll="close"
           className="playerActions" 

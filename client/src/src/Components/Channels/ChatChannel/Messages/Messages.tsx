@@ -5,17 +5,22 @@ import ChatMessage from "./ChatMessage/ChatMessage";
 import './Messages.scss';
 import React from 'react';
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { getBlockedByList, getBlockList } from "../../../../Redux/authSlice";
 
 interface props {
 	userId: string;
 	messages: Imessage[];
 	users: IuserDb[];
 	setUsers: any;
+	setMessages: any;
 }
 
 function Messages(props : props) {
 	const messageEl = useRef<HTMLDivElement>(null);
 	const [usersChannel, setUsersChannel] = useState<IuserDb[]>(props.users);
+	const blockedByList = useSelector(getBlockedByList);
+	const blockList = useSelector(getBlockList);
 
 	useEffect(() => {
 		const getUsername = async () => {
@@ -42,10 +47,14 @@ function Messages(props : props) {
 		getUsername();
 	}, [props.messages]);
 
+	useEffect(() => {
+		console.log(blockedByList)
+	}, [blockList, blockedByList]);
+
 	return (
 		<div id="messages" className='messages' ref={messageEl}>
 			{props.messages.map((message : Imessage, index) => (
-				<ChatMessage key={index} message={message} users={usersChannel} userId={props.userId} setUsers={setUsersChannel} />
+				<ChatMessage key={index} message={message} users={usersChannel} userId={props.userId} setUsers={setUsersChannel} blockedByList={blockedByList} blockList={blockList} />
 			))}
 		</div>
 	);

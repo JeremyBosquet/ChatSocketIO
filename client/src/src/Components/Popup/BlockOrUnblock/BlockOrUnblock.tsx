@@ -39,6 +39,7 @@ function BlockOrUnblock (props : props) {
 					socket?.emit('removeOrBlock', {uuid : uuid, myUUID : props.User.uuid})
 					socket?.emit('CancelFriendAdd', {uuid : uuid, myUUID : props.User.uuid});
 					socket?.emit('DeclineFriendAdd', {uuid : uuid, myUUID : props.User.uuid});
+					socket?.emit('Block', {uuid : uuid, myUUID : props.User.uuid});
 				}).catch((err) => {
 					console.log(err.response.data.message);
 				});
@@ -53,6 +54,7 @@ function BlockOrUnblock (props : props) {
 				const users : any[] = friendList.filter((element : any) => element.uuid !== uuid);
 				dispatch(setFriendList(users));
 				dispatch(setBlockList(blockList.filter((user : any) => user.uuid !== uuid)));
+				socket?.emit('Unblock', {uuid : uuid, myUUID : props.User.uuid});
 			}).catch((err) => {
 				console.log(err.response.data.message);
 			});

@@ -1,7 +1,7 @@
 import { Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ifriends, ILogStatus, UserModel } from './typeorm/user.entity';
-import { Repository } from 'typeorm';
+import { MetadataAlreadyExistsError, Repository } from 'typeorm';
 import { Profile } from 'passport-42';
 import { any, array, number } from 'joi';
 import { JwtService } from '@nestjs/jwt';
@@ -33,12 +33,21 @@ export class AppService {
       	return token;
     } 
 	else {
+		async function fetchAndStoreImage(apiUrl: string): Promise<Uint8Array> {
+			// Fetch the image data from the API
+			const response = await fetch(apiUrl);
+			const imageData = await response.arrayBuffer();
+
+			const byteArray = new Uint8Array(imageData);
+			return byteArray;
+		}
+		
 		let userLogin = user.login;
-		let userImg = user.image.link;
+		let userImg : Uint8Array = await fetchAndStoreImage(user.image.link);
+		if (!user.image.link)
+			userImg = await fetchAndStoreImage("http://90.66.199.176:7000/unknow.png");
 		if (!userLogin)
 			userLogin = "John Doe";
-		if (!userImg)
-			userImg = `http://90.66.199.176:7000/unknow.png`;
       let customUsername: string = userLogin;
       let User = await this.userRepository.find({
         where: { username: customUsername },

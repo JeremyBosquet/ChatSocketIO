@@ -150,23 +150,33 @@ export class RoomGateway {
             console.log('playerA hit the ball')
             room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerA.y) / room.settings.boardHeight);
             room.ball.speed += 0.1;
+            room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.45;
+            room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.45;
           }
           else if (this.checkHitBox(room.playerB.x, room.playerB.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
             console.log('playerB hit the ball')
             room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerB.y) / room.settings.boardHeight);
             room.ball.speed += 0.1;
+            room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.45;
+            room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.45;
           }
           else if (this.checkHitBox(0, 0, 100, 1, room.ball.x, room.ball.y)) {
             console.log('wall hit the ball')
             room.ball.direction = this.newDirection(room.ball.direction, 0);
+            room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
+            room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
           }
           else if (this.checkHitBox(0, 99, 100, 1, room.ball.x, room.ball.y)) {
             console.log('wall hit the ball')
             room.ball.direction = this.newDirection(room.ball.direction, 0);
+            room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
+            room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
+          }
+          else {
+            room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
+            room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
           }
           // Move the ball
-          room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
-          room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
           this.server.in('room-' + room.id).emit('ballMovement', room);
         }
         room.lastActivity = Date.now();

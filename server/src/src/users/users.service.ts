@@ -684,16 +684,16 @@ export class UsersService {
     return 0;
   }
 
-  async ChangeAvatar(uuid: string, newAvatar: string) {
-    const user = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
-    if (user) {
-      await this.userRepository.update({ uuid }, { image: newAvatar });
-      return 1;
-    }
-    return 0;
-  }
+//   async ChangeAvatar(uuid: string, newAvatar: string) {
+//     const user = (await this.userRepository.find()).filter(
+//       (user) => user.uuid === uuid,
+//     )[0];
+//     if (user) {
+//       await this.userRepository.update({ uuid }, { image: newAvatar });
+//       return 1;
+//     }
+//     return 0;
+//   }
 
   async getUsers(): Promise<UserModel[]> {
     return await this.userRepository.find();

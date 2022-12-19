@@ -139,7 +139,7 @@ function Settings() {
 
   const AvatarFile = async (event : any) => {
 	setChangeavatar(event.target.files[0]);
-	setFileName(event.target.files[0].name);
+	setFileName(event.target.files[0]?.name);
   }
   const ChangeAvatar = async (event: any) => {
     event.preventDefault();

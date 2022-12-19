@@ -9,6 +9,7 @@ const initialState = {
   socket: null, 
   friendList : [],
   blockList : [],
+  blockedByList : [],
   requestedList : [],
   requestList: [],
   historyList: [],
@@ -69,10 +70,13 @@ export const authSlice = createSlice({
 	setConnectedList: (state: any, action: PayloadAction<any[]>) => {
 		state.connectedList = action.payload;
 	},
+	setBlockedByList: (state: any, action: PayloadAction<any[]>) => {
+		state.blockedByList = action.payload;
+	},
   },
 });
 
-export const { setUser, setLogged, setConnected, setActivated, setSocketSocial, setFriendList, setBlockList, setHistoryList, setProfileDisplayed, setProfilePage, setRequestList, setRequestedList, setUserImg, setUserUsername, setConnectedList } = authSlice.actions;
+export const { setUser, setLogged, setConnected, setActivated, setSocketSocial, setFriendList, setBlockList, setHistoryList, setProfileDisplayed, setProfilePage, setRequestList, setRequestedList, setUserImg, setUserUsername, setConnectedList, setBlockedByList } = authSlice.actions;
 
 export const getUser = (state: any) => state.auth.user;
 export const getLogged = (state: any) => state.auth.logged;
@@ -81,6 +85,7 @@ export const getConnected = (state: any) => state.auth.connected;
 export const getSocketSocial = (state: any) => state.auth.socket;
 export const getFriendList = (state: any) => state.auth.friendList;
 export const getBlockList = (state: any) => state.auth.blockList;
+export const getBlockedByList = (state: any) => state.auth.blockedByList;
 export const getRequestedList = (state: any) => state.auth.requestedList;
 export const getRequestList = (state: any) => state.auth.requestList;
 export const getHistoryList = (state: any) => state.auth.historyList;

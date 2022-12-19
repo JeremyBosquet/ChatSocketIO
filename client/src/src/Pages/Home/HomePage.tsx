@@ -9,7 +9,7 @@ import NavBar from "../../Components/Nav/NavBar";
 import { getMyExp } from '../../Components/Utils/getExp'
 import { whoWon } from "../../Components/Utils/whoWon";
 import KillSocket from "../../Components/KillSocket/KillSocket";
-import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage, getUserImg, getUserUsername, setUserUsername, setUserImg, getConnectedList } from "../../Redux/authSlice";
+import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage, getUserImg, getUserUsername, setUserUsername, setUserImg} from "../../Redux/authSlice";
 import { setFriendList, setRequestList, setRequestedList, setProfileDisplayed } from '../../Redux/authSlice'
 import Popup from "../../Components/Popup/Popup";
 import io, { Socket } from "socket.io-client";

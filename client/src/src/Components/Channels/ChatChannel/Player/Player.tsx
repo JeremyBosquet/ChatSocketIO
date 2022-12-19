@@ -75,7 +75,6 @@ function Player(props : props) {
         {connected ? <span className="connected"></span> : <span className="disconnected"></span>}
         <p style={{maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis"}}>{props.user?.username}</p>
       </div>
-      {/* <button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button> */}
       {
         me?.uuid !== props.user?.uuid && hasInvited(props.user?.uuid) ?
           <button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button>
@@ -83,12 +82,13 @@ function Player(props : props) {
           null
       }
       {
-        props.user?.uuid === me.uuid ? null :
+        props.user?.uuid === "" ? null :
         <Menu 
           viewScroll="close"
           className="playerActions" 
+          onKeyDown={(e) => e.stopPropagation()}
           menuButton={<MenuButton>⁝</MenuButton>}
-        > 
+        >
               {(me.role === "admin" && 
                 props.user.role !== 'admin' && 
                 props.user.role !== 'owner') ?
@@ -109,10 +109,8 @@ function Player(props : props) {
               <DM user={props.user}/>
               { connected ? <InviteGame user={props.user}/> : null }
               <Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
-              {/* <button className="actionButton">Profile</button> */}
               <Block user={props.user}/>
               <AddRemoveFriend user={props.user}/>
-              {/* <button className="actionButton">Add friend</button> */}
             </Menu>
       }
     </div>

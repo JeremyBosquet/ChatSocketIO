@@ -24,7 +24,7 @@
         .manageForm {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            // align-items: center;
         }
 
         .manageChannelInfos {
@@ -109,6 +109,18 @@
             // height: 90%;
             .CreateChannelInfos {
                 font-size: 18px;
+            }
+
+            .manageChangePasswordInput {
+                // margin: 5px 0;
+                // margin-top: 10px;
+                width: calc(100% - 20px);
+            }
+
+            .manageVisibilityChoice {
+                display: flex;
+                flex-direction: column;
+                width: 80%;
             }
         }
     }

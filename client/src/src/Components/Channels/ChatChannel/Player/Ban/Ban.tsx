@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { getUser } from "../../../../../Redux/authSlice";
 import { getSocket } from "../../../../../Redux/chatSlice";
 import { IuserDb } from "../../interfaces/users";
-import DateTimePicker from 'react-datetime-picker';
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
@@ -12,6 +11,7 @@ import './Ban.scss'
 import { useNavigate, useParams } from "react-router-dom";
 import React from 'react';
 import { createNotification } from "../../../../notif/Notif";
+import DatePicker from "../DatePicker/DatePicker";
 
 interface props {
     user: IuserDb;
@@ -29,7 +29,9 @@ function Ban(props : props) {
   const [time, setTime] = useState<string>("permanent");
   const [banMenu, setBanMenu] = useState(false);
 
-  const handleBan = async (targetId: string) => {
+  const handleBan = async (e: any, targetId: string) => {
+    e.preventDefault();
+    
     if (!params.id)
       navigate('/chat/channel');
 
@@ -37,7 +39,6 @@ function Ban(props : props) {
       onChange(new Date());
     
     let permanent = time === "permanent" ? true : false;
-    // const newDate = new Date(value.setHours(value.getHours() + 1));
     let duration = value?.toISOString();
 
 
@@ -47,7 +48,7 @@ function Ban(props : props) {
       admin: me.uuid,
       time: duration,
       isPermanent: permanent
-    }).then(res => {
+    }).then(() => {
       socket?.emit("kick", {channelId: selectedChannel, target: targetId, type: "ban"});
       if (permanent)
         createNotification('success', 'You have permanently banned the player.');
@@ -58,7 +59,10 @@ function Ban(props : props) {
 
   const handleClose = () => {
     setBanMenu(false);
-    // props.setManageMode(false);
+  }
+  
+  const changeTime = (e: any) => {
+    setTime(e.target.value);
   }
 
   return (
@@ -68,40 +72,22 @@ function Ban(props : props) {
             <div className="banContainer">
               <div className="banInfos">
                 <h3>Ban {props.user.username}</h3>
-                <span onClick={handleClose}>X</span>
+                <span onClick={() => handleClose()}>X</span>
               </div>
-              <div className="banDuration">
-                <h4>Duration</h4>
-                <form>
-                  <input type="radio" name="permanent" value="permanent" onChange={e => setTime("permanent")} checked={time === "permanent"}/>
-                  <label htmlFor="permanent">Permanent</label>
-                  <input type="radio" name="temporary" value="temporary" onChange={e => setTime("temporary")} checked={time === "temporary"}/>
-                  <label htmlFor="temporary">Temporary</label>
+              <div className="banDuration" onSubmit={(e) => handleBan(e, props.user.uuid)}>
+                <form className="banForm">
+                  <select className="banSelect" name="time" value={time} onChange={changeTime}>
+                    <option value="permanent">Permanent</option>
+                    <option value="temporary">Temporary</option>
+                  </select>
+                  {
+                    time === "temporary" ?
+                      <DatePicker value={value} onChange={onChange} />
+                      : null
+                  }
+                  <button className="banButton" type="submit">Ban</button>
                 </form>
               </div>
-              {
-                time === "temporary" ?
-                <DateTimePicker 
-                  disableClock={true} 
-                  clearIcon={null} 
-                  format="dd/MM/y - h:mm a" 
-                  dayPlaceholder="DD"
-                  monthPlaceholder="MM"
-                  yearPlaceholder="Y"
-                  minutePlaceholder="Minute" 
-                  hourPlaceholder="Hour"
-                  closeWidgets={false}
-                  locale="fr"
-                  minDate={new Date()} 
-                  onChange={onChange}
-                  value={value}
-                  
-
-                  className="datePicker" 
-                  required />
-                  : null
-              }
-              <button onClick={() => handleBan(props.user.uuid)}>Ban</button>
             </div>
           </div>
       : null

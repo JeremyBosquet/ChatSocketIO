@@ -4,11 +4,12 @@ interface props {
   message: string;
   room: string;
   date: string;
+  id: number;
 }
 
 function ChatMessage(props: props) {
   return (
-    <div key={Math.random()}>
+    <div key={props.id}>
       <p>
         {props.name} : {props.message}
       </p>

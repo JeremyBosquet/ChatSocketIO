@@ -54,6 +54,9 @@ function DevelopButton(props: props) {
                         className="channelMenu"
                         direction='left'
                         viewScroll='close'
+                        onClick={(e) => e.stopPropagation()}
+                        onClose={() => setToggleMenu(false)}
+                        onAuxClickCapture={() => setToggleMenu(false)}
                     >
                         { isOwner() ? <button className='channelMenuButton' onClick={e => handleManageMode(e)}>Manage channel</button> : null }
                         <Leave channelId={props.channel["id"]} setSearchChannel={props.setSearchChannel} />

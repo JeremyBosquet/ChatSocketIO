@@ -33,6 +33,7 @@ function App() {
 	const ConnectedList = useSelector(getConnectedList);
 	const requestedList = useSelector(getRequestedList);
 	const [booleffect, setBooleffect] = useState<boolean>(false);
+	const [booleffect2, setBooleffect2] = useState<boolean>(false);
 	
 	useEffect(() => { // Connect to the socket
 		if (!socketChat)
@@ -191,28 +192,79 @@ function App() {
 	useEffect(() => {
 		console.log("update socket on")
 		console.log(`socketSocial ${socketSocial}`);
+		let listUsers : any[] = [];
+		async function filterBlockedUsers(data : any) {
+			if (data.users)
+				listUsers = [... data.users];
+			await axios.get(`http://90.66.199.176:7000/user/ListUsersBlocked`, {
+				headers: ({
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				})})
+			.then((res) => {
+				let blockedList : any[] = res.data.ListUsersblocked;
+				if (blockedList)
+				{
+					console.log("salami" , listUsers);
+					for (let i = 0; i < blockedList.length; i++) {
+						listUsers = listUsers.filter((e : any) => e.uuid !== blockedList[i].uuid);
+					}
+					console.log("salennemi" , listUsers);
+				}
+			});
+			await axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
+				headers: ({
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+			})})
+			.then((res) => {
+				let blockedByList : any[] = res.data.ListBlockedBy;
+				if (blockedByList)
+				{
+					console.log("frite" , listUsers);
+					for (let i = 0; i < blockedByList.length; i++) {
+						listUsers = listUsers.filter((e : any) => e.uuid !== blockedByList[i].uuid);
+					}
+					console.log("steak" , listUsers);
+				}
+			});
+			setBooleffect2(true);
+		}
 		if (socketSocial)
 		{
 			console.log('la')
 			socketSocial?.removeListener("listUsersConnected");
 			socketSocial.on('listUsersConnected', (data : any) => {
-				dispatch(setConnectedList(data.users));
-				console.log("erererererer" , ConnectedList)
-			})
+					filterBlockedUsers(data);
+					if (booleffect2)
+					{
+						console.log("listUsers: ", listUsers);
+						dispatch(setConnectedList(listUsers));
+						console.log("erererererer" , ConnectedList);
+					}
+				}
+			)
 			
 			socketSocial?.removeListener("connectedToServer");
 			socketSocial.on('connectedToServer', (data : any) => {
-				console.log("test")
-				dispatch(setConnectedList([...ConnectedList, data]));
+				filterBlockedUsers(data);
+				if (booleffect2)
+				{
+					console.log("test")
+					dispatch(setConnectedList(listUsers));
+				}
 			})
 			
 			socketSocial?.removeListener("disconnectFromServer");
 			socketSocial.on('disconnectFromServer', (data : any) => {
-				console.log("Oui salade: ", ConnectedList.filter((user: any) => user.uuid !== data.uuid))
-				dispatch(setConnectedList(ConnectedList.filter((user: any) => user.uuid !== data.uuid)));
+				filterBlockedUsers(data);
+				if (booleffect2)
+				{
+					listUsers = listUsers.filter((user: any) => user.uuid !== data.uuid);
+					console.log("Oui salade: ", listUsers);
+					dispatch(setConnectedList(listUsers));
+				}
 			})
 		}
-	}, [socketSocial, ConnectedList]);
+	}, [socketSocial, ConnectedList, booleffect2]);
   return (
     <Router>
       {APIStatus ? (

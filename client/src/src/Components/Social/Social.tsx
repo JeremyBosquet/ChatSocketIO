@@ -9,7 +9,7 @@ import React from 'react';
 import './Social.scss';
 import NavBar from '../Nav/NavBar';
 // import { AddOrRemoveFriend, CancelFriendAdd, AcceptFriend, DeclineFriendAdd, BlockOrUnblockUser} from "../../Components/Utils/socialCheck"
-import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage, getConnectedList } from "../../Redux/authSlice";
+import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage} from "../../Redux/authSlice";
 import {setFriendList, setRequestList, setRequestedList, setProfileDisplayed, setHistoryList, setBlockList, setProfilePage} from '../../Redux/authSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import Show from '../Popup/Show/Show';
@@ -19,7 +19,7 @@ import Accept from '../Popup/Accept/Accept';
 import Decline from '../Popup/Decline/Decline';
 import Cancel from '../Popup/Cancel/Cancel';
 import {GoPrimitiveDot} from 'react-icons/go'
-import { isOnline } from '../Utils/isOnline';
+import IsOnline from '../Utils/IsOnline';
 //import RxDotFilled from 'react-icons/rx'
 
 function Social() {
@@ -51,7 +51,6 @@ function Social() {
 	const blockList = useSelector(getBlockList);
 	const requestedList = useSelector(getRequestedList);
 	const requestList = useSelector(getRequestList);
-	const ConnectedList = useSelector(getConnectedList);
 	const profilePage = useSelector(getProfilePage);
 	const profileDisplayed = useSelector(getProfileDisplayed);
 	const historyList = useSelector(getHistoryList);
@@ -228,10 +227,7 @@ function Social() {
 												<p> {user.username} </p>
 												<div className='status'>
 												{
-													ConnectedList.find((userInList : any) => userInList.uuid === user.uuid) ?
-														<span className={"Green"}> <GoPrimitiveDot/> </span>
-													:
-														<span className={"Red"}> <GoPrimitiveDot/> </span>
+													<IsOnline uuid={user.uuid}/>
 												}
 												</div>
 												<div className='buttons'>
@@ -292,10 +288,7 @@ function Social() {
 												<p> {user.username} </p>
 												<div className='status'>
 												{
-													ConnectedList.find((userInList : any) => userInList.uuid === user.uuid) ?
-													<span className={"Green"}> <GoPrimitiveDot/> </span>
-												:
-													<span className={"Red"}> <GoPrimitiveDot/> </span>
+													<IsOnline uuid={user.uuid}/>
 												}
 												</div>
 												<div className='buttons'>
@@ -333,10 +326,7 @@ function Social() {
 												<p> {user?.username} </p>
 												<div className='status'>
 												{
-													ConnectedList.find((userInList : any) => userInList.uuid === user.uuid) ?
-														<span className={"Green"}> <GoPrimitiveDot/> </span>
-													:
-														<span className={"Red"}> <GoPrimitiveDot/> </span>
+													<IsOnline uuid={user.uuid}/>
 												}
 												</div>
 												<div className='buttons'>

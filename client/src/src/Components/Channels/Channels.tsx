@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React from 'react';
 import { useEffect, useState } from 'react';
-import FormCreateChannel from '../FormCreateChannel/FormCreateChannel';
 import ChatChannel from './ChatChannel/ChatChannel';
 import { useDispatch, useSelector } from 'react-redux';
 import { getChannels, setChannels } from '../../Redux/chatSlice';
@@ -27,7 +26,6 @@ function Channels(props: props) {
     const dispatch = useDispatch();
 
     const user = useSelector(getUser);
-    const channels = useSelector(getChannels);
     
     const getUsersChannel = async (userId: any) => {
         await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + userId)
@@ -48,8 +46,6 @@ function Channels(props: props) {
     return (
     <>  
         <div className='channels'>
-            {/* <div className='channelsOperations'>
-            </div> */}
             <div className='channelChat'>
                 { params.id !== undefined ? 
                     <ChatChannel invites={props.invites} /> : null

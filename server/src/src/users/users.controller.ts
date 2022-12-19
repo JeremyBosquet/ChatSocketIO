@@ -759,6 +759,26 @@ export class UsersController {
 	});
   }
 
+  @Get('ListBlockedBy')
+  @UseGuards(JwtAuthGuard)
+  async ListBlockedByWithUuid(@Req() req: any, @Res() res: any) {
+	const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
+	const User = await this.userService.findUserByUuid(Jwt['uuid']);
+	if (User) {
+	  const add = await this.userService.ListBlockedByWithUuid(User.uuid);
+	  return res.status(HttpStatus.OK).json({
+		statusCode: HttpStatus.OK,
+		message: 'succes',
+		ListBlockedBy: add,
+	  });
+	}
+	return res.status(HttpStatus.NOT_FOUND).json({
+	  statusCode: HttpStatus.NOT_FOUND,
+	  message: 'User not found',
+	  error: 'NOT_FOUND',
+	});
+  }
+
   @Post('changeUsername')
   @UseGuards(JwtTwoFactorGuard)
   async ChangeUsername(

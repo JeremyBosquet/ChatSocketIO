@@ -18,11 +18,11 @@ export class AppGateway {
 
   @SubscribeMessage('connected')
   async connected(@MessageBody() data: any,@ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
-	  if (await this.UsersService.findUserByUuid(data.uuid))
+		let myUser = await this.UsersService.findUserByUuid(data.uuid);
+	  if (myUser)
 	  {
 		console.log("connected", data);
 		// console.log('hereerer');
-		console.log(client.id);
 		client.data.uuid = data.uuid;
 		//this.UsersService.IsLoggedIn(data.uuid)
 		const sockets = await this.server.fetchSockets()
@@ -30,8 +30,8 @@ export class AppGateway {
         let users = [];
         for (const socket of sockets) {
 			if (socket.data.uuid)
-			if (!(await users.find((user) => (user.uuid === socket.data.uuid))))
-			users.push({uuid : socket.data.uuid});
+				if (!(await users.find((user) => (user.uuid === socket.data.uuid))))
+					users.push({uuid : socket.data.uuid});
 		}
 		this.server.to(client.id).emit('listUsersConnected', {users : users});
 		client.broadcast.emit('connectedToServer', {uuid : data.uuid});

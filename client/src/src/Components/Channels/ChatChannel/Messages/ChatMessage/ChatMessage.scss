@@ -11,14 +11,15 @@
     border-radius: 15px 15px 15px 0px;
     overflow-wrap: anywhere;
 
-    .messageUser {
-        font-weight: bold;
-        margin-bottom: 2px;
-    }
-
     .messageContent {
         margin-top: 0px;
     }
+}
+
+.messageUser {
+    position: relative;
+    top: -3px;
+    color: rgb(214, 214, 214);
 }
 
 .sender {
@@ -32,4 +33,13 @@
     .messageContent {
         text-align: left;
     }
+}
+
+.left {
+    margin-left: 3px;
+}
+
+.right {
+    align-self: flex-end;
+    margin-right: 5px;
 }

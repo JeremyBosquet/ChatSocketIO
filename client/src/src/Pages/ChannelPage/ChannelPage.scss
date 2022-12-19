@@ -7,6 +7,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+
     .container {
         display: flex;
         background-color: #2C2C2C;
@@ -21,6 +22,25 @@ body {
 
         .backButtonDiv {
             display: none;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+
+            .backButton {
+                width: 100%;
+                height: 30px;
+                background-color: #1F1F1F;
+                border: none;
+                color: white;
+                font-size: 20px;
+                cursor: pointer;
+                padding: 3px 20px;
+                transition-duration: 0.2s;
+
+                &:hover {
+                    background-color: #131313;
+                }
+            }
         }
 
         .leftSide {

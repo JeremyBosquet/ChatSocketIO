@@ -7,47 +7,48 @@ import React from 'react';
 import axios from "axios";
 
 interface props {
-  userId: string;
-  messages: Imessage[];
-  users: IuserDb[];
-  setUsers: any;
+	userId: string;
+	messages: Imessage[];
+	users: IuserDb[];
+	setUsers: any;
 }
 
 function Messages(props : props) {
-  const messageEl = useRef<HTMLDivElement>(null);
-  const [usersChannel, setUsersChannel] = useState<IuserDb[]>(props.users);
+	const messageEl = useRef<HTMLDivElement>(null);
+	const [usersChannel, setUsersChannel] = useState<IuserDb[]>(props.users);
 
-  useEffect(() => {
-    const getUsername = async () => {
-      let temp = usersChannel;
-         for (let i = 0; i < props.messages.length; i++)
-         {
-           const userFinded = temp.find(user => user.uuid === props.messages[i].userId);``
-           if (!userFinded)
-           {
-             await axios.get(`http://90.66.199.176:7000/api/chat/user/` + props.messages[i].userId).then(res => {
-               if (res.data)
-                 temp = [...temp, {...res.data, print: false}];
-               }).catch(err => console.log(err));
-           }
-         }
-         setUsersChannel(temp);
-  }
+	useEffect(() => {
+		const getUsername = async () => {
+			let temp = usersChannel;
+				 for (let i = 0; i < props.messages.length; i++)
+				 {
+					 const userFinded = temp.find(user => user.uuid === props.messages[i].userId);``
+					 if (!userFinded)
+					 {
+						 await axios.get(`http://90.66.199.176:7000/api/chat/user/` + props.messages[i].userId).then(res => {
+							 if (res.data)
+								 temp = [...temp, {...res.data, print: false}];
+							 }).catch(err => console.log(err));
+					 }
+				 }
+				 setUsersChannel(temp);
+	}
 
-  setTimeout(() => {
-    if (messageEl.current)
-      messageEl.current.scroll({top: messageEl.current.scrollHeight, behavior: 'auto'});
-  }, 1)
-  getUsername();
-  }, [props.messages]);
+		setTimeout(() => {
+			if (messageEl.current)
+				messageEl.current.scroll({top: messageEl.current.scrollHeight, behavior: 'auto'});
+		}, 1)
 
-  return (
-    <div id="messages" className='messages' ref={messageEl}>
-      {props.messages.map((message : Imessage, index) => (
-        <ChatMessage key={index} message={message} users={usersChannel} userId={props.userId} setUsers={setUsersChannel}/>
-      ))}
-    </div>
-  );
+		getUsername();
+	}, [props.messages]);
+
+	return (
+		<div id="messages" className='messages' ref={messageEl}>
+			{props.messages.map((message : Imessage, index) => (
+				<ChatMessage key={index} message={message} users={usersChannel} userId={props.userId} setUsers={setUsersChannel} />
+			))}
+		</div>
+	);
 }
 
 export default Messages;

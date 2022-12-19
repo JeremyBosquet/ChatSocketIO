@@ -37,6 +37,26 @@
 .players {
     max-height: 645px;
     overflow-y: auto;
+
+    /* width */
+    &::-webkit-scrollbar {
+        width: 2px;
+    }
+    
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background: #181818;
+    }
+    
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+    
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 }
 
 @media screen and (max-width: 1160px) {

@@ -14,7 +14,6 @@ interface props {
 
 function Join(props: props) {
     const [password, setPassword] = useState<string>("");
-    const [error, setError] = useState<string>("");
 
     const dispatch = useDispatch();
     
@@ -22,7 +21,6 @@ function Join(props: props) {
     const socket = useSelector(getSocket);
 
     const handleJoin = async (id: string) => {
-        setError("");
 
         if (props.channelVisibility === "protected")
             if (password === "")
@@ -30,7 +28,7 @@ function Join(props: props) {
 
         if (props.channelVisibility === "private")
         {
-            setError("You can't join this channel, please use code.");
+            createNotification("error", "You can't join this channel, please use the private code.");
             return;
         }
                 
@@ -49,7 +47,7 @@ function Join(props: props) {
             createNotification("success", "You have successfully join the channel.");
             props.setSearchChannel("");
         }).catch((err) => {
-            setError(err.response.data.message);
+            createNotification("error", err.response.data.message);
         })}
     
   return (
@@ -57,13 +55,11 @@ function Join(props: props) {
         {
             props.channelVisibility === "protected" ?
             <>
-                { error !== "" ? <p>Error: {error}</p> : null }
                 <input placeholder="password" value={password} onChange={e => setPassword(e.target.value)}></input>
                 <button className='joinChannelButton' onClick={e => handleJoin(props.channelId)}>Join</button>
             </>
             :
             <>
-                { error !== "" ? <p>Error: {error}</p> : null }
                 <button className='joinChannelButton' onClick={e => handleJoin(props.channelId)}>Join</button>
             </>
         }

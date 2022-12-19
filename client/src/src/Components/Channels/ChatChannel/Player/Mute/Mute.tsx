@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { getUser } from "../../../../../Redux/authSlice";
 import { getSocket } from "../../../../../Redux/chatSlice";
 import { IuserDb } from "../../interfaces/users";
-import DateTimePicker from 'react-datetime-picker';
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
@@ -12,6 +11,7 @@ import './Mute.scss'
 import { useNavigate, useParams } from "react-router-dom";
 import React from 'react';
 import { createNotification } from "../../../../notif/Notif";
+import DatePicker from "../DatePicker/DatePicker";
 
 interface props {
     user: IuserDb;
@@ -30,7 +30,8 @@ function Mute(props : props) {
   const [time, setTime] = useState<string>("permanent");
   const [muteMenu, setMuteMenu] = useState(false);
 
-  const handleMute = async (targetId: string) => {
+  const handleMute = async (e: any, targetId: string) => {
+    e.preventDefault();
     if (!params.id)
       navigate('/chat/channel');
 
@@ -80,6 +81,10 @@ function Mute(props : props) {
       return true;
     return false;
   }
+  
+  const changeTime = (e: any) => {
+    setTime(e.target.value);
+  }
 
   return (
     <>
@@ -91,44 +96,26 @@ function Mute(props : props) {
                 <span onClick={handleClose}>X</span>
               </div>
               <div className="muteDuration">
-                <h4>Duration</h4>
-                <form>
-                  <input type="radio" name="permanent" value="permanent" onChange={e => setTime("permanent")} checked={time === "permanent"}/>
-                  <label htmlFor="permanent">Permanent</label>
-                  <input type="radio" name="temporary" value="temporary" onChange={e => setTime("temporary")} checked={time === "temporary"}/>
-                  <label htmlFor="temporary">Temporary</label>
+                <form className="muteForm" onSubmit={(e) => handleMute(e, props.user.uuid)}>
+                  <select className="muteSelect" name="time" value={time} onChange={changeTime}>
+                    <option value="permanent">Permanent</option>
+                    <option value="temporary">Temporary</option>
+                  </select>
+                  {
+                    time === "temporary" ?
+                      <DatePicker value={value} onChange={onChange} />
+                      : null
+                  }
+                  <button className="muteButton" type="submit">Mute</button>
                 </form>
               </div>
-              {
-                time === "temporary" ?
-                <DateTimePicker 
-                  disableClock={true} 
-                  clearIcon={null} 
-                  format="dd/MM/y - h:mm a" 
-                  dayPlaceholder="DD"
-                  monthPlaceholder="MM"
-                  yearPlaceholder="Y"
-                  minutePlaceholder="Minute" 
-                  hourPlaceholder="Hour"
-                  closeWidgets={false}
-                  locale="fr"
-                  minDate={new Date()} 
-                  onChange={onChange}
-                  value={value}
-                  
-
-                  className="datePicker" 
-                  required />
-                  : null
-              }
-              <button onClick={() => handleMute(props.user.uuid)}>Mute</button>
             </div>
           </div>
       : null
     }
       {
         isMuted() ?
-          <button className="actionButton" onClick={() => handleMute(props.user.uuid)}>Unmute</button>
+          <button className="actionButton" onClick={(e) => handleMute(e, props.user.uuid)}>Unmute</button>
         :
           <button className="actionButton" onClick={() => setMuteMenu(!muteMenu)}>Mute</button>
       }

@@ -188,11 +188,16 @@ export class UsersService {
   }
 
   async ListBlockedWithUuid(uuid: string) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
     if (find)
 		return find.blocked;
+    return null;
+  }
+
+  async ListBlockedByWithUuid(uuid: string) {
+    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    if (find)
+		return find.blockedby;
     return null;
   }
 

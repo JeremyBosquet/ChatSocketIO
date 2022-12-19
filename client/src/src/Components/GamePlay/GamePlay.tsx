@@ -84,6 +84,9 @@ function GamePlay(props: props) {
   let maxWidth = 1000;
   let maxHeight = 600;
 
+  let boardAX = 0.025;
+  let boardBX = 0.025;
+
   const [image] = (props?.room?.settings?.background == "background1" ? useImage(imager) : useImage(imager));
   const [windowsWidth, setWindowsWidth] = useState(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
   const [windowsHeight, setWindowsHeight] = useState(window.innerHeight > maxHeight /*- 200*/ ? maxHeight : window.innerHeight /*- 200*/); // game board
@@ -113,7 +116,7 @@ function GamePlay(props: props) {
   });
   const [playerA, setPlayerA] = useState<ICanvasBoard>({
     id: "playerA",
-    x: 0.01 * windowsWidth,
+    x: boardAX * windowsWidth,
     y: props.room?.playerA.y
       ? (props.room?.playerA.y / 100) * windowsHeight
       : windowsHeight / 2 - boardHeight / 2,
@@ -121,7 +124,7 @@ function GamePlay(props: props) {
   });
   const [playerB, setPlayerB] = useState<ICanvasBoard>({
     id: "playerB",
-    x: (windowsWidth - 0.015 * windowsWidth),
+    x: (windowsWidth - boardBX * windowsWidth),
     y: props.room?.playerB.y
       ? (props.room?.playerB.y / 100) * windowsHeight
       : windowsHeight / 2 - boardHeight / 2,
@@ -249,14 +252,14 @@ function GamePlay(props: props) {
     setPlayerA({
       ...playerA,
       id: "playerA",
-      x: (0.01 * windowsWidth),
+      x: (boardAX * windowsWidth),
       y: (playerA.percentY / 100) * windowsHeight,
       percentY: playerA.percentY,
     });
     setPlayerB({
       ...playerB,
       id: "playerB",
-      x: (windowsWidth - 0.015 * windowsWidth),
+      x: (windowsWidth - boardBX * windowsWidth),
       y: (playerB.percentY / 100) * windowsHeight,
       percentY: playerB.percentY,
     });
@@ -273,7 +276,7 @@ function GamePlay(props: props) {
         setPlayerA({
           ...playerA,
           id: "playerA",
-          x: 0.01 * windowsWidth,
+          x: boardAX * windowsWidth,
           y: (data.y / 100) * windowsHeight,
           percentY: data.y,
         });
@@ -281,7 +284,7 @@ function GamePlay(props: props) {
         setPlayerB({
           ...playerB,
           id: "playerB",
-          x: windowsWidth - 0.015 * windowsWidth,
+          x: windowsWidth - boardBX * windowsWidth,
           y: (data.y / 100) * windowsHeight,
           percentY: data.y,
         });

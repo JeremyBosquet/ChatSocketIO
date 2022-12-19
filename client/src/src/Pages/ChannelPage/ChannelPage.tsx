@@ -18,7 +18,7 @@ import Popup from '../../Components/Popup/Popup';
 import Channel from '../../Components/Channels/Channel/Channel';
 import { getChannels, setChannels } from '../../Redux/chatSlice';
 import { GrAdd } from 'react-icons/gr';
-import { IoAdd } from 'react-icons/io5';
+import { IoAdd, IoArrowBackOutline } from 'react-icons/io5';
 import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
 import Search from '../../Components/Channels/Search/Search';
 
@@ -304,7 +304,7 @@ function ChannelPage() {
 									{params.id ?
 										(
 											<div className="backButtonDiv">
-												<button className="backButton" onClick={() => navigate('/chat/')}>Back</button>
+												<button className="backButton" onClick={() => navigate('/chat/')}><IoArrowBackOutline /> Back</button>
 											</div>
 										) : null
 									}

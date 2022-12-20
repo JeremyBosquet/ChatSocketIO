@@ -12,6 +12,7 @@ import { getUser } from '../../../Redux/authSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 import { IoMdLock } from 'react-icons/io';
+import instance from '../../../API/Instance';
 
 function DMChannel() {
   const [messages, setMessages] = useState<Imessage[]>([]);
@@ -29,7 +30,7 @@ function DMChannel() {
   const dispatch = useDispatch();
 
   const getUsersChannel = async (userId: any) => {
-    await axios.get("http://90.66.199.176:7000/api/chat/dms/user/" + userId)
+    await instance.get("chat/dms/user/" + userId)
     .then((res) => {
         if (res)
           dispatch(setChannels(res.data));
@@ -37,7 +38,7 @@ function DMChannel() {
   }
 
   const getMessages = async () => {
-    await axios.get(`http://90.66.199.176:7000/api/chat/dm/messages/` + selectedChannelDM + '/' + user.uuid)
+    await instance.get("chat/dm/messages/" + selectedChannelDM + '/' + user.uuid)
     .then(res => {
       if (res.data)
         setMessages(res.data);
@@ -50,7 +51,7 @@ function DMChannel() {
   
   useEffect(() => {
     const getChannel = async () => {
-      const dm = (await axios.get(`http://90.66.199.176:7000/api/chat/dm/` + selectedChannelDM)).data;
+      const dm = (await instance.get("chat/dm/" + selectedChannelDM)).data;
       setDm(dm);
       setUsers(dm.users);
     }
@@ -67,7 +68,7 @@ function DMChannel() {
   useEffect(() => {
     const getName = async () => {
       const userId = dm?.users[0]?.uuid === user.uuid ? dm?.users[1]?.uuid : dm?.users[0]?.uuid;
-      const u = (await axios.get(`http://90.66.199.176:7000/api/chat/user/` + userId)).data;
+      const u = (await instance.get(`chat/user/` + userId)).data;
       if (u?.username)
         setName(u.username);
     }
@@ -79,7 +80,6 @@ function DMChannel() {
   useEffect(() => {
     if (socket)
     {
-
       socket.removeListener('messageFromServer');
       socket.on('messageFromServer', (message: Imessage) => {
         setMessages(messages => [...messages, message]);

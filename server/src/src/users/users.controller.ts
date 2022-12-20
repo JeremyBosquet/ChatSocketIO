@@ -814,6 +814,9 @@ export class UsersController {
   ) {
 	const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 	const User = await this.userService.findUserByUuid(Jwt['uuid']);
+	function onlyLettersAndNumbers(str : string) {
+		return Boolean(str.match(/^[A-Za-z0-9]*$/));
+	}	
 	if (User) {
 	  const newName = Name['newName'];
 	  if (
@@ -821,12 +824,13 @@ export class UsersController {
 		!newName ||
 		/^\s*$/.test(newName) ||
 		newName.length < 2 ||
-		newName.length > 10
+		newName.length > 10 ||
+		!onlyLettersAndNumbers(newName)
 	  ) {
 		return res.status(HttpStatus.BAD_REQUEST).json({
 		  statusCode: HttpStatus.BAD_REQUEST,
 		  message:
-			'Username is either too short , too long or made of only space char',
+			'Username is invalid , check the length or the characters that make up the username',
 		  error: 'BAD_REQUEST',
 		});
 	  }
@@ -918,7 +922,7 @@ export class UsersController {
 		console.log('Invalid image file');
 	}
 	if (User) {
-	  if (!(await this.userService.ChangeAvatar(User.uuid , file.buffer))) {
+	  if (!(await this.userService.ChangeAvatar(User.uuid , file.buffer, file.mimetype))) {
 		return res.status(HttpStatus.NOT_FOUND).json({
 		  statusCode: HttpStatus.NOT_FOUND,
 		  message: 'User not found',

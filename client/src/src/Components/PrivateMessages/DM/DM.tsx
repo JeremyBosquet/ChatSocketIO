@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 import { IoMdLock } from 'react-icons/io';
+import instance from '../../../API/Instance';
 
 interface props {
     dm: any;
@@ -32,7 +33,7 @@ function DM(props: props) {
   useEffect(() => {
     const getName = async () => {
       const userId = props.dm.users[0]?.id === user.uuid ? props.dm.users[1]?.id : props.dm.users[0]?.id;
-      const u = (await axios.get(`http://90.66.199.176:7000/api/chat/user/` + userId)).data;
+      const u = (await instance.get("chat/user/" + userId)).data;
       if (u?.username)
         setName(u.username);
     }

@@ -430,7 +430,7 @@ export class RoomGateway {
             lastActivity: Date.now(),
           };
           _tmp.scoreA++;
-          _tmp.scoreB = -1;
+          _tmp.scoreB = -_tmp.scoreB;
           _tmp.status = 'finished';
           this.usersService.addExp(room.playerA.id, 0.42);
           await this.roomService.save(_tmp);
@@ -456,7 +456,7 @@ export class RoomGateway {
           };
           this.usersService.addExp(room.playerB.id, 0.42);
           _tmp.scoreB++;
-          _tmp.scoreA = -1;
+          _tmp.scoreA = -_tmp.scoreB;
           _tmp.status = 'finished';
           await this.roomService.save(_tmp);
           await this.roomService.updateRoom(room.id, {status: 'destroy'});

@@ -35,9 +35,9 @@ export class UserModel {
   @Expose()
   trueUsername: string;
 
-  @Column('bytea', {nullable: true})
+  @Column({nullable: true})
   @Expose()
-  image: Buffer;
+  image: string;
 
   @Column()
   @Expose()

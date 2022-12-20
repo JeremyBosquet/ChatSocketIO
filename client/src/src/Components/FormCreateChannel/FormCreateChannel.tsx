@@ -7,6 +7,7 @@ import React from 'react';
 import { createNotification } from '../notif/Notif';
 import './FormCreateChannel.scss';
 import { IoAdd } from 'react-icons/io5';
+import instance from '../../API/Instance';
 
 function FormCreateChannel() {
   const [channelName, setChannelName] = useState<string>("");
@@ -75,7 +76,7 @@ function FormCreateChannel() {
         socket?.emit('channelCreated');
 
         const getUsersChannel = async (userId: any) => {
-          await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + userId)
+          await instance.get("chat/channels/user/" + userId)
           .then((res) => {
               if (res)
                   dispatch(setChannels(res.data));

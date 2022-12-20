@@ -203,6 +203,7 @@ function HomePage() {
 				.then((res) => {
 					setUser(res.data.User);
 					dispatch(setUserUsername(res.data.User.username));
+					dispatch(setUserImg(res.data.User.image));
 					setTrueUsername(res.data.User.trueUsername);
 					axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + res.data.User.uuid,
 					{
@@ -275,7 +276,7 @@ function HomePage() {
 									{display ? (
 										<div id="myProfile">
 											<img
-												src={`http://90.66.199.176:7000/user/getProfilePicture/` + User.uuid}
+												src={userImg}
 												alt="user_img"
 												className="userImg"
 												width="384"

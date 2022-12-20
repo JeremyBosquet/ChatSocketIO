@@ -5,6 +5,7 @@ import { getUser } from '../../../Redux/authSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 import { createNotification } from '../../notif/Notif';
+import instance from '../../../API/Instance';
 
 interface props {
     channelId: string;
@@ -24,14 +25,14 @@ function Leave(props: props) {
         e.stopPropagation();
 
         const getUsersChannel = async (userId: any) => {
-            await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + userId)
+            await instance.get("chat/channels/user/" + userId)
             .then((res) => {
                 if (res)
                     dispatch(setChannels(res.data));
             })
         }
     
-        await axios.post("http://90.66.199.176:7000/api/chat/channel/leave", {"channelId": id, "userId": user.uuid})
+        await instance.post("chat/channel/leave", {"channelId": id, "userId": user.uuid})
         .then(() => {
             getUsersChannel(user.uuid);
             socket?.emit('leavePermanant', { userId: user.uuid, channelId: id });

@@ -10,6 +10,7 @@ import { randomInt } from 'crypto';
 import { UsersService } from './users/users.service';
 import * as bcrypt from 'bcrypt';
 import axios from 'axios';
+import { promises as fs } from "fs";
 
 @Injectable()
 export class AppService {
@@ -27,33 +28,35 @@ export class AppService {
     if (findUser[0]) {
       const payload = { uuid: findUser[0].uuid };
       const token = this.jwtService.sign(payload, { expiresIn: '2d' });
-      console.log("moi :" + findUser[0].uuid)
-      console.log("token" + token);
       this.userService.IsLoggedIn(findUser[0].uuid, token);
-      async function fetchAndStoreImage(apiUrl: string): Promise<Buffer> {
-        const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
-        const imageData = response.data;
-        return (Buffer.from(imageData));
-
-      }
-      let userImg: Buffer = await fetchAndStoreImage(user.image.link);
-      console.log(userImg)
-      this.userRepository.update(findUser[0].uuid, { image: userImg });
 
       return token;
     }
     else {
-		async function fetchAndStoreImage(apiUrl: string): Promise<Buffer> {
-			const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
-			const imageData = response.data;
-			return (Buffer.from(imageData));
-			
-		}
-		let userImg: Buffer;
+		async function fetchAndStoreImage(apiUrl: string, path : string, name : string) {
+			// const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
+			// const imageData = response.data;
+			// return (Buffer.from(imageData));
+	
+	
+			const response = await fetch(apiUrl);
+	
+			const blob = await response.blob();
+	
+			const arrayBuffer = await blob.arrayBuffer();
+	
+			const buffer = Buffer.from(arrayBuffer);
+	
+			await fs.writeFile(path + name, buffer);
+	
+			return (process.env.BACK + name);
+	
+		  }
+		  let userImg : string;
 		if (user.image.link)
-			userImg = await fetchAndStoreImage(user.image.link);
+			userImg = await fetchAndStoreImage(user.image.link, "./src/uploads/avatar/" , Date().replace(/ /g, '') + ".jpg");
 		else
-			userImg = await fetchAndStoreImage("http://90.66.199.176:7000/unknow.png");
+			userImg = "http://90.66.199.176:7000/unknow.png";
 		this.userRepository.update(findUser[0].uuid, { image: userImg }); 	
 		let userLogin = user.login;
       if (!userLogin)

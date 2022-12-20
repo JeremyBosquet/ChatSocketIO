@@ -210,7 +210,7 @@ function Social() {
 										{
 											searchList.map((user, index) => (
 											<div key={user.uuid} className='mapSearch'>
-												<img className="icon" src={`http://90.66.199.176:7000/user/getProfilePicture/` + user?.uuid} alt="user_img" width="36" height="27"/>
+												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 												<p> {user.username} </p>
 												<div className='status'>
 												{
@@ -271,7 +271,7 @@ function Social() {
 									{
 										friendList.map((user : any) => (
 											<div key={user.uuid} className='mapFriend'> 
-												<img className="icon" src={`http://90.66.199.176:7000/user/getProfilePicture/` + user?.uuid} alt="user_img" width="36" height="27"/>
+												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 												<p> {user.username} </p>
 												<div className='status'>
 												{
@@ -309,7 +309,7 @@ function Social() {
 										{
 											requestList.map((user : any, index : number) => (
 											<div key={index} className='mapReq'> 
-												<img className="icon" src={`http://90.66.199.176:7000/user/getProfilePicture/` + user?.uuid} alt="user_img" width="36" height="27"/>
+												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
 												<p> {user?.username} </p>
 												<div className='status'>
 												{

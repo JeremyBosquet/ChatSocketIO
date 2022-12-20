@@ -8,6 +8,7 @@ import React from 'react';
 import axios from 'axios';
 import { setChannels } from '../../../Redux/chatSlice';
 import { createNotification } from '../../notif/Notif';
+import instance from '../../../API/Instance';
 
 interface props {
     channel: any;
@@ -41,7 +42,7 @@ function Manage(props: props) {
 
     const removePassword = (visibility === "public") ? true : false;
 
-    await axios.post("http://90.66.199.176:7000/api/chat/channel/edit", {
+    await instance.post("chat/channel/edit", {
       channelId: props.channel.id,
       userId: user.uuid,
       removePassword: removePassword,

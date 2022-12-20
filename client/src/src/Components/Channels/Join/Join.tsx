@@ -5,6 +5,7 @@ import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import React from 'react';
 import { createNotification } from '../../notif/Notif';
 import './Join.scss';
+import instance from '../../../API/Instance';
 
 interface props {
     channelId: string;
@@ -33,14 +34,14 @@ function Join(props: props) {
         }
                 
         const getUsersChannel = async (userId: any) => {
-            await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + userId)
+            await instance.get("chat/channels/user/" + userId)
             .then((res) => {
                 if (res)
                     dispatch(setChannels(res.data));
             })
         }
     
-        await axios.post("http://90.66.199.176:7000/api/chat/channel/join", {"channelId": id, "userId": user.uuid, "password": password})
+        await instance.post("chat/channel/join", {"channelId": id, "userId": user.uuid, "password": password})
         .then(() => {
             getUsersChannel(user.uuid);
             socket?.emit('joinPermanent', { channelId: id });

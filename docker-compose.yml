@@ -8,7 +8,7 @@ services:
     build:
       context: ./client
       args:
-       - url=${FRONT_URL}
+       - ARG_URL=${URL}
     ports:
       - "5999:5999"
     restart: unless-stopped
@@ -19,7 +19,7 @@ services:
     build:
       context: ./server
       args:
-       - url=${FRONT_URL}
+       - URL=${URL}
     ports:
       - "6000:6000"
       - "7000:7000"
@@ -30,9 +30,16 @@ services:
     restart: unless-stopped
   db:
     container_name: db
-    image: postgres
-    restart: always
-    environment:
-      POSTGRES_PASSWORD: jerem
+    build:
+      context: ./db
+      args:
+       - ARG_USER=${USER}
+       - ARG_PASSWORD=${PASSWORD}
+       - ARG_DBNAME=${DBNAME}
+       - ARG_FORTYTWO_CLIENT_ID=${FORTYTWO_CLIENT_ID}
+       - ARG_FORTYTWO_CLIENT_SECRET=${FORTYTWO_CLIENT_SECRET}
+       - ARG_JWT_SECRET=${JWT_SECRET}
+       - ARG_TWO_FACTOR_AUTHENTICATION_APP_NAME=${TWO_FACTOR_AUTHENTICATION_APP_NAME}
     ports:
       - "5432:5432"
+    restart: unless-stopped

@@ -8,6 +8,7 @@ import DMChannel from './DMChannel/DMChannel';
 import { useParams } from 'react-router-dom';
 import React from 'react';
 import { setDMs } from '../../Redux/chatSlice';
+import instance from '../../API/Instance';
 
 function PrivateMessages() {
     const params = useParams();
@@ -18,7 +19,7 @@ function PrivateMessages() {
 
     useEffect(() => {
         const getUsersDM = async (userId: any) => {
-            await axios.get("http://90.66.199.176:7000/api/chat/dm/user/" + userId)
+            await instance.get("chat/dm/user/" + userId)
             .then((res) => {
                 if (res)
                     dispatch(setDMs(res.data));

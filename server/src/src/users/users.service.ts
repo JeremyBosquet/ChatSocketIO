@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { plainToClass } from 'class-transformer';
 import { User } from 'src/login/user.decorator';
 import * as bcrypt from 'bcrypt';
-
+import { promises as fs } from "fs";
 @Injectable()
 export class UsersService {
   constructor(
@@ -684,12 +684,17 @@ export class UsersService {
     return 0;
   }
 
-  async ChangeAvatar(uuid: string, newAvatar: Buffer) {
+  async ChangeAvatar(uuid: string, newAvatar: Buffer, type : string) {
     const user = (await this.userRepository.find()).filter(
       (user) => user.uuid === uuid,
     )[0];
     if (user) {
-      await this.userRepository.update({ uuid }, { image: newAvatar });
+		const path = "./src/uploads/avatar/";
+		if (type.includes("image/"))
+			type = type.slice(6);
+		const name = Date().replace(/ /g, '') + "." + type;
+		await fs.writeFile(path + name, newAvatar);
+      await this.userRepository.update({ uuid }, { image: process.env.BACK + name});
       return 1;
     }
     return 0;

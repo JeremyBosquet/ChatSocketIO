@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React from 'react';
 import { useEffect, useState } from 'react';
 import ChatChannel from './ChatChannel/ChatChannel';
@@ -7,6 +6,7 @@ import { getChannels, setChannels } from '../../Redux/chatSlice';
 import { useParams } from 'react-router-dom';
 import { getUser } from '../../Redux/authSlice';
 import './Channels.scss';
+import instance from '../../API/Instance';
 interface IInvites {
     requestFrom: string;
     roomId: string;
@@ -27,7 +27,7 @@ function Channels(props: props) {
     const user = useSelector(getUser);
     
     const getUsersChannel = async (userId: any) => {
-        await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + userId)
+        await instance.get("chat/channels/user/" + userId)
         .then((res) => {
             if (res)
                 dispatch(setChannels(res.data));

@@ -16,6 +16,7 @@ import { getSockeGame, getSockeSpectate, setSocketGame, setSocketSpectate } from
 import KillSocket from "../../Components/KillSocket/KillSocket";
 import Popup from "../../Components/Popup/Popup";
 import { getUser, setUser } from "../../Redux/authSlice";
+import instance from "../../API/Instance";
 
 interface IPlayer {
   id: string;
@@ -157,7 +158,7 @@ function GameSpectatePage() {
     const checkId = async () => {
       if (roomId) {
         console.log("room", roomId);
-        const result = await axios.get(`http://90.66.199.176:7000/api/room/checkGame/` + roomId);
+        const result = await instance.get(`room/checkGame/` + roomId);
         if (result.data) {
           setDisplay(true);
         }

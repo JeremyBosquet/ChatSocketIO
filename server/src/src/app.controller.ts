@@ -15,14 +15,9 @@ import { HttpService } from '@nestjs/axios';
 import { UsersService } from './users/users.service';
 import { AppService } from './app.service';
 import { JwtService } from '@nestjs/jwt';
-import { FtOauthGuard } from './login/guards/ft-oauth.guard';
-import { JwtAuthGuard } from './login/guards/jwt-auth.guard';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel } from './typeorm';
 import { Repository } from 'typeorm';
-import { any } from 'joi';
-import { Response } from 'express';
-import { json } from 'stream/consumers';
 import { JwtTwoFactorGuard } from './2auth/jwt-two-factor.guard';
 
 @Controller()

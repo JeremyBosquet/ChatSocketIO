@@ -36,7 +36,7 @@ import { ScheduleModule } from '@nestjs/schedule';
         password: configService.get('DB_PASS'),
         database: configService.get('DB_NAME'),
         entities: [UserModel, Channel, Room, DM],
-        synchronize: false,
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),

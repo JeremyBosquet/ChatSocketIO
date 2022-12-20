@@ -202,30 +202,24 @@ function HomePage() {
 			})
 				.then((res) => {
 					setUser(res.data.User);
-					dispatch(setUserImg(res.data.User.image));
 					dispatch(setUserUsername(res.data.User.username));
 					setTrueUsername(res.data.User.trueUsername);
-					axios
-						.get(
-							`http://90.66.199.176:7000/api/room/getGameOfUser/` +
-							res.data.User.uuid,
-							{
-								headers: {
-									Authorization: "Bearer " + localStorage.getItem("token"),
-								},
-							}
-						)
-						.then((res) => {
-							if (res.data && res.data.length)
-								SetMyHistoryList(res.data);
-							else if (res.data)
-								SetMyHistoryList([]);
-						});
+					axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + res.data.User.uuid,
+					{
+						headers: {
+							Authorization: "Bearer " + localStorage.getItem("token"),
+						},
+					}).then((res) => {
+						if (res.data && res.data.length)
+							SetMyHistoryList(res.data);
+						else if (res.data)
+							SetMyHistoryList([]);
+					});
 					console.log(res.data.User);
 				}).catch((err) => {
 					console.log(err.message);
 					setUser(undefined);
-				});
+			});
 			await axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
@@ -281,7 +275,7 @@ function HomePage() {
 									{display ? (
 										<div id="myProfile">
 											<img
-												src={userImg}
+												src={`http://90.66.199.176:7000/user/getProfilePicture/` + User.uuid}
 												alt="user_img"
 												className="userImg"
 												width="384"

@@ -90,7 +90,7 @@ function Profile() {
 				<NavBar/>
 				<div id="userProfile">
 					<img
-					src={userProfile?.image}
+					src={`http://90.66.199.176:7000/user/getProfilePicture/` + userProfile.uuid}
 					alt="user_img"
 					className="userImg"
 					width="384"

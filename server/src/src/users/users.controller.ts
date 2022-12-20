@@ -144,6 +144,24 @@ export class UsersController {
 	});
   }
 
+  @Get('getProfilePicture/:uuid')
+  async getProfilePicture(@Param() param: any, @Res() res: any)
+  {
+    const User = await this.userService.findUserByUuid(param?.uuid);
+    if (User) {
+      if (User.image) {
+        res.setHeader('Content-Type', 'image/webp');
+        return res.status(HttpStatus.OK).send(User.image);
+      }
+    }
+    return res.status(HttpStatus.NOT_FOUND).json({
+      statusCode: HttpStatus.NOT_FOUND,
+      message: 'user not found',
+      error: 'NOT_FOUND',
+    });
+
+  }
+  
   @Get('CompareToken')
   @UseGuards(JwtAuthGuard)
   async CompareToken(@Req() req: any, @Res() res: any) {
@@ -900,15 +918,13 @@ export class UsersController {
 		console.log('Invalid image file');
 	}
 	if (User) {
-	//   if (
-	// 	!(await this.userService.ChangeAvatar(User.uuid,`${process.env.BACK}`.concat(nameAvatar)))
-	//   ) {
-	// 	return res.status(HttpStatus.NOT_FOUND).json({
-	// 	  statusCode: HttpStatus.NOT_FOUND,
-	// 	  message: 'User not found',
-	// 	  error: 'NOT_FOUND',
-	// 	});
-	//   }
+	  if (!(await this.userService.ChangeAvatar(User.uuid , file.buffer))) {
+		return res.status(HttpStatus.NOT_FOUND).json({
+		  statusCode: HttpStatus.NOT_FOUND,
+		  message: 'User not found',
+		  error: 'NOT_FOUND',
+		});
+	  }
 	  return res.status(HttpStatus.OK).json({
 		statusCode: HttpStatus.OK,
 		message: 'succes',

@@ -911,15 +911,31 @@ export class UsersController {
 	console.log(file);
 	if (file.mimetype === 'image/png') {
 		if (file.buffer[0] !== 0x89 || file.buffer[1] !== 0x50 || file.buffer[2] !== 0x4E || file.buffer[3] !== 0x47 || file.buffer[4] !== 0x0D || file.buffer[5] !== 0x0A || file.buffer[6] !== 0x1A || file.buffer[7] !== 0x0A)
-			console.log('Invalid image file');
+			return res.status(HttpStatus.BAD_REQUEST).json({
+				statusCode: HttpStatus.BAD_REQUEST,
+				message: 'ivalid png',
+				error: 'BAD_REQUEST',
+			});
 	} else if (file.mimetype === 'image/jpeg') {
 		if (file.buffer[0] !== 0xFF || file.buffer[1] !== 0xD8 || file.buffer[2] !== 0xFF)
-			console.log('Invalid image file');
+			return res.status(HttpStatus.BAD_REQUEST).json({
+				statusCode: HttpStatus.BAD_REQUEST,
+				message: 'ivalid jpeg',
+				error: 'BAD_REQUEST',
+			});
 	} else if (file.mimetype === 'image/jpg') {
 		if (file.buffer[0] !== 0xFF || file.buffer[1] !== 0xD8 || file.buffer[2] !== 0xFF)
-			console.log('Invalid image file');
+			return res.status(HttpStatus.BAD_REQUEST).json({
+				statusCode: HttpStatus.BAD_REQUEST,
+				message: 'ivalid jpg',
+				error: 'BAD_REQUEST',
+			});
 	} else {
-		console.log('Invalid image file');
+		return res.status(HttpStatus.BAD_REQUEST).json({
+			statusCode: HttpStatus.BAD_REQUEST,
+			message: 'ivalid image file',
+			error: 'BAD_REQUEST',
+		});
 	}
 	if (User) {
 	  if (!(await this.userService.ChangeAvatar(User.uuid , file.buffer, file.mimetype))) {

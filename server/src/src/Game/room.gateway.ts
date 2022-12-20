@@ -431,6 +431,8 @@ export class RoomGateway {
           };
           _tmp.scoreA++;
           _tmp.scoreB = -_tmp.scoreB;
+          if (_tmp.scoreB == 0)
+            _tmp.scoreB = -42;
           _tmp.status = 'finished';
           this.usersService.addExp(room.playerA.id, 0.42);
           await this.roomService.save(_tmp);
@@ -456,7 +458,9 @@ export class RoomGateway {
           };
           this.usersService.addExp(room.playerB.id, 0.42);
           _tmp.scoreB++;
-          _tmp.scoreA = -_tmp.scoreB;
+          _tmp.scoreA = -_tmp.scoreA;
+          if (_tmp.scoreA == 0)
+            _tmp.scoreA = -42;
           _tmp.status = 'finished';
           await this.roomService.save(_tmp);
           await this.roomService.updateRoom(room.id, {status: 'destroy'});

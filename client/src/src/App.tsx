@@ -18,7 +18,6 @@ import "./App.css";
 import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import Protected from "./Protected";
-import TestPage from "./Pages/test";
 import { createNotification } from "./Components/notif/Notif";
 import Profile from "./Pages/Profile/Profile";
 //import TestPage from "./Pages/test";
@@ -336,7 +335,6 @@ function App() {
 			<Route path="/chat/channel/:id" element={<Protected><ChannelPage /></Protected>}></Route>
 			<Route path="/chat/dm" element={<Protected><DMPage /></Protected>}></Route>
 			<Route path="/chat/dm/:id" element={<Protected><DMPage /></Protected>}></Route>
-			<Route path="/test" element={<Protected><TestPage /></Protected>}></Route>
 			<Route path="*" element={<NotFound />}></Route>
     </Routes>
       ) : (

@@ -182,16 +182,6 @@ function HomePage() {
 			setRoom({...room, scoreA: data.scoreA, scoreB: data.scoreB});
 	});
 
-	useEffect(() => {
-		if (firstrender2.current) {
-			firstrender2.current = false;
-			return;
-		}
-		if (!booleffect2)
-			if (User)
-				getMyExp(User.uuid, setMyProfileExp, setUser);
-	}), [User];
-
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem("token")) {
 			console.log("GetLoggedInfoAndUser");
@@ -241,9 +231,36 @@ function HomePage() {
 		setbooleffect2(false);
 	}
 
+	async function reloadHistoryList() {
+		await axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + User.uuid,
+		{
+			headers: {
+				Authorization: "Bearer " + localStorage.getItem("token"),
+			},
+		}).then((res) => {
+			if (res.data && res.data.length)
+				SetMyHistoryList(res.data);
+			else if (res.data)
+				SetMyHistoryList([]);
+		});
+	}
+
 	useEffect(() => {
 		GetLoggedInfoAndUser();
 	}, []);
+
+	useEffect(() => {
+		if (User)
+			reloadHistoryList();
+	}, [playing]);
+
+	useEffect(() => {
+		if (User)
+		{
+			console.log("rcedw");
+			getMyExp(User.uuid, setMyProfileExp);
+		}
+	}, [User, booleffect2, playing, display]);
 
 	// useEffect(() => {
 	// 	// if (booleffect.current)
@@ -292,7 +309,7 @@ function HomePage() {
 												<div id="listMyGameParent">
 													{myHistoryList.length ?
 														(
-															<div id={myHistoryList.length > 3 ? "listMyGameScroll" : "listMyGame"}>
+															<div id={myHistoryList.length > 4 ? "listMyGameScroll" : "listMyGame"}>
 																{myHistoryList.map((game, index) => (
 																	<ul key={index}>
 																		{/* {whoWon(User.uuid, game) === "Victory" ? ( */}
@@ -307,13 +324,6 @@ function HomePage() {
 																				|&nbsp;&nbsp;{game.scoreA < 0 ? -game.scoreA : game.scoreA} - {game.scoreB < 0 ? -game.scoreB : game.scoreB}
 																			</p>
 																		</li>
-																		{/* ) : (
-									<li>
-									<span className="red">
-										{game.playerA.name} vs {game.playerB.name} | {whoWon(User.uuid, game)} | {game.scoreA} - {game.scoreB}
-									</span>
-									</li>
-								)} */}
 																	</ul>
 																))}
 															</div>

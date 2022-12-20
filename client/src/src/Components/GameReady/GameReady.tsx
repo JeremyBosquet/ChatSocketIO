@@ -176,13 +176,13 @@ function GameReady(props: props) {
     props.setDisplay(false);
   }
   return (
-    <div>
+    <div className="PlayInterface">
       {!searchingDisplay && !configuringDisplay ? (
-        <div>
+        <>
           <button onClick={handleReady} className="play-button">
             Search for a game
           </button>
-        </div>
+        </>
       ) : null}
       {searchingDisplay ? (
         <div>

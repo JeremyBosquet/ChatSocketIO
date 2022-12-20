@@ -106,7 +106,7 @@ function Profile() {
 					{
 						historyList.length ?
 						(
-							<div id={historyList.length > 3 ? "listMyGameScroll" : "listMyGame"}>
+							<div id={historyList.length > 4 ? "listMyGameScroll" : "listMyGame"}>
 							{historyList.map((game, index) => (
 								<ul key={index}>
 									<li>

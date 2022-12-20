@@ -66,7 +66,7 @@ export async function getExpProfile(uuid : string, setProfileExp : any)
 	});
 }
 
-export async function getMyExp(uuid : string, setProfileExp : any, setUser : any)
+export async function getMyExp(uuid : string, setProfileExp : any)
 {
 	await axios.get(`http://90.66.199.176:7000/user/getExp/` + uuid, {
 		headers: {
@@ -83,8 +83,18 @@ export async function getMyExp(uuid : string, setProfileExp : any, setUser : any
 				cut = res.data.Exp.slice(2);
 			else
 				cut = res.data.Exp.slice(3);
+			console.log("h");
 			for (let i = 0; elem[i]; i++) {
+				console.log("v");
 				(elem[i] as HTMLElement).style.setProperty('--expAmount', cut.toString() + '%');
+			}
+		}
+		else
+		{
+			setProfileExp(0.00);
+			let elem = document.getElementsByClassName('myExp');
+			for (let i = 0; elem[i]; i++) {
+				(elem[i] as HTMLElement).style.setProperty('--expAmount', '0%');
 			}
 		}
 	})
@@ -92,9 +102,8 @@ export async function getMyExp(uuid : string, setProfileExp : any, setUser : any
 		setProfileExp(0.00);
 		let elem = document.getElementsByClassName('myExp');
 		for (let i = 0; elem[i]; i++) {
-			(elem[i] as HTMLElement).style.setProperty('--expAmount', '00%');
+			(elem[i] as HTMLElement).style.setProperty('--expAmount', '0%');
 		}
-		setUser(undefined);
 		console.log(err.message);
 	});
 }

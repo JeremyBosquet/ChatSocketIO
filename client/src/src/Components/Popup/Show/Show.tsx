@@ -1,9 +1,10 @@
 import React from "react"
 import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setHistoryList, setProfileDisplayed, setProfilePage, setRequestedList, setRequestList } from "../../../Redux/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
+import instance from "../../../API/Instance";
 
 interface props {
 	UserUuid : string;

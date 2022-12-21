@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { getUser } from "../../../../../Redux/authSlice";
@@ -12,6 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import React from 'react';
 import { createNotification } from "../../../../notif/Notif";
 import DatePicker from "../DatePicker/DatePicker";
+import instance from "../../../../../API/Instance";
 
 interface props {
     user: IuserDb;

@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createNotification } from "../../Components/notif/Notif";
@@ -105,7 +105,7 @@ function HomePage() {
 		console.log("socketGame", socketGame);
 		if (socketGame)
 			socketGame?.close();
-		const newSocket = io("http://90.66.199.176:7002");
+		const newSocket = io(import.meta.env.VITE_URL_API + ":7002");
 		dispatch(setSocketGame(newSocket));
 	}, []);
 

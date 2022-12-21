@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import React from "react";
 import { useRef } from "react";
 import { useEffect, useState } from "react";
@@ -33,9 +33,7 @@ function GetToken() {
           console.log(err.message);
           setUser("{}");
         });
-      console.log("ereh");
     }
-    console.log("here");
     booleffect2.current = false;
   }
   function redirect() {

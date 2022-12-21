@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useEffect, useRef, useState } from "react";
 import SignIn from "../Components/Auth/Signin";
 import { redirect, useNavigate, useLocation } from "react-router-dom";
@@ -7,6 +7,7 @@ import { redirect, useNavigate, useLocation } from "react-router-dom";
 import { createNotification } from "../Components/notif/Notif";
 import React from "react";
 import KillSocket from "../Components/KillSocket/KillSocket";
+import instance from "../API/Instance";
 
 function TwoAuth() {
   KillSocket("all");
@@ -54,9 +55,7 @@ function TwoAuth() {
 
   const LogTwoAuth = async (event: any) => {
     event.preventDefault();
-    await axios
-      .post(
-        `http://90.66.199.176:7000/2fa/authenticate`,
+    await instance.post(`2fa/authenticate`,
         { twoFactorAuthenticationCode: authCode },
         {
           headers: {

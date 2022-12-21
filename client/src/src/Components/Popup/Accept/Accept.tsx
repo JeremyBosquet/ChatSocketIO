@@ -1,8 +1,9 @@
-import axios from "axios";
+
 import React from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/authSlice";
 import {ImCross, ImCheckmark} from "react-icons/im";
+import instance from "../../../API/Instance";
 
 interface props{
 	User : any;

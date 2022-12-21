@@ -1,6 +1,7 @@
 import { Socket } from "socket.io-client";
-import axios from "axios";
+
 import React from "react";
+import instance from "../../API/Instance";
 
 interface props {
   socket: Socket | undefined;
@@ -35,8 +36,8 @@ function FormChat(props: props) {
     );
 
     props.setJoined(true); // Set the joined room state to true
-    const messages = await axios.get(
-      `http://90.66.199.176:7000/api/chat/messages/` + props.room
+    const messages = await instance.get(
+      `chat/messages/` + props.room
     );
 
     if (messages?.data) {

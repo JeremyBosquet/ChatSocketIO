@@ -2,8 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import GameBoard from "../GameBoard/GameBoard";
 import "./GameSpectate.scss";
-import { Stage, Layer, Rect, Circle, Text } from "react-konva";
-import Konva from "konva";
 import useEventListener from "@use-it/event-listener";
 import NavBar from "../Nav/NavBar";
 import useImage from "use-image";

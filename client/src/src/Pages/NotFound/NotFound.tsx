@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useEffect, useState } from "react";
 import SignIn from "../../Components/Auth/Signin";
 import { redirect, useNavigate, useLocation } from "react-router-dom";
@@ -8,6 +8,7 @@ import React from "react";
 import KillSocket from "../../Components/KillSocket/KillSocket";
 import image404 from './404.png';
 import './NotFound.scss'
+import instance from "../../API/Instance";
 
 function NotFound() {
   let navigate = useNavigate();

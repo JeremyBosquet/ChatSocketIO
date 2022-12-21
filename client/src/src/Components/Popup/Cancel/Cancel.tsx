@@ -1,8 +1,9 @@
-import axios from "axios";
+
 import React from "react"
 import { useDispatch, useSelector } from "react-redux";
 import {getFriendList, getProfilePage, getRequestedList, getSocketSocial, setRequestedList } from "../../../Redux/authSlice";
 import {MdCancelScheduleSend} from "react-icons/md";
+import instance from "../../../API/Instance";
 
 interface props{
 	User : any,

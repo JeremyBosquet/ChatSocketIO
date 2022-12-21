@@ -3,7 +3,8 @@ import {MdCancelScheduleSend, MdBlock} from "react-icons/md";
 import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/authSlice";
 import {CgUnblock} from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
+import instance from "../../../API/Instance";
+
 
 interface props {
 	User: any;

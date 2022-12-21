@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
 import { getSocket } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';
-import axios from 'axios';
+
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';

@@ -3,7 +3,7 @@ import io, { Socket } from "socket.io-client";
 import GameReady from "../../Components/GameReady/GameReady";
 import GamePlay from "../../Components/GamePlay/GamePlay";
 import { createNotification } from "../../Components/notif/Notif";
-import axios from "axios";
+
 import RoomInfo from "../../Components/RoomInfo/RoomInfo";
 import RoomSpectateInfo from "../../Components/RoomSpectateInfo/RoomSpectateInfo";
 import { useNavigate, useParams } from "react-router-dom";
@@ -92,7 +92,7 @@ function GameSpectatePage() {
     console.log("socket", socket);
     if (socket)
       socket?.close();
-    const newSocket = io("http://90.66.199.176:7002");
+    const newSocket = io(import.meta.env.VITE_URL_API + ":7002");
     dispatch(setSocketSpectate(newSocket));
     getRooms(null);
   }, []);
@@ -173,8 +173,8 @@ function GameSpectatePage() {
 
   useEffect(() => {
 	const getUserInfos = async () => {
-		await axios
-		.get(`http://90.66.199.176:7000/user`, {
+		await instance
+		.get(`user`, {
 		  headers: {
 			Authorization: "Bearer " + localStorage.getItem("token"),
 		  },

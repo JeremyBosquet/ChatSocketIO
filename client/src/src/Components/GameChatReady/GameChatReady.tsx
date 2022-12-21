@@ -1,13 +1,13 @@
-import axios from "axios";
+
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { createNotification } from "../notif/Notif";
 import React from "react";
 import "./GameChatReady.scss";
-import { PacmanLoader, ScaleLoader } from "react-spinners";
-import NavBar from "../Nav/NavBar";
+import { ScaleLoader } from "react-spinners";
 import { useSelector } from "react-redux";
-import { getSockeGame, getSockeGameChat } from "../../Redux/gameSlice";
+import { getSockeGameChat } from "../../Redux/gameSlice";
+import instance from "../../API/Instance";
 /*
   Check if player search on another tab
 */

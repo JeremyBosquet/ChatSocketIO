@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+
 import { IoArrowBackOutline } from 'react-icons/io5';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -44,7 +44,7 @@ function DMPage() {
 
 	useEffect(() => {
 		const getUserInfos = async () => {
-			await axios.get(`http://90.66.199.176:7000/user`, {
+			await await instance.get(`user`, {
 			  headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			  },

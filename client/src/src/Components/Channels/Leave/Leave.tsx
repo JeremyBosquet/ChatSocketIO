@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import { useSelector, useDispatch } from 'react-redux';
 import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import { getUser } from '../../../Redux/authSlice';

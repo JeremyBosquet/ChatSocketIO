@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import { useEffect, useState } from 'react';
 import './Channels.scss';
 import { useDispatch, useSelector } from 'react-redux';

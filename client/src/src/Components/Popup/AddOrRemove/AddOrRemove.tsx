@@ -2,8 +2,9 @@ import React from "react"
 import { useNavigate } from "react-router-dom";
 import {IoPersonRemoveSharp, IoPersonAddSharp} from 'react-icons/io5';
 import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/authSlice";
-import axios from "axios";
+
 import { useDispatch, useSelector } from "react-redux";
+import instance from "../../../API/Instance";
 
 interface props{
 	User : any,

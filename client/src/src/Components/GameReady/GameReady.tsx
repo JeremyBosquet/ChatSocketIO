@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { createNotification } from "../notif/Notif";
@@ -8,6 +8,7 @@ import { PacmanLoader, ScaleLoader } from "react-spinners";
 import NavBar from "../Nav/NavBar";
 import { useSelector } from "react-redux";
 import { getSockeGame } from "../../Redux/gameSlice";
+import instance from "../../API/Instance";
 /*
   Check if player search on another tab
 */

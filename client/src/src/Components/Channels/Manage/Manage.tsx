@@ -5,7 +5,7 @@ import { getUser } from '../../../Redux/authSlice';
 import { useState } from 'react';
 import './Manage.scss';
 import React from 'react';
-import axios from 'axios';
+
 import { setChannels } from '../../../Redux/chatSlice';
 import { createNotification } from '../../notif/Notif';
 import instance from '../../../API/Instance';

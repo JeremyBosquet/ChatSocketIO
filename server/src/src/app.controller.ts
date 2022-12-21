@@ -20,7 +20,7 @@ import { UserModel } from './typeorm';
 import { Repository } from 'typeorm';
 import { JwtTwoFactorGuard } from './2auth/jwt-two-factor.guard';
 
-@Controller()
+@Controller('api')
 export class AppController {
   constructor(
     private readonly httpService: HttpService,

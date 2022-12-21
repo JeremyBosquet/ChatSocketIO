@@ -1,6 +1,7 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import instance from "./API/Instance";
 
 
 const Protected = ({children}: {children: any}) => {
@@ -12,8 +13,7 @@ const Protected = ({children}: {children: any}) => {
 	useEffect(() => {
 		const checkAuth = async () => {	
 			if (localStorage.getItem("token")) {
-				await axios
-				.get(`http://90.66.199.176:7000/user/CompareToken`, {
+				await instance.get(`user/CompareToken`, {
 				  headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
 				  },

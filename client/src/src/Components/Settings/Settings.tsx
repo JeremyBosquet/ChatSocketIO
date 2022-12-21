@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useEffect, useRef, useState } from "react";
 import SignIn from "../Auth/Signin";
 import { redirect, useNavigate, useLocation } from "react-router-dom";
@@ -102,9 +102,7 @@ function Settings() {
 
   const DeactivatedTwoAuth = async (event: any) => {
     event.preventDefault();
-    await axios
-      .post(
-        `http://90.66.199.176:7000/2fa/turn-off`,
+    await instance.post(`2fa/turn-off`,
         { twoFactorAuthenticationCode: authCode },
         {
           headers: {
@@ -127,9 +125,7 @@ function Settings() {
   const ChangeUsername = async (event: any) => {
     event.preventDefault();
     console.log(changename);
-    await axios
-      .post(
-        `http://90.66.199.176:7000/user/changeUsername`,
+    await instance.post(`user/changeUsername`,
         { newName: changename },
         {
           headers: {
@@ -165,14 +161,12 @@ function Settings() {
 		setFileName("");
 		setChangeavatar(undefined)
 		console.log(data.get("file"));
-		await axios({
-		method: "post",
-		url: `http://90.66.199.176:7000/user/changeAvatar`,
-		data: data,
-		headers: {
-			Authorization: "Bearer " + token,
-			"Content-Type": "multipart/form-data",
-		},
+		await instance.post(`user/changeAvatar`,{
+			data: data,
+			headers: {
+				Authorization: "Bearer " + token,
+				"Content-Type": "multipart/form-data",
+			},
 		})
 		.then((res) => {
 			console.log(res);
@@ -192,9 +186,7 @@ function Settings() {
 
   const GetQrCode = async (event: any) => {
     event.preventDefault();
-    await axios
-      .post(
-        `http://90.66.199.176:7000/2fa/generate`,
+    await instance.post(`2fa/generate`,
         {},
         {
           headers: {
@@ -214,9 +206,7 @@ function Settings() {
 
   const ActivateTwoAuth = async (event: any) => {
     event.preventDefault();
-    await axios
-      .post(
-        `http://90.66.199.176:7000/2fa/turn-on`,
+    await instance.post(`2fa/turn-on`,
         { twoFactorAuthenticationCode: authCode },
         {
           headers: {
@@ -234,9 +224,7 @@ function Settings() {
         // createNotification('error', err.response.data.message);
       });
 
-    await axios
-      .post(
-        `http://90.66.199.176:7000/2fa/authenticate`,
+    await instance.post(`2fa/authenticate`,
         { twoFactorAuthenticationCode: authCode },
         {
           headers: {

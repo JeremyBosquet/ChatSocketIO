@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { getUser } from "../../../../../Redux/authSlice";
@@ -6,6 +6,7 @@ import { getSocket } from "../../../../../Redux/chatSlice";
 import { IuserDb } from "../../interfaces/users";
 import React from 'react';
 import { createNotification } from "../../../../notif/Notif";
+import instance from "../../../../../API/Instance";
 
 interface props {
     user: IuserDb;

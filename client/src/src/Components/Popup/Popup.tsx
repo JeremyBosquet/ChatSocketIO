@@ -11,7 +11,7 @@ import Accept from "./Accept/Accept";
 import Decline from "./Decline/Decline";
 import Cancel from "./Cancel/Cancel";
 import {getExp} from '../../Components/Utils/getExp'
-import axios from "axios";
+
 import instance from "../../API/Instance";
 
 interface props {

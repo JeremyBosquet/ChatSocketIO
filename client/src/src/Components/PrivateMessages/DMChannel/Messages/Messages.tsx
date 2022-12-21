@@ -6,7 +6,7 @@ import './Messages.scss';
 import React from 'react';
 import { useSelector } from "react-redux";
 import { getBlockedByList, getBlockList } from "../../../../Redux/authSlice";
-import axios from "axios";
+
 import instance from "../../../../API/Instance";
 interface props {
 	userId: string;

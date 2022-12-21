@@ -1,12 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import GameBoard from "../GameBoard/GameBoard";
 import "./GamePlay.scss";
-import { Stage, Layer, Rect, Circle, Text, Image } from "react-konva";
 import useImage from 'use-image';
-import Konva from "konva";
 import useEventListener from "@use-it/event-listener";
-import imager from './zyzz.png';
 
 interface props {
   socket: Socket | undefined;
@@ -87,7 +84,7 @@ function GamePlay(props: props) {
   let boardAX = 0.025;
   let boardBX = 0.025;
 
-  const [image] = (props?.room?.settings?.background == "background1" ? useImage(imager) : useImage(imager));
+  const [image] = (props?.room?.settings?.background == "background1" ? useImage("https://cdn.discordapp.com/attachments/275666699448090626/1055082229581221889/image.png") : useImage("https://cdn.discordapp.com/attachments/275666699448090626/1055081971799314482/image.png"));
   const [windowsWidth, setWindowsWidth] = useState(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth /2);
   const [windowsHeight, setWindowsHeight] = useState(window.innerHeight - 60> maxHeight ? maxHeight : window.innerHeight /2  - 60); // game board
   const [boardWidth, setBoardWidth] = useState<number>(
@@ -136,25 +133,28 @@ function GamePlay(props: props) {
     // Clear context and reprint everything
     if (contextRef.current)
     {
+      // Create background image and print it
+      if (image)
+        contextRef.current.drawImage(image, 0, 0, windowsWidth, windowsHeight);
       contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
       contextRef.current.fillStyle = "black";
       contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
       contextRef.current.fillStyle = "white";
       contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight );
-      contextRef.current.fillStyle = "gray";
-      contextRef.current.font = "30px Arial";
+      //contextRef.current.fillStyle = "gray";
+      //contextRef.current.font = "30px Arial";
       // print name of players and score
       //contextRef.current.fillText(props.room?.playerA.name + " : " + props.room?.scoreA, windowsWidth / 2 - 400, 50);
       //contextRef.current.fillText(props.room?.playerB.name + " : " + props.room?.scoreB, windowsWidth / 2 + 100, 50);
-      contextRef.current.font = "30px Arial";
-      if (props.room?.scoreA)
-        contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 50, 50);
-      else
-        contextRef.current.fillText("0", windowsWidth / 2 - 50, 50);
-      if (props.room?.scoreB)
-        contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 30, 50);
-      else
-        contextRef.current.fillText("0", windowsWidth / 2 + 30, 50);
+      //contextRef.current.font = "30px Arial";
+      //if (props.room?.scoreA)
+      //  contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 50, 50);
+      //else
+      //  contextRef.current.fillText("0", windowsWidth / 2 - 50, 50);
+      //if (props.room?.scoreB)
+      //  contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 30, 50);
+      //else
+      //  contextRef.current.fillText("0", windowsWidth / 2 + 30, 50);
       // Player A
       contextRef.current.fillStyle = "white";
       contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
@@ -305,6 +305,7 @@ function GamePlay(props: props) {
   });
   return (
     <div id="gameMain" className="cursor">
+      <GameBoard socket={props.socket} room={props.room}/>
       <canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
     </div>
   );

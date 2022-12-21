@@ -1,4 +1,4 @@
-import axios from 'axios';
+
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -16,12 +16,10 @@ import KillSocket from '../../Components/KillSocket/KillSocket';
 import Popup from '../../Components/Popup/Popup';
 import Channel from '../../Components/Channels/Channel/Channel';
 import { getChannels, setChannels } from '../../Redux/chatSlice';
-import { GrAdd } from 'react-icons/gr';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
 import Search from '../../Components/Channels/Search/Search';
 import instance from '../../API/Instance';
-
 
 interface IPlayer {
 	id: string;
@@ -100,8 +98,7 @@ function ChannelPage() {
 
 	useEffect(() => {
 		const getUserInfos = async () => {
-			await axios
-			.get(`http://90.66.199.176:7000/user`, {
+			await instance.get(`user`, {
 			  headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			  },
@@ -142,7 +139,7 @@ function ChannelPage() {
 		// Connect to the socket
 		if (socketGame)
 			socketGame?.close();
-		const newSocket = io("http://90.66.199.176:7002");
+		const newSocket = io(import.meta.env.VITE_URL_API + ":7002");
 		dispatch(setSocketGameChat(newSocket));
 	}, []);
 
@@ -154,7 +151,7 @@ function ChannelPage() {
 		setPlayerName("");
 		setRoom(undefined);
 		// Re create the socket
-		const newSocket = io("http://90.66.199.176:7002");
+		const newSocket = io(import.meta.env.VITE_URL_API + ":7002");
 		socketGame?.close();
 		dispatch(setSocketGameChat(newSocket));
 	}

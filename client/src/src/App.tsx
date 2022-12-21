@@ -7,7 +7,7 @@ import NotFound from "./Pages/NotFound/NotFound";
 import Logout from "./Components/Auth/Logout";
 import Settings from "./Components/Settings/Settings";
 import TwoAuth from "./Pages/TwoAuth";
-import axios from "axios";
+
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
 import { getConnectedList, getRequestedList, getSocketSocial, getUser, setBlockedByList, setConnectedList, setFriendList, setRequestedList, setRequestList, setSocketSocial, setUser, setBlockList } from "./Redux/authSlice";
@@ -54,7 +54,7 @@ function App() {
 				}).then((res) => {
 					dispatch(setFriendList(res.data.friendList));
 				}).catch((err) => {
-					console.log(err.message);
+					//console.log(err.message);
 				});
 
 			await instance.get(`user/ListBlockedBy`, {

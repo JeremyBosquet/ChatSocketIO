@@ -35,7 +35,6 @@ specifiers:
   react-dom: ^18.2.0
   react-error-overlay: ^6.0.9
   react-icons: ^4.7.1
-  react-konva: ^18.2.3
   react-redux: ^8.0.5
   react-router-dom: ^6.5.0
   react-scripts: ^5.0.1
@@ -78,7 +77,6 @@ dependencies:
   react-datetime-picker: 4.1.1_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
-  react-konva: 18.2.3_b37p36zhls44rqmxgh4mahumjq
   react-redux: 8.0.5_6fpxtwwxc52cyvwzdgczt4jvpq
   react-router-dom: 6.5.0_biqbaboplfbrettd7655fr4n2y
   react-scripts: 5.0.1_ojognn47wz4hl2blsdhgy3ww6y
@@ -2602,12 +2600,6 @@ packages:
 
   /@types/react-dom/18.0.9:
     resolution: {integrity: sha512-qnVvHxASt/H7i+XG1U1xMiY5t+IHcPGUK7TDMDzom08xa7e86eCeKOiLZezwCKVxJn6NEiiy2ekgX8aQssjIKg==}
-    dependencies:
-      '@types/react': 18.0.26
-    dev: false
-
-  /@types/react-reconciler/0.28.0:
-    resolution: {integrity: sha512-5cjk9ottZAj7eaTsqzPUIlrVbh3hBAO2YaEL1rkjHKB3xNAId7oU8GhzvAX+gfmlfoxTwJnBjPxEHyxkEA1Ffg==}
     dependencies:
       '@types/react': 18.0.26
     dev: false
@@ -6833,15 +6825,6 @@ packages:
       istanbul-lib-report: 3.0.0
     dev: false
 
-  /its-fine/1.0.8_react@18.2.0:
-    resolution: {integrity: sha512-MagTA9/J6kN3aEQsQu6by3nyrttCm0whCOYo4SfiNzOfYgcr1cb29mJ3zgluaJboaWOL/lHzJeMXi/QGSCfX1Q==}
-    peerDependencies:
-      react: '>=18.0'
-    dependencies:
-      '@types/react-reconciler': 0.28.0
-      react: 18.2.0
-    dev: false
-
   /jake/10.8.5:
     resolution: {integrity: sha512-sVpxYeuAhWt0OTWITwT98oyV0GsXyMlXCF+3L1SuafBVUIr/uILGRB+NqwkzhgXKvoJpDIpQvqkUALgdmQsQxw==}
     engines: {node: '>=10'}
@@ -9760,32 +9743,6 @@ packages:
 
   /react-is/18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
-    dev: false
-
-  /react-konva/18.2.3_b37p36zhls44rqmxgh4mahumjq:
-    resolution: {integrity: sha512-OPxjBTgaEGU9pt/VJSVM7QNXYHEZ5CkulX+4fTTvbaH+Wh+vMLbXmH3yjWw4kT/5Qi6t0UQKHPPmirCv8/9sdg==}
-    peerDependencies:
-      konva: ^8.0.1 || ^7.2.5
-      react: '>=18.0.0'
-      react-dom: '>=18.0.0'
-    dependencies:
-      its-fine: 1.0.8_react@18.2.0
-      konva: 8.3.14
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      react-reconciler: 0.29.0_react@18.2.0
-      scheduler: 0.23.0
-    dev: false
-
-  /react-reconciler/0.29.0_react@18.2.0:
-    resolution: {integrity: sha512-wa0fGj7Zht1EYMRhKWwoo1H9GApxYLBuhoAuXN0TlltESAjDssB+Apf0T/DngVqaMyPypDmabL37vw/2aRM98Q==}
-    engines: {node: '>=0.10.0'}
-    peerDependencies:
-      react: ^18.2.0
-    dependencies:
-      loose-envify: 1.4.0
-      react: 18.2.0
-      scheduler: 0.23.0
     dev: false
 
   /react-redux/8.0.5_6fpxtwwxc52cyvwzdgczt4jvpq:

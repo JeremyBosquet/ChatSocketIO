@@ -36,7 +36,7 @@ import { Express } from 'express';
 
 
 let nameAvatar: string;
-@Controller('user')
+@Controller('api/user')
 export class UsersController {
 	constructor(
 		private readonly userService: UsersService,

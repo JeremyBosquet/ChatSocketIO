@@ -4,7 +4,7 @@ import { IuserDb } from "../interfaces/users";
 import ChatMessage from "./ChatMessage/ChatMessage";
 import './Messages.scss';
 import React from 'react';
-import axios from "axios";
+
 import { useSelector } from "react-redux";
 import { getBlockedByList, getBlockList } from "../../../../Redux/authSlice";
 import instance from "../../../../API/Instance";

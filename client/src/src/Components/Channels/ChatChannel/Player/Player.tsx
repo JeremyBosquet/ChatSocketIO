@@ -1,5 +1,5 @@
 import { Menu, MenuButton } from "@szhsin/react-menu";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getBlockedByList, getBlockList, getUser } from "../../../../Redux/authSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
@@ -37,6 +37,7 @@ function Player(props : props) {
   const blockedByList = useSelector(getBlockedByList);
   const [blocked, setBlocked] = useState<boolean>(false);
   const [blockedBy, setBlockedBy] = useState<boolean>(false);
+  const topAnchor = useRef(null);
 
   async function isBlocked(user: IuserDb) {
     let userFinded = blockList.find((blockedUser: any) => blockedUser.uuid === user.uuid);
@@ -105,8 +106,14 @@ function Player(props : props) {
     }
   }
 
+  function isMobile() {
+    if (window.innerWidth < 1165)
+      return (true);
+    return (false);
+  }
+
   return (
-    <div className='player' key={props.user?.uuid}>
+    <div className='player' key={props.user?.uuid} >
       <div style={{display: "flex"}}>
         {connected && !blocked && !blockedBy ? <span className="connected"></span> : <span className="disconnected"></span>}
         <p style={{maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis"}}>{props.user?.username}</p>
@@ -122,8 +129,11 @@ function Player(props : props) {
         <Menu 
           viewScroll="close"
           className="playerActions" 
-          onKeyDown={(e) => e.stopPropagation()}
-          menuButton={<MenuButton>⁝</MenuButton>}
+          onKeyDown={(e: any) => e.stopPropagation()}
+          menuButton={<MenuButton ref={topAnchor}>⁝</MenuButton>}
+          position={isMobile() ? "anchor" : "auto"}
+          direction={isMobile() ? "top" : "bottom"}
+          
         >
               {(me.role === "admin" && 
                 props.user.role !== 'admin' && 
@@ -147,7 +157,7 @@ function Player(props : props) {
               <Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
               <Block user={props.user}/>
               <AddRemoveFriend user={props.user}/>
-            </Menu>
+          </Menu>
       }
     </div>
   );

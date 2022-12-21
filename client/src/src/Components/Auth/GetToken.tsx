@@ -3,6 +3,7 @@ import React from "react";
 import { useRef } from "react";
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import instance from "../../API/Instance";
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../../Redux/authSlice';
 import { createNotification } from "../notif/Notif";
 

@@ -8,6 +8,7 @@ import {
   useLocation,
   useParams,
 } from "react-router-dom";
+import instance from "../../API/Instance";
 import { getSocketSocial } from "../../Redux/authSlice";
 import { createNotification } from "../notif/Notif";
 

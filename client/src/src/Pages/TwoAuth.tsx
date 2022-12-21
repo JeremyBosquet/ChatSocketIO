@@ -18,7 +18,7 @@ function TwoAuth() {
   const [messageCode, setmessageCode] = useState<string>();
   const token = localStorage.getItem("token");
 
-  const booleffect2 = useRef<boolean>(true);
+  const [booleffect2, setbooleffect2] = useState<boolean>(true);
   const firstrender = useRef<boolean>(true);
 
   const [User, setUser] = useState<any>();
@@ -35,22 +35,24 @@ function TwoAuth() {
         .then((res) => {
           setActivated(res.data.isTwoFactorAuthenticationEnabled);
           setConnected(res.data.isSecondFactorAuthenticated);
+		  setbooleffect2(false);
         })
         .catch((err) => {
           console.log(err.message);
-          setUser(undefined);
+		  setbooleffect2(false);
         });
     } else {
       createNotification("error", "User not found");
       navigate("/");
     }
-    booleffect2.current = false;
   }
 
   function setOfPrint() {
     console.log(IsTwoAuthActivated);
-    if (IsTwoAuthActivated) setPrint(true);
-    else setPrint(false);
+    if (IsTwoAuthActivated)
+		setPrint(true);
+    else
+		setPrint(false);
   }
 
   const LogTwoAuth = async (event: any) => {
@@ -92,11 +94,8 @@ function TwoAuth() {
     }
   }, []);
   useEffect(() => {
-    if (firstrender.current) {
-      firstrender.current = false;
-      return;
-    }
-    if (!booleffect2.current) setOfPrint();
+    if (!booleffect2)
+		setOfPrint();
   }, [IsTwoAuthActivated]);
   return (
     <div>

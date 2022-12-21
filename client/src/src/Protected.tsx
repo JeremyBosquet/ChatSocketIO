@@ -13,11 +13,7 @@ const Protected = ({children}: {children: any}) => {
 	useEffect(() => {
 		const checkAuth = async () => {	
 			if (localStorage.getItem("token")) {
-				await instance.get(`user/CompareToken`, {
-				  headers: {
-					Authorization: "Bearer " + localStorage.getItem("token"),
-				  },
-				})
+				await instance.get(`user/CompareToken`)
 				.then((res) => {
 					setIsLoggedIn(true);
 				})

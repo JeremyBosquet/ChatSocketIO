@@ -46,66 +46,72 @@ function App() {
 		//eslint-disable-next-line
 	}, []);
 	useEffect(() => {
-		async function ListFriends() {
-			await instance.get(`user/ListFriends`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-				}).then((res) => {
-					dispatch(setFriendList(res.data.friendList));
-				}).catch((err) => {
-					//console.log(err.message);
+		if (localStorage.getItem('token'))
+		{
+			async function ListFriends() {
+				await instance.get(`user/ListFriends`, {
+						headers: ({
+							Authorization: 'Bearer ' + localStorage.getItem('token'),
+						})
+					}).then((res) => {
+						dispatch(setFriendList(res.data.friendList));
+					}).catch((err) => {
+						//console.log(err.message);
+					});
+
+				await instance.get(`user/ListBlockedBy`, {
+				headers: ({
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				})}).then((res) => {
+					let blockedByList : any[] = res.data.ListBlockedBy;
+					if (blockedByList)
+					{
+						dispatch(setBlockedByList(blockedByList));
+					}
+					else
+						dispatch(setBlockedByList([]));
 				});
 
-			await instance.get(`user/ListBlockedBy`, {
-			headers: ({
-				Authorization: 'Bearer ' + localStorage.getItem('token'),
-			})}).then((res) => {
-				let blockedByList : any[] = res.data.ListBlockedBy;
-				if (blockedByList)
-				{
-					dispatch(setBlockedByList(blockedByList));
-				}
-				else
-					dispatch(setBlockedByList([]));
-			});
+				await instance.get(`user/ListBlockedBy`, {
+				headers: ({
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				})}).then((res) => {
+					let blockedByList : any[] = res.data.ListBlockedBy;
+					if (blockedByList)
+					{
+						dispatch(setBlockedByList(blockedByList));
+					}
+					else
+						dispatch(setBlockedByList([]));
+				});
+			}
 
-			await instance.get(`user/ListBlockedBy`, {
-			headers: ({
-				Authorization: 'Bearer ' + localStorage.getItem('token'),
-			})}).then((res) => {
-				let blockedByList : any[] = res.data.ListBlockedBy;
-				if (blockedByList)
-				{
-					dispatch(setBlockedByList(blockedByList));
-				}
-				else
-					dispatch(setBlockedByList([]));
-			});
-		}
-
-		const socketSet = async () => {
-			await instance.get(`user`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("token"),
-				},
-			})
-			.then((res) => {
-				if (res.data.User)
-				{
-					socketSocial?.close();
-					console.log("get user and emit socket");
-					const newSocketSocial = io('http://90.66.199.176:7003');
-					dispatch(setSocketSocial(newSocketSocial));
-					dispatch(setUser(res.data.User));
+			const socketSet = async () => {
+				await instance.get(`user`, {
+					headers: {
+						Authorization: "Bearer " + localStorage.getItem("token"),
+					},
+				})
+				.then((res) => {
+					if (res.data.User)
+					{
+						socketSocial?.close();
+						console.log("get user and emit socket");
+						const newSocketSocial = io('http://90.66.199.176:7003');
+						dispatch(setSocketSocial(newSocketSocial));
+						dispatch(setUser(res.data.User));
+						
+						ListFriends();
+					}
+				}).catch((err) => {
+					console.log(err)
+				});
+				console.log("trefsvre" , localStorage.getItem("token"));
 					
-					ListFriends();
-				}
-			})
-				
+			}
+			socketSet();
 		}
-		socketSet();
-	}, [localStorage.length]);
+	}, [localStorage]);
 	useEffect(() => {
 		if (user && !booleffect && socketSocial)
 		{

@@ -35,6 +35,7 @@ import got from 'got';
 import { fileTypeFromStream } from 'file-type';
 // import { Express } from 'express';
 import axios from 'axios';
+import { JwtTwoFactorStrategy } from 'src/2auth/auth.strategy';
 
 @Controller('api/user')
 export class UsersController {
@@ -180,7 +181,7 @@ export class UsersController {
 	}
 
 	@Get('SearchFriend/:username')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async SearchFriendsByUsername(
 		@Req() req: any,
 		@Res() res: any,
@@ -219,7 +220,7 @@ export class UsersController {
 	}
 
 	@Get('SearchProfile/:username')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async SearchProfileByUsername(
 		@Req() req: any,
 		@Res() res: any,
@@ -266,7 +267,7 @@ export class UsersController {
 	}
 
 	@Get('IsFriend/:uuid')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async IsFriendByUuid(
 		@Req() req: any,
 		@Res() res: any,
@@ -297,7 +298,7 @@ export class UsersController {
 	}
 
 	@Post('AddFriend')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async AddFriendByUuid(@Req() req: any, @Res() res: any, @Body() body: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
@@ -365,7 +366,7 @@ export class UsersController {
 	}
 
 	@Post('AcceptFriend')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async acceptUserByUuid(@Req() req: any, @Res() res: any, @Body() body: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
@@ -413,7 +414,7 @@ export class UsersController {
 	}
 
 	@Post('RemoveFriend')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async removeFriendByUuid(
 		@Req() req: any,
 		@Res() res: any,
@@ -474,7 +475,7 @@ export class UsersController {
 	}
 
 	@Post('CancelFriendAdd')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async cancelFriendAddByUuid(
 		@Req() req: any,
 		@Res() res: any,
@@ -535,7 +536,7 @@ export class UsersController {
 	}
 
 	@Post('DeclineFriendAdd')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async refuseFriendAddByUuid(
 		@Req() req: any,
 		@Res() res: any,
@@ -597,7 +598,7 @@ export class UsersController {
 	}
 
 	@Post('BlockUser')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async blockUserByUuid(@Req() req: any, @Res() res: any, @Body() body: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
@@ -645,7 +646,7 @@ export class UsersController {
 	}
 
 	@Post('UnblockUser')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async unblockUserByUuid(@Req() req: any, @Res() res: any, @Body() body: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
@@ -693,7 +694,7 @@ export class UsersController {
 	}
 
 	@Get('ListFriends')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async ListFriendsWithUuid(@Req() req: any, @Res() res: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
@@ -714,7 +715,7 @@ export class UsersController {
 	}
 
 	@Get('ListFriendRequested')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async ListFriendsRequestedWithUuid(@Req() req: any, @Res() res: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
@@ -736,7 +737,7 @@ export class UsersController {
 	}
 
 	@Get('ListFriendRequest')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async ListFriendsRequestWithUuid(@Req() req: any, @Res() res: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
@@ -761,7 +762,7 @@ export class UsersController {
 	}
 
 	@Get('ListUsersBlocked')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async ListBlockedWithUuid(@Req() req: any, @Res() res: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
@@ -781,7 +782,7 @@ export class UsersController {
 	}
 
 	@Get('ListBlockedBy')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async ListBlockedByWithUuid(@Req() req: any, @Res() res: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);

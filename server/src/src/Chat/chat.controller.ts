@@ -1,5 +1,6 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { JwtTwoFactorGuard } from 'src/2auth/jwt-two-factor.guard';
 import { JwtAuthGuard } from 'src/login/guards/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { ChatService } from './chat.service';
@@ -26,7 +27,7 @@ export class ChatController {
 
         let user = await this.chatService.getUser(param.id);
         let data = {};
-        
+
         if (!user)
         {
             data = {

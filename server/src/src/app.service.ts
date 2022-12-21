@@ -29,6 +29,7 @@ export class AppService {
       const payload = { uuid: findUser[0].uuid };
       const token = this.jwtService.sign(payload, { expiresIn: '2d' });
       this.userService.IsLoggedIn(findUser[0].uuid, token);
+	  console.log(findUser[0].uuid, token);
       return token;
     }
     else {

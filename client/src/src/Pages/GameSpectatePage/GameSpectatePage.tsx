@@ -221,7 +221,6 @@ function GameSpectatePage() {
 			)}
 			</div>
 		</div>
-		<Popup User={user}/>
 	</>
   );
 }

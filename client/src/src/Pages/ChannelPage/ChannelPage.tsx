@@ -362,8 +362,6 @@ function ChannelPage() {
 					</>
 			)}
 		</div>
-
-		<Popup User={user} />
 		</>
 	);
 }

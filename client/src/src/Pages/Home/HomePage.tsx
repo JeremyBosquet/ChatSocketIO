@@ -1,6 +1,6 @@
 
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { createNotification } from "../../Components/notif/Notif";
 import { useDispatch, useSelector } from 'react-redux';
 import "./HomePage.scss";
@@ -256,10 +256,7 @@ function HomePage() {
 
 	useEffect(() => {
 		if (User)
-		{
-			console.log("rcedw");
 			getMyExp(User.uuid, setMyProfileExp);
-		}
 	}, [User, booleffect2, playing, display]);
 
 	// useEffect(() => {
@@ -292,6 +289,7 @@ function HomePage() {
 									<NavBar />
 									{display ? (
 										<div id="myProfile">
+											<Link to="/chat/dm"> salut</Link>
 											<img
 												src={userImg}
 												alt="user_img"
@@ -342,7 +340,6 @@ function HomePage() {
 								</div>
 							</>
 						)}
-						<Popup User={User} />
 					</>
 				</div>
 			) : null}

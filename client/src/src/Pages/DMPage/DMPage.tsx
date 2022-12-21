@@ -105,7 +105,6 @@ function DMPage() {
 				</div>
 			</div>
 		</div>
-		<Popup User={user} />
 		</>
 	);
 }

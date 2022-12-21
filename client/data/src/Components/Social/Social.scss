@@ -1,0 +1,395 @@
+.SocialPage {
+	display: flex;
+	justify-content: space-around;
+	background: rgba(0, 0, 0, 0);
+	.status {
+		.Green {
+			color : green;
+		}
+		.Red {
+			color : red;
+		}
+		background: none;
+		position: absolute;
+		z-index: 3;
+		top : 28px;
+		left : 26px;
+		font-size: 32px;
+		// display: flex;
+		// justify-content: space-around;
+	}
+	.box
+	{
+		margin-top: 10px;
+		border: 2px solid rgb(255, 255, 255);
+		border-radius: 20px;
+		width: fit-content;
+		width : 240px;
+	}
+	button {
+		cursor: pointer;
+		padding: 0;
+		border: none;
+		background: none;
+		color : #ffffff;
+		font-size: large;
+	}
+	h3{
+		display: flex;
+		justify-content: center;
+		margin-top: 10px;
+		margin-bottom: 5px;
+		color: #fff;
+	}
+	form {
+		display: flex;
+		justify-content: center;
+		margin-bottom:15px;
+		height: 40px;
+		[type=text]{
+			margin-top: 10px;
+			padding: 4px 10px;
+			border-radius: 30px;
+			border: none;
+		}
+	}
+	// form [type=text]{
+	// 	margin-top: 10px;
+	// 	padding: 4px 10px;
+	// 	border-radius: 30px;
+	// 	border: none;
+	// 	p{
+	// 		color : blue;
+	// 	}
+	// }
+
+	.green {
+		color : green;
+	}
+
+	.red {
+		color : red;
+		font-size: 15px;
+	}
+
+	#listSearchParent{
+		::-webkit-scrollbar-button {
+			height: 12px;
+		}
+		::-webkit-scrollbar {
+			width: 15px;        /* width of the entire scrollbar */
+		}
+		
+		::-webkit-scrollbar-track {
+			background: #ffffff;  
+			border-radius: 10px;      /* color of the tracking area */
+		}
+		
+		::-webkit-scrollbar-thumb {
+			background: #181818;   /* color of the scroll thumb */
+			border-radius: 10px;       /* roundness of the scroll thumb */
+			border: 1px solid #ffffff; /* creates padding around scroll thumb */
+		}
+		#listSearchScroll{
+			p{
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+				color :rgb(255, 255, 255);
+				font-size: medium;
+			}
+			.buttons {
+				button{
+					cursor: pointer;
+					margin-right: 6px;
+				}
+				//width :fit-content;
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+				//float : left;
+				
+			}
+			.buttons2 {
+				button{
+					cursor: pointer;
+					margin-right: 6px;
+				}
+				width :fit-content;
+				position: relative;
+				bottom : 84px;
+				left : 112px;
+			}
+			overflow:hidden;
+			overflow-y:scroll;
+			margin-top : 15px;
+			margin-bottom: 15px;
+			height: 190px; 
+			width: 230px;
+			margin-left: 5px;
+			margin-right : 5px;
+
+			.mapSearch{
+				list-style-type: none;
+				position: relative;
+				font-size: 25px;
+				height: 70px;
+			}
+		}
+
+		#listSearch
+		{
+			p{
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+				color :rgb(255, 255, 255);
+				font-size: medium;
+			}
+			.buttons {
+				button{
+					cursor: pointer;
+					margin-right: 6px;
+				}
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+			}
+			.buttons2 {
+				button{
+					cursor: pointer;
+					margin-right: 6px;
+					font-size: 22px;
+				}
+				width :fit-content;
+				position: relative;
+				bottom : 82px;
+				left : 114px;
+			}
+			margin-top : 15px;
+			margin-bottom: 15px;
+			height: 190px; 
+			width: 235px;
+			margin-left: 5px;
+	
+			.mapSearch {
+				list-style-type: none;
+				position: relative;
+				font-size: 25px;
+				height: 70px;
+			}
+		}
+		//margin-bottom: 10px;
+	}
+
+	#listReqParent{
+		::-webkit-scrollbar-button {
+			height: 12px;
+		}
+		::-webkit-scrollbar {
+			width: 15px;        /* width of the entire scrollbar */
+		}
+		
+		::-webkit-scrollbar-track {
+			background: #ffffff;  
+			border-radius: 10px;      /* color of the tracking area */
+		}
+		
+		::-webkit-scrollbar-thumb {
+			background: #181818;   /* color of the scroll thumb */
+			border-radius: 10px;       /* roundness of the scroll thumb */
+			border: 1px solid #ffffff; /* creates padding around scroll thumb */
+		}
+		#listReqScroll{
+			p{
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+				color :rgb(255, 255, 255);
+				font-size: medium;
+			}
+			.buttons {
+				button{
+					cursor: pointer;
+					margin-right: 6px;
+				}
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+			}
+			overflow:hidden;
+			overflow-y:scroll;
+			margin-top : 15px;
+			margin-bottom: 15px;
+			height: 190px; 
+			width: 230px;
+			margin-left: 5px;
+			margin-right : 5px;
+
+			.mapReq{
+				list-style-type: none;
+				position: relative;
+				font-size: 25px;
+				height: 70px;
+			}
+		}
+
+		#listReq
+		{
+			p{
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+				color :rgb(255, 255, 255);
+				font-size: medium;
+			}
+			.buttons {
+				button{
+					cursor: pointer;
+					margin-right: 6px;
+				}
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+			}
+			margin-top : 15px;
+			margin-bottom: 15px;
+			height: 190px; 
+			width: 235px;
+			margin-left: 5px;
+	
+			.mapReq {
+				list-style-type: none;
+				position: relative;
+				font-size: 25px;
+				height: 70px;
+			}
+		}
+	}
+
+	#listFriendParent {	
+		::-webkit-scrollbar-button {
+			height: 12px;
+		}
+		::-webkit-scrollbar {
+			width: 15px;       /* width of the entire scrollbar */
+		}
+		
+		::-webkit-scrollbar-track {
+			background: #ffffff;  
+			border-radius: 10px;      /* color of the tracking area */
+		}
+		
+		::-webkit-scrollbar-thumb {
+			background: #181818;   /* color of the scroll thumb */
+			border-radius: 10px;       /* roundness of the scroll thumb */
+			border: 1px solid #ffffff; /* creates padding around scroll thumb */
+		}
+		#listFriendScroll{
+			p{
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+				color :rgb(255, 255, 255);
+				font-size: medium;
+			}
+			.buttons {
+				button{
+					margin-right: 6px;
+					cursor: pointer;
+				}
+				width :fit-content;
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+			}
+			// border-radius : 4px;
+			margin-top : 15px;
+			margin-bottom: 20px;
+			margin-left: 5px;
+			margin-right :5px;
+			height: 190px; 
+			//width:100%;
+			width: 230px;
+			overflow:hidden;
+			overflow-y:scroll;
+
+			.mapFriend{
+				list-style-type: none;
+				position: relative;
+				font-size: 25px;
+				height: 70px;
+			}
+		}
+
+		#listFriend
+		{
+			p{
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+				color :rgb(255, 255, 255);
+				font-size: medium;
+			}
+			.buttons {
+				button{
+					margin-right: 6px;
+					cursor: pointer;
+				}
+				position: relative;
+				bottom : 55px;
+				left : 65px;
+			}
+			margin-top : 15px;
+			margin-bottom: 20px;
+			height: 190px; 
+			width: 235px;
+			margin-left: 5px;
+	
+			.mapFriend {
+				list-style-type: none;
+				position: relative;
+				font-size: 25px;
+				height: 70px;
+			}
+		}
+	}
+
+	.icon{
+		width: 50px;
+		height: 50px;
+		object-fit: cover;
+		border-radius: 50%;
+	}
+}
+
+@media screen and (max-width: 460px) {
+	.SocialPage #popup .ProfileImg {
+		width: 100%;
+		height : auto;
+		//height: 100%;
+	}
+	.SocialPage #popup button {
+		width: 100%;
+		//height: 100%;
+	}
+	.SocialPage #popup #listParent #list{
+		width : 100%;
+		height: 35px;
+	}
+	.SocialPage #popup #listParent #list li{
+		font-size: 50%;
+	}
+}
+
+@media screen and (max-width: 550px) {
+	.SocialPage{
+		height: calc(100vh - 100px);
+		overflow:hidden;
+		overflow-y:scroll;
+		scrollbar-width: none;
+		&::-webkit-scrollbar { 
+			display: none;  /* Safari and Chrome */
+		}
+	}
+}

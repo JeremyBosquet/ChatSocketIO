@@ -1,5 +1,8 @@
 FROM node:18
 
+ARG ARG_VITE_URL_API
+ENV VITE_URL_API=$ARG_VITE_URL_API
+
 WORKDIR /usr/src/app
 
 COPY src/package*.json ./

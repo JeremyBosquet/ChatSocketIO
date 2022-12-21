@@ -9,7 +9,7 @@ import NavBar from "../../Components/Nav/NavBar";
 import { getMyExp } from '../../Components/Utils/getExp'
 import { whoWon } from "../../Components/Utils/whoWon";
 import KillSocket from "../../Components/KillSocket/KillSocket";
-import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage, getUserImg, getUserUsername, setUserUsername, setUserImg} from "../../Redux/authSlice";
+import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList} from "../../Redux/authSlice";
 import { setFriendList, setRequestList, setRequestedList, setProfileDisplayed } from '../../Redux/authSlice'
 import Popup from "../../Components/Popup/Popup";
 import io, { Socket } from "socket.io-client";
@@ -21,6 +21,7 @@ import useEventListener from "@use-it/event-listener";
 import { useParams } from "react-router-dom";
 import { getSocket } from "../../Redux/chatSlice";
 import { modifyScores } from "../../Components/Utils/modifyScores";
+import instance from "../../API/Instance";
 
 interface IPlayer {
 	id: string;
@@ -77,7 +78,6 @@ function HomePage() {
 	const booleffect = useRef<boolean>(false);
 	const [booleffect2, setbooleffect2] = useState<boolean>(true);
 	const firstrender2 = useRef<boolean>(true);
-	const [myHistoryList, SetMyHistoryList] = useState<any[]>([]);
 
 	const [User, setUser] = useState<any>();
 	const [trueUsername, setTrueUsername] = useState<string>("");
@@ -99,6 +99,7 @@ function HomePage() {
 
 	const userImg = useSelector(getUserImg);
 	const userUsername = useSelector(getUserUsername);
+	const myHistoryList = useSelector(getHistoryList);
 	useEffect(() => {
 		// Connect to the socketGame
 		console.log("socketGame", socketGame);
@@ -185,7 +186,7 @@ function HomePage() {
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem("token")) {
 			console.log("GetLoggedInfoAndUser");
-			await axios.get(`http://90.66.199.176:7000/user`, {
+			await instance.get(`user`, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
 				},
@@ -195,23 +196,23 @@ function HomePage() {
 					dispatch(setUserUsername(res.data.User.username));
 					dispatch(setUserImg(res.data.User.image));
 					setTrueUsername(res.data.User.trueUsername);
-					axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + res.data.User.uuid,
+					instance.get(`room/getGameOfUser/` + res.data.User.uuid,
 					{
 						headers: {
 							Authorization: "Bearer " + localStorage.getItem("token"),
 						},
 					}).then((res) => {
 						if (res.data && res.data.length)
-							SetMyHistoryList(res.data);
+							dispatch(setHistoryList(res.data));
 						else if (res.data)
-							SetMyHistoryList([]);
+							dispatch(setHistoryList([]));
 					});
 					console.log(res.data.User);
 				}).catch((err) => {
 					console.log(err.message);
 					setUser(undefined);
 			});
-			await axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
+			await instance.get(`user/ListFriendRequest`, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
 				},
@@ -232,16 +233,16 @@ function HomePage() {
 	}
 
 	async function reloadHistoryList() {
-		await axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + User.uuid,
+		await instance.get(`room/getGameOfUser/` + User.uuid,
 		{
 			headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			},
 		}).then((res) => {
 			if (res.data && res.data.length)
-				SetMyHistoryList(res.data);
+				dispatch(setHistoryList(res.data));
 			else if (res.data)
-				SetMyHistoryList([]);
+				dispatch(setHistoryList([]));
 		});
 	}
 
@@ -310,7 +311,7 @@ function HomePage() {
 													{myHistoryList.length ?
 														(
 															<div id={myHistoryList.length > 4 ? "listMyGameScroll" : "listMyGame"}>
-																{myHistoryList.map((game, index) => (
+																{myHistoryList.map((game : any, index : number) => (
 																	<ul key={index}>
 																		<li>
 																			<p id="playerName">

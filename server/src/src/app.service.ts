@@ -29,7 +29,6 @@ export class AppService {
       const payload = { uuid: findUser[0].uuid };
       const token = this.jwtService.sign(payload, { expiresIn: '2d' });
       this.userService.IsLoggedIn(findUser[0].uuid, token);
-
       return token;
     }
     else {
@@ -56,7 +55,7 @@ export class AppService {
 		if (user.image.link)
 			userImg = await fetchAndStoreImage(user.image.link, "./src/uploads/avatar/" , Date().replace(/ /g, '') + ".jpg");
 		else
-			userImg = "http://90.66.199.176:7000/unknow.png";
+			userImg = process.env.BACK + 'unknow.png';
 		let userLogin = user.login;
       if (!userLogin)
         userLogin = "John Doe";

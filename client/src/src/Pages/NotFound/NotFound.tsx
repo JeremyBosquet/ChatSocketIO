@@ -21,8 +21,7 @@ function NotFound() {
 
   async function GetLoggedInfoAndUser() {
     if (localStorage.getItem("token")) {
-      await axios
-        .get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
+      await instance.get(`user/getLoggedInfo`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -35,8 +34,7 @@ function NotFound() {
           console.log(err.message);
           setUser("{}");
         });
-      await axios
-        .get(`http://90.66.199.176:7000/user`, {
+      await instance.get(`user`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },

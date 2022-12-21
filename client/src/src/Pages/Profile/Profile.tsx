@@ -12,6 +12,7 @@ import NavBar from "../../Components/Nav/NavBar";
 import KillSocket from "../../Components/KillSocket/KillSocket";
 import { getExp, getExpProfile } from "../../Components/Utils/getExp";
 import { modifyScores } from "../../Components/Utils/modifyScores";
+import instance from "../../API/Instance";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 
@@ -35,7 +36,7 @@ function Profile() {
 
   async function GetUserProfile(username : string) {
     if (localStorage.getItem("token")) {
-		await axios.get(`http://90.66.199.176:7000/user/SearchProfile/` + username, {
+		await instance.get(`user/SearchProfile/` + username, {
 			headers: ({
 				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})
@@ -47,7 +48,7 @@ function Profile() {
 					// else
 					// 	navigate(location.pathname + '/' + uuid);
 					setUserProfile(res.data.User);
-					axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + res.data.User.uuid,
+					instance.get(`room/getGameOfUser/` + res.data.User.uuid,
 					{
 						headers: {
 						Authorization: "Bearer " + token,

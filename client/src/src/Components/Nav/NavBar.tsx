@@ -16,7 +16,7 @@ import { IoGameController } from "react-icons/io5";
 import { BsFillEyeFill } from "react-icons/bs";
 import { GrClose } from "react-icons/gr";
 import {AiOutlineClose} from "react-icons/ai";
-import "./NavBar.scss";
+import './NavBar.scss';
 import Social from "../Social/Social";
 import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeGameChat, getSockeSpectate, setSocketGame, setSocketGameChat, setSocketSpectate } from "../../Redux/gameSlice";
@@ -41,8 +41,7 @@ function NavBar(props: any) {
   async function GetLoggedInfo() {
 
     if (localStorage.getItem("token")) {
-      await axios
-        .get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
+      await instance.get(`user/getLoggedInfo`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -54,8 +53,7 @@ function NavBar(props: any) {
         .catch((err) => {
           console.log(err.message);
         });
-      await axios
-        .get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
+      await instance.get(`user/ListFriendRequest`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },

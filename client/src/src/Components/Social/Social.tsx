@@ -20,6 +20,7 @@ import Decline from '../Popup/Decline/Decline';
 import Cancel from '../Popup/Cancel/Cancel';
 import {GoPrimitiveDot} from 'react-icons/go'
 import IsOnline from '../Utils/IsOnline';
+import instance from '../../API/Instance';
 //import RxDotFilled from 'react-icons/rx'
 
 function Social() {
@@ -57,7 +58,7 @@ function Social() {
 	
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem('token')) {
-			await axios.get(`http://90.66.199.176:7000/user`, {
+			await instance.get(`user`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -69,7 +70,7 @@ function Social() {
 				createNotification('error', 'User not found');
 				navigate("/");
 			});
-			await axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
+			await instance.get(`user/ListFriendRequest`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -96,7 +97,7 @@ function Social() {
 	}
 
 	async function ListFriends() {
-		await axios.get(`http://90.66.199.176:7000/user/ListFriends`, {
+		await instance.get(`user/ListFriends`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -108,7 +109,7 @@ function Social() {
 	}
 
 	async function ListRequested() {
-		await axios.get(`http://90.66.199.176:7000/user/ListFriendRequested`, {
+		await instance.get(`user/ListFriendRequested`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -120,7 +121,7 @@ function Social() {
 	}
 
 	async function ListBlocked() {
-		await axios.get(`http://90.66.199.176:7000/user/ListUsersBlocked`, {
+		await instance.get(`user/ListUsersBlocked`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -132,7 +133,7 @@ function Social() {
 	}
 
 	async function SearchFriend(username : string) {
-		await axios.get(`http://90.66.199.176:7000/user/SearchFriend/` + username, {
+		await instance.get(`user/SearchFriend/` + username, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -188,7 +189,7 @@ function Social() {
 				!(booleffect3) ?
 				(
 					<>
-					<div className="container blur">
+					<div className="container">
 						<div>
 							<div id='listSearchParent'>
 								<h3> Search Friends </h3>

@@ -129,8 +129,7 @@ function GameChatReady(props: props) {
   //}, [propsOn, socket, User, searchingDisplay, configuringDisplay, searching, tmpUserBoolean, settingsBis, settings, room, tmpUser, error, success]);
 
   const getUser = async () => {
-    const messages = await axios
-      .get(`http://90.66.199.176:7000/user`, {
+    const messages = await instance.get(`user`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },

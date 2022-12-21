@@ -68,7 +68,6 @@ interface ISettings {
 function GameSpectatePage() {
   const [rooms, setRooms] = useState<IRoom[]>([]);
   const [room, setRoom] = useState<IRoom>();
-  //const [notification, setNotificaton] = useState<Boolean>(false);
   const navigate = useNavigate();
   const { roomId } = useParams<{ roomId: string }>();
   const user = useSelector(getUser);
@@ -80,8 +79,8 @@ function GameSpectatePage() {
 	KillSocket("chat");
 
   const getRooms = async (e: any) => {
-    const messages = await axios.get(
-      `http://90.66.199.176:7000/api/room/getRoomSpectates`
+    const messages = await instance.get(
+      `room/getRoomSpectates`
     );
 
     if (messages?.data) {

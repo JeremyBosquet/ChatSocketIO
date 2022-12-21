@@ -20,6 +20,7 @@ import { io } from "socket.io-client";
 import Protected from "./Protected";
 import { createNotification } from "./Components/notif/Notif";
 import Profile from "./Pages/Profile/Profile";
+import instance from "./API/Instance";
 //import TestPage from "./Pages/test";
 //import './Pages/PhaserGame'
 
@@ -37,7 +38,7 @@ function App() {
 	useEffect(() => { // Connect to the socket
 		if (!socketChat)
 		{
-			const newSocket = io('http://90.66.199.176:4001');
+			const newSocket = io('http://90.66.199.176:7004');
 			dispatch(setSocket(newSocket));
 		}
 		// socketSocial?.removeAllListeners();
@@ -46,7 +47,7 @@ function App() {
 	}, []);
 	useEffect(() => {
 		async function ListFriends() {
-			await axios.get(`http://90.66.199.176:7000/user/ListFriends`, {
+			await instance.get(`user/ListFriends`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -56,7 +57,7 @@ function App() {
 					console.log(err.message);
 				});
 
-			await axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
+			await instance.get(`user/ListBlockedBy`, {
 			headers: ({
 				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})}).then((res) => {
@@ -69,7 +70,7 @@ function App() {
 					dispatch(setBlockedByList([]));
 			});
 
-			await axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
+			await instance.get(`user/ListBlockedBy`, {
 			headers: ({
 				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})}).then((res) => {
@@ -84,7 +85,7 @@ function App() {
 		}
 
 		const socketSet = async () => {
-			await axios.get(`http://90.66.199.176:7000/user`, {
+			await instance.get(`user`, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
 				},
@@ -121,7 +122,7 @@ function App() {
 			socketSocial.on("newFriend", (data: any) => {
 				if (data.uuid === user.uuid && data?.username) {
 					createNotification("info", "New friend request from: " + data.username);
-					axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
+					instance.get(`user/ListFriendRequest`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -141,7 +142,7 @@ function App() {
 			socketSocial.on("friendAccepted", (data: any) => {
 				if (data.uuid === user.uuid && data?.username && data?.friendUuid) {
 					createNotification("info", data.username + " accepted your friend request");
-					axios.get(`http://90.66.199.176:7000/user/ListFriends`, {
+					instance.get(`user/ListFriends`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -160,7 +161,7 @@ function App() {
 			socketSocial.on("removedOrBlocked", (data: any) => {
 				if (data.uuid === user.uuid && data?.username) {
 					//createNotification("info", data.username + " accepted your friend request");
-					axios.get(`http://90.66.199.176:7000/user/ListFriends`, {
+					instance.get(`user/ListFriends`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -177,7 +178,7 @@ function App() {
 			socketSocial.on("Unblocked", (data: any) => {
 				if (data.uuid === user.uuid && data?.username) {
 					//createNotification("info", data.username + " accepted your friend request");
-					axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
+					instance.get(`user/ListBlockedBy`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})}).then((res) => {
@@ -195,7 +196,7 @@ function App() {
 			socketSocial.on("Block", (data: any) => {
 				if (data.uuid === user.uuid && data?.username) {
 					//createNotification("info", data.username + " accepted your friend request");
-					axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
+					instance.get(`user/ListBlockedBy`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})}).then((res) => {
@@ -212,7 +213,7 @@ function App() {
 			socketSocial.removeListener("CancelFriend");
 			socketSocial.on("CancelFriend", (data: any) => {
 				if (data.uuid === user.uuid) {
-					axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
+					instance.get(`user/ListFriendRequest`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -231,7 +232,7 @@ function App() {
 			socketSocial.removeListener("DeclineFriend");
 			socketSocial.on("DeclineFriend", (data: any) => {
 				if (data.uuid === user.uuid) {
-					axios.get(`http://90.66.199.176:7000/user/ListFriendRequested`, {
+					instance.get(`user/ListFriendRequested`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -257,7 +258,7 @@ function App() {
 		async function filterBlockedUsers(data : any) {
 			if (data.users)
 				listUsers = [... data.users];
-			await axios.get(`http://90.66.199.176:7000/user/ListUsersBlocked`, {
+			await instance.get(`user/ListUsersBlocked`, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})})
@@ -270,7 +271,7 @@ function App() {
 					}
 				}
 			});
-			await axios.get(`http://90.66.199.176:7000/user/ListBlockedBy`, {
+			await instance.get(`user/ListBlockedBy`, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})})

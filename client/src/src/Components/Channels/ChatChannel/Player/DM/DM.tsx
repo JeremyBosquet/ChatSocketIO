@@ -19,7 +19,7 @@ function DM(props : props) {
     if (!params.id)
       navigate('/chat/channel');
 
-    await axios.post(`http://90.66.199.176:7000/api/chat/dm/`, {
+    await instance.post(`chat/dm/`, {
       user1: me.uuid,
       user2: targetId,
     }).then(res => {

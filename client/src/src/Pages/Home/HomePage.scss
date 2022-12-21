@@ -7,6 +7,14 @@
 	user-select : none;
 }
 
+.blur {
+	height: 100vh;
+    //overflow: hidden;
+}
+
+// body {
+// 	overflow: hidden;
+// }
 .popup {
 	position: absolute;
 	transform: translate(-50%, -50%);
@@ -203,8 +211,6 @@
 {
   --black : #181818;
 //   background: #222222;
-  height: 100vh;
-  overflow: hidden;
   font-family: 'Roboto', sans-serif;
 }
 

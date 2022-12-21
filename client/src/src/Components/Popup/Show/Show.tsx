@@ -14,7 +14,7 @@ function Show(props : props) {
 	const dispatch = useDispatch();
 	async function ShowProfile(uuid : string)
 	{
-		await axios.get(`http://90.66.199.176:7000/user/findUser/` + uuid, {
+		await instance.get(`user/findUser/` + uuid, {
 		headers: ({
 			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		})

@@ -29,7 +29,7 @@ function AddOrRemove(props : props) {
 		const test : any[] = userFriends.filter(friend => friend.uuid === uuid)
 		if (!test.length)
 		{
-			await axios.post(`http://90.66.199.176:7000/user/AddFriend`, {uuid : uuid}, {
+			await instance.post(`user/AddFriend`, {uuid : uuid}, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -42,7 +42,7 @@ function AddOrRemove(props : props) {
 		}
 		else
 		{
-			await axios.post(`http://90.66.199.176:7000/user/RemoveFriend`, {uuid : uuid}, {
+			await instance.post(`user/RemoveFriend`, {uuid : uuid}, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})

@@ -24,7 +24,7 @@ function BlockOrUnblock (props : props) {
 		const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid)
 		if (!test.length)
 		{
-			await axios.post(`http://90.66.199.176:7000/user/BlockUser`, {uuid : uuid}, {
+			await instance.post(`user/BlockUser`, {uuid : uuid}, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
@@ -46,7 +46,7 @@ function BlockOrUnblock (props : props) {
 		}
 		else
 		{
-			await axios.post(`http://90.66.199.176:7000/user/UnblockUser`, {uuid : uuid}, {
+			await instance.post(`user/UnblockUser`, {uuid : uuid}, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})

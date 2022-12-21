@@ -18,7 +18,8 @@ import {Tb2Fa} from 'react-icons/tb'
 import {ImCross, ImCheckmark} from "react-icons/im";
 import './Settings.scss'
 import { useDispatch } from "react-redux";
-import { setUserImg, setUserUsername } from "../../Redux/authSlice";
+import { setHistoryList, setUserImg, setUserUsername } from "../../Redux/authSlice";
+import instance from "../../API/Instance";
 
 function Settings() {
   //KillSocket("all");
@@ -43,8 +44,7 @@ function Settings() {
 	const dispatch = useDispatch();
   async function GetLoggedInfoAndUser() {
     if (localStorage.getItem("token")) {
-      await axios
-        .get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
+      await instance.get(`user/getLoggedInfo`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -59,8 +59,7 @@ function Settings() {
           console.log(err.message);
           setUser("{}");
         });
-      await axios
-        .get(`http://90.66.199.176:7000/user`, {
+      await instance.get(`user`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -82,6 +81,20 @@ function Settings() {
     }
     setbooleffect2(false);
   }
+
+  async function reloadHistoryList() {
+	await instance.get(`room/getGameOfUser/` + User.uuid,
+	{
+		headers: {
+			Authorization: "Bearer " + localStorage.getItem("token"),
+		},
+	}).then((res) => {
+		if (res.data && res.data.length)
+			dispatch(setHistoryList(res.data));
+		else if (res.data)
+			dispatch(setHistoryList([]));
+	});
+}
 
   function setOfAuthStatus() {
     setTurnedOff(true);
@@ -127,6 +140,7 @@ function Settings() {
       .then((res) => {
         console.log(res.data.message);
         GetLoggedInfoAndUser();
+		reloadHistoryList();
         createNotification("success", "Username succefuly changed");
       })
       .catch((err) => {

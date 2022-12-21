@@ -34,7 +34,7 @@ function AddRemoveFriend(props : props) {
 	async function AddOrRemoveFriend(uuid : string) {
 		if (!isFriend)
 		{
-			await axios.post(`http://90.66.199.176:7000/user/AddFriend`, {uuid : uuid}, {
+			await instance.post(`user/AddFriend`, {uuid : uuid}, {
 				headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
@@ -49,7 +49,7 @@ function AddRemoveFriend(props : props) {
 		}
 		else
 		{
-			await axios.post(`http://90.66.199.176:7000/user/RemoveFriend`, {uuid : uuid}, {
+			await instance.post(`user/RemoveFriend`, {uuid : uuid}, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
@@ -71,7 +71,7 @@ function AddRemoveFriend(props : props) {
 		const test : any[] = requestedList.filter((friend : any) => friend.uuid === uuid)
 		if (test.length)
 		{
-			await axios.post(`http://90.66.199.176:7000/user/CancelFriendAdd`, {uuid : uuid}, {
+			await instance.post(`user/CancelFriendAdd`, {uuid : uuid}, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
@@ -89,7 +89,7 @@ function AddRemoveFriend(props : props) {
 
 	async function getUserData(uuid: string) {
 		let userData : any = [];
-		await axios.get(`http://90.66.199.176:7000/findUser/` + uuid, {
+		await instance.get(`findUser/` + uuid, {
 			headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			},
@@ -108,7 +108,7 @@ function AddRemoveFriend(props : props) {
 		if (test.length)
 		{
 			const acceptThisUser = await getUserData(test[0]?.uuid);
-			await axios.post(`http://90.66.199.176:7000/user/AcceptFriend`, {uuid : uuid}, {
+			await instance.post(`user/AcceptFriend`, {uuid : uuid}, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})

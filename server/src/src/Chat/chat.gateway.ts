@@ -9,7 +9,7 @@ interface IUserJoin {
     userId: string,
 }
 
-@WebSocketGateway(4001, { cors: '*:*'})
+@WebSocketGateway(7004, { cors: '*:*'})
 export class ChatGateway {
 
     constructor(

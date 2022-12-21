@@ -12,6 +12,7 @@ import Decline from "./Decline/Decline";
 import Cancel from "./Cancel/Cancel";
 import {getExp} from '../../Components/Utils/getExp'
 import axios from "axios";
+import instance from "../../API/Instance";
 
 interface props {
 	User: any;
@@ -52,7 +53,7 @@ function Popup(props: props)
 	}
 
 	async function History (uuid : string) {
-		await axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + uuid, {
+		await instance.get(`room/getGameOfUser/` + uuid, {
 		headers: ({
 			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		})

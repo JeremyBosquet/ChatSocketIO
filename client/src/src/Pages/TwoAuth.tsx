@@ -26,8 +26,7 @@ function TwoAuth() {
 
   async function GetLoggedInfo() {
     if (localStorage.getItem("token")) {
-      await axios
-        .get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
+      await instance.get(`user/getLoggedInfo`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -77,8 +76,7 @@ function TwoAuth() {
         createNotification("error", err.response.data.message);
       });
     if (IsTwoAuthConnected) {
-      await axios
-        .get(`http://90.66.199.176:7000/user`, {
+      await instance.get(`user`, {
           headers: {
             Authorization: "Bearer " + token,
           },

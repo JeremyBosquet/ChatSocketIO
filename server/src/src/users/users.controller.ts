@@ -33,7 +33,7 @@ import * as bcrypt from 'bcrypt';
 import { fileTypeFromFile } from 'file-type';
 import got from 'got';
 import {fileTypeFromStream} from 'file-type';
-
+import {Express} from 'express';
 
 let nameAvatar: string;
 @Controller('user')

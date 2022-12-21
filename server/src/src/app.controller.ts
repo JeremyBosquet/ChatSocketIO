@@ -89,14 +89,13 @@ export class AppController {
 
     //console.log(user);
 
-    if (user)
+    if (user && user)
 	{
-	console.log(this.userRepository.find());
-      return res.status(HttpStatus.OK).json({
-        statusCode: HttpStatus.OK,
-        token: await this.appService.logIn(user),
-        message: 'succes',
-      });
+		return res.status(HttpStatus.OK).json({
+			statusCode: HttpStatus.OK,
+			token: await this.appService.logIn(user),
+			message: 'succes',
+		});
 	}
     return res
       .status(HttpStatus.FORBIDDEN)

@@ -312,7 +312,6 @@ function HomePage() {
 															<div id={myHistoryList.length > 4 ? "listMyGameScroll" : "listMyGame"}>
 																{myHistoryList.map((game, index) => (
 																	<ul key={index}>
-																		{/* {whoWon(User.uuid, game) === "Victory" ? ( */}
 																		<li>
 																			<p id="playerName">
 																				{game.playerA.name} vs {game.playerB.name}
@@ -321,7 +320,7 @@ function HomePage() {
 																				|&nbsp;&nbsp;{whoWon(User.uuid, game)}
 																			</p>
 																			<p id="playerScore">
-																				|&nbsp;&nbsp;{game.scoreA < 0 ? -game.scoreA : game.scoreA} - {game.scoreB < 0 ? -game.scoreB : game.scoreB}
+																				|&nbsp;&nbsp;{game.scoreA < 0 ? (game.scoreA == -42 ? 0 : -game.scoreA) : game.scoreA} - {game.scoreB < 0 ? (game.scoreB == -42 ? 0 : -game.scoreB) : game.scoreB}
 																			</p>
 																		</li>
 																	</ul>

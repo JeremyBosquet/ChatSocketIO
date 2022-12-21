@@ -52,12 +52,11 @@ export class AppService {
 			return (process.env.BACK + name);
 	
 		  }
-		  let userImg : string;
+		let userImg : string = "";
 		if (user.image.link)
 			userImg = await fetchAndStoreImage(user.image.link, "./src/uploads/avatar/" , Date().replace(/ /g, '') + ".jpg");
 		else
-			userImg = "http://192.168.1.53:7000/unknow.png";
-		this.userRepository.update(user.uuid, { image: userImg }); 	
+			userImg = "http://90.66.199.176:7000/unknow.png";
 		let userLogin = user.login;
       if (!userLogin)
         userLogin = "John Doe";

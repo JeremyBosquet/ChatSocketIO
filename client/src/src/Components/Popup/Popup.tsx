@@ -124,16 +124,18 @@ function Popup(props: props)
 							<div id={historyList.length > 3 ? 'listGameScroll' : 'listGame'}>
 							{
 								historyList.map((game : any, index : number) => (
-									<ul key={index} >
-										{whoWon(profilePage.uuid, game) === 'Victory' ? 
-										
-											<li> <span className='green'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game)}</span> </li>
-
-											:
-
-											<li> <span className='red'> {game.playerA.name} vs {game.playerB.name} / {whoWon(profilePage.uuid, game)}</span> </li>
-											
-										}
+									<ul key={index}>
+										<li>
+											<p id="playerName">
+												{game.playerA.name} vs {game.playerB.name}
+											</p>
+											<p id="playerStatus">
+												|&nbsp;&nbsp;{whoWon(profilePage?.uuid, game)}
+											</p>
+											<p id="playerScore">
+												|&nbsp;&nbsp;{game.scoreA < 0 ? (game.scoreA == -42 ? 0 : -game.scoreA) : game.scoreA} - {game.scoreB < 0 ? (game.scoreB == -42 ? 0 : -game.scoreB) : game.scoreB}
+											</p>
+										</li>
 									</ul>
 								))
 							}

@@ -36,12 +36,19 @@ COPY src/package*.json ./
 
 RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
+ENV PATH="/pnpm:$PATH"
+ENV PNPM_HOME="/pnpm"
+ENV NODE_ENV=production
+
 RUN pnpm install
 
-RUN echo a
+RUN pnpm i -g @nestjs/cli 
+RUN pnpm i multer express @nestjs/platform-express @types/multer
 
 COPY src/. .
 
-EXPOSE 6000 7000 7001 7002 7003 4001
+RUN pnpm build
 
-CMD [ "pnpm", "start" ]
+EXPOSE 6000 7000 7001 7002 7003 7004
+
+CMD [ "pnpm", "start:prod" ]

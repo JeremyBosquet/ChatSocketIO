@@ -3,7 +3,7 @@ import React from "react";
 
 export async function getExp(uuid : string, setProfileExp : any)
 {
-	await axios.get(`http://192.168.1.53:7000/user/getExp/` + uuid, {
+	await axios.get(`http://90.66.199.176:7000/user/getExp/` + uuid, {
 		headers: {
 		Authorization: "Bearer " + localStorage.getItem("token"),
 		},
@@ -35,7 +35,7 @@ export async function getExp(uuid : string, setProfileExp : any)
 
 export async function getExpProfile(uuid : string, setProfileExp : any)
 {
-	await axios.get(`http://192.168.1.53:7000/user/getExp/` + uuid, {
+	await axios.get(`http://90.66.199.176:7000/user/getExp/` + uuid, {
 		headers: {
 		Authorization: "Bearer " + localStorage.getItem("token"),
 		},
@@ -68,7 +68,7 @@ export async function getExpProfile(uuid : string, setProfileExp : any)
 
 export async function getMyExp(uuid : string, setProfileExp : any)
 {
-	await axios.get(`http://192.168.1.53:7000/user/getExp/` + uuid, {
+	await axios.get(`http://90.66.199.176:7000/user/getExp/` + uuid, {
 		headers: {
 		Authorization: "Bearer " + localStorage.getItem("token"),
 		},

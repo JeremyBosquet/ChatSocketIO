@@ -28,7 +28,7 @@ function DMPage() {
     
     useEffect(() => {
         const getUsersDM = async (userId: any) => {
-            await axios.get("http://192.168.1.53:7000/api/chat/dm/user/" + userId)
+            await axios.get("http://90.66.199.176:7000/api/chat/dm/user/" + userId)
             .then((res) => {
                 if (res)
                     dispatch(setDMs(res.data));
@@ -44,7 +44,7 @@ function DMPage() {
 	useEffect(() => {
 		const getUserInfos = async () => {
 			await axios
-			.get(`http://192.168.1.53:7000/user`, {
+			.get(`http://90.66.199.176:7000/user`, {
 			  headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			  },

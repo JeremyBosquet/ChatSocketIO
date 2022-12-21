@@ -21,7 +21,7 @@ function Decline(props : props){
 		const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
 		if (test.length)
 		{
-			await axios.post(`http://192.168.1.53:7000/user/DeclineFriendAdd`, {uuid : uuid}, {
+			await axios.post(`http://90.66.199.176:7000/user/DeclineFriendAdd`, {uuid : uuid}, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})

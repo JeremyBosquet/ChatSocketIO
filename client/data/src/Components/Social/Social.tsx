@@ -57,7 +57,7 @@ function Social() {
 	
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem('token')) {
-			await axios.get(`http://192.168.1.53:7000/user`, {
+			await axios.get(`http://90.66.199.176:7000/user`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -69,7 +69,7 @@ function Social() {
 				createNotification('error', 'User not found');
 				navigate("/");
 			});
-			await axios.get(`http://192.168.1.53:7000/user/ListFriendRequest`, {
+			await axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -96,7 +96,7 @@ function Social() {
 	}
 
 	async function ListFriends() {
-		await axios.get(`http://192.168.1.53:7000/user/ListFriends`, {
+		await axios.get(`http://90.66.199.176:7000/user/ListFriends`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -108,7 +108,7 @@ function Social() {
 	}
 
 	async function ListRequested() {
-		await axios.get(`http://192.168.1.53:7000/user/ListFriendRequested`, {
+		await axios.get(`http://90.66.199.176:7000/user/ListFriendRequested`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -120,7 +120,7 @@ function Social() {
 	}
 
 	async function ListBlocked() {
-		await axios.get(`http://192.168.1.53:7000/user/ListUsersBlocked`, {
+		await axios.get(`http://90.66.199.176:7000/user/ListUsersBlocked`, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})
@@ -132,7 +132,7 @@ function Social() {
 	}
 
 	async function SearchFriend(username : string) {
-		await axios.get(`http://192.168.1.53:7000/user/SearchFriend/` + username, {
+		await axios.get(`http://90.66.199.176:7000/user/SearchFriend/` + username, {
 				headers: ({
 					Authorization: 'Bearer ' + token,
 				})

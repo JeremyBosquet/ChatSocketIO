@@ -36,7 +36,7 @@ function Mute(props : props) {
       navigate('/chat/channel');
 
     if (isMuted()){ //unmute
-      await axios.post(`http://192.168.1.53:7000/api/chat/channel/unmute/`, {
+      await axios.post(`http://90.66.199.176:7000/api/chat/channel/unmute/`, {
         channelId: selectedChannel,
         target: targetId,
         admin: me.uuid,
@@ -55,7 +55,7 @@ function Mute(props : props) {
     let permanent = time === "permanent" ? true : false;
     let duration = value?.toISOString();
 
-    await axios.post(`http://192.168.1.53:7000/api/chat/channel/mute/`, {
+    await axios.post(`http://90.66.199.176:7000/api/chat/channel/mute/`, {
       channelId: selectedChannel,
       target: targetId,
       admin: me.uuid,

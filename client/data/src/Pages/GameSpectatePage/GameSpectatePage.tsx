@@ -81,7 +81,7 @@ function GameSpectatePage() {
 
   const getRooms = async (e: any) => {
     const messages = await axios.get(
-      `http://192.168.1.53:7000/api/room/getRoomSpectates`
+      `http://90.66.199.176:7000/api/room/getRoomSpectates`
     );
 
     if (messages?.data) {
@@ -93,7 +93,7 @@ function GameSpectatePage() {
     console.log("socket", socket);
     if (socket)
       socket?.close();
-    const newSocket = io("http://192.168.1.53:7002");
+    const newSocket = io("http://90.66.199.176:7002");
     dispatch(setSocketSpectate(newSocket));
     getRooms(null);
   }, []);
@@ -175,7 +175,7 @@ function GameSpectatePage() {
   useEffect(() => {
 	const getUserInfos = async () => {
 		await axios
-		.get(`http://192.168.1.53:7000/user`, {
+		.get(`http://90.66.199.176:7000/user`, {
 		  headers: {
 			Authorization: "Bearer " + localStorage.getItem("token"),
 		  },

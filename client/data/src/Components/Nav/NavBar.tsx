@@ -42,7 +42,7 @@ function NavBar(props: any) {
 
     if (localStorage.getItem("token")) {
       await axios
-        .get(`http://192.168.1.53:7000/user/getLoggedInfo`, {
+        .get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -55,7 +55,7 @@ function NavBar(props: any) {
           console.log(err.message);
         });
       await axios
-        .get(`http://192.168.1.53:7000/user/ListFriendRequest`, {
+        .get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },

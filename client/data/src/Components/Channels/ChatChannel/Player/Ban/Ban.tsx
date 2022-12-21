@@ -42,7 +42,7 @@ function Ban(props : props) {
     let duration = value?.toISOString();
 
 
-    await axios.post(`http://192.168.1.53:7000/api/chat/channel/ban/`, {
+    await axios.post(`http://90.66.199.176:7000/api/chat/channel/ban/`, {
       channelId: selectedChannel,
       target: targetId,
       admin: me.uuid,

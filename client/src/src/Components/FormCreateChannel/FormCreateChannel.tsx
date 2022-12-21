@@ -69,7 +69,7 @@ function FormCreateChannel() {
       }
     ]
 
-    axios.post('http://192.168.1.53:7000/api/chat/channel', { name: channelName, owner: {id: user.uuid}, visibility: visibility, password: password, users: defaultUsers, messages: [], mutes: [], bans: [] })
+    axios.post('http://90.66.199.176:7000/api/chat/channel', { name: channelName, owner: {id: user.uuid}, visibility: visibility, password: password, users: defaultUsers, messages: [], mutes: [], bans: [] })
     .then((res : any) => {
       if (res.data ) {
         createNotification("success", "You have successfully created " + channelName + " channel.");

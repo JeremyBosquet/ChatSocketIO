@@ -20,7 +20,7 @@ function Cancel(props : props){
 		const test : any[] = requestedList.filter((friend : any) => friend.uuid === uuid)
 		if (test.length)
 		{
-			await axios.post(`http://192.168.1.53:7000/user/CancelFriendAdd`, {uuid : uuid}, {
+			await axios.post(`http://90.66.199.176:7000/user/CancelFriendAdd`, {uuid : uuid}, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})

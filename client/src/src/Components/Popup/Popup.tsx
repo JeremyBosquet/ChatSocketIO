@@ -52,7 +52,7 @@ function Popup(props: props)
 	}
 
 	async function History (uuid : string) {
-		await axios.get(`http://192.168.1.53:7000/api/room/getGameOfUser/` + uuid, {
+		await axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + uuid, {
 		headers: ({
 			Authorization: 'Bearer ' + localStorage.getItem('token'),
 		})

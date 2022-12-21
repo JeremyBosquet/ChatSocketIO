@@ -42,7 +42,7 @@ export async function AddOrRemoveFriend(uuid : string, User : any) {
 	const test : any[] = userFriends.filter(friend => friend.uuid === uuid)
 	if (!test.length)
 	{
-		await axios.post(`http://192.168.1.53:7000/user/AddFriend`, {uuid : uuid}, {
+		await axios.post(`http://90.66.199.176:7000/user/AddFriend`, {uuid : uuid}, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
@@ -55,7 +55,7 @@ export async function AddOrRemoveFriend(uuid : string, User : any) {
 	}
 	else
 	{
-		await axios.post(`http://192.168.1.53:7000/user/RemoveFriend`, {uuid : uuid}, {
+		await axios.post(`http://90.66.199.176:7000/user/RemoveFriend`, {uuid : uuid}, {
 			headers: ({
 				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})
@@ -77,7 +77,7 @@ export async function AcceptFriend(uuid : string, image : any, User : any) {
 	const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
 	if (test.length)
 	{
-		await axios.post(`http://192.168.1.53:7000/user/AcceptFriend`, {uuid : uuid}, {
+		await axios.post(`http://90.66.199.176:7000/user/AcceptFriend`, {uuid : uuid}, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
@@ -99,7 +99,7 @@ export async function DeclineFriendAdd(uuid : string, User : any) {
 	const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
 	if (test.length)
 	{
-		await axios.post(`http://192.168.1.53:7000/user/DeclineFriendAdd`, {uuid : uuid}, {
+		await axios.post(`http://90.66.199.176:7000/user/DeclineFriendAdd`, {uuid : uuid}, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
@@ -120,7 +120,7 @@ export async function CancelFriendAdd(uuid : string, User : any) {
 	const test : any[] = requestedList.filter((friend : any) => friend.uuid === uuid)
 	if (test.length)
 	{
-		await axios.post(`http://192.168.1.53:7000/user/CancelFriendAdd`, {uuid : uuid}, {
+		await axios.post(`http://90.66.199.176:7000/user/CancelFriendAdd`, {uuid : uuid}, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
@@ -145,7 +145,7 @@ export async function BlockOrUnblockUser(uuid : string, User : any) {
 	const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid)
 	if (!test.length)
 	{
-		await axios.post(`http://192.168.1.53:7000/user/BlockUser`, {uuid : uuid}, {
+		await axios.post(`http://90.66.199.176:7000/user/BlockUser`, {uuid : uuid}, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
@@ -167,7 +167,7 @@ export async function BlockOrUnblockUser(uuid : string, User : any) {
 	}
 	else
 	{
-		await axios.post(`http://192.168.1.53:7000/user/UnblockUser`, {uuid : uuid}, {
+		await axios.post(`http://90.66.199.176:7000/user/UnblockUser`, {uuid : uuid}, {
 			headers: ({
 				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})

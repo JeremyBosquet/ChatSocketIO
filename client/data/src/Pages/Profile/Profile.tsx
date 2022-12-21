@@ -35,7 +35,7 @@ function Profile() {
 
   async function GetUserProfile(username : string) {
     if (localStorage.getItem("token")) {
-		await axios.get(`http://192.168.1.53:7000/user/SearchProfile/` + username, {
+		await axios.get(`http://90.66.199.176:7000/user/SearchProfile/` + username, {
 			headers: ({
 				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})
@@ -47,7 +47,7 @@ function Profile() {
 					// else
 					// 	navigate(location.pathname + '/' + uuid);
 					setUserProfile(res.data.User);
-					axios.get(`http://192.168.1.53:7000/api/room/getGameOfUser/` + res.data.User.uuid,
+					axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + res.data.User.uuid,
 					{
 						headers: {
 						Authorization: "Bearer " + token,

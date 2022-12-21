@@ -44,7 +44,7 @@ function Settings() {
   async function GetLoggedInfoAndUser() {
     if (localStorage.getItem("token")) {
       await axios
-        .get(`http://192.168.1.53:7000/user/getLoggedInfo`, {
+        .get(`http://90.66.199.176:7000/user/getLoggedInfo`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -60,7 +60,7 @@ function Settings() {
           setUser("{}");
         });
       await axios
-        .get(`http://192.168.1.53:7000/user`, {
+        .get(`http://90.66.199.176:7000/user`, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
@@ -91,7 +91,7 @@ function Settings() {
     event.preventDefault();
     await axios
       .post(
-        `http://192.168.1.53:7000/2fa/turn-off`,
+        `http://90.66.199.176:7000/2fa/turn-off`,
         { twoFactorAuthenticationCode: authCode },
         {
           headers: {
@@ -116,7 +116,7 @@ function Settings() {
     console.log(changename);
     await axios
       .post(
-        `http://192.168.1.53:7000/user/changeUsername`,
+        `http://90.66.199.176:7000/user/changeUsername`,
         { newName: changename },
         {
           headers: {
@@ -153,7 +153,7 @@ function Settings() {
 		console.log(data.get("file"));
 		await axios({
 		method: "post",
-		url: `http://192.168.1.53:7000/user/changeAvatar`,
+		url: `http://90.66.199.176:7000/user/changeAvatar`,
 		data: data,
 		headers: {
 			Authorization: "Bearer " + token,
@@ -180,7 +180,7 @@ function Settings() {
     event.preventDefault();
     await axios
       .post(
-        `http://192.168.1.53:7000/2fa/generate`,
+        `http://90.66.199.176:7000/2fa/generate`,
         {},
         {
           headers: {
@@ -202,7 +202,7 @@ function Settings() {
     event.preventDefault();
     await axios
       .post(
-        `http://192.168.1.53:7000/2fa/turn-on`,
+        `http://90.66.199.176:7000/2fa/turn-on`,
         { twoFactorAuthenticationCode: authCode },
         {
           headers: {
@@ -222,7 +222,7 @@ function Settings() {
 
     await axios
       .post(
-        `http://192.168.1.53:7000/2fa/authenticate`,
+        `http://90.66.199.176:7000/2fa/authenticate`,
         { twoFactorAuthenticationCode: authCode },
         {
           headers: {

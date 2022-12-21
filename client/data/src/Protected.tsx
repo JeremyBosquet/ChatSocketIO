@@ -13,7 +13,7 @@ const Protected = ({children}: {children: any}) => {
 		const checkAuth = async () => {	
 			if (localStorage.getItem("token")) {
 				await axios
-				.get(`http://192.168.1.53:7000/user/CompareToken`, {
+				.get(`http://90.66.199.176:7000/user/CompareToken`, {
 				  headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
 				  },

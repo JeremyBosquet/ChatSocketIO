@@ -1,5 +1,27 @@
 version: "3.5"
 
+networks:
+  transcendance-network:
+    name: transcendance-network
+    driver: bridge
+
+volumes:
+  back:
+    driver: local
+    name: back
+    driver_opts:
+      type: none
+      o: bind
+      device: ./server/data
+  front:
+    driver: local
+    name: front
+    driver_opts:
+      type: none
+      o: bind
+      device: ./client/data
+
+
 services:
   front:
     container_name: front
@@ -8,18 +30,33 @@ services:
     build:
       context: ./client
       args:
-       - ARG_URL=${URL}
+       - ARG_VITE_URL_API=${URL}
     ports:
       - "5999:5999"
-    restart: unless-stopped
+    volumes:
+      - front:/usr/src/app
+    networks:
+      - transcendance-network
+    restart: always
   back:
     container_name: back
+    volumes:
+      - back:/usr/src/app
+    networks:
+      - transcendance-network
     depends_on:
       - db
     build:
       context: ./server
       args:
-       - URL=${URL}
+       - ARG_VITE_URL_API=${URL}
+       - ARG_FORTYTWO_CLIENT_ID=${FORTYTWO_CLIENT_ID}
+       - ARG_FORTYTWO_CLIENT_SECRET=${FORTYTWO_CLIENT_SECRET}
+       - ARG_JWT_SECRET=${JWT_SECRET}
+       - ARG_TWO_FACTOR_AUTHENTICATION_APP_NAME=${TWO_FACTOR_AUTHENTICATION_APP_NAME}
+       - ARG_USER=${USER}
+       - ARG_PASSWORD=${PASSWORD}
+       - ARG_DBNAME=${DBNAME}
     ports:
       - "6000:6000"
       - "7000:7000"
@@ -27,7 +64,7 @@ services:
       - "7002:7002"
       - "7003:7003"
       - "4001:4001"
-    restart: unless-stopped
+    restart: always
   db:
     container_name: db
     build:
@@ -36,10 +73,8 @@ services:
        - ARG_USER=${USER}
        - ARG_PASSWORD=${PASSWORD}
        - ARG_DBNAME=${DBNAME}
-       - ARG_FORTYTWO_CLIENT_ID=${FORTYTWO_CLIENT_ID}
-       - ARG_FORTYTWO_CLIENT_SECRET=${FORTYTWO_CLIENT_SECRET}
-       - ARG_JWT_SECRET=${JWT_SECRET}
-       - ARG_TWO_FACTOR_AUTHENTICATION_APP_NAME=${TWO_FACTOR_AUTHENTICATION_APP_NAME}
     ports:
       - "5432:5432"
-    restart: unless-stopped
+    networks:
+      - transcendance-network
+    restart: always

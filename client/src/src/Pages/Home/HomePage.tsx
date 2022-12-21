@@ -104,7 +104,7 @@ function HomePage() {
 		console.log("socketGame", socketGame);
 		if (socketGame)
 			socketGame?.close();
-		const newSocket = io("http://90.66.199.176:7002");
+		const newSocket = io("http://192.168.1.53:7002");
 		dispatch(setSocketGame(newSocket));
 	}, []);
 
@@ -185,7 +185,7 @@ function HomePage() {
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem("token")) {
 			console.log("GetLoggedInfoAndUser");
-			await axios.get(`http://90.66.199.176:7000/user`, {
+			await axios.get(`http://192.168.1.53:7000/user`, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
 				},
@@ -195,7 +195,7 @@ function HomePage() {
 					dispatch(setUserUsername(res.data.User.username));
 					dispatch(setUserImg(res.data.User.image));
 					setTrueUsername(res.data.User.trueUsername);
-					axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + res.data.User.uuid,
+					axios.get(`http://192.168.1.53:7000/api/room/getGameOfUser/` + res.data.User.uuid,
 					{
 						headers: {
 							Authorization: "Bearer " + localStorage.getItem("token"),
@@ -211,7 +211,7 @@ function HomePage() {
 					console.log(err.message);
 					setUser(undefined);
 			});
-			await axios.get(`http://90.66.199.176:7000/user/ListFriendRequest`, {
+			await axios.get(`http://192.168.1.53:7000/user/ListFriendRequest`, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
 				},
@@ -232,7 +232,7 @@ function HomePage() {
 	}
 
 	async function reloadHistoryList() {
-		await axios.get(`http://90.66.199.176:7000/api/room/getGameOfUser/` + User.uuid,
+		await axios.get(`http://192.168.1.53:7000/api/room/getGameOfUser/` + User.uuid,
 		{
 			headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),

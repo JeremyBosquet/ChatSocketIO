@@ -1,0 +1,448 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
+
+.blur.active{
+	color : white;
+	filter : blur(5px);
+	pointer-events: none;
+	user-select : none;
+}
+
+.popup {
+	position: absolute;
+	transform: translate(-50%, -50%);
+	top : 50%;
+	left : 50%;
+	width : 50%;
+	//margin: 1px;
+
+	visibility: hidden;
+	transition: transform 0.8s, opacity 0.8s;
+	opacity: 0;
+	z-index: 10;
+	//width : 400px; //vtre
+	background: #181818;
+	/* animation: name duration timing-function delay iteration-count direction fill-mode; */
+	border-radius: 6px;
+	//text-align: center;
+	padding : 0px 20px;
+	color : rgb(255, 255, 255);
+	font-family:Georgia, 'Times New Roman', Times, serif;
+	font-size : 100%;
+	h3 {
+		font-size: 30px;
+		color :rgb(255, 255, 255);
+		top : 50px;
+		position: relative;
+		left: 110px;
+		top : -75px;
+		width: fit-content;
+	}
+	h4 {
+		//font-size: px;
+		color :rgb(129, 129, 129);
+		top : 50px;
+		position: relative;
+		left: 110px;
+		top : -74px;
+	}
+	.ProfileImg {
+		width: 100px;
+		height: 100px;
+		position : relative;
+		top : 20px;
+		right : 0px;
+		object-fit: cover;
+		border-radius: 50%;
+	}
+
+	.Buttons{
+		display: flex;
+		//position: flex;
+		width : 10%;
+		position: relative;
+		left : 110px;
+		top : -77px;
+		height: auto;
+		margin-top : 10px;
+		//margin-left : 10px;
+		button {
+			padding:4px;
+			height : fit-content;
+			background: #222222;
+			color: #fff;
+			border: 0;
+			outline : none;
+			font-size : 18px;
+			margin :1px;
+			//padding: px;
+			border-radius : 4px;
+			cursor: pointer;
+			box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+			font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+		}
+	}
+
+	.closeProfile {
+		&:hover
+		{
+			color :rgb(255, 255, 255);
+		}
+		background-color: rgba(0, 0, 0, 0);
+		border : none;
+		outline : none;
+		color : #818181;
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		//left : 150px;
+		font-size: 30px;
+		height: 35px;
+	}
+	.expBar
+	{
+		width : 100%;
+		background: #222222;
+		height: 35px;
+		top : -35px;
+		position: relative;
+		border-radius: 4px;
+		.exp{
+			--expAmount : 0%;
+			background: linear-gradient(90deg, #8E2DE2, #4A00E0);
+			width : var(--expAmount);
+			border: #000000;
+			height: 35px;
+			border-radius: 4px;
+			//top : 15px;
+			// left : 40px;
+			position: absolute;
+		}
+		p{
+			font-size: 24px;
+			display: flex;
+			height: fit-content;
+			justify-content: center;
+			position: relative;
+		}
+	}
+	#listGameParent{
+		background: #222222;
+		padding: 10px;
+		margin-bottom: 20px;
+		border-radius: 5px;
+		::-webkit-scrollbar { 
+			width: 15px;         /* width of the entire scrollbar */
+		}
+		::-webkit-scrollbar-track {
+			background: #ffffff; 
+			border-radius: 10px;      /* color of the tracking area */
+		}
+		
+		::-webkit-scrollbar-thumb {
+			background: var(--black);    /* color of the scroll thumb */
+			border-radius: 10px;       /* roundness of the scroll thumb */
+			border: 1px solid #fff; /* creates padding around scroll thumb */
+		}
+		#listGameScroll{
+  			scrollbar-color: var(--black) #ffffff;
+			
+			overflow:hidden;
+			overflow-y:scroll;
+			height: 95px;
+
+			.green{
+				//color :#2fbb00
+				color :rgb(255, 255, 255);
+			}
+
+			.red{
+				//color :#bf0000
+				color : rgb(255, 255, 255);
+			}
+
+			
+			li{
+				list-style-type: none;
+				display : flex;
+				//position: relative;
+				font-size: 25px;
+				margin-bottom: 2px;
+			}
+		}
+
+		#listGame{
+			height: 90px;
+			overflow: hidden;
+
+			.green{
+				//color :#2fbb00
+				color :rgb(255, 255, 255);
+			}
+
+			.red{
+				//color :#bf0000
+				color : rgb(255, 255, 255);
+			}
+
+			li{
+				list-style-type: none;
+				position: relative;
+				font-size: 25px;
+			}
+		}
+	}
+}
+
+.popup.active{
+	visibility: visible;
+	opacity: 1;
+	transition: transform 0.8s, opacity 0.8s;
+}
+
+.main
+{
+  --black : #181818;
+//   background: #222222;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Roboto', sans-serif;
+}
+
+.HomePage #myProfile {
+	display: flex;
+	.userInfo
+	{
+		width: 100%;
+		margin-left: 18px;
+		margin-right: 18px;
+	}
+	.userImg
+	{
+		width: 150px;
+		height: 150px;
+		position : relative;
+		top : 20px;
+		margin-left: 10px;
+		object-fit: cover;
+		border-radius: 50%;
+	}
+	h3 {
+		position: relative;
+		top: 50px;
+		color: #fff;
+		font-size: 26px;
+	}
+	h4 {
+		position: relative;
+		top: 50px;
+		color: rgb(129, 129, 129);
+		font-size: 15px;
+	}
+	.expBar
+	{
+		width : 100%;
+		background: var(--black);
+		height: 35px;
+		top : 70px;
+		position: relative;
+		border-radius: 4px;
+		.myExp{
+			--expAmount : 0%;
+			//background-color: #4158D0;
+			background: linear-gradient(90deg, #8E2DE2, #4A00E0);
+
+			//background: linear-gradient(135deg, rgb(120, 136, 152) , rgb(47, 79, 80));
+			width : var(--expAmount);
+			border: #000000;
+			height: 35px;
+			border-radius: 4px;
+			//top : 15px;
+			// left : 40px;
+			position: absolute;
+		}
+		p{
+			top : 4px;
+			color: #fff;
+			font-size: 24px;
+			display: flex;
+			height: fit-content;
+			justify-content: center;
+			position: relative;
+		}
+	}
+	#listMyGameParent{
+		top : 112px;
+		position: relative;
+		//margin-left : 180px;
+		background: var(--black);
+		padding: 10px;
+		//margin-bottom: 20px;
+		border-radius: 5px;
+		::-webkit-scrollbar { 
+			width: 15px;         /* width of the entire scrollbar */
+		}
+		::-webkit-scrollbar-track {
+			background: #ffffff; 
+			border-radius: 10px;      /* color of the tracking area */
+		}
+		
+		::-webkit-scrollbar-thumb {
+			background: var(--black);    /* color of the scroll thumb */
+			border-radius: 10px;       /* roundness of the scroll thumb */
+			border: 1px solid #ffffff; /* creates padding around scroll thumb */
+		}
+		#listMyGameScroll{
+  			scrollbar-color: var(--black) #ffffff;
+			overflow:hidden;
+			overflow-y:scroll;
+			height: 126px;
+			color : #ffffff;
+
+			li{
+				list-style-type: none;
+				display : flex;
+				flex-direction: row;
+				// position: relative;
+				font-size: 25px;
+				margin-bottom: 2px;
+				margin-right: 0px;
+				#playerName {
+					width: 50%;
+				}
+				#playerStatus {
+					width: 30%;
+				}
+				#playerScore {
+					width: 20%;
+				}
+			}
+			
+		}
+
+		#listMyGame{
+			height: 126px;
+			overflow: hidden;
+			color :rgb(255, 255, 255);
+			.green{
+				//color :#2fbb00
+				color :rgb(255, 255, 255);
+			}
+
+			.red{
+				//color :#bf0000
+				color : rgb(255, 255, 255);
+			}
+
+			li{
+				list-style-type: none;
+				display : flex;
+				flex-direction: row;
+				// position: relative;
+				font-size: 25px;
+				margin-bottom: 2px;
+				margin-right: 0px;
+				#playerName {
+					width: 50%;
+				}
+				#playerStatus {
+					width: 30%;
+				}
+				#playerScore {
+					width: 20%;
+				}
+			}
+		}
+	}
+}
+
+.HomePage #login
+{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: 100px;
+	transform: translate(-50%, -50%);
+	background: var(--black);
+	border: none;
+	padding: 10px;
+	outline : none;
+	// width: 200px;
+	// height: 100px;
+	color: rgb(255, 255, 255);
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-size: 50px;
+	border-radius: 30px;
+	cursor: pointer;
+	box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+}
+
+.HomePage #loginTitle
+{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: rgb(255, 255, 255);
+	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+	font-size: 70px;
+}
+
+@media screen and (max-width: 790px) {
+	.popup{
+		h3 {
+			margin-top: 10px;
+			font-size: 16px;
+		}
+		.expBar
+		{
+			margin-top: 8px;
+		}
+	}
+}
+
+@media screen and (max-width: 502px) {
+	.popup{
+		width: 75%;
+		h3 {
+			font-size : 25px;
+		}
+		.ProfileImg {
+			width: 100px;
+			height: 100px;
+		}
+	}
+	.HomePage {
+		
+		#myProfile{
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			h3 {
+				text-align: center;
+			}
+			.userInfo {
+				align-items: center;
+				width: 80%;
+				margin: 0;
+			}
+			#listMyGameParent {
+				height: 185px;
+			}
+			#listMyGameParent p {
+				font-size: 16px;
+			}
+			#listMyGameParent li {
+				flex-direction: column;
+			}
+			#playerName {
+				width: unset;
+			}
+			#playerStatus {
+				width: 40px;
+			}
+			#playerScore {
+				width: 40px;
+			}
+		}
+	}
+}

@@ -47,7 +47,7 @@ function Block(props : props) {
       navigate('/chat/channel');
 
     if (!blocked) {
-      await axios.post(`http://90.66.199.176:7000/user/BlockUser`, {uuid : targetId}, {
+      await axios.post(`http://192.168.1.53:7000/user/BlockUser`, {uuid : targetId}, {
           headers: ({
               Authorization: 'Bearer ' + localStorage.getItem('token'),
           })
@@ -70,7 +70,7 @@ function Block(props : props) {
           console.log(err.response.data.message);
         });
       } else {
-        await axios.post(`http://90.66.199.176:7000/user/UnblockUser`, {uuid : targetId}, {
+        await axios.post(`http://192.168.1.53:7000/user/UnblockUser`, {uuid : targetId}, {
           headers: ({
             Authorization: 'Bearer ' + localStorage.getItem('token'),
           })

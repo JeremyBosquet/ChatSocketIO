@@ -52,7 +52,7 @@ export class AppService {
 			return (process.env.BACK + name);
 	
 		  }
-		  let userImg : string;
+		let userImg : string = "";
 		if (user.image.link)
 			userImg = await fetchAndStoreImage(user.image.link, "./src/uploads/avatar/" , Date().replace(/ /g, '') + ".jpg");
 		else

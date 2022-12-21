@@ -117,7 +117,7 @@ function Profile() {
 										|&nbsp;&nbsp;{whoWon(userProfile.uuid, game)}
 									</p>
 									<p id="playerScore">
-									|&nbsp;&nbsp;{game.scoreA < 0 ? -game.scoreA : game.scoreA} - {game.scoreB < 0 ? -game.scoreB : game.scoreB}
+									|&nbsp;&nbsp;{game.scoreA < 0 ? (game.scoreA == -42 ? 0 : -game.scoreA) : game.scoreA} - {game.scoreB < 0 ? (game.scoreB == -42 ? 0 : -game.scoreB) : game.scoreB}
 									</p>
 									</li>
 								</ul>

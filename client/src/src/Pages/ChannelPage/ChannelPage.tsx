@@ -20,6 +20,7 @@ import { GrAdd } from 'react-icons/gr';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
 import Search from '../../Components/Channels/Search/Search';
+import instance from '../../API/Instance';
 
 
 interface IPlayer {
@@ -129,7 +130,7 @@ function ChannelPage() {
 
 	    
     const getUsersChannel = async (userId: any) => {
-        await axios.get("http://90.66.199.176:7000/api/chat/channels/user/" + userId)
+        await instance.get(`api/chat/channels/user/` + userId)
         .then((res) => {
             if (res)
                 dispatch(setChannels(res.data));

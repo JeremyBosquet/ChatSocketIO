@@ -12,6 +12,7 @@ import PrivateMessages from '../../Components/PrivateMessages/PrivateMessages';
 import { getLogged, getUser, setLogged, setUser } from '../../Redux/authSlice';
 import { getChannels, getDMs, getMode, setDMs } from '../../Redux/chatSlice';
 import './DMPage.scss'
+import instance from '../../API/Instance';
 
 function DMPage() {
 	const logged = useSelector(getLogged);
@@ -28,7 +29,7 @@ function DMPage() {
     
     useEffect(() => {
         const getUsersDM = async (userId: any) => {
-            await axios.get("http://90.66.199.176:7000/api/chat/dm/user/" + userId)
+            await instance.get(`api/chat/dm/user/` + userId)
             .then((res) => {
                 if (res)
                     dispatch(setDMs(res.data));
@@ -43,8 +44,7 @@ function DMPage() {
 
 	useEffect(() => {
 		const getUserInfos = async () => {
-			await axios
-			.get(`http://90.66.199.176:7000/user`, {
+			await axios.get(`http://90.66.199.176:7000/user`, {
 			  headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			  },

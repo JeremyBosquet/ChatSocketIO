@@ -2,6 +2,7 @@ import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
 import { redirect, useNavigate, useLocation } from "react-router-dom";
+import instance from "../../API/Instance";
 
 function SignIn() {
   let navigate = useNavigate();

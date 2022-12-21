@@ -21,6 +21,7 @@ import Social from "../Social/Social";
 import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeGameChat, getSockeSpectate, setSocketGame, setSocketGameChat, setSocketSpectate } from "../../Redux/gameSlice";
 import Settings from "../Settings/Settings";
+import instance from "../../API/Instance";
 
 function NavBar(props: any) {
   let location = useLocation();

@@ -199,18 +199,24 @@ export class UsersController {
   ) {
 	const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 	const User = await this.userService.findUserByUuid(Jwt['uuid']);
+	function onlyLettersAndNumbers(str : string) {
+		return Boolean(str.match(/^[A-Za-z0-9]*$/));
+	}
 	if (User) {
-	  const find = await this.userService.findUsersByUsername(
-		param.username,
-		User.uuid,
-	  );
-	  if (find) {
-		return res.status(HttpStatus.OK).json({
-		  statusCode: HttpStatus.OK,
-		  message: 'succes',
-		  searchResult: find,
-		});
-	  }
+		if (onlyLettersAndNumbers(param.username))
+		{
+			const find = await this.userService.findUsersByUsername(
+				param.username,
+				User.uuid,
+			);
+			if (find) {
+				return res.status(HttpStatus.OK).json({
+				statusCode: HttpStatus.OK,
+				message: 'succes',
+				searchResult: find,
+				});
+			}
+		}
 	  return res.status(HttpStatus.NO_CONTENT).json({
 		statusCode: HttpStatus.NO_CONTENT,
 		message: 'Friend not found',

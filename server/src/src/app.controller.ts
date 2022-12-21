@@ -89,7 +89,7 @@ export class AppController {
 
     //console.log(user);
 
-    if (user && user)
+    if (user)
 	{
 		return res.status(HttpStatus.OK).json({
 			statusCode: HttpStatus.OK,

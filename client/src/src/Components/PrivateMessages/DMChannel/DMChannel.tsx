@@ -38,7 +38,7 @@ function DMChannel() {
   }
 
   const getMessages = async () => {
-    await instance.get("chat/dm/messages/" + selectedChannelDM + '/' + user.uuid)
+    await instance.get("chat/dm/messages/" + selectedChannelDM)
     .then(res => {
       if (res.data)
         setMessages(res.data);

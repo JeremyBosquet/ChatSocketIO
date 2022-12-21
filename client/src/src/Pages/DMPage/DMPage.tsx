@@ -10,26 +10,25 @@ import Popup from '../../Components/Popup/Popup';
 import DM from '../../Components/PrivateMessages/DM/DM';
 import PrivateMessages from '../../Components/PrivateMessages/PrivateMessages';
 import { getLogged, getUser, setLogged, setUser } from '../../Redux/authSlice';
-import { getChannels, getDMs, getMode, setDMs } from '../../Redux/chatSlice';
+import { getDMs, getMode, setDMs } from '../../Redux/chatSlice';
 import './DMPage.scss'
 import instance from '../../API/Instance';
 
 function DMPage() {
 	const logged = useSelector(getLogged);
-    const mode = useSelector(getMode);
     const user = useSelector(getUser);
     const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const params = useParams();
     const [init, setInit] = useState<boolean>(false);
+	const dms : [] = useSelector(getDMs);
 
 	KillSocket("spectate");
 	KillSocket("game");
-	const dms = useSelector(getDMs);
     
     useEffect(() => {
         const getUsersDM = async (userId: any) => {
-            await instance.get(`api/chat/dm/user/` + userId)
+            await instance.get(`chat/dm/user`)
             .then((res) => {
                 if (res)
                     dispatch(setDMs(res.data));
@@ -40,20 +39,16 @@ function DMPage() {
         if (!init)
             getUsersDM(user.uuid);
         //eslint-disable-next-line
-    }, [init])
+    }, [])
 
 	useEffect(() => {
 		const getUserInfos = async () => {
-			await await instance.get(`user`, {
-			  headers: {
-				Authorization: "Bearer " + localStorage.getItem("token"),
-			  },
-			})
+			await instance.get(`user`)
 			.then((res) => {
 			  dispatch(setUser(res.data.User));
 			  dispatch(setLogged(true));
 			})
-			.catch((err) => {
+			.catch(() => {
 			  setUser({});
 			  createNotification("error", "User not found");
 			  navigate("/");
@@ -99,7 +94,7 @@ function DMPage() {
 							</div>
 							<div className='channelsInfos'>
 								<div className='channelsInfo dmWidthChange'>
-									{dms.map((channel : any) => (
+									{dms && dms.map((channel : any) => (
 										<DM key={channel["id"]} dm={channel} />
 									))}
 								</div>

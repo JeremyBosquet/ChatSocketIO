@@ -133,7 +133,7 @@ function GameReady(props: props) {
     });
     socket?.on("playerLeave", () => {
       console.log("receive cancelSearching");
-      createNotification("info", "L'autre connard a leave 1");
+      createNotification("info", "The other player left the room");
       //setNotificaton(true);
       setSearchingDisplay(true);
       setSearching(true);

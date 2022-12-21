@@ -43,17 +43,14 @@ function Search(props: props) {
 
     const handleJoinPrivate = async (e: any) => {
         e.preventDefault();
-        const data = {
-            code: e.target.joinPrivate.value,
-            userId: user.uuid
-        }
-        await instance.post("chat/channel/join/code", data)
+        await instance.post("chat/channel/join/code", {code: e.target.joinPrivate.value})
         .then((res) => {
             if (res)
             {
                 props.getUsersChannel(user.uuid);
                 socket?.emit('joinPermanent', { channelId: res.data.channelId });
                 createNotification("success", "You have successfully join the private channel.");
+                props.setSearchChannel("");
             }
         }).catch((err) => {
             createNotification("error", err.response.data.message);

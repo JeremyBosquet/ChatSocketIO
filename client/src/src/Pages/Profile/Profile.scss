@@ -80,7 +80,7 @@
 				position: relative;
 			}
 		}
-		#listMyGameParent{
+		#listGameParent{
 			//margin-left : 180px;
 			width: 80%;
 			margin-top: 35px;
@@ -101,7 +101,7 @@
 				border-radius: 10px;       /* roundness of the scroll thumb */
 				border: 1px solid #ffffff; /* creates padding around scroll thumb */
 			}
-			#listMyGameScroll{
+			#listGameScroll{
 				scrollbar-color: var(--black) #ffffff;
 				overflow:hidden;
 				overflow-y:scroll;
@@ -129,7 +129,7 @@
 				
 			}
 
-			#listMyGame{
+			#listGame{
 				height: 126px;
 				overflow: hidden;
 				color :rgb(255, 255, 255);
@@ -160,6 +160,60 @@
 					#playerScore {
 						width: 20%;
 					}
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 674px) {
+	.profilePage {
+		
+		#userProfile{
+			// display: flex;
+			// flex-direction: column;
+			// align-items: center;
+			// h3 {
+			// 	text-align: center;
+			// }
+			// h4 {
+			// 	margin-top: 4px;
+			// 	text-align: center;
+			// }
+			// .userInfo {
+			// 	align-items: center;
+			// 	width: 80%;
+			// 	margin: 0;
+			// }
+			#listGameParent
+			{
+				#listGameScroll {
+					height: 66px;
+				}
+				p {
+					font-size: 12.5px;
+				}
+				li {
+					flex-direction: column;
+				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 965px) and (min-width: 674px) {
+	.profilePage {
+		#userProfile{
+			#listGameParent
+			{
+				#listGameScroll {
+					height: 84px;
+				}
+				p {
+					font-size: 16px;
+				}
+				li {
+					flex-direction: column;
 				}
 			}
 		}

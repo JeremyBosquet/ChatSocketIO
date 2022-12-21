@@ -19,17 +19,11 @@ export class editChannelPasswordDTO {
 export class JoinChannelDTO {
     @IsUUID()
     channelId: string;
-  
-    @IsUUID()
-    userId: string;
 
     password: string;
 }
 
 export class JoinChannelCodeDTO {
-    @IsUUID()
-    userId: string;
-
     @IsNotEmpty()
     code: string;
 }

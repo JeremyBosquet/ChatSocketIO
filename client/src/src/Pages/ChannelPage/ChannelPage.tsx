@@ -129,6 +129,7 @@ function ChannelPage() {
     const getUsersChannel = async (userId: any) => {
         await instance.get(`api/chat/channels/user/` + userId)
         .then((res) => {
+			console.log(res.data)
             if (res)
                 dispatch(setChannels(res.data));
         })
@@ -227,7 +228,7 @@ function ChannelPage() {
 			socketGame?.on("playerDisconnected", (data: IRoom) => {
 			if (ready) {
 			  //if (!notification)
-				createNotification("info", "L'autre connard a leave 2");
+				createNotification("info", "The other player has left the game");
 			  //setNotificaton(true);
 			  console.log("aPlayerDisconnected : ", data);
 			  if (playing) {
@@ -259,7 +260,7 @@ function ChannelPage() {
 			  "gameForceEnd donc erreur 'sorry l'autre connard a crash'",
 			  data
 			);
-			  createNotification("info", "L'autre connard a leave 3");
+			  createNotification("info", "The other asshole has crashed");
 			//setNotificaton(true);
 			setRoom(undefined);
 			setPlaying(false);
@@ -318,7 +319,7 @@ function ChannelPage() {
 										<div className='channelsInfos'>
 											{searchChannel === "" ? 
 												<div className='channelsInfo'>
-													{channels.map((channel : any) => (
+													{channels && channels.map((channel : any) => (
 														<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={false}/>
 													))}
 												</div>

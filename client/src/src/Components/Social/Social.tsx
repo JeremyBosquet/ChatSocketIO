@@ -211,7 +211,7 @@ function Social() {
 										{
 											searchList.map((user, index) => (
 											<div key={user.uuid} className='mapSearch'>
-												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
+												<img className="icon" src={import.meta.env.VITE_URL_API + ":7000/" + user?.image} alt="user_img" width="36" height="27"/>
 												<p> {user.username} </p>
 												<div className='status'>
 												{
@@ -219,7 +219,7 @@ function Social() {
 												}
 												</div>
 												<div className='buttons'>
-													<Show UserUuid={user.uuid}/>
+													<Show trueUsername={user.trueUsername}/>
 													<BlockOrUnblock UserUuid={user.uuid} User={User}/>
 												</div>
 												<div>
@@ -237,7 +237,7 @@ function Social() {
 
 														(
 															<div className='buttons2'>
-																<Accept User={User} UserUuid={user.uuid} UserImg={user?.image}/>
+																<Accept User={User} UserUuid={user.uuid} UserImg={import.meta.env.VITE_URL_API + ":7000/" + user?.image}/>
 																<Decline User={User} UserUuid={user.uuid} />
 															</div>
 														)
@@ -272,7 +272,7 @@ function Social() {
 									{
 										friendList.map((user : any) => (
 											<div key={user.uuid} className='mapFriend'> 
-												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
+												<img className="icon" src={import.meta.env.VITE_URL_API + ":7000/" + user?.image} alt="user_img" width="36" height="27"/>
 												<p> {user.username} </p>
 												<div className='status'>
 												{
@@ -281,7 +281,7 @@ function Social() {
 												</div>
 												<div className='buttons'>
 													<AddOrRemove User={User} UserUuid={user.uuid}/>
-													<Show UserUuid={user.uuid}/>
+													<Show trueUsername={user.trueUsername}/>
 													<BlockOrUnblock UserUuid={user.uuid} User={User}/>
 												</div>
 											</div>
@@ -310,7 +310,7 @@ function Social() {
 										{
 											requestList.map((user : any, index : number) => (
 											<div key={index} className='mapReq'> 
-												<img className="icon" src={user?.image} alt="user_img" width="36" height="27"/>
+												<img className="icon" src={import.meta.env.VITE_URL_API + ":7000/" + user?.image} alt="user_img" width="36" height="27"/>
 												<p> {user?.username} </p>
 												<div className='status'>
 												{
@@ -318,7 +318,7 @@ function Social() {
 												}
 												</div>
 												<div className='buttons'>
-													<Show UserUuid={user.uuid}/>
+													<Show trueUsername={user.trueUsername}/>
 													<BlockOrUnblock UserUuid={user.uuid} User={User}/>
 													<Accept User={User} UserUuid={user.uuid} UserImg={user?.image}/>
 													<Decline User={User} UserUuid={user.uuid} />

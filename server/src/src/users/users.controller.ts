@@ -19,6 +19,7 @@ import {
 	ParseFilePipe,
 	FileTypeValidator,
 	ParseFilePipeBuilder,
+	BadRequestException,
 } from '@nestjs/common';
 import { ExpDto, FriendsDto, SearchDto, SendUserDto, TokenDto } from './users.dto';
 import { UsersService } from './users.service';
@@ -32,10 +33,9 @@ import * as bcrypt from 'bcrypt';
 import { fileTypeFromFile } from 'file-type';
 import got from 'got';
 import { fileTypeFromStream } from 'file-type';
-import { Express } from 'express';
+// import { Express } from 'express';
+import axios from 'axios';
 
-
-let nameAvatar: string;
 @Controller('api/user')
 export class UsersController {
 	constructor(
@@ -64,39 +64,30 @@ export class UsersController {
 		});
 	}
 
-	//   @Post('addExp')
-	//   @UseGuards(JwtTwoFactorGuard)
-	//   async addExp(@Req() req: any,@Res() res: any,@Body() Exp : ExpDto) {
-	// 	const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-	// 	const User = await this.userService.findUserByUuid(Jwt['uuid']);
-	// 	if (User) {
-	// 	  const expToAdd = Exp['exp'];
-	// 	  if (!Exp || !expToAdd) {
-	// 		return res.status(HttpStatus.NOT_MODIFIED).json({
-	// 		  statusCode: HttpStatus.NOT_MODIFIED,
-	// 		  message: 'Exp invalid',
-	// 		  error: 'NOT_MODIFIED',
-	// 		});
-	// 	  }
-	// 	  if (!(await this.userService.addExp(User.uuid, expToAdd))) {
-	// 		return res.status(HttpStatus.NOT_MODIFIED).json({
-	// 		  statusCode: HttpStatus.NOT_MODIFIED,
-	// 		  message: 'Failed to add exp',
-	// 		  error: 'NOT_MODIFIED',
-	// 		});
-	// 	  }
-	// 	  return res.status(HttpStatus.OK).json({
-	// 		statusCode: HttpStatus.OK,
-	// 		message: 'succes',
-	// 	  });
-	// 	}
-	// 	return res.status(HttpStatus.NOT_FOUND).json({
-	// 	  statusCode: HttpStatus.NOT_FOUND,
-	// 	  message: 'User not found',
-	// 	  error: 'NOT_FOUND',
-	// 	});
-	//   }
-
+	@Get('getProfilePicture/:uuid')
+	async getProfilePicture(@Param() param: any, @Res() res: any) {
+		const User = await this.userService.findUserByUuid(param?.uuid);
+		if (User) {
+			if (User.image) {
+				res.setHeader('Content-Type', 'image/webp');
+				console.log(process.env.BACK + User.image);
+				const response = await axios.get(process.env.BACK + User.image, {
+					responseType: 'arraybuffer',
+				});
+				return res.status(HttpStatus.OK).send(response.data);
+			}
+			return res.status(HttpStatus.NO_CONTENT).json({
+				statusCode: HttpStatus.NO_CONTENT,
+				message: 'No profile picture',
+				error: 'NO_CONTENT',
+			});
+		}
+		return res.status(HttpStatus.NOT_FOUND).json({
+			statusCode: HttpStatus.NOT_FOUND,
+			message: 'User not found',
+			error: 'NOT_FOUND',
+		});
+	}
 	@Get('getExp/:uuid')
 	@UseGuards(JwtAuthGuard)
 	async getExp(@Req() req: any, @Res() res: any, @Param(ValidationPipe) param: FriendsDto,) {
@@ -144,22 +135,22 @@ export class UsersController {
 		});
 	}
 
-	@Get('getProfilePicture/:uuid')
-	async getProfilePicture(@Param() param: any, @Res() res: any) {
-		const User = await this.userService.findUserByUuid(param?.uuid);
-		if (User) {
-			if (User.image) {
-				res.setHeader('Content-Type', 'image/webp');
-				return res.status(HttpStatus.OK).send(User.image);
-			}
-		}
-		return res.status(HttpStatus.NOT_FOUND).json({
-			statusCode: HttpStatus.NOT_FOUND,
-			message: 'user not found',
-			error: 'NOT_FOUND',
-		});
-
-	}
+	//@Get('getProfilePicture/:uuid')
+	//async getProfilePicture(@Param() param: any, @Res() res: any) {
+	//	const User = await this.userService.findUserByUuid(param?.uuid);
+	//	if (User) {
+	//		if (User.image) {
+	//			res.setHeader('Content-Type', 'image/webp');
+	//			return res.status(HttpStatus.OK).send(User.image);
+	//		}
+	//	}
+	//	return res.status(HttpStatus.NOT_FOUND).json({
+	//		statusCode: HttpStatus.NOT_FOUND,
+	//		message: 'user not found',
+	//		error: 'NOT_FOUND',
+	//	});
+//
+	//}
 
 	@Get('CompareToken')
 	@UseGuards(JwtAuthGuard)
@@ -859,31 +850,6 @@ export class UsersController {
 		});
 	}
 
-	// @Post('changeAvatar')
-	// @UseGuards(JwtAuthGuard)
-	// async ChangeAvatar(@Req() req: any , @Res() res : any, @Body() Avatar : string) {
-	// 	const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-	// 	const User = await this.userService.findUserById(Jwt["id"]);
-	// 	const newAvatar = Avatar["newAvatar"]
-	// 	if (User)
-	// 	{
-	// 		if (! (await this.userService.ChangeAvatar(User.id, newAvatar)))
-	// 		{
-	// 			return res.status(HttpStatus.NOT_FOUND).json({
-	// 				statusCode: HttpStatus.NOT_FOUND,
-	// 				message: "User not found",
-	// 				error: "NOT_FOUND"});
-	// 		}
-	// 		return res.status(HttpStatus.OK).json({
-	// 			statusCode: HttpStatus.OK,
-	// 			message : "succes"});
-	// 	}
-	// 	return res.status(HttpStatus.NOT_FOUND).json({
-	// 		statusCode: HttpStatus.NOT_FOUND,
-	// 		message: "User not found",
-	// 		error: "NOT_FOUND"});
-	// }
-
 	@Post('changeAvatar')
 	@UseGuards(JwtTwoFactorGuard)
 	@UseInterceptors(FileInterceptor('file', {
@@ -893,18 +859,13 @@ export class UsersController {
 				'image/jpeg',
 				'image/jpg',
 			]
+			if (!file)
+				return cb( new BadRequestException('No file provided'), false);
 			if (!whitelist.includes(file.mimetype))
 				return cb(
 					new UnsupportedMediaTypeException('No files other than jpg/png/jpeg are accepted'), false);
 			cb(null, true);
 		},
-		//storage: diskStorage({
-		//	destination: 'src/uploads/avatar',
-		//	filename: async function (req, file, cb) {
-		//		const type = '.' + file.mimetype.split('/')[1];
-		//		cb(null, (nameAvatar = Date().replace(/ /g, '') + type));
-		//	},
-		//}),
 		limits: {
 			fileSize: 1e6,
 		},
@@ -914,6 +875,12 @@ export class UsersController {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
 		console.log(file);
+		if (!file)
+			return res.status(HttpStatus.BAD_REQUEST).json({
+				statusCode: HttpStatus.BAD_REQUEST,
+				message: 'No file',
+				error: 'BAD_REQUEST',
+			});
 		if (file.mimetype === 'image/png') {
 			if (file.buffer[0] !== 0x89 || file.buffer[1] !== 0x50 || file.buffer[2] !== 0x4E || file.buffer[3] !== 0x47 || file.buffer[4] !== 0x0D || file.buffer[5] !== 0x0A || file.buffer[6] !== 0x1A || file.buffer[7] !== 0x0A)
 				return res.status(HttpStatus.BAD_REQUEST).json({
@@ -943,17 +910,25 @@ export class UsersController {
 			});
 		}
 		if (User) {
-			if (!(await this.userService.ChangeAvatar(User.uuid, file.buffer, file.mimetype))) {
+			const nb = (await this.userService.ChangeAvatar(User.uuid, file.buffer, file.mimetype));
+			if (!nb) {
 				return res.status(HttpStatus.NOT_FOUND).json({
 					statusCode: HttpStatus.NOT_FOUND,
 					message: 'User not found',
 					error: 'NOT_FOUND',
 				});
 			}
-			return res.status(HttpStatus.OK).json({
-				statusCode: HttpStatus.OK,
-				message: 'succes',
-			});
+			if (nb === 1)
+				return res.status(HttpStatus.OK).json({
+					statusCode: HttpStatus.OK,
+					message: 'succes',
+				});
+			else
+				return res.status(HttpStatus.BAD_REQUEST).json({
+					statusCode: HttpStatus.BAD_REQUEST,
+					message: 'failed to change avatar',
+					error: 'BAD_REQUEST',
+				});
 		}
 		return res.status(HttpStatus.NOT_FOUND).json({
 			statusCode: HttpStatus.NOT_FOUND,
@@ -972,8 +947,6 @@ export class UsersController {
 	) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
-		//console.log(req)
-		//const uuid = param["uuid"];
 		if (User && param.uuid) {
 			const UserUuid = await this.userService.findFriendByUuid(User.uuid, param.uuid);
 			if (UserUuid) {

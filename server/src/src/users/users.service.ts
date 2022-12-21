@@ -9,6 +9,7 @@ import { plainToClass } from 'class-transformer';
 import { User } from 'src/login/user.decorator';
 import * as bcrypt from 'bcrypt';
 import { promises as fs } from "fs";
+import { v4 as uuidv4 } from 'uuid';
 @Injectable()
 export class UsersService {
   constructor(
@@ -692,9 +693,25 @@ export class UsersService {
 		const path = "./src/uploads/avatar/";
 		if (type.includes("image/"))
 			type = type.slice(6);
-		const name = Date().replace(/ /g, '') + "." + type;
-		await fs.writeFile(path + name, newAvatar);
-      await this.userRepository.update({ uuid }, { image: process.env.BACK + name});
+		const name = uuidv4() + "." + type;
+		try 
+		{
+			//delete img
+			await fs.unlink(path + user.image);
+		}
+		catch
+		{
+			return (2)
+		}
+		try
+		{
+			await fs.writeFile(path + name, newAvatar);
+		}
+		catch (err)
+		{
+			return (2);
+		}
+      await this.userRepository.update({ uuid }, { image: name});
       return 1;
     }
     return 0;

@@ -58,19 +58,25 @@ export class RoomGateway {
   }
 
   newDirection(oldDirection: number, ratioBetweenBallAndBoard: number) : number{
-    // Calculate the new direction of the ball, ratioBetweenBallAndBoard is the ratio between the ball's position and the board's position 0 and 1 (0 is the left side of the board, 1 is the right side of the board) 
-    // oldDirection is the direction of the ball before the collision (in radians)
-    // The new direction is calculated with the old direction and the ratio between the ball and the board (in radians)
-    // if ratioBetweenBallAndBoard is 0, the have hit a wall, the new direction is the opposite of the old direction
-    // If the ball hit a wall, the new direction is the opposite of the old direction
-    if (ratioBetweenBallAndBoard == 0) return (-oldDirection);
-
-    // If the ball hit a board, the new direction is calculated with the old direction and the ratio between the ball and the board
+    // If oldirection is not a valid radian repair it
+    if (oldDirection < 0) oldDirection += 2 * Math.PI;
+    if (oldDirection > 2 * Math.PI) oldDirection -= 2 * Math.PI;
+    // Calculate the new direction
     let newDirection = Math.PI - oldDirection;
-    if (ratioBetweenBallAndBoard < 0.5) newDirection += ratioBetweenBallAndBoard * Math.PI / 2;
-    else newDirection -= (1 - ratioBetweenBallAndBoard) * Math.PI / 2;
-
-    console.log("Direction updated : " + newDirection, "Old direction : " + oldDirection, "Ratio : " + ratioBetweenBallAndBoard);
+    if (ratioBetweenBallAndBoard == 0) 
+      newDirection =(-oldDirection);
+    else
+    {
+      if (ratioBetweenBallAndBoard < 0.5) newDirection += ratioBetweenBallAndBoard * Math.PI / 2;
+      else newDirection -= (1 - ratioBetweenBallAndBoard) * Math.PI / 2;
+    }
+    //console.log("beforenewDirection: " + newDirection);
+    if (newDirection < 0) newDirection += 2 * Math.PI;
+    if (newDirection > 2 * Math.PI) newDirection -= 2 * Math.PI;
+    if (newDirection > Math.PI / 2 - Math.PI / 8 && newDirection < Math.PI / 2 + Math.PI / 8) newDirection = Math.PI / 2 + Math.PI / 8;
+    if (newDirection > 3 * Math.PI / 2 - Math.PI / 8 && newDirection < 3 * Math.PI / 2 + Math.PI / 8) newDirection = 3 * Math.PI / 2 + Math.PI / 8;
+    if (newDirection > Math.PI - Math.PI / 8 && newDirection < Math.PI + Math.PI / 8) newDirection = Math.PI + Math.PI / 8;
+    //console.log("afternewDirection: " + newDirection);
     return newDirection;
   }
 
@@ -142,35 +148,71 @@ export class RoomGateway {
           room.ball.speed = room.settings.defaultSpeed;
           this.roomService.updateRoom(room.id, { ball: room.ball });
           this.server.in('room-' + room.id).emit('ballMovement', room);
-          console.log('playerA.id: ' + room.playerA.id + ' - playerB.id: ' + room.playerB.id);
+          //console.log('playerA.id: ' + room.playerA.id + ' - playerB.id: ' + room.playerB.id);
           this.server.in('room-' + room.id).emit('roomUpdated', room);
         } else {
           // Use checkHitBox to check if the ball hit a player or a wall
           if (this.checkHitBox(room.playerA.x, room.playerA.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
-            console.log('playerA hit the ball')
             room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerA.y) / room.settings.boardHeight);
             room.ball.speed += 0.1;
-            room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.45;
-            room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.45;
+            let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45) ;
+            let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45) ;
+            //console.log('playerA hit the ball', room.ball.direction, x, ' ', y)
+            while (x < room.ball.x) {
+              //console.log('Je suis dans la boucle A', room.ball.direction, x, ' ', y)
+              room.ball.direction =  room.ball.direction + 0.1;
+              x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.45;
+              y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.45;
+            }
+            room.ball.x = x;
+            room.ball.y = y;
+            //room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.45;
+            //room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.45;
           }
           else if (this.checkHitBox(room.playerB.x, room.playerB.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
-            console.log('playerB hit the ball')
             room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerB.y) / room.settings.boardHeight);
             room.ball.speed += 0.1;
-            room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.45;
-            room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.45;
+            let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45) ;
+            let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45) ;
+            //console.log('playerB hit the ball', room.ball.direction, x, ' ', y)
+            while (x > room.ball.x) {
+             //console.log('Je suis dans la boucle B', room.ball.direction, x, ' ', y)
+              room.ball.direction =  room.ball.direction - 0.1;
+              x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.45;
+              y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.45;
+            }
+            room.ball.x = x;
+            room.ball.y = y;
+            //room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.45;
+            //room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.45;
           }
-          else if (this.checkHitBox(0, 0, 100, 1, room.ball.x, room.ball.y)) {
-            console.log('wall hit the ball')
+          else if (this.checkHitBox(0, -50, 100, 51, room.ball.x, room.ball.y)) {
+            //console.log('wall hit the ball')
             room.ball.direction = this.newDirection(room.ball.direction, 0);
-            room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
-            room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
+            let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
+            let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
+            while ((this.checkHitBox(0, -50, 100, 51, x, y)))
+            {
+              room.ball.direction =  room.ball.direction + 0.35;
+              x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
+              y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
+            }
+            room.ball.x = x;
+            room.ball.y = y;
           }
-          else if (this.checkHitBox(0, 99, 100, 1, room.ball.x, room.ball.y)) {
-            console.log('wall hit the ball')
+          else if (this.checkHitBox(0, 99, 100, 51, room.ball.x, room.ball.y)) {
+            //console.log('wall hit the ball')
             room.ball.direction = this.newDirection(room.ball.direction, 0);
-            room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
-            room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
+            let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
+            let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
+            while ((this.checkHitBox(0, 99, 100, 51, x, y)))
+            {
+              room.ball.direction =  room.ball.direction + 0.35;
+              x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
+              y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
+            }
+            room.ball.x = x;
+            room.ball.y = y;
           }
           else {
             room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
@@ -178,9 +220,15 @@ export class RoomGateway {
           }
           // Move the ball
           this.server.in('room-' + room.id).emit('ballMovement', room);
+          room.playerA.y = room.ball.y - room.settings.boardHeight / 2;
+          room.playerB.y = room.ball.y - room.settings.boardHeight / 2;
+          this.server.in('room-' + room.id).emit('playerMovement', {player: "playerA", x: boardAX, y: room.playerA.y});
+          this.server.in('room-' + room.id).emit('playerMovement', {player: "playerB", x: boardBX, y: room.playerB.y});
         }
         room.lastActivity = Date.now();
-        this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
+        if (room.ball.speed > 8)
+          room.ball.speed = 8;
+        this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity, playerA: room.playerA, playerB: room.playerB });
       }
     }
   }

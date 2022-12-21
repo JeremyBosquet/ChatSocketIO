@@ -43,7 +43,7 @@ function Ban(props : props) {
     let duration = value?.toISOString();
 
 
-    await instancence.post(`chat/channel/ban/`, {
+    await instance.post(`chat/channel/ban/`, {
       channelId: selectedChannel,
       target: targetId,
       admin: me.uuid,

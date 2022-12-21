@@ -18,36 +18,66 @@ export class DMsController {
     @UseGuards(JwtTwoFactorGuard)
     async getDmWhereTwoUser(@Body(ValidationPipe) body: DmCheckDTO, @Req() req : any, @Res() res: any) {
         const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
-        if (User.uuid == body.user1 || User.uuid == body.user2)
+        const user = await this.userService.findUserByUuid(Jwt["uuid"]);
+
+        if (user && user.uuid == body.user1 || user.uuid == body.user2)
         {
             const dm = await this.dmsService.getAndCreateDmWhereTwoUser(body.user1, body.user2);
-            res.json(dm);
+            res.status(HttpStatus.OK).json(dm);
         } else {
-            res.json("nop");
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
         }
-
     }
 
-    @Get('dm/user/:userId') // Get dms where user is in
+
+    //edit and remove :userId
+    @Get('dm/user') // Get dms where user is in
     @UseGuards(JwtTwoFactorGuard)
-    async getDMsWhereUser(@Param(ValidationPipe) param: UserIdDTO, @Res() res) {
-        const dms = await this.dmsService.getDMsWhereUser(param.userId);
-        res.json(dms);
+    async getDMsWhereUser(@Req() req : any, @Res() res) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
+        const dms = await this.dmsService.getDMsWhereUser(User.uuid);
+        res.status(HttpStatus.OK).json(dms);
     }
 
     @Get('dm/:dmId') //Get dm by id
     @UseGuards(JwtTwoFactorGuard)
-    async getChannel(@Param(ValidationPipe) param: DmIdDTO, @Res() res) {
-        const channels = await this.dmsService.getDm(param.dmId);
-        res.json(channels);
+    async getDm(@Param(ValidationPipe) param: DmIdDTO, @Req() req : any, @Res() res) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
+        const dm = await this.dmsService.getDm(param.dmId);
+        res.status(HttpStatus.OK).json(dm);
     }
 
-    @Get('dm/messages/:dmId/:userId') // Get messages from 
+    //remove userId
+    @Get('dm/messages/:dmId') // Get messages from 
     @UseGuards(JwtTwoFactorGuard)
-    async getMessagesFromChannel(@Param(ValidationPipe) params: GetMessagesDmDTO, @Res() res) {
+    async getMessagesFromChannel(@Param(ValidationPipe) params: DmIdDTO, @Req() req: any, @Res() res) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const checkUserIsIn = (channel: any) => {
-            const containsUser = channel?.users.filter((user: any) => user.uuid === params.userId);
+            const containsUser = channel?.users.filter((user: any) => user.uuid === User.uuid);
             if (Object.keys(containsUser).length == 0)
                 return false;
             return true;
@@ -55,7 +85,7 @@ export class DMsController {
 
         const dm = await this.dmsService.getDm(params.dmId);
         if (!dm)
-            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "dm not found", error: "Not found"});
+            return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Dm not found", error: "Not found"});
 
         if (!checkUserIsIn(dm))
             return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});

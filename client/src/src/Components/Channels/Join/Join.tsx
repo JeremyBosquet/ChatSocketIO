@@ -41,7 +41,7 @@ function Join(props: props) {
             })
         }
     
-        await instance.post("chat/channel/join", {"channelId": id, "userId": user.uuid, "password": password})
+        await instance.post("chat/channel/join", {"channelId": id, "password": password})
         .then(() => {
             getUsersChannel(user.uuid);
             socket?.emit('joinPermanent', { channelId: id });

@@ -21,7 +21,4 @@ export class UserIdDTO {
 export class GetMessagesDmDTO {
     @IsUUID()
     dmId: string;
-  
-    @IsUUID()
-    userId: string;
 }

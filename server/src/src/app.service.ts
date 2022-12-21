@@ -48,14 +48,15 @@ export class AppService {
 	
 			await fs.writeFile(path + name, buffer);
 	
-			return (process.env.BACK + name);
+			return (name);
 	
 		  }
+		const newUuid: string = uuidv4();
 		let userImg : string = "";
 		if (user.image.link)
-			userImg = await fetchAndStoreImage(user.image.link, "./src/uploads/avatar/" , Date().replace(/ /g, '') + ".jpg");
+			userImg = await fetchAndStoreImage(user.image.link, "./src/uploads/avatar/" , newUuid + ".jpg");
 		else
-			userImg = process.env.BACK + 'unknow.png';
+			userImg = 'unknow.png';
 		let userLogin = user.login;
       if (!userLogin)
         userLogin = "John Doe";
@@ -71,7 +72,6 @@ export class AppService {
       }
       let newList: Ifriends[] = [];
       let isLoggedIn: ILogStatus[] = [];
-      const newUuid: string = uuidv4();
       const form: UserModel = {
         createdAt: new Date(Date.now()),
         id: user.id,

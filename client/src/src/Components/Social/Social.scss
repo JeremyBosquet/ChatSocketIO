@@ -34,6 +34,14 @@
 		color : #ffffff;
 		font-size: large;
 	}
+	a {
+		cursor: pointer;
+		padding: 0;
+		border: none;
+		background: none;
+		color : #ffffff;
+		font-size: large;
+	}
 	h3{
 		display: flex;
 		justify-content: center;
@@ -384,7 +392,7 @@
 
 @media screen and (max-width: 550px) {
 	.SocialPage{
-		height: calc(100vh - 100px);
+		height: calc(100vh - 140px);
 		overflow:hidden;
 		overflow-y:scroll;
 		scrollbar-width: none;

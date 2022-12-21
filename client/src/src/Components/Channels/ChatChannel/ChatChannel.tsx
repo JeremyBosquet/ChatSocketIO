@@ -49,8 +49,8 @@ function ChatChannel(props: props) {
 	const getUsersChannel = async (userId: any) => {
 		await instance.get("chat/channels/user/" + userId)
 		.then((res) => {
-				if (res)
-					dispatch(setChannels(res.data));
+			if (res)
+				dispatch(setChannels(res.data));
 		})
 	}
 

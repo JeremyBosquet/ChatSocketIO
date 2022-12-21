@@ -17,8 +17,8 @@ import {BsArrowRightCircleFill} from 'react-icons/bs'
 import {Tb2Fa} from 'react-icons/tb'
 import {ImCross, ImCheckmark} from "react-icons/im";
 import './Settings.scss'
-import { useDispatch } from "react-redux";
-import { setHistoryList, setUserImg, setUserUsername } from "../../Redux/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserImg, setHistoryList, setUserImg, setUserUsername } from "../../Redux/authSlice";
 import instance from "../../API/Instance";
 
 function Settings() {
@@ -42,6 +42,7 @@ function Settings() {
 
 
 	const dispatch = useDispatch();
+	const userImg = useSelector(getUserImg);
   async function GetLoggedInfoAndUser() {
     if (localStorage.getItem("token")) {
       await instance.get(`user/getLoggedInfo`, {
@@ -57,7 +58,7 @@ function Settings() {
         })
         .catch((err) => {
           console.log(err.message);
-          setUser("{}");
+          setUser(undefined);
         });
       await instance.get(`user`, {
           headers: {
@@ -66,7 +67,7 @@ function Settings() {
         })
         .then((res) => {
 			setUser(res.data.User);
-			dispatch(setUserImg(res.data.User.image));
+			dispatch(setUserImg(import.meta.env.VITE_URL_API + ":7000/" + res.data.User.image));
 			dispatch(setUserUsername(res.data.User.username));
         })
         .catch((err) => {
@@ -161,12 +162,13 @@ function Settings() {
 		setFileName("");
 		setChangeavatar(undefined)
 		console.log(data.get("file"));
-		await instance.post(`user/changeAvatar`,{
+		await instance({
+			url: `user/changeAvatar`,
+			method: "POST",
 			data: data,
 			headers: {
-				Authorization: "Bearer " + token,
-				"Content-Type": "multipart/form-data",
-			},
+				'Content-Type': "multipart/form-data"
+			}
 		})
 		.then((res) => {
 			console.log(res);
@@ -283,7 +285,7 @@ function Settings() {
 								Current Avatar :
 							</h3>
 							<img
-								src={User.image}
+								src={userImg}
 								alt="user_img"
 								width="96"
 								height="64"

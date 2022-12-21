@@ -144,7 +144,7 @@ function HomePage() {
 	});
 	socketGame?.on("playerDisconnected", (data: IRoom) => {
 		if (ready) {
-				createNotification("info", "L'autre connard a leave 2");
+				createNotification("info", "The other player has left the game");
 			//setNotificaton(true);
 
 			console.log("aPlayerDisconnected : ", data);
@@ -170,7 +170,7 @@ function HomePage() {
 			"gameForceEnd donc erreur 'sorry l'autre connard a crash'",
 			data
 		);
-			createNotification("info", "L'autre connard a leave 3");
+			createNotification("info", "The other player has left the game");
 		//setNotificaton(true);
 		setRoom(data);
 		setPlaying(false);
@@ -194,7 +194,7 @@ function HomePage() {
 				.then((res) => {
 					setUser(res.data.User);
 					dispatch(setUserUsername(res.data.User.username));
-					dispatch(setUserImg(res.data.User.image));
+					dispatch(setUserImg(import.meta.env.VITE_URL_API + ":7000/" + res.data.User.image));
 					setTrueUsername(res.data.User.trueUsername);
 					instance.get(`room/getGameOfUser/` + res.data.User.uuid,
 					{

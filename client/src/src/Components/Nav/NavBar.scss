@@ -242,19 +242,20 @@
 	.sidenavSocial {
 		margin-top: 100px;
 		width: 100%;
-		//height: unset;
-		// position : relative;
-		overflow-x: unset;
+		height: calc(100vh - 140px);
+		//position : relative;
+		//overflow-x: unset;
 		//padding-top: unset;
 	}
 	.sidenavSettings {
 		margin-top: 100px;
 		width: 100%;
+		height: calc(100vh - 140px);
 		//height: 3000%;
 		//height: unset;
 		//position : relative;
-		overflow-x: unset;
-		padding-top: unset;
+		//overflow-x: unset;
+		//padding-top: unset;
 	}
 	.NavBar #ProjectName
 	{

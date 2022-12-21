@@ -88,7 +88,7 @@ function Popup(props: props)
 			(
 				<>
 					<ClosePopup setProfileDisplayed={setProfileDisplayed} />
-					<img className="ProfileImg" src={profilePage?.image} alt="user_img" width="384" height="256"/>
+					<img className="ProfileImg" src={import.meta.env.VITE_URL_API + ":7000/" + profilePage?.image} alt="user_img" width="384" height="256"/>
 					<h3> {profilePage?.username} </h3>
 					<h4> @{profilePage?.trueUsername} </h4>
 					<div className="Buttons">

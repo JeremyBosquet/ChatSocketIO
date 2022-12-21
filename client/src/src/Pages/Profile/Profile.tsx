@@ -1,7 +1,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import SignIn from "../../Components/Auth/Signin";
-import { redirect, useNavigate, useLocation } from "react-router-dom";
+import { redirect, useNavigate, useLocation, useParams } from "react-router-dom";
 import { createNotification } from "../../Components/notif/Notif";
 import { whoWon } from "../../Components/Utils/whoWon";
 import React from "react";
@@ -19,6 +19,7 @@ import instance from "../../API/Instance";
 function Profile() {
   let navigate = useNavigate();
   let booleffect = false;
+  const params = useParams();
   const token = localStorage.getItem("token");
   KillSocket("all");
   const booleffect3 = useRef<boolean>(false);
@@ -70,12 +71,10 @@ function Profile() {
     setbooleffect2(false);
   }
   useEffect((): any => {
-    if (!booleffect) {
-		let username = location.pathname.split('/')[2];
-		GetUserProfile(username);
-      booleffect = true;
-    }
-  }, []);
+		let username = params.Username;
+		if (username)
+			GetUserProfile(username);
+  }, [params.Username]);
 
 	useEffect((): any => {
 		if (userProfile)
@@ -91,7 +90,7 @@ function Profile() {
 				<NavBar/>
 				<div id="userProfile">
 					<img
-					src={userProfile.image}
+					src={import.meta.env.VITE_URL_API + ":7000/" + userProfile.image}
 					alt="user_img"
 					className="userImg"
 					width="384"
@@ -103,11 +102,11 @@ function Profile() {
 						<span className="Exp"> </span>
 						<p>{profileExp}</p>
 					</div>
-					<div id="listMyGameParent">
+					<div id="listGameParent">
 					{
 						historyList.length ?
 						(
-							<div id={historyList.length > 4 ? "listMyGameScroll" : "listMyGame"}>
+							<div id={historyList.length > 4 ? "listGameScroll" : "listGame"}>
 							{historyList.map((game, index) => (
 								<ul key={index}>
 									<li>

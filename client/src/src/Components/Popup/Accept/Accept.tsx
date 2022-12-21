@@ -29,7 +29,7 @@ function Accept(props : props){
 					})
 				}).then((res) => {
 					const request : any[] = requestList.filter((element : any) => element.uuid !== uuid);
-					dispatch(setFriendList([...friendList, {uuid : uuid , username : test[0].username, image : image}]));
+					dispatch(setFriendList([...friendList, {uuid : uuid , username : test[0].username, image : import.meta.env.VITE_URL_API + ":7000/" + image}]));
 					dispatch(setRequestList(request));
 					socket?.emit('acceptFriend', {uuid : uuid, myUUID : props.User.uuid});
 				}).catch((err) => {

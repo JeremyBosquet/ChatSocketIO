@@ -1,18 +1,31 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Res, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Req, Res, UseGuards, ValidationPipe } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { BanPlayerDTO, ChannelIdDTO, ChannelsWhereUserDTO, CreateChannelDTO, editChannelPasswordDTO, GetMessagesDTO, JoinChannelCodeDTO, JoinChannelDTO, KickPlayerDTO, LeaveChannelDTO, MutePlayerDTO, setAdminDTO, UnmutePlayerDTO, UserIdDTO } from './Interfaces/ChannelDTO';
 import * as bcrypt from 'bcrypt';
-import { User } from './Entities/user.entity';
-import { UserModel } from 'src/typeorm';
+import { UsersService } from 'src/users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import { JwtAuthGuard } from 'src/login/guards/jwt-auth.guard';
 
 @Controller('api/chat')
 export class ChannelController {
     constructor(
-        private readonly chatService: ChatService
+        private readonly chatService: ChatService,
+        private readonly jwtService: JwtService,
+        private readonly userService: UsersService
     ) {}
 
     @Post('channel')
-    async createChannel(@Res() res, @Body(ValidationPipe) body: CreateChannelDTO) {
+    @UseGuards(JwtAuthGuard)
+    async createChannel(@Req() req: any, @Res() res: any, @Body(ValidationPipe) body: CreateChannelDTO) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         async function passwordHash(password) {
             return await bcrypt.hash(password, 10);
         }
@@ -32,16 +45,25 @@ export class ChannelController {
     }
 
     @Post('channel/join')
-    async joinChannel(@Res() res, @Body(ValidationPipe) body : JoinChannelDTO) {
+    @UseGuards(JwtAuthGuard)
+    async joinChannel(@Req() req: any, @Res() res: any, @Body(ValidationPipe) body : JoinChannelDTO) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
         
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const checkIfUserAlreadyIn = (channel: any) => {
-            const containsUser = channel.users.filter(user => user.id === body.userId);
+            const containsUser = channel.users.filter(user => user.id === User.uuid);
             if (Object.keys(containsUser).length == 0)
                 return false;
             return true;
         }
 
-        if (body?.channelId && body?.userId)
+        if (body?.channelId)
         {
             const channel = await this.chatService.getBrutChannel(body.channelId);
             if (channel)
@@ -54,7 +76,7 @@ export class ChannelController {
                     } else if (channel.visibility === "private") 
                         return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "Wrong request", error: "Forbidden"});
 
-                let user = {"id": body.userId, "role": "default"}
+                let user = {"id": User.uuid, "role": "default"}
                 if (channel.users)
                 {
                     if (checkIfUserAlreadyIn(channel) === true)
@@ -63,9 +85,9 @@ export class ChannelController {
                     channel.users = [...channel.users, user];
                 }
                     
-                if (await this.chatService.userIsBanned(body.channelId, body.userId))
+                if (await this.chatService.userIsBanned(body.channelId, User.uuid))
                 {
-                    const ban = channel.bans.filter(ban => ban.id === body.userId)[0];
+                    const ban = channel.bans.filter(ban => ban.id === User.uuid)[0];
                     if (ban?.permanent)
                         return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "You are permanently banned from this channel", error: "Forbidden"});
                     if (ban?.time > new Date().toISOString())
@@ -81,21 +103,30 @@ export class ChannelController {
     }
 
     @Post('channel/join/code')
-    async joinChannelWithCode(@Res() res, @Body(ValidationPipe) body : JoinChannelCodeDTO) {
+    @UseGuards(JwtAuthGuard)
+    async joinChannelWithCode(@Req() req : any, @Res() res: any, @Body(ValidationPipe) body : JoinChannelCodeDTO) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
         
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const checkIfUserAlreadyIn = (channel: any) => {
-            const containsUser = channel.users.filter(user => user.id === body.userId);
+            const containsUser = channel.users.filter((user: any) => user.id === User.uuid);
             if (Object.keys(containsUser).length == 0)
                 return false;
             return true;
         }
 
-        if (body?.code && body?.userId)
+        if (body?.code)
         {
             const channel = await this.chatService.getBrutChannelWithCode(body.code);
             if (channel)
             {   
-                let user = {"id": body.userId, "role": "default"}
+                let user = {"id": User.uuid, "role": "default"}
                 if (channel.users)
                 {
                     if (checkIfUserAlreadyIn(channel) === true)
@@ -104,9 +135,9 @@ export class ChannelController {
                     channel.users = [...channel.users, user];
                 }
                     
-                if (await this.chatService.userIsBanned(channel.id, body.userId))
+                if (await this.chatService.userIsBanned(channel.id, User.uuid))
                 {
-                    const ban = channel.bans.filter(ban => ban.id === body.userId)[0];
+                    const ban = channel.bans.filter(ban => ban.id === User.uuid)[0];
                     if (ban?.permanent)
                         return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "You are permanently banned from this channel", error: "Forbidden"});
                     if (ban?.time > new Date().toISOString())

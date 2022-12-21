@@ -17,21 +17,6 @@ function PrivateMessages() {
     
     const user = useSelector(getUser);
 
-    useEffect(() => {
-        const getUsersDM = async (userId: any) => {
-            await instance.get("chat/dm/user/" + userId)
-            .then((res) => {
-                if (res)
-                    dispatch(setDMs(res.data));
-                    setInit(true);
-            })
-        }
-        
-        if (!init)
-            getUsersDM(user.uuid);
-        //eslint-disable-next-line
-    }, [init, user])
-
     return (
     <div className='channels'>
         <div className='channelChat'>

@@ -10,12 +10,13 @@ import { Channel } from "./Entities/channel.entity";
 import { DM } from "./Entities/dm.entity";
 import { UserModel } from "src/typeorm";
 import { JwtService } from "@nestjs/jwt";
+import { UsersService } from "src/users/users.service";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([Channel, UserModel, DM]),
     ],
     controllers: [ChatController, ChannelController, DMsController],
-    providers: [JwtService, ChatService, DMsService, ChatGateway],
+    providers: [JwtService, UsersService, ChatService, DMsService, ChatGateway],
 })
 export class ChatModule{}

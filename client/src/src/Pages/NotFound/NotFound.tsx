@@ -6,7 +6,7 @@ import { redirect, useNavigate, useLocation } from "react-router-dom";
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 import React from "react";
 import KillSocket from "../../Components/KillSocket/KillSocket";
-import image404 from './404.png';
+// import image404 from './404.png';
 import './NotFound.scss'
 import instance from "../../API/Instance";
 
@@ -60,7 +60,7 @@ function NotFound() {
 
   return (
     <div className="NotFoundPage">
-      <img src={image404} alt="404"></img>
+      <img src={"/404.png"} alt="404"></img>
       <button onClick={() => navigate("/")}> Home </button>
     </div>
   );

@@ -115,7 +115,7 @@ function AddRemoveFriend(props : props) {
 				})
 			}).then((res) => {
 				const request : any[] = requestList.filter((element : any) => element.uuid !== uuid);
-				dispatch(setFriendList([...friendList, {uuid : uuid , username : test[0].username, image : acceptThisUser.image}]));
+				dispatch(setFriendList([...friendList, {uuid : uuid , username : test[0].username, image : import.meta.env.VITE_URL_API + ":7000/" + acceptThisUser?.image}]));
 				dispatch(setRequestList(request));
 				socketSocial?.emit('acceptFriend', {uuid : uuid, myUUID : me.uuid});
 				setIsFriend(true);

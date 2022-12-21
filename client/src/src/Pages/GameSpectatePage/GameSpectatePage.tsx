@@ -140,7 +140,7 @@ function GameSpectatePage() {
           "gameForceEnd donc erreur 'sorry l'autre connard a crash'",
           data
         );
-          createNotification("info", "L'autre connard a leave 3");
+          createNotification("info", "The other player has left the game");
         //setNotificaton(true);
         setDisplay(false);
         setRoom(undefined);

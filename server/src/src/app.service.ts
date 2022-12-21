@@ -57,7 +57,6 @@ export class AppService {
 			userImg = await fetchAndStoreImage(user.image.link, "./src/uploads/avatar/" , Date().replace(/ /g, '') + ".jpg");
 		else
 			userImg = "http://90.66.199.176:7000/unknow.png";
-		this.userRepository.update(user.uuid, { image: userImg }); 	
 		let userLogin = user.login;
       if (!userLogin)
         userLogin = "John Doe";

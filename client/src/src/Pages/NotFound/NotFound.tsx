@@ -33,7 +33,6 @@ function NotFound() {
         })
         .catch((err) => {
           console.log(err.message);
-          setUser("{}");
         });
       await instance.get(`user`, {
           headers: {
@@ -46,7 +45,6 @@ function NotFound() {
         })
         .catch((err) => {
           console.log(err.message);
-          setUser("{}");
         });
     }
   }

@@ -18,17 +18,17 @@ function Search(props: props) {
     const socket = useSelector(getSocket);
 
     const dispatch = useDispatch();
+    
+    const getUsersChannel = async (e: any) => {
+        await instance.get("chat/channels/user/" + user.uuid)
+        .then((res) => {
+            if (res)
+                dispatch(setChannels(res.data));
+        })
+    }
 
     const handleSearch = async (e: any) => {
         props.setSearchChannel(e.target.value);
-
-        const getUsersChannel = async (e: any) => {
-            await instance.get("chat/channels/user/" + user.uuid)
-            .then((res) => {
-                if (res)
-                    dispatch(setChannels(res.data));
-            })
-        }
 
         if (e.target.value === "")
             getUsersChannel(user.uuid)
@@ -47,9 +47,9 @@ function Search(props: props) {
         .then((res) => {
             if (res)
             {
-                props.getUsersChannel(user.uuid);
                 socket?.emit('joinPermanent', { channelId: res.data.channelId });
                 createNotification("success", "You have successfully join the private channel.");
+                getUsersChannel(user.uuid);
                 props.setSearchChannel("");
             }
         }).catch((err) => {

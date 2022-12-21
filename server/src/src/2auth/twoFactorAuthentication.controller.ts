@@ -20,7 +20,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
 import { JwtTwoFactorGuard } from './jwt-two-factor.guard';
 
-@Controller('2fa')
+@Controller('api/2fa')
 //@UseInterceptors(ClassSerializerInterceptor)
 export class TwoFactorAuthenticationController {
   constructor(

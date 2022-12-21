@@ -45,11 +45,10 @@ function DMPage() {
 		const getUserInfos = async () => {
 			await instance.get(`user`)
 			.then((res) => {
-			  dispatch(setUser(res.data.User));
-			  dispatch(setLogged(true));
+				dispatch(setUser(res.data.User));
+				dispatch(setLogged(true));
 			})
 			.catch(() => {
-			  setUser({});
 			  createNotification("error", "User not found");
 			  navigate("/");
 			});

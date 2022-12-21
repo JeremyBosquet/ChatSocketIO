@@ -31,9 +31,6 @@ export class JoinChannelCodeDTO {
 export class LeaveChannelDTO {
     @IsUUID()
     channelId: string;
-  
-    @IsUUID()
-    userId: string;
 }
 
 export class ChannelIdDTO {

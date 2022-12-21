@@ -32,7 +32,7 @@ function Leave(props: props) {
             })
         }
     
-        await instance.post("chat/channel/leave", {"channelId": id, "userId": user.uuid})
+        await instance.post("chat/channel/leave", {"channelId": id})
         .then(() => {
             getUsersChannel(user.uuid);
             socket?.emit('leavePermanant', { userId: user.uuid, channelId: id });

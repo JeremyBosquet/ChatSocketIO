@@ -129,7 +129,7 @@ function ChannelPage() {
     const getUsersChannel = async (userId: any) => {
         await instance.get(`api/chat/channels/user/` + userId)
         .then((res) => {
-			console.log(res.data)
+			console.log("la ", res)
             if (res)
                 dispatch(setChannels(res.data));
         })

@@ -700,9 +700,7 @@ export class UsersService {
 			await fs.unlink(path + user.image);
 		}
 		catch
-		{
-			return (2)
-		}
+		{}
 		try
 		{
 			await fs.writeFile(path + name, newAvatar);

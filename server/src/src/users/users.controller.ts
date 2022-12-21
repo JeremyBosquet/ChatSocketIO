@@ -89,7 +89,7 @@ export class UsersController {
 		});
 	}
 	@Get('getExp/:uuid')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async getExp(@Req() req: any, @Res() res: any, @Param(ValidationPipe) param: FriendsDto,) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
@@ -123,7 +123,6 @@ export class UsersController {
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
 				message: 'succes',
-				IsLoggedIn: User.isLoggedIn,
 				isTwoFactorAuthenticationEnabled: User.isTwoFactorAuthenticationEnabled,
 				isSecondFactorAuthenticated: User.isSecondFactorAuthenticated,
 			});
@@ -867,7 +866,7 @@ export class UsersController {
 			cb(null, true);
 		},
 		limits: {
-			fileSize: 1e6,
+			fileSize: 1e7,
 		},
 	}),
 	)

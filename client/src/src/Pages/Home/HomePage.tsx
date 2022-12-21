@@ -210,7 +210,6 @@ function HomePage() {
 					console.log(res.data.User);
 				}).catch((err) => {
 					console.log(err.message);
-					setUser(undefined);
 			});
 			await instance.get(`user/ListFriendRequest`, {
 				headers: {

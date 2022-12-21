@@ -11,7 +11,6 @@ import { Response } from 'express';
 export class TwoFactorAuthenticationService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly configService: ConfigService,
   ) {}
 
   public isTwoFactorAuthenticationCodeValid(
@@ -32,7 +31,7 @@ export class TwoFactorAuthenticationService {
 
     const otpauthUrl = authenticator.keyuri(
       trueUsername,
-      this.configService.get('TWO_FACTOR_AUTHENTICATION_APP_NAME'),
+      process.env.TWO_FACTOR_AUTHENTICATION_APP_NAME,
       secret,
     );
 

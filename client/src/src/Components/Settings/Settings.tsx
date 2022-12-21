@@ -58,7 +58,6 @@ function Settings() {
         })
         .catch((err) => {
           console.log(err.message);
-          setUser(undefined);
         });
       await instance.get(`user`, {
           headers: {
@@ -116,6 +115,7 @@ function Settings() {
         GetLoggedInfoAndUser();
         createNotification("success", "two auth auth succefully deactivated");
 		setTurnedOff(false);
+		setQrCode(undefined);
       })
       .catch((err) => {
         console.log(err.message);

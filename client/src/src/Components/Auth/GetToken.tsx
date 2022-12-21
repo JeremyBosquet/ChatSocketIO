@@ -10,7 +10,9 @@ import { createNotification } from "../notif/Notif";
 function GetToken() {
   let navigate = useNavigate();
   let booleffect = false;
+  // let booleffect2 = true;
   const booleffect2 = useRef<boolean>(true);
+  const firstrender = useRef<boolean>(true);
 
   const [User, setUser] = useState<any>();
   const [IsTwoAuthActivated, setActivated] = useState<boolean>(false);
@@ -29,7 +31,6 @@ function GetToken() {
         })
         .catch((err) => {
           console.log(err.message);
-          setUser("{}");
         });
     }
     booleffect2.current = false;
@@ -99,6 +100,10 @@ function GetToken() {
     }
   }, []);
   useEffect(() => {
+    if (firstrender.current) {
+      firstrender.current = false;
+      return;
+    }
     if (!booleffect2.current) {
       if (IsTwoAuthActivated) redirect();
       else NotActivated();

@@ -44,7 +44,6 @@ function Manage(props: props) {
 
     await instance.post("chat/channel/edit", {
       channelId: props.channel.id,
-      userId: user.uuid,
       removePassword: removePassword,
       newVisibility: visibility,
       newPassword: password,
@@ -104,9 +103,9 @@ function Manage(props: props) {
               visibility === "protected" ?
               <div className='manageChangePassword'>
                   { props.channel.visibility === "protected" ? 
-                  <input className="manageChangePasswordInput" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)} required></input>
+                  <input className="manageChangePasswordInput" name="oldPassword" type="password" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)} required></input>
                   : null }
-                  <input className="manageChangePasswordInput" name="password" type="text" placeholder='New password' value={password} onChange={e => setPassword(e.target.value)} required></input>
+                  <input className="manageChangePasswordInput" name="password" type="password" placeholder='New password' value={password} onChange={e => setPassword(e.target.value)} required></input>
                 </div>
               :
               null

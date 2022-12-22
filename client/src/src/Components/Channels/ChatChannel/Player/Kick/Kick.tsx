@@ -26,7 +26,6 @@ function Kick(props : props) {
     await instance.post(`chat/channel/kick/`, {
       channelId: selectedChannel,
       target: targetId,
-      admin: me.uuid
     }).then(() => {
       socket?.emit("kick", {channelId: selectedChannel, target: targetId, type: "kick"});
       createNotification('success', 'You have successfully kicked the player.');

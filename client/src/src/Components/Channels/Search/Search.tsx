@@ -19,8 +19,8 @@ function Search(props: props) {
 
     const dispatch = useDispatch();
     
-    const getUsersChannel = async (e: any) => {
-        await instance.get("chat/channels/user/" + user.uuid)
+    const getUsersChannel = async () => {
+        await instance.get("chat/channels/user")
         .then((res) => {
             if (res)
                 dispatch(setChannels(res.data));
@@ -31,9 +31,9 @@ function Search(props: props) {
         props.setSearchChannel(e.target.value);
 
         if (e.target.value === "")
-            getUsersChannel(user.uuid)
+            getUsersChannel()
         else {
-            await instance.get("chat/channels/byname/" + e.target.value + "/" + user.uuid)
+            await instance.get("chat/channels/byname/" + e.target.value)
             .then((res) => {
                 if (res)
                     props.setChannelsFind(res.data);
@@ -49,7 +49,7 @@ function Search(props: props) {
             {
                 socket?.emit('joinPermanent', { channelId: res.data.channelId });
                 createNotification("success", "You have successfully join the private channel.");
-                getUsersChannel(user.uuid);
+                getUsersChannel();
                 props.setSearchChannel("");
             }
         }).catch((err) => {

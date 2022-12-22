@@ -33,6 +33,12 @@ export class ChannelController {
         if (body?.password)
             body.password = await passwordHash(body.password);
 
+        if ((body.name.length > 16 || body.name.length < 3) || body.name.trim().length === 0)
+            return res.status(HttpStatus.BAD_REQUEST).json({statusCode: HttpStatus.BAD_REQUEST, message: "Channel name must be between 3 and 16 characters", error: "Bad Request"});
+
+        if (body?.password && body.password.length < 8)
+            return res.status(HttpStatus.BAD_REQUEST).json({statusCode: HttpStatus.BAD_REQUEST, message: "Password must be at least 8 characters", error: "Bad Request"});
+
         const data : any = body;
 
         if (data?.visibility === "private")
@@ -196,7 +202,16 @@ export class ChannelController {
     
     @Post('channel/edit') //Edit channel password
     @UseGuards(JwtTwoFactorGuard)
-    async editChannel(@Res() res, @Body(ValidationPipe) body : editChannelPasswordDTO) {
+    async editChannel(@Req() req: any, @Res() res: any, @Body(ValidationPipe) body : editChannelPasswordDTO) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         function verifPassword(password: string) {
             if (!password)
                 return (false);
@@ -211,7 +226,7 @@ export class ChannelController {
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
             
-        if (channel.owner.id !== body.userId)
+        if (channel.owner.id !== User.uuid)
             return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
 
         if (channel.visibility === "protected")
@@ -242,6 +257,8 @@ export class ChannelController {
         }
         
         if (body.newVisibility === "protected") {
+            if (body.newPassword.length < 8)
+                return res.status(HttpStatus.BAD_REQUEST).json({statusCode: HttpStatus.BAD_REQUEST, message: "New password must be contain at least 8 characters", error: "Bad request"});
             if (!verifPassword(body.oldPassword)) {
                 if (verifPassword(body.newPassword)) {
                     channel.password = await passwordHash(body.newPassword);
@@ -266,37 +283,82 @@ export class ChannelController {
 
     @Get('channel/:channelId') //Get channel by id
     @UseGuards(JwtTwoFactorGuard)
-    async getChannel(@Param(ValidationPipe) param: ChannelIdDTO, @Res() res) {
+    async getChannel(@Param(ValidationPipe) param: ChannelIdDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const channels = await this.chatService.getChannel(param.channelId);
+        res.status(HttpStatus.OK).json(channels);
+    }
+
+    @Get('channels/byname/:channelContain') // Get all channels contains :channelContain where :userId is in
+    @UseGuards(JwtTwoFactorGuard)
+    async getChannelsWhereUserByName(@Param(ValidationPipe) param: ChannelsWhereUserDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
+        const channels = await this.chatService.getChannelsWhereUserByName(param.channelContain, User.uuid);
         res.json(channels);
     }
 
-    @Get('channels/byname/:channelContain/:userId') // Get all channels contains :channelContain where :userId is in
+    @Get('channels/user') // Get channels where user is in
     @UseGuards(JwtTwoFactorGuard)
-    async getChannelsWhereUserByName(@Param(ValidationPipe) param: ChannelsWhereUserDTO, @Res() res) {
-        const channels = await this.chatService.getChannelsWhereUserByName(param.channelContain, param.userId);
-        res.json(channels);
-    }
+    async getChannelsWhereUser(@Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
 
-    @Get('channels/user/:userId') // Get channels where user is in
-    @UseGuards(JwtTwoFactorGuard)
-    async getChannelsWhereUser(@Param(ValidationPipe) param: UserIdDTO, @Res() res) {
-        const channels : [] = await this.chatService.getChannelsWhereUser(param.userId);
+        const channels : [] = await this.chatService.getChannelsWhereUser(User.uuid);
         res.status(HttpStatus.OK).json(channels);
     }
 
     @Get('channels/users/:channelId') // Get users in channel
     @UseGuards(JwtTwoFactorGuard)
-    async getChannelsWhereUsers(@Param(ValidationPipe) param: ChannelIdDTO, @Res() res) {
+    async getChannelsWhereUsers(@Param(ValidationPipe) param: ChannelIdDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+        
         const channels = await this.chatService.getUsersInfosInChannel(param.channelId);
         res.json(channels);
     }
 
-    @Get('messages/:channelId/:userId') // Get messages from 
+    @Get('messages/:channelId') // Get messages from 
     @UseGuards(JwtTwoFactorGuard)
-    async getMessagesFromChannel(@Param(ValidationPipe) params: GetMessagesDTO, @Res() res) {
+    async getMessagesFromChannel(@Param(ValidationPipe) params: GetMessagesDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const checkUserIsIn = (channel: any) => {
-            const containsUser = channel.users.filter((user : any) => user.id === params.userId);
+            const containsUser = channel.users.filter((user : any) => user.id === User.uuid);
             if (Object.keys(containsUser).length == 0)
                 return false;
             return true;
@@ -315,7 +377,16 @@ export class ChannelController {
 
     @Get('mutes/:channelId') // Get mutes from channel 
     @UseGuards(JwtTwoFactorGuard)
-    async getMutedUsers(@Param(ValidationPipe) params: ChannelIdDTO, @Res() res) {
+    async getMutedUsers(@Param(ValidationPipe) params: ChannelIdDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const channel = await this.chatService.getBrutChannel(params.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
@@ -326,14 +397,24 @@ export class ChannelController {
 
     @Post('channel/kick') //Kick player from channel
     @UseGuards(JwtTwoFactorGuard)
-    async kick(@Body(ValidationPipe) body: KickPlayerDTO, @Res() res) {
+    async kick(@Body(ValidationPipe) body: KickPlayerDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
-        const admin = await this.chatService.getUserInChannel(body.admin, body.channelId);
+        const admin = await this.chatService.getUserInChannel(User.uuid, body.channelId);
         if (!admin)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
+
         if (admin.role !== "admin" && admin.role !== "owner")
             return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
         
@@ -350,12 +431,21 @@ export class ChannelController {
 
     @Post('channel/ban') //Ban player from channel
     @UseGuards(JwtTwoFactorGuard)
-    async ban(@Body(ValidationPipe) body: BanPlayerDTO, @Res() res) {
+    async ban(@Body(ValidationPipe) body: BanPlayerDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
-        const admin = await this.chatService.getUserInChannel(body.admin, body.channelId);
+        const admin = await this.chatService.getUserInChannel(User.uuid, body.channelId);
         if (!admin)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         if (admin.role !== "admin" && admin.role !== "owner")
@@ -377,12 +467,21 @@ export class ChannelController {
     
     @Post('channel/mute') //mute player from channel
     @UseGuards(JwtTwoFactorGuard)
-    async mute(@Body(ValidationPipe) body: MutePlayerDTO, @Res() res) {
+    async mute(@Body(ValidationPipe) body: MutePlayerDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
-        const admin = await this.chatService.getUserInChannel(body.admin, body.channelId);
+        const admin = await this.chatService.getUserInChannel(User.uuid, body.channelId);
         if (!admin)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         if (admin.role !== "admin" && admin.role !== "owner")
@@ -403,12 +502,21 @@ export class ChannelController {
 
     @Post('channel/unmute') //mute player from channel
     @UseGuards(JwtTwoFactorGuard)
-    async unmute(@Body(ValidationPipe) body: UnmutePlayerDTO, @Res() res) {
+    async unmute(@Body(ValidationPipe) body: UnmutePlayerDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
-        const admin = await this.chatService.getUserInChannel(body.admin, body.channelId);
+        const admin = await this.chatService.getUserInChannel(User.uuid, body.channelId);
         if (!admin)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         if (admin.role !== "admin" && admin.role !== "owner")
@@ -427,12 +535,21 @@ export class ChannelController {
 
     @Post('channel/setadmin') //set player to admin from channel
     @UseGuards(JwtTwoFactorGuard)
-    async setAdmin(@Body(ValidationPipe) body: setAdminDTO, @Res() res) {
+    async setAdmin(@Body(ValidationPipe) body: setAdminDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
-        const owner = await this.chatService.getUserInChannel(body.owner, body.channelId);
+        const owner = await this.chatService.getUserInChannel(User.uuid, body.channelId);
         if (!owner)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         if (owner.role !== "owner")
@@ -454,12 +571,21 @@ export class ChannelController {
 
     @Post('channel/unsetadmin') //set player to admin from channel
     @UseGuards(JwtTwoFactorGuard)
-    async unsetAdmin(@Body(ValidationPipe) body: setAdminDTO, @Res() res) {
+    async unsetAdmin(@Body(ValidationPipe) body: setAdminDTO, @Req() req: any, @Res() res: any) {
+        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
+        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        
+        if (!User)
+        {
+            res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            return ;
+        }
+
         const channel = await this.chatService.getBrutChannel(body.channelId);
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
 
-        const owner = await this.chatService.getUserInChannel(body.owner, body.channelId);
+        const owner = await this.chatService.getUserInChannel(User.uuid, body.channelId);
         if (!owner)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         if (owner.role !== "owner")

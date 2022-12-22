@@ -59,7 +59,6 @@ function Mute(props : props) {
     await instance.post(`chat/channel/mute/`, {
       channelId: selectedChannel,
       target: targetId,
-      admin: me.uuid,
       time: duration,
       isPermanent: permanent
     }).then(() => {

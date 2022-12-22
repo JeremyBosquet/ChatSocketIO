@@ -26,8 +26,8 @@ function Channels(props: props) {
 
     const user = useSelector(getUser);
     
-    const getUsersChannel = async (userId: any) => {
-        await instance.get("chat/channels/user/" + userId)
+    const getUsersChannel = async () => {
+        await instance.get("chat/channels/user")
         .then((res) => {
             if (res)
                 dispatch(setChannels(res.data));
@@ -38,7 +38,7 @@ function Channels(props: props) {
     useEffect(() => {
         
         if (!init && user.uuid)
-            getUsersChannel(user.uuid);
+            getUsersChannel();
         //eslint-disable-next-line
     }, [init, user])
 

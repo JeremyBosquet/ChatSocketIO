@@ -126,10 +126,9 @@ function ChannelPage() {
 	}
 
 	    
-    const getUsersChannel = async (userId: any) => {
-        await instance.get(`api/chat/channels/user/` + userId)
+    const getUsersChannel = async () => {
+        await instance.get(`api/chat/channels/user`)
         .then((res) => {
-			console.log("la ", res)
             if (res)
                 dispatch(setChannels(res.data));
         })
@@ -325,7 +324,7 @@ function ChannelPage() {
 												</div>
 											:
 												<div className='channelsInfo'>
-													{channelsFind.map((channel) => (
+													{channelsFind && channelsFind.map((channel) => (
 														<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={true}/>
 													))}
 													{ channelsFind.length === 0 ? (<p className="noChannel">No channel found.</p>) :null}

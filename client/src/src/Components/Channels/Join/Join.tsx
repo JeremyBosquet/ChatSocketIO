@@ -33,8 +33,8 @@ function Join(props: props) {
             return;
         }
                 
-        const getUsersChannel = async (userId: any) => {
-            await instance.get("chat/channels/user/" + userId)
+        const getUsersChannel = async () => {
+            await instance.get("chat/channels/user")
             .then((res) => {
                 if (res)
                     dispatch(setChannels(res.data));
@@ -43,7 +43,7 @@ function Join(props: props) {
     
         await instance.post("chat/channel/join", {"channelId": id, "password": password})
         .then(() => {
-            getUsersChannel(user.uuid);
+            getUsersChannel();
             socket?.emit('joinPermanent', { channelId: id });
             createNotification("success", "You have successfully join the channel.");
             props.setSearchChannel("");

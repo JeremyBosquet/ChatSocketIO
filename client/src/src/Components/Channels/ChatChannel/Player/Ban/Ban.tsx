@@ -46,7 +46,6 @@ function Ban(props : props) {
     await instance.post(`chat/channel/ban/`, {
       channelId: selectedChannel,
       target: targetId,
-      admin: me.uuid,
       time: duration,
       isPermanent: permanent
     }).then(() => {

@@ -5,9 +5,6 @@ export class editChannelPasswordDTO {
     @IsUUID()
     channelId: string;
 
-    @IsUUID()
-    userId: string;
-
     @IsNotEmpty()
     newVisibility: string;
     
@@ -46,9 +43,6 @@ export class UserIdDTO {
 export class GetMessagesDTO {
     @IsUUID()
     channelId: string;
-  
-    @IsUUID()
-    userId: string;
 }
 
 export class CreateChannelDTO {
@@ -69,9 +63,6 @@ export class CreateChannelDTO {
 }
 
 export class ChannelsWhereUserDTO {
-    @IsUUID()
-    userId: string;
-
     @IsNotEmpty()
     channelContain: string;
 }
@@ -81,18 +72,12 @@ export class KickPlayerDTO {
     channelId: string;
     
     @IsUUID()
-    admin: string;
-    
-    @IsUUID()
     target: string;
 }
 
 export class BanPlayerDTO {
     @IsUUID()
     channelId: string;
-    
-    @IsUUID()
-    admin: string;
     
     @IsUUID()
     target: string;
@@ -109,9 +94,6 @@ export class MutePlayerDTO {
     channelId: string;
     
     @IsUUID()
-    admin: string;
-    
-    @IsUUID()
     target: string;
 
     @IsNotEmpty()
@@ -126,9 +108,6 @@ export class UnmutePlayerDTO {
     channelId: string;
     
     @IsUUID()
-    admin: string;
-    
-    @IsUUID()
     target: string;
 }
 
@@ -137,15 +116,11 @@ export class setAdminDTO {
     channelId: string;
     
     @IsUUID()
-    owner: string;
-    
-    @IsUUID()
     target: string;
 }
 
 export interface IbanPlayer {
     channelId: string,
-    admin: string,
     target: string,
     time: undefined
 }

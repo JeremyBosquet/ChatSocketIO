@@ -31,7 +31,6 @@ function Admin(props : props) {
     await instance.post(`chat/channel/setadmin/`, {
       channelId: selectedChannel,
       target: targetId,
-      owner: me.uuid
     }).then(() => {
       props.setUsers(props.users.map(user => {
         if (user.uuid === targetId)
@@ -48,7 +47,6 @@ function Admin(props : props) {
     await instance.post(`chat/channel/unsetadmin/`, {
       channelId: selectedChannel,
       target: targetId,
-      owner: me.uuid
     }).then(() => {
       props.setUsers(props.users.map(user => {
         if (user.uuid === targetId)

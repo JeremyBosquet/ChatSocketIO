@@ -46,8 +46,8 @@ function ChatChannel(props: props) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
-	const getUsersChannel = async (userId: any) => {
-		await instance.get("chat/channels/user/" + userId)
+	const getUsersChannel = async () => {
+		await instance.get("chat/channels/user")
 		.then((res) => {
 			console.log(res.data);
 			if (res)
@@ -56,13 +56,13 @@ function ChatChannel(props: props) {
 	}
 
 	const getMessages = async () => {
-		await instance.get("chat/messages/" + selectedChannel + '/' + user.uuid)
+		await instance.get("chat/messages/" + selectedChannel)
 		.then(res => {
 			if (res.data)
 				setMessages(res.data);
 			}).catch(err => {
 			if (err.response.status === 401) {
-				getUsersChannel(user.uuid);
+				getUsersChannel();
 				setMessages([]);
 			}
 			navigate('/chat/channel');
@@ -141,7 +141,7 @@ function ChatChannel(props: props) {
 			socket.removeListener('kickFromChannel');
 			socket.on('kickFromChannel', (data: {target: string, channelId: string, message: string}) => {
 				socket?.emit('leavePermanant', { userId: user.uuid, channelId: data.channelId });
-				getUsersChannel(user.uuid);
+				getUsersChannel();
 				if (params.id === data.channelId)
 					navigate('/chat/channel');
 				// use message to display a message to the user

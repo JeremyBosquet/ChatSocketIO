@@ -75,15 +75,15 @@ function FormCreateChannel() {
         createNotification("success", "You have successfully created " + channelName + " channel.");
         socket?.emit('channelCreated');
 
-        const getUsersChannel = async (userId: any) => {
-          await instance.get("chat/channels/user/" + userId)
+        const getUsersChannel = async () => {
+          await instance.get("chat/channels/user")
           .then((res) => {
               if (res)
                   dispatch(setChannels(res.data));
           })
         }
 
-        getUsersChannel(user.uuid);
+        getUsersChannel();
         
         //Reset form
         setChannelName("");
@@ -94,7 +94,9 @@ function FormCreateChannel() {
     }
     ).catch((error : any) => {
         if (error) {
-          createNotification("error", "Please retry later. (" + error +")");
+          console.log(error)
+          if (error.response?.data?.message)
+            createNotification("error", error.response?.data?.message);
         }
       }
     )

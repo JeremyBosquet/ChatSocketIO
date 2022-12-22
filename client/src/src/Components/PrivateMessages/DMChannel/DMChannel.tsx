@@ -29,8 +29,8 @@ function DMChannel() {
 
   const dispatch = useDispatch();
 
-  const getUsersChannel = async (userId: any) => {
-    await instance.get("chat/dms/user/" + userId)
+  const getUsersChannel = async () => {
+    await instance.get("chat/dms/user")
     .then((res) => {
         if (res)
           dispatch(setChannels(res.data));
@@ -43,7 +43,7 @@ function DMChannel() {
       if (res.data)
         setMessages(res.data);
     }).catch(() => {
-      getUsersChannel(user.uuid);
+      getUsersChannel();
       setMessages([]);
       navigate('/chat/dm');
     });

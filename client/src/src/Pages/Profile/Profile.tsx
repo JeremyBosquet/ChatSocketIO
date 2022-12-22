@@ -13,6 +13,7 @@ import KillSocket from "../../Components/KillSocket/KillSocket";
 import { getExp, getExpProfile } from "../../Components/Utils/getExp";
 import { modifyScores } from "../../Components/Utils/modifyScores";
 import instance from "../../API/Instance";
+import {Helmet} from "react-helmet";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 
@@ -87,6 +88,10 @@ function Profile() {
 	{
 		!booleffect2 ? (
 			<div className='blur'>
+				<Helmet>
+					<meta charSet="utf-8" />
+					<title> Profile - transcendence </title>
+				</Helmet>
 				<NavBar/>
 				<div id="userProfile">
 					<img

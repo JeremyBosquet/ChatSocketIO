@@ -15,6 +15,7 @@ import { getSockeGameChat } from "../../../../Redux/gameSlice";
 import { Link } from "react-router-dom";
 import Block from "./Block/Block";
 import AddRemoveFriend from "./AddRemoveFriend/AddRemoveFriend";
+import { TbDotsVertical } from "react-icons/tb";
 
 interface IInvites {
   requestFrom: string;
@@ -106,6 +107,23 @@ function Player(props : props) {
     }
   }
 
+  const usernameTrunc = (username: string) => {
+    function addSpace() {
+      let spaces = "";  
+
+      for (let i = 0; i <= (7 - username.length); i++)
+        spaces += '\xa0';
+      return (spaces);
+    }
+
+    if (me?.uuid !== props.user?.uuid && hasInvited(props.user.uuid)) {
+      if (username.length >= 5)
+        return (username.substring(0, 5) + '..');
+      return (username + addSpace());
+    }
+    return (username);
+  }
+
   function isMobile() {
     if (window.innerWidth < 1165)
       return (true);
@@ -116,49 +134,51 @@ function Player(props : props) {
     <div className='player' key={props.user?.uuid} >
       <div style={{display: "flex"}}>
         {connected && !blocked && !blockedBy ? <span className="connected"></span> : <span className="disconnected"></span>}
-        <p style={{maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis"}}>{props.user?.username}</p>
+        <p style={{maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis"}}>{usernameTrunc(props.user?.username)}</p>
       </div>
-      {
-        me?.uuid !== props.user?.uuid && hasInvited(props.user?.uuid) ?
-          <button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button>
-          :
-          null
-      }
-      {
-        props.user?.uuid === me.uuid ? null :
-        <Menu 
-          viewScroll="close"
-          className="playerActions" 
-          onKeyDown={(e: any) => e.stopPropagation()}
-          menuButton={<MenuButton ref={topAnchor}>⁝</MenuButton>}
-          position={isMobile() ? "anchor" : "auto"}
-          direction={isMobile() ? "top" : "bottom"}
-          
-        >
-              {(me.role === "admin" && 
-                props.user.role !== 'admin' && 
-                props.user.role !== 'owner') ?
-                  <>
-                    <Ban user={props.user} />
-                    <Kick user={props.user} />
-                    <Mute user={props.user} mutedUsers={props.mutedUsers}/>
-                  </>
-                : (me.role === "owner") ? 
-                  <>
-                    <Ban user={props.user} />
-                    <Kick user={props.user} />
-                    <Mute user={props.user} mutedUsers={props.mutedUsers}/>
-                    <Admin user={props.user} users={props.users} setUsers={props.setUsers}/>
-                  </>
-                : null
-              }
-              <DM user={props.user}/>
-              { connected ? <InviteGame user={props.user}/> : null }
-              <Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
-              <Block user={props.user}/>
-              <AddRemoveFriend user={props.user}/>
-          </Menu>
-      }
+      <div className="playerGroupActions">
+        {
+          me?.uuid !== props.user?.uuid && hasInvited(props.user?.uuid) ?
+            <button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button>
+            :
+            null
+        }
+        {
+          props.user?.uuid === me.uuid ? null :
+          <Menu 
+            viewScroll="close"
+            className="playerActions" 
+            onKeyDown={(e: any) => e.stopPropagation()}
+            menuButton={<MenuButton ref={topAnchor}><TbDotsVertical className="playerDots" /></MenuButton>}
+            position={isMobile() ? "anchor" : "auto"}
+            direction={isMobile() ? "top" : "bottom"}
+            onClick={() => isMobile()}
+          >
+                {(me.role === "admin" && 
+                  props.user.role !== 'admin' && 
+                  props.user.role !== 'owner') ?
+                    <>
+                      <Ban user={props.user} />
+                      <Kick user={props.user} />
+                      <Mute user={props.user} mutedUsers={props.mutedUsers}/>
+                    </>
+                  : (me.role === "owner") ? 
+                    <>
+                      <Ban user={props.user} />
+                      <Kick user={props.user} />
+                      <Mute user={props.user} mutedUsers={props.mutedUsers}/>
+                      <Admin user={props.user} users={props.users} setUsers={props.setUsers}/>
+                    </>
+                  : null
+                }
+                <DM user={props.user}/>
+                { connected && !blocked && !blockedBy && !hasInvited(props.user?.uuid) ? <InviteGame user={props.user}/> : null }
+                <Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
+                <Block user={props.user}/>
+                <AddRemoveFriend user={props.user}/>
+            </Menu>
+        }
+      </div>
     </div>
   );
 }

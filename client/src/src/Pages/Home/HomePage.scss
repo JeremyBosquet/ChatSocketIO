@@ -418,7 +418,15 @@
 		}
 	}
 	.HomePage {
-		
+		#loginTitle
+		{
+			font-size: 30px;
+		}
+		#login
+		{
+			margin-top: 70px;
+			font-size: 30px;
+		}
 		#myProfile{
 			display: flex;
 			flex-direction: column;

@@ -68,6 +68,7 @@ export class RoomService {
   }
 
   async getRoomSpectates(): Promise<Room[]> {
+    //return await this.roomRepository.find();
     if (roomList.length > 0) 
     {
       const _roomList = roomList.filter((room) => room.status == 'playing');

@@ -12,9 +12,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 import { MdPublic } from 'react-icons/md';
 import { IoMdLock } from 'react-icons/io';
-import { BsFillShieldLockFill } from 'react-icons/bs';
+import { BsFillEyeSlashFill, BsFillShieldLockFill } from 'react-icons/bs';
 import './ChatChannel.scss'
 import instance from '../../../API/Instance';
+import {Helmet} from "react-helmet";
+import { IoEyeSharp } from 'react-icons/io5';
 
 interface Ichannel {
 	id: string;
@@ -36,6 +38,7 @@ function ChatChannel(props: props) {
 	const [usersConnected, setUsersConnected] = useState<Iuser[]>([]);
 	const [channel, setChannel] = useState<Ichannel>();
 	const [mutedUsers, setMutedUsers] = useState<[]>([]);
+	const [showCode, setShowCode] = useState<boolean>(false);
 	const channels = useSelector(getChannels);
 	const params = useParams();
 	
@@ -173,6 +176,10 @@ function ChatChannel(props: props) {
 				{
 					!channel?.name ? <h2>Select a channel</h2> :
 					<>
+						<Helmet>
+							<meta charSet="utf-8" />
+							<title> {channel.name} - transcendence </title>
+						</Helmet>
 						<div className='ChatChannelInfos'>
 							<p>{channel.name}</p>
 							{channel.visibility === "public" ?
@@ -180,7 +187,12 @@ function ChatChannel(props: props) {
 							: channel.visibility === "private" ?
 								(
 									<div className='privateInfos'>
-										<p>{channel.code}</p>
+										{
+											showCode ?
+												<p className="code">{channel.code}</p>
+											: null
+										}
+										{ !showCode ? <IoEyeSharp className="showCode" onClick={() => setShowCode(true)}/> : <BsFillEyeSlashFill className="showCode" onClick={() => setShowCode(false)}/>}
 										<IoMdLock className='channelIcon' />
 									</div>
 								)

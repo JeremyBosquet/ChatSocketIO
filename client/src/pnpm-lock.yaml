@@ -19,6 +19,7 @@ specifiers:
   '@types/react': ^18.0.26
   '@types/react-datetime-picker': ^3.4.1
   '@types/react-dom': ^18.0.9
+  '@types/react-helmet': ^6.1.6
   '@types/svgo': ^3.0.0
   '@types/vite-plugin-react-svg': ^0.2.2
   '@use-it/event-listener': ^0.1.7
@@ -26,6 +27,7 @@ specifiers:
   axios: ^0.27.2
   dotenv: ^16.0.3
   grid-align: ^1.0.1
+  helmet: ^6.0.1
   konva: ^8.3.14
   node-sass-chokidar: ^2.0.0
   react: ^18.2.0
@@ -34,6 +36,7 @@ specifiers:
   react-datetime-picker: ^4.1.1
   react-dom: ^18.2.0
   react-error-overlay: ^6.0.9
+  react-helmet: ^6.1.0
   react-icons: ^4.7.1
   react-redux: ^8.0.5
   react-router-dom: ^6.5.0
@@ -69,6 +72,7 @@ dependencies:
   '@use-it/event-listener': 0.1.7_react@18.2.0
   axios: 0.27.2
   grid-align: 1.0.1
+  helmet: 6.0.1
   konva: 8.3.14
   node-sass-chokidar: 2.0.0
   react: 18.2.0
@@ -76,6 +80,7 @@ dependencies:
   react-clock: 4.0.0_biqbaboplfbrettd7655fr4n2y
   react-datetime-picker: 4.1.1_biqbaboplfbrettd7655fr4n2y
   react-dom: 18.2.0_react@18.2.0
+  react-helmet: 6.1.0_react@18.2.0
   react-icons: 4.7.1_react@18.2.0
   react-redux: 8.0.5_6fpxtwwxc52cyvwzdgczt4jvpq
   react-router-dom: 6.5.0_biqbaboplfbrettd7655fr4n2y
@@ -93,6 +98,7 @@ dependencies:
 
 devDependencies:
   '@types/react': 18.0.26
+  '@types/react-helmet': 6.1.6
   '@vitejs/plugin-react': 2.2.0_vite@3.0.0
   dotenv: 16.0.3
   react-error-overlay: 6.0.9
@@ -2603,6 +2609,12 @@ packages:
     dependencies:
       '@types/react': 18.0.26
     dev: false
+
+  /@types/react-helmet/6.1.6:
+    resolution: {integrity: sha512-ZKcoOdW/Tg+kiUbkFCBtvDw0k3nD4HJ/h/B9yWxN4uDO8OkRksWTO+EL+z/Qu3aHTeTll3Ro0Cc/8UhwBCMG5A==}
+    dependencies:
+      '@types/react': 18.0.26
+    dev: true
 
   /@types/react/18.0.26:
     resolution: {integrity: sha512-hCR3PJQsAIXyxhTNSiDFY//LhnMZWpNNr5etoCqx/iUfGc5gXWtQR2Phl908jVR6uPXacojQWTg4qRpkxTuGug==}
@@ -6218,6 +6230,11 @@ packages:
     hasBin: true
     dev: false
 
+  /helmet/6.0.1:
+    resolution: {integrity: sha512-8wo+VdQhTMVBMCITYZaGTbE4lvlthelPYSvoyNvk4RECTmrVjMerp9RfUOQXZWLvCcAn1pKj7ZRxK4lI9Alrcw==}
+    engines: {node: '>=14.0.0'}
+    dev: false
+
   /hoist-non-react-statics/3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
     dependencies:
@@ -9712,6 +9729,10 @@ packages:
     resolution: {integrity: sha512-nQTTcUu+ATDbrSD1BZHr5kgSD4oF8OFjxun8uAaL8RwPBacGBNPf/yAuVVdx17N8XNzRDMrZ9XcKZHCjPW+9ew==}
     dev: true
 
+  /react-fast-compare/3.2.0:
+    resolution: {integrity: sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==}
+    dev: false
+
   /react-fit/1.4.0_biqbaboplfbrettd7655fr4n2y:
     resolution: {integrity: sha512-cf9sFKbr1rlTB9fNIKE5Uy4NCMUOqrX2mdJ69V4RtmV4KubPdtnbIP1tEar16GXaToCRr7I7c9d2wkTNk9TV5g==}
     peerDependencies:
@@ -9723,6 +9744,18 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       tiny-warning: 1.0.3
+    dev: false
+
+  /react-helmet/6.1.0_react@18.2.0:
+    resolution: {integrity: sha512-4uMzEY9nlDlgxr61NL3XbKRy1hEkXmKNXhjbAIOVw5vcFrsdYbH2FEwcNyWvWinl103nXgzYNlns9ca+8kFiWw==}
+    peerDependencies:
+      react: '>=16.3.0'
+    dependencies:
+      object-assign: 4.1.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-fast-compare: 3.2.0
+      react-side-effect: 2.1.2_react@18.2.0
     dev: false
 
   /react-icons/4.7.1_react@18.2.0:
@@ -9906,6 +9939,14 @@ packages:
       - webpack-cli
       - webpack-hot-middleware
       - webpack-plugin-serve
+    dev: false
+
+  /react-side-effect/2.1.2_react@18.2.0:
+    resolution: {integrity: sha512-PVjOcvVOyIILrYoyGEpDN3vmYNLdy1CajSFNt4TDsVQC5KpTijDvWVoR+/7Rz2xT978D8/ZtFceXxzsPwZEDvw==}
+    peerDependencies:
+      react: ^16.3.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-spinners/0.13.7_biqbaboplfbrettd7655fr4n2y:

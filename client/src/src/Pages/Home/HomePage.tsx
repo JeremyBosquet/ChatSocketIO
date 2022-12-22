@@ -1,6 +1,6 @@
 
-import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { createNotification } from "../../Components/notif/Notif";
 import { useDispatch, useSelector } from 'react-redux';
 import "./HomePage.scss";
@@ -9,19 +9,14 @@ import NavBar from "../../Components/Nav/NavBar";
 import { getMyExp } from '../../Components/Utils/getExp'
 import { whoWon } from "../../Components/Utils/whoWon";
 import KillSocket from "../../Components/KillSocket/KillSocket";
-import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList} from "../../Redux/authSlice";
-import { setFriendList, setRequestList, setRequestedList, setProfileDisplayed } from '../../Redux/authSlice'
-import Popup from "../../Components/Popup/Popup";
-import io, { Socket } from "socket.io-client";
+import {getHistoryList, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList} from "../../Redux/authSlice";
+import io from "socket.io-client";
 import GameReady from "../../Components/GameReady/GameReady";
 import GamePlay from "../../Components/GamePlay/GamePlay";
 import "../../Pages/Home/HomePage.scss";
 import { getSockeGame, getSockeGameChat, setSocketGame } from "../../Redux/gameSlice";
-import useEventListener from "@use-it/event-listener";
-import { useParams } from "react-router-dom";
-import { getSocket } from "../../Redux/chatSlice";
-import { modifyScores } from "../../Components/Utils/modifyScores";
 import instance from "../../API/Instance";
+import {Helmet} from "react-helmet";
 
 interface IPlayer {
 	id: string;
@@ -72,16 +67,10 @@ interface ISettings {
 
 function HomePage() {
 	const navigate = useNavigate();
-	let tab: any[] = [];
-	const nbButton: number = 6;
-	const [compt, setCompt] = useState<number>(0);
-	const booleffect = useRef<boolean>(false);
 	const [booleffect2, setbooleffect2] = useState<boolean>(true);
-	const firstrender2 = useRef<boolean>(true);
 
 	const [User, setUser] = useState<any>();
 	const [trueUsername, setTrueUsername] = useState<string>("");
-	const [friendRequest, setFriendRequest] = useState<number>();
 	const [myProfileExp, setMyProfileExp] = useState<any>();
 	const socketGame = useSelector(getSockeGame);
 	const [ready, setReady] = useState<boolean>(false);
@@ -89,7 +78,6 @@ function HomePage() {
 	const [playerId, setPlayerId] = useState<string>("");
 	const [playerName, setPlayerName] = useState<string>("");
 	const [room, setRoom] = useState<IRoom>();
-	//const [notification, setNotificaton] = useState<Boolean>(false);
 	const [display, setDisplay] = useState<boolean>(true);
 
 
@@ -101,7 +89,6 @@ function HomePage() {
 	const userUsername = useSelector(getUserUsername);
 	const myHistoryList = useSelector(getHistoryList);
 	useEffect(() => {
-		// Connect to the socketGame
 		console.log("socketGame", socketGame);
 		if (socketGame)
 			socketGame?.close();
@@ -123,9 +110,6 @@ function HomePage() {
 	socketGame?.removeListener("roomUpdated");
 	socketGame?.on("errorRoomIsFull", (id: string) => {
 		console.log("errorRoomIsFull", id);
-		//window.location.href = '/game/';
-
-		//Spectator here
 	});
 
 	socketGame?.on("playerReady", (data: IRoom) => {
@@ -139,14 +123,11 @@ function HomePage() {
 		setRoom(data);
 		setPlaying(true);
 		setReady(false);
-		//setNotificaton(false);
 		setDisplay(false);
 	});
 	socketGame?.on("playerDisconnected", (data: IRoom) => {
 		if (ready) {
-				createNotification("info", "The other player has left the game");
-			//setNotificaton(true);
-
+			createNotification("info", "The opponent player has left the game");
 			console.log("aPlayerDisconnected : ", data);
 			if (playing) {
 				setPlaying(false);
@@ -159,7 +140,6 @@ function HomePage() {
 			createNotification("success", "PlayerA a gagner");
 		else if (data.scoreB === 10)
 			createNotification("success", "PlayerB a gagner");
-		//setNotificaton(true);
 		setDisplay(true);
 		setRoom(data);
 		setPlaying(false);
@@ -170,8 +150,7 @@ function HomePage() {
 			"gameForceEnd donc erreur 'sorry l'autre connard a crash'",
 			data
 		);
-			createNotification("info", "The other player has left the game");
-		//setNotificaton(true);
+			createNotification("info", "The opponent player has left the game");
 		setRoom(data);
 		setPlaying(false);
 		setDisplay(true);
@@ -179,7 +158,7 @@ function HomePage() {
 		setReady(false);
 	});
 	socketGame?.on("roomUpdated", (data: IRoom) => {
-		if (room) // update scoreA and scoreB only
+		if (room)
 			setRoom({...room, scoreA: data.scoreA, scoreB: data.scoreB});
 	});
 
@@ -211,22 +190,6 @@ function HomePage() {
 				}).catch((err) => {
 					console.log(err.message);
 			});
-			await instance.get(`user/ListFriendRequest`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("token"),
-				},
-			})
-				.then((res) => {
-					tab = res.data.ListFriendsRequest;
-					if (tab.length) {
-						setFriendRequest(tab.length);
-					} else setFriendRequest(0);
-					setCompt(tab.length);
-				})
-				.catch((err) => {
-					console.log(err.message);
-					setFriendRequest(0);
-				});
 		}
 		setbooleffect2(false);
 	}
@@ -259,18 +222,6 @@ function HomePage() {
 			getMyExp(User.uuid, setMyProfileExp);
 	}, [User, booleffect2, playing, display]);
 
-	// useEffect(() => {
-	// 	// if (booleffect.current)
-	// 	// 	return;
-	// 	if (User && myHistoryList.length)
-	// 	{
-	// 		myHistoryList.map((game, index) => {
-	// 			modifyScores(User.uuid, game, setScoreA, setScoreB, scoreA, scoreB, index, index==(myHistoryList.length-1) ? true : false)
-	// 		});
-	// 		booleffect.current = true;
-	// 	}
-	// }, [myHistoryList, User]);
-
 	return (
 		<>
 			{!booleffect2 && !ready && !playing ? (
@@ -278,18 +229,24 @@ function HomePage() {
 					<>
 						{!User ? (
 							<>
-								<h1 id="loginTitle">Ft_transcendance</h1>
+								<Helmet>
+									<meta charSet="utf-8" />
+									<title> Login - transcendence </title>
+								</Helmet>
+								<h1 id="loginTitle"> transcendence </h1>
 								<button id="login" onClick={() => navigate("/login")}>
 									login
 								</button>
 							</>
 						) : (
 							<>
-								<div className='blur'>
 									<NavBar />
 									{display ? (
 										<div id="myProfile">
-											<Link to="/chat/dm"> salut</Link>
+											<Helmet>
+											<meta charSet="utf-8" />
+											<title> Home - transcendence </title>
+											</Helmet>
 											<img
 												src={userImg}
 												alt="user_img"
@@ -337,7 +294,6 @@ function HomePage() {
 										setPlayerId={setPlayerId}
 										setPlayerName={setPlayerName}
 									/>
-								</div>
 							</>
 						)}
 					</>

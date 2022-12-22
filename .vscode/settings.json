@@ -7,7 +7,7 @@
 			"driver": "PostgreSQL",
 			"name": "jeremy",
 			"database": "adonis",
-			"username": "transcendance",
+			"username": "transcendence",
 			"password": "adonis"
 		},
 		{

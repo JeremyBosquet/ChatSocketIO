@@ -20,6 +20,7 @@
     "@use-it/event-listener": "^0.1.7",
     "axios": "^0.27.2",
     "grid-align": "^1.0.1",
+    "helmet": "^6.0.1",
     "konva": "^8.3.14",
     "node-sass-chokidar": "^2.0.0",
     "react": "^18.2.0",
@@ -27,6 +28,7 @@
     "react-clock": "^4.0.0",
     "react-datetime-picker": "^4.1.1",
     "react-dom": "^18.2.0",
+    "react-helmet": "^6.1.0",
     "react-icons": "^4.7.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.5.0",
@@ -67,6 +69,7 @@
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
+    "@types/react-helmet": "^6.1.6",
     "@vitejs/plugin-react": "^2.2.0",
     "dotenv": "^16.0.3",
     "react-error-overlay": "^6.0.9",

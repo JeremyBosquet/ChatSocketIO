@@ -61,16 +61,10 @@ function GameBoard(props: props) {
         <div className="game-board__player__name">
           {props.room?.playerA.name}
         </div>
-        <div className="game-board__player__score">
-          {props.room?.scoreA}
-        </div>
       </div>
       <div className="game-board__player">
         <div className="game-board__player__name">
           {props.room?.playerB.name}
-        </div>
-        <div className="game-board__player__score">
-          {props.room?.scoreB}
         </div>
       </div>
     </div>

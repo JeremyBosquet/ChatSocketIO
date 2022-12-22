@@ -5,6 +5,7 @@ import "./GameSpectate.scss";
 import useEventListener from "@use-it/event-listener";
 import NavBar from "../Nav/NavBar";
 import useImage from "use-image";
+import {Helmet} from "react-helmet";
 
 interface props {
   socket: Socket | undefined;
@@ -94,9 +95,20 @@ function GameSpectate(props: props) {
   let maxWidth = 1000;
   let maxHeight = 600;
 
-  const [image] = (props?.room?.settings?.background == "background1" ? useImage("") : useImage(""));
-  const [windowsWidth, setWindowsWidth] = useState(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth);
-  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight > maxHeight - 200 ? maxHeight : window.innerHeight - 200); // game board
+  const [image] = (props?.room?.settings?.background == "background1" ? useImage("https://cdn.discordapp.com/attachments/768496887720181770/1047556063500709908/image.png") : useImage("https://cdn.discordapp.com/attachments/768496887720181770/1047556063500709908/image.png"));
+  const [imageA] = (useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id));
+  const [imageB] = (useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id));
+  
+  let mult = 0.5;
+  if (window.innerWidth < 500)
+    mult = 0.9;
+  let _t = window.innerHeight *mult ;
+  let _r = (window.innerWidth*mult) / (window.innerHeight * mult);
+  if (_r < 16 / 9) {
+    _t = (window.innerWidth * mult) * (9 / 16);
+  }
+  const [windowsWidth, setWindowsWidth] = useState((16 * _t) / 9);
+  const [windowsHeight, setWindowsHeight] = useState(_t);
   const [boardWidth, setBoardWidth] = useState<number>(
     props.room?.settings.boardWidth
       ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -124,16 +136,16 @@ function GameSpectate(props: props) {
   const [playerA, setPlayerA] = useState<ICanvasBoard>({
     id: "playerA",
     x: 0.01 * windowsWidth,
-    y: props.room?.playerA.y
-      ? (props.room?.playerA.y / 100) * windowsHeight
+    y: props.room?.playerA?.y
+      ? (props.room?.playerA?.y / 100) * windowsHeight
       : windowsHeight / 2 - boardHeight / 2,
     percentY: 50,
   });
   const [playerB, setPlayerB] = useState<ICanvasBoard>({
     id: "playerB",
     x: (windowsWidth - 0.015 * windowsWidth),
-    y: props.room?.playerB.y
-      ? (props.room?.playerB.y / 100) * windowsHeight
+    y: props.room?.playerB?.y
+      ? (props.room?.playerB?.y / 100) * windowsHeight
       : windowsHeight / 2 - boardHeight / 2,
     percentY: 50,
   });
@@ -143,25 +155,63 @@ function GameSpectate(props: props) {
     // Clear context and reprint everything
     if (contextRef.current)
     {
+      // Create background image and print it
       contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
       contextRef.current.fillStyle = "black";
       contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
+      if (image)
+       contextRef.current.drawImage(image, 0, 0, windowsWidth, windowsHeight);
       contextRef.current.fillStyle = "white";
       contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight );
-      contextRef.current.fillStyle = "gray";
-      contextRef.current.font = "30px Arial";
+      contextRef.current.fillStyle = "white";
       // print name of players and score
       //contextRef.current.fillText(props.room?.playerA.name + " : " + props.room?.scoreA, windowsWidth / 2 - 400, 50);
       //contextRef.current.fillText(props.room?.playerB.name + " : " + props.room?.scoreB, windowsWidth / 2 + 100, 50);
-      contextRef.current.font = "30px Arial";
-      if (props.room?.scoreA)
-        contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 50, 50);
+      //contextRef.current.font = "30px Arial";
+      // On top left corner put the imageA (of player A) 
+      let display = 50;
+      if (window.innerWidth < 500)
+      {  display = 30;
+        mult = 0.9;
+        contextRef.current.font = "20px Arial";
+        if (props.room?.scoreA)
+          contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
+        else
+          contextRef.current.fillText("0", windowsWidth / 2 - 20, 25);
+        if (props.room?.scoreB)
+          contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
+        else
+          contextRef.current.fillText("0", windowsWidth / 2 + 10, 25);
+        
+      }
       else
-        contextRef.current.fillText("0", windowsWidth / 2 - 50, 50);
-      if (props.room?.scoreB)
-        contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 30, 50);
-      else
-        contextRef.current.fillText("0", windowsWidth / 2 + 30, 50);
+      {
+        mult = 0.5;
+        contextRef.current.font = "30px Arial";
+        if (imageA)
+         contextRef.current.drawImage(imageA, windowsWidth / 2 - 100, 0, display, display);
+        /// On top right corner put the imageB (of player B)
+        if (imageB)
+        contextRef.current.drawImage(imageB, windowsWidth / 2 + 50, 0, display, display);
+        if (props.room?.scoreA)
+          contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
+        else
+          contextRef.current.fillText("0", windowsWidth / 2 - 35, 35);
+        if (props.room?.scoreB)
+          contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
+        else
+          contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
+      }
+      // Create a border around the score
+      contextRef.current.fillStyle = "red";
+      // Size of the border
+      contextRef.current.lineWidth = 1;
+      // color of the border
+      contextRef.current.strokeStyle = "white";
+      //contextRef.current.strokeRect(windowsWidth / 2 - 50, 0, 100, 50);
+      
+      //  contextRef.current.fillText("10", windowsWidth / 2 + 11, 35);
+      //  contextRef.current.fillText("10", windowsWidth / 2 - 45, 35);
       // Player A
       contextRef.current.fillStyle = "white";
       contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
@@ -278,6 +328,10 @@ function GameSpectate(props: props) {
   });
   return (
     <div id="gameMain" className="cursor">
+		<Helmet>
+				<meta charSet="utf-8" />
+				<title> Spectating - transcendence </title>
+		</Helmet>
       <canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
     </div>
   );

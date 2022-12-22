@@ -1,8 +1,8 @@
 version: "3.5"
 
 networks:
-  transcendance-network:
-    name: transcendance-network
+  transcendence-network:
+    name: transcendence-network
     driver: bridge
 
 volumes:
@@ -36,14 +36,14 @@ services:
     volumes:
       - front:/usr/src/app
     networks:
-      - transcendance-network
+      - transcendence-network
     restart: always
   back:
     container_name: back
     volumes:
       - back:/usr/src/app
     networks:
-      - transcendance-network
+      - transcendence-network
     depends_on:
       - db
     build:
@@ -76,5 +76,5 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - transcendance-network
+      - transcendence-network
     restart: always

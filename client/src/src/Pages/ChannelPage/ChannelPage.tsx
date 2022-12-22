@@ -20,6 +20,7 @@ import { IoArrowBackOutline } from 'react-icons/io5';
 import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
 import Search from '../../Components/Channels/Search/Search';
 import instance from '../../API/Instance';
+import {Helmet} from "react-helmet";
 
 interface IPlayer {
 	id: string;
@@ -78,16 +79,16 @@ function ChannelPage() {
 	const logged = useSelector(getLogged);
     const user = useSelector(getUser);
     const dispatch = useDispatch();
-	const socketGame = useSelector(getSockeGameChat);
 	const navigate = useNavigate();
+	const socketGame = useSelector(getSockeGameChat);
 	const [inGame, setInGame] = useState<boolean>(false);
 	const [ready, setReady] = useState<boolean>(false);
 	const [playing, setPlaying] = useState<boolean>(false);
 	const [playerId, setPlayerId] = useState<string>("");
 	const [playerName, setPlayerName] = useState<string>("");
 	const [room, setRoom] = useState<IRoom>();
-	//const [notification, setNotificaton] = useState<Boolean>(false);
 	const [inviteGames, setInviteGames] = useState<IInvites[]>([]);
+	//const [notification, setNotificaton] = useState<Boolean>(false);
     const [searchChannel, setSearchChannel] = useState<string>("");
 	const [channelsFind, setChannelsFind] = useState<[]>([]);
 
@@ -156,8 +157,6 @@ function ChannelPage() {
 		dispatch(setSocketGameChat(newSocket));
 	}
 
-	useEffect(() => {
-		if (socketGame) {
 			socketGame?.removeListener("errorRoomIsFull");
 		  	socketGame?.removeListener("playerReady");
 		  	socketGame?.removeListener("gameStart");
@@ -167,7 +166,7 @@ function ChannelPage() {
 		  	socketGame?.removeListener("roomUpdated");
 		  	socketGame?.removeListener("gameFetchInvite");
 		  
-			socketGame.on("gameRemoveInvite", (data: any) => {
+			socketGame?.on("gameRemoveInvite", (data: any) => {
 				console.log("gameRemoveInvite", data);
 				if (data?.target && data?.room)
 				{
@@ -179,8 +178,8 @@ function ChannelPage() {
 				}
 			});
 
-			socketGame.emit("gameAskInvite", {id: user.uuid});
-			socketGame.on("gameFetchInvite", (data: any) => {
+			socketGame?.emit("gameAskInvite", {id: user.uuid});
+			socketGame?.on("gameFetchInvite", (data: any) => {
 				if (data?.target && data?.room && data?.switch == true)
 				{
 					console.log("gameFetchInvite", data?.target, user.uuid)
@@ -272,8 +271,7 @@ function ChannelPage() {
 				if (room) // update scoreA and scoreB only
 					setRoom({...room, scoreA: data.scoreA, scoreB: data.scoreB});
 			});
-		}
-	  }, [socketGame, ready, playing, room, user, inviteGames]);
+		
 	  
 	useEffect(() => {
 		// If in game or configuring during a url change we need to quit the game
@@ -284,10 +282,15 @@ function ChannelPage() {
 	
 	return (
 		<>
+		
 			<div className="blur">
 				<NavBar />
 				{!inGame ? (
 					<div className='chatPage'>
+						<Helmet>
+							<meta charSet="utf-8" />
+							<title> Channel - transcendence </title>
+						</Helmet>
 						<div className='container'>
 							{ logged === false ?
 								(

@@ -154,7 +154,7 @@ function NavBar(props: any) {
     <div className="NavBar">
             <div id='ProjectName'>
               <NavLink to="/" id='home'>
-                Ft_transcendance
+                Ft_transcendence
               </NavLink>
 			</div>
         <>

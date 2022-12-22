@@ -63,7 +63,6 @@ function Settings() {
           },
         })
         .then((res) => {
-			console.log("heho" , res.data)
 			setUser(res.data.User);
 			dispatch(setUserImg(import.meta.env.VITE_URL_API + ":7000/" + res.data.User.image));
 			dispatch(setUserUsername(res.data.User.username));
@@ -71,11 +70,9 @@ function Settings() {
         .catch((err) => {
           console.log(err.message);
           setUser(undefined);
-          createNotification("error", "User not found");
           navigate("/");
         });
     } else {
-      createNotification("error", "User not found");
       navigate("/");
     }
     setbooleffect2(false);

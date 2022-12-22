@@ -8,6 +8,7 @@ import { ScaleLoader } from "react-spinners";
 import { useSelector } from "react-redux";
 import { getSockeGameChat } from "../../Redux/gameSlice";
 import instance from "../../API/Instance";
+import {Helmet} from "react-helmet";
 /*
   Check if player search on another tab
 */
@@ -81,6 +82,8 @@ function GameChatReady(props: props) {
     socket?.removeListener("configuring");
     socket?.removeListener("configurationUpdated");
     socket?.removeListener("playerLeave");
+    socket?.removeListener("roomTimeout");
+    socket?.removeListener("roomDestroyed");
     socket?.on("roomDestroyed", (data: any) => {
       console.log("Room destroyed");
       createNotification("info", "Un des deux jouers n'a pas confirmé la configuration");
@@ -116,7 +119,7 @@ function GameChatReady(props: props) {
     });
     socket?.on("playerLeave", () => {
       console.log("receive cancelSearching");
-      createNotification("info", "The other player left the game");
+      createNotification("info", "The opponent player left the game");
       //setNotificaton(true);
       setSearchingDisplay(true);
       setSearching(true);
@@ -150,17 +153,30 @@ function GameChatReady(props: props) {
       props.setPlayerId(messages.data.User.uuid);
       props.setPlayerName(messages.data.User.username);
       //setNotificaton(false);
-      setSearchingDisplay(false);
-      setConfiguringDisplay(true);
+      if (room?.playerA?.id == messages.data.User.uuid)
+      {
+        setSearchingDisplay(true);
+        setConfiguringDisplay(false);
+
+      }
+      else
+      {
+        setSearchingDisplay(false);
+        setConfiguringDisplay(true);
+      }
     }
   };
   useEffect(() => {
     getUser();
   }, []);
   return (
-    <div>
+    <>
       {searchingDisplay /*|| props.room.playerB == undefined */? (
         <div>
+			<Helmet>
+				<meta charSet="utf-8" />
+				<title> Searching - transcendence </title>
+			</Helmet>
           <ScaleLoader
             className="loading-spinner"
             color={"#FFFFFF"}
@@ -190,9 +206,14 @@ function GameChatReady(props: props) {
         </div>
       ) : null}
       {configuringDisplay /*&& props.room.playerB != undefined*/ ? (
-        <div>
+        <div className="PlayInterface">
+			<Helmet>
+				<meta charSet="utf-8" />
+				<title> Configuring - transcendence </title>
+			</Helmet>
           <div className="game-config">
             <p>Configuring the game...</p>
+						<p>{timeouts}</p>
             <div className="ChannelRoomFormInput-Difficulty">
               <label htmlFor="Difficulty">Difficulty </label>
               <select
@@ -258,50 +279,51 @@ function GameChatReady(props: props) {
                 </option>
               </select>
             </div>
-
-            <button
-              className="game-config-button"
-              onClick={
-                () => {
-                  console.log("cancel searching", tmpUser);
-                  socket?.emit("cancelSearching", { tmpUser, room });
-                  setSearchingDisplay(false);
-                  setSearching(false);
-                  setTmpUserBoolean(false);
-                  setConfiguringDisplay(false);
-                  setSettings({difficulty: "easy", background: "background1", confirmed: false});
-                } /*Cancel search*/
-              }
-            >
-              Cancel
-            </button>
-            {!settings.confirmed ? (
-            <button
-              className="game-config-button"
-              onClick={
-                () => {
-                  if (
-                    settings?.difficulty &&
-                    settings?.background &&
-                    settings?.confirmed === false
-                  ) {
-                    setSettings({ ...settings, confirmed: true });
-                    socket?.emit("confirmConfiguration", settings);
-                  }
-                  else {
-                    console.log ("settings", settings);
-                  }
-                } /*Cancel search*/
-              }
-            >
-              Ready
-            </button>
-            ) : (
-              null)
-            }
+			<div>
+				<button
+				className="game-config-button"
+				onClick={
+					() => {
+					console.log("cancel searching", tmpUser);
+					socket?.emit("cancelSearching", { tmpUser, room });
+					setSearchingDisplay(false);
+					setSearching(false);
+					setTmpUserBoolean(false);
+					setConfiguringDisplay(false);
+					setSettings({difficulty: "easy", background: "background1", confirmed: false});
+					} /*Cancel search*/
+				}
+				>
+				Cancel
+				</button>
+				{!settings.confirmed ? (
+				<button
+				className="game-config-button"
+				onClick={
+					() => {
+					if (
+						settings?.difficulty &&
+						settings?.background &&
+						settings?.confirmed === false
+					) {
+						setSettings({ ...settings, confirmed: true });
+						socket?.emit("confirmConfiguration", settings);
+					}
+					else {
+						console.log ("settings", settings);
+					}
+					} /*Cancel search*/
+				}
+				>
+				Ready
+				</button>
+				) : (
+				null)
+				}
+			</div>
           </div>
           <div className="game-config-secondary">
-            <p>Configuration of the other player</p>
+            <p>Configuration of The opponent player</p>
             <div className="ChannelRoomFormInput-Difficulty">
               <label htmlFor="Difficulty">Difficulty </label>
               {settingsBis?.difficulty ? (
@@ -323,7 +345,7 @@ function GameChatReady(props: props) {
         </div>
       ) : null}
       <div></div>
-    </div>
+    </>
   );
 }
 

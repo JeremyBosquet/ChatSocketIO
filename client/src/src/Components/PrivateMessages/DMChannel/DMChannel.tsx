@@ -8,13 +8,22 @@ import { Imessage } from './interfaces/messages';
 import './DMChannel.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, setChannels } from '../../../Redux/chatSlice';
-import { getUser } from '../../../Redux/authSlice';
+import { getBlockedByList, getBlockList, getUser } from '../../../Redux/authSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 import { IoMdLock } from 'react-icons/io';
 import instance from '../../../API/Instance';
+import {Helmet} from "react-helmet";
 
-function DMChannel() {
+interface IInvites {
+  requestFrom: string;
+  roomId: string;
+}
+interface props {
+  invites: IInvites[];
+}
+
+function DMChannel(props: props) {
   const [messages, setMessages] = useState<Imessage[]>([]);
   const [users, setUsers] = useState<IuserDb[]>([]);
   const [usersConnected, setUsersConnected] = useState<Iuser[]>([]);
@@ -22,12 +31,59 @@ function DMChannel() {
   const [name, setName] = useState<string>();
   const params = useParams();
 
+  const blockList = useSelector(getBlockList);
+  const blockedByList = useSelector(getBlockedByList);
+  const [blocked, setBlocked] = useState<boolean>(false);
+  const [blockedBy, setBlockedBy] = useState<boolean>(false);
+
   const socket = useSelector(getSocket);
   const selectedChannelDM = params.id || "";
   const user = useSelector(getUser);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  async function isBlocked(userId: string) {
+    let userFinded = blockList.find((blockedUser: any) => blockedUser.uuid === userId);
+    if (userFinded)
+    {
+      setBlocked(true);
+      return (true);
+    }
+    setBlocked(false);
+    return (false);
+  }
+
+  async function isBlockedBy(userId: string) { //TODO a faire quand adonis aura fait la blockByList
+    let userFinded = blockedByList.find((blocked: any) => blocked.uuid === userId);
+    if (userFinded)
+    {
+      setBlockedBy(true);
+      return (true);
+    }
+    setBlockedBy(false);
+    return (false);
+  }
+
+  useEffect(() => {
+    const userId = dm?.users[0]?.uuid === user.uuid ? dm?.users[1]?.uuid : dm?.users[0]?.uuid;
+
+    isBlocked(userId);
+  }, [blockList])
+
+  useEffect(() => {
+    const userId = dm?.users[0]?.uuid === user.uuid ? dm?.users[1]?.uuid : dm?.users[0]?.uuid;
+
+    isBlockedBy(userId);
+  }, [blockedByList])
+
+  useEffect(() => {
+    const userId = dm?.users[0]?.uuid === user.uuid ? dm?.users[1]?.uuid : dm?.users[0]?.uuid;
+
+    isBlocked(userId);
+    isBlockedBy(userId);
+    //eslint-disable-next-line
+  }, [])
 
   const getUsersChannel = async () => {
     await instance.get("chat/dms/user")
@@ -101,12 +157,21 @@ function DMChannel() {
           !name ? <h2>Select a channel</h2> :
           <>
             <div className='ChatChannelInfos'>
+              <Helmet>
+                <meta charSet="utf-8" />
+                <title>{name} - transcendence </title>
+			        </Helmet>
               <p>{name}</p>
               <IoMdLock className='channelIcon' />
             </div>
             <Messages userId={user.uuid} messages={messages} users={users} setUsers={setUsers} setMessages={setMessages}/>
             <div className='sendMessage'>
-              <SendMessage channelId={selectedChannelDM} user={user}/>
+              {
+                !blocked && !blockedBy ?
+                  <SendMessage channelId={selectedChannelDM} user={user} blocked={false}/>
+                :
+                  <SendMessage channelId={selectedChannelDM} user={user} blocked={true}/>
+              }
             </div>
           </>
         }
@@ -118,7 +183,7 @@ function DMChannel() {
         <div className='players'>
           {users?.map((user : any) => ( 
 						user.print === undefined && user.print !== false ?
-							<Player key={user.uuid} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} />
+							<Player key={user.uuid} setUsers={setUsers} users={users} user={user} usersConnected={usersConnected} invites={props.invites} />
 						: null
 					))}
         </div>

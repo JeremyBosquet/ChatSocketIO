@@ -1,31 +1,41 @@
 .PlayInterface {
 	display: flex;
-	justify-content: center;
 	align-items: center;
-	margin-top: 200px;
-	.play-button {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		background: var(--black);
-		overflow: hidden;
-		color: white;
-		font-size: 16px;
-		padding: 16px 32px;
-		text-align: center;
-		text-decoration: none;
-		display: inline-block;
-		border: none;
-		border-radius: 8px;
-		cursor: pointer;
-		margin: 4px 2px;
-		transition-duration: 0.4s;
-		font-weight: bold;
-		-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-		-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-		box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	height: calc(100vh - 60px);
+	justify-content: center;
+	.line {
+		height: 1px;
+		width : 100%;
+		background: #ffffff;
+		margin-top: 8px;
+		margin-bottom: 8px;
 	}
+	//margin-top: 200px;
+}
+
+.play-button {
+	margin-top: 200px;
+	display: flex;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 60px;
+	justify-content: unset;
+	align-items: center;
+	background: var(--black);
+	overflow: hidden;
+	color: white;
+	font-size: 16px;
+	padding: 16px 32px;
+	text-align: center;
+	text-decoration: none;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	transition-duration: 0.4s;
+	font-weight: bold;
+	-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
 }
 
 .play-button:hover {
@@ -91,129 +101,161 @@
     color: #f44336;
 }
 
-
+// .game-group
+// {
 // Style of configuring parameters for the game
 
 // Path: client/src/Components/GameConfig/GameConfig.scss
-.game-config {
-    position: absolute;
-    top: 50%;
-    left: 25%;
-    transform: translate(-50%, -50%);
-    background-color: var(--black);
-    color: white;
-    font-size: 16px;
-    padding: 16px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    font-weight: bold;
-    -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-    -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-    box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-}
+	// display: flex;
+	// flex-direction: row;
+	// justify-content: space-between;
+	// align-items: center;
+	.game-config {
+		display: flex;
+		flex-direction: column;
+		background-color: #181818;
+		color: white;
+		font-size: 16px;
+		padding: 16px 32px;
+		margin-left: auto;
+		margin-right: 100px;
+		text-align: center;
+		text-decoration: none;
+		border: none;
+		border-radius: 8px;
+		cursor: pointer;
+		transition-duration: 0.4s;
+		font-weight: bold;
+		-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	}
 
+	.game-config-secondary {
+		.ChannelRoomFormInput-Difficulty
+		{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.ChannelRoomFormInput-Background
+		{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		.ChannelRoomFormInput-Status
+		{
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		display: flex;
+		flex-direction: column;
+		background-color: #181818;
+		color: white;
+		font-size: 16px;
+		margin-right: auto;
+		padding: 16px 32px;
+		text-align: center;
+		text-decoration: none;
+		border: none;
+		border-radius: 8px;
+		cursor: pointer;
+		transition-duration: 0.4s;
+		font-weight: bold;
+		-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	}
 
+	.game-config-input {
+		background-color: #222222;
+		color: white;
+		font-size: 16px;
+		padding: 16px 32px;
+		text-align: center;
+		text-decoration: none;
+		border: none;
+		border-radius: 8px;
+		cursor: pointer;
+		margin: 4px 2px;
+		transition-duration: 0.4s;
+		font-weight: bold;
+		-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	}
 
-.game-config-input {
-    background-color: #222222;
-    color: white;
-    font-size: 16px;
-    padding: 16px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    font-weight: bold;
-    -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-    -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-    box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-}
+	.game-config-input:focus {
+		outline: none;
+	}
 
-.game-config-input:focus {
-    outline: none;
-}
+	.game-config-input::-webkit-input-placeholder {
+		color: white;
+	}
 
-.game-config-input::-webkit-input-placeholder {
-    color: white;
-}
+	.game-config-input:-moz-placeholder {
+		color: white;
+	}
 
-.game-config-input:-moz-placeholder {
-    color: white;
-}
+	.game-config-select {
+		background-color: #222222;
+		color: white;
+		font-size: 16px;
+		padding: 16px 32px;
+		text-align: center;
+		text-decoration: none;
+		border: none;
+		border-radius: 8px;
+		cursor: pointer;
+		margin: 4px 2px;
+		transition-duration: 0.4s;
+		font-weight: bold;
+		-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	}
 
-.game-config-select {
-    background-color: #222222;
-    color: white;
-    font-size: 16px;
-    padding: 16px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    font-weight: bold;
-    -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-    -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-    box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-}
-
-.game-config-button {
-    background-color: #222222;
-    color: white;
-    font-size: 16px;
-    padding: 16px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    font-weight: bold;
-    -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-    -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-    box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-}
-
-.game-config-secondary {
-    position: absolute;
-    top: 50%;
-    left: 75%;
-    transform: translate(-50%, -50%);
-    background-color: var(--black);
-    color: white;
-    font-size: 16px;
-    padding: 16px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    font-weight: bold;
-    -webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-    -moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-    box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-}
+	.game-config-button {
+		background-color: #222222;
+		color: white;
+		font-size: 16px;
+		padding: 16px 32px;
+		text-align: center;
+		text-decoration: none;
+		border: none;
+		border-radius: 8px;
+		cursor: pointer;
+		margin: 4px 3px;
+		transition-duration: 0.4s;
+		font-weight: bold;
+		-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	}
+// }
 
 @media screen and (max-width: 674px) {
 	.PlayInterface {
-		margin-top: 150px;
+		height: calc(100vh - 100px);
+	}
+}
+
+@media screen and (max-width: 800px) {
+	.PlayInterface {
+		flex-direction: column;
+		//justify-content: unset;
+	}
+
+	.game-config {
+		margin-left: unset;
+		margin-right: unset;
+	}
+
+	.game-config-secondary {
+		margin-right: unset;
+		margin-top: 20px;
+		margin-bottom: 50px;
 	}
 }

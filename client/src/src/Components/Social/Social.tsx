@@ -67,7 +67,6 @@ function Social() {
 			}).catch((err) => {
 				console.log(err.message);
 				setUser(undefined);
-				createNotification('error', 'User not found');
 				navigate("/");
 			});
 			await instance.get(`user/ListFriendRequest`, {
@@ -89,10 +88,7 @@ function Social() {
 			});
 		}
 		else
-		{
-			createNotification('error', 'User not found');
 			navigate("/");
-		}
 		setbooleffect3(false);
 	}
 

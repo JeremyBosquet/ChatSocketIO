@@ -153,8 +153,36 @@ export class UsersController {
 	//}
 
 	@Get('CompareToken')
-	@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtTwoFactorGuard)
 	async CompareToken(@Req() req: any, @Res() res: any) {
+		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
+		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		if (User) {
+			for (let i = 0; i < User.isLoggedIn.length; i++) {
+				if (await bcrypt.compare(req.headers.authorization.split(' ')[1], User.isLoggedIn[i].token)) {
+					return res.status(HttpStatus.OK).json({
+						statusCode: HttpStatus.OK,
+						message: 'succes'
+					});
+				}
+			}
+			return res.status(HttpStatus.FORBIDDEN).json({
+				statusCode: HttpStatus.FORBIDDEN,
+				message: 'Token invalid',
+				error: 'FORBIDDEN',
+			});
+
+		}
+		return res.status(HttpStatus.NOT_FOUND).json({
+			statusCode: HttpStatus.NOT_FOUND,
+			message: 'User not found',
+			error: 'NOT_FOUND',
+		});
+	}
+
+	@Get('CompareTokenTwoAuth')
+	@UseGuards(JwtAuthGuard)
+	async CompareTokenTwoAuth(@Req() req: any, @Res() res: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
 		if (User) {

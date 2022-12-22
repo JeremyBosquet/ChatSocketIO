@@ -9,6 +9,7 @@ import NavBar from "../Nav/NavBar";
 import { useSelector } from "react-redux";
 import { getSockeGame } from "../../Redux/gameSlice";
 import instance from "../../API/Instance";
+import {Helmet} from "react-helmet";
 /*
   Check if player search on another tab
 */
@@ -176,182 +177,203 @@ function GameReady(props: props) {
     props.setDisplay(false);
   }
   return (
-    <div className="PlayInterface">
-      {!searchingDisplay && !configuringDisplay ? (
-        <>
-          <button onClick={handleReady} className="play-button">
-            Search for a game
-          </button>
-        </>
-      ) : null}
-      {searchingDisplay ? (
-        <div>
-          <ScaleLoader
-            className="loading-spinner"
-            color={"#FFFFFF"}
-            loading={true}
-            height={65}
-            speedMultiplier={0.75}
-            width={10}
-          />
-          {
-            //<p className="waiting-text">Searching for a game...</p>
-          }
-          <button
-            onClick={
-              () => {
-                socket?.emit("cancelSearching", { tmpUser, room });
-                setSearchingDisplay(false);
-                setConfiguringDisplay(false);
-                setSearching(false);
-                setTmpUserBoolean(false);
-                props.setDisplay(true);
-              } /*Cancel search*/
-            }
-            className="cancel-button"
-          >
-            Cancel
-          </button>
-        </div>
-      ) : null}
-      {configuringDisplay ? (
-        <div>
-        
-          <div className="game-config">
-            <p>Configuring the game...</p>
-            <p>{timeouts}</p>
-            <div className="ChannelRoomFormInput-Difficulty">
-              <label htmlFor="Difficulty">Difficulty </label>
-              <select
-                disabled={settings?.confirmed}
-                className="game-config-select"
-                defaultValue="easy"
-                id="Difficulty"
-                onChange={(e) => {
-                  if (e.target.value === "undefined") return;
-                  if (settings)
-                    setSettings({ ...settings, difficulty: e.target.value });
-                  else
-                    setSettings({
-                      difficulty: e.target.value,
-                      background: "",
-                      confirmed: false,
-                    });
-                  socket?.emit("updateConfirugation", {
-                    difficulty: e.target.value,
-                    background: settings?.background,
-                    confirmed: false,
-                  });
-                }}
-              >
-                <option key="easy" value="easy">
-                  Easy
-                </option>
-                <option key="medium" value="medium">
-                  Medium
-                </option>
-                <option key="hard" value="hard">
-                  Hard
-                </option>
-              </select>
-            </div>
-            <div className="ChannelRoomFormInput-Background">
-              <label htmlFor="Background">Background </label>
-              <select
-                disabled={settings?.confirmed}
-                className="game-config-select"
-                defaultValue="background1"
-                id="Background"
-                onChange={(e) => {
-                  if (e.target.value === "undefined") return;
-                  if (settings)
-                    setSettings({ ...settings, background: e.target.value });
-                  else
-                    setSettings({
-                      difficulty: "",
-                      background: e.target.value,
-                      confirmed: false,
-                    });
-                  socket?.emit("updateConfirugation", {
-                    difficulty: settings?.difficulty,
-                    background: e.target.value,
-                    confirmed: false,
-                  });
-                }}
-              >
-                <option key="background1" value="background1">
-                  Background 1
-                </option>
-                <option key="background2" value="background2">
-                  Background 2
-                </option>
-              </select>
-            </div>
-
-            <button
-              className="game-config-button"
-              onClick={
-                () => {
-                  console.log("cancel searching", tmpUser);
-                  socket?.emit("cancelSearching", { tmpUser, room });
-                  setSearchingDisplay(false);
-                  setSearching(false);
-                  setTmpUserBoolean(false);
-                  setConfiguringDisplay(false);
-                  setSettings({difficulty: "easy", background: "background1", confirmed: false});
-                  props.setDisplay(true);
-                } /*Cancel search*/
-              }
-            >
-              Cancel
-            </button>
-            {!settings?.confirmed ? (
-            <button
-              className="game-config-button"
-              onClick={
-                () => {
-                  if (
-                    settings?.difficulty &&
-                    settings?.background &&
-                    settings?.confirmed === false
-                  ) {
-                    setSettings({ ...settings, confirmed: true });
-                    socket?.emit("confirmConfiguration", settings);
-                  }
-                  else {
-                    console.log ("settings", settings);
-                  }
-                } /*Cancel search*/
-              }
-            >
-              Ready
-            </button>
-            ) : null}
-          </div>
-          <div className="game-config-secondary">
-            <p>Configuration of the other player</p>
-            <div className="ChannelRoomFormInput-Difficulty">
-              <label htmlFor="Difficulty">Difficulty </label>
-              {settingsBis?.difficulty ? (
-                <p>{settingsBis.difficulty}</p>
-              ) : (
-                <p>Easy1</p>
-              )}
-            </div>
-            <div className="ChannelRoomFormInput-Background">
-              <label htmlFor="Difficulty">Background </label>
-              {settingsBis?.background ? (
-                <p>{settingsBis.background}</p>
-              ) : (
-                <p>Background1</p>
-              )}
-            </div>
-            Ready : {settingsBis?.confirmed ? <p>Yes</p> : <p>No</p>}
-          </div>
-        </div>
-      ) : null}
-      <div></div>
-    </div>
+	<>
+		{!searchingDisplay && !configuringDisplay ? (
+			<>
+			<button onClick={handleReady} className="play-button">
+				Search for a game
+			</button>
+			</>
+		) : null}
+		{
+			searchingDisplay || configuringDisplay
+			? (
+				<div className="PlayInterface">
+				{searchingDisplay ? (
+					<div>
+						<Helmet>
+							<meta charSet="utf-8" />
+							<title> Searching - transcendence </title>
+						</Helmet>
+					<ScaleLoader
+						className="loading-spinner"
+						color={"#FFFFFF"}
+						loading={true}
+						height={65}
+						speedMultiplier={0.75}
+						width={10}
+					/>
+					{
+						//<p className="waiting-text">Searching for a game...</p>
+					}
+					<button
+						onClick={
+						() => {
+							socket?.emit("cancelSearching", { tmpUser, room });
+							setSearchingDisplay(false);
+							setConfiguringDisplay(false);
+							setSearching(false);
+							setTmpUserBoolean(false);
+							props.setDisplay(true);
+						} /*Cancel search*/
+						}
+						className="cancel-button"
+					>
+						Cancel
+					</button>
+					</div>
+				) : null}
+				{configuringDisplay ? (
+					<>
+						<Helmet>
+							<meta charSet="utf-8" />
+							<title> Configuring - transcendence </title>
+						</Helmet>
+						{/* <div className="game-group"> */}
+							<div className="game-config">
+								<p>Configuring the game...</p>
+								<p>{timeouts}</p>
+								<div className="ChannelRoomFormInput-Difficulty">
+									<label htmlFor="Difficulty">Difficulty </label>
+									<select
+									disabled={settings?.confirmed}
+									className="game-config-select"
+									defaultValue="easy"
+									id="Difficulty"
+									onChange={(e) => {
+										if (e.target.value === "undefined") return;
+										if (settings)
+										setSettings({ ...settings, difficulty: e.target.value });
+										else
+										setSettings({
+											difficulty: e.target.value,
+											background: "",
+											confirmed: false,
+										});
+										socket?.emit("updateConfirugation", {
+										difficulty: e.target.value,
+										background: settings?.background,
+										confirmed: false,
+										});
+									}}
+									>
+									<option key="easy" value="easy">
+										Easy
+									</option>
+									<option key="medium" value="medium">
+										Medium
+									</option>
+									<option key="hard" value="hard">
+										Hard
+									</option>
+									</select>
+								</div>
+								<div className="ChannelRoomFormInput-Background">
+									<label htmlFor="Background">Background </label>
+									<select
+									disabled={settings?.confirmed}
+									className="game-config-select"
+									defaultValue="background1"
+									id="Background"
+									onChange={(e) => {
+										if (e.target.value === "undefined") return;
+										if (settings)
+										setSettings({ ...settings, background: e.target.value });
+										else
+										setSettings({
+											difficulty: "",
+											background: e.target.value,
+											confirmed: false,
+										});
+										socket?.emit("updateConfirugation", {
+										difficulty: settings?.difficulty,
+										background: e.target.value,
+										confirmed: false,
+										});
+									}}
+									>
+									<option key="background1" value="background1">
+										Background 1
+									</option>
+									<option key="background2" value="background2">
+										Background 2
+									</option>
+									</select>
+								</div>
+								<div>
+									<button
+										className="game-config-button"
+										onClick={
+										() => {
+											console.log("cancel searching", tmpUser);
+											socket?.emit("cancelSearching", { tmpUser, room });
+											setSearchingDisplay(false);
+											setSearching(false);
+											setTmpUserBoolean(false);
+											setConfiguringDisplay(false);
+											setSettings({difficulty: "easy", background: "background1", confirmed: false});
+											props.setDisplay(true);
+										} /*Cancel search*/
+										}
+									>
+										Cancel
+									</button>
+									{!settings?.confirmed ? (
+									<button
+										className="game-config-button"
+										onClick={
+										() => {
+											if (
+											settings?.difficulty &&
+											settings?.background &&
+											settings?.confirmed === false
+											) {
+											setSettings({ ...settings, confirmed: true });
+											socket?.emit("confirmConfiguration", settings);
+											}
+											else {
+											console.log ("settings", settings);
+											}
+										} /*Cancel search*/
+										}
+									>
+										Ready
+									</button>
+									) : null}
+								</div>
+							</div>
+							<div className="game-config-secondary">
+							<p>Configuration of the other player</p>
+							<div className="line"></div>
+							<div className="ChannelRoomFormInput-Difficulty">
+								<label htmlFor="Difficulty">Difficulty :&nbsp;</label>
+								{settingsBis?.difficulty ? (
+								<p>{settingsBis.difficulty}</p>
+								) : (
+								<p>Easy1</p>
+								)}
+							</div>
+							<div className="line"></div>
+							<div className="ChannelRoomFormInput-Background">
+								<label htmlFor="Difficulty">Background :&nbsp;</label>
+								{settingsBis?.background ? (
+								<p>{settingsBis.background}</p>
+								) : (
+								<p>Background1</p>
+								)}
+							</div>
+							<div className="line"></div>
+							<div className="ChannelRoomFormInput-Status">
+								Ready :&nbsp;{settingsBis?.confirmed ? <p>Yes</p> : <p>No</p>}
+							</div>
+							</div>
+						{/* </div> */}
+					</>
+				) : null}
+				</div>
+			): null
+		}
+	</>
   );
 }
 

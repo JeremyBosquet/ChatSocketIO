@@ -6,7 +6,7 @@ import HomePage from "./Pages/Home/HomePage";
 import NotFound from "./Pages/NotFound/NotFound";
 import Logout from "./Components/Auth/Logout";
 import Settings from "./Components/Settings/Settings";
-import TwoAuth from "./Pages/TwoAuth";
+import TwoAuth from "./Pages/TwoAuth/TwoAuth";
 
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
@@ -21,6 +21,7 @@ import Protected from "./Protected";
 import { createNotification } from "./Components/notif/Notif";
 import Profile from "./Pages/Profile/Profile";
 import instance from "./API/Instance";
+import ProtectedTwoAuth from "./ProtectedTwoAuth";
 //import TestPage from "./Pages/test";
 //import './Pages/PhaserGame'
 
@@ -330,7 +331,7 @@ function App() {
 			<Route path="/settings" element={<Settings />}></Route>
 			{/* <Route path="/profile" element={<Protected><Profile /></Protected>}></Route> */}
 			<Route path="/logout" element={<Protected><Logout /></Protected>}></Route>
-			<Route path="/twoAuth" element={<Protected><TwoAuth /></Protected>}></Route>
+			<Route path="/twoAuth" element={<ProtectedTwoAuth><TwoAuth /></ProtectedTwoAuth>}></Route>
 			<Route path="/profile/:Username" element={<Protected><Profile /></Protected>}></Route>
 			{/* <Route path=":UserId" element={<Protected><Social /></Protected>}></Route> */}
 			{/*</Routes>Route path="/game/" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}

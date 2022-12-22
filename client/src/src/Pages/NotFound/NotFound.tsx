@@ -9,6 +9,7 @@ import KillSocket from "../../Components/KillSocket/KillSocket";
 // import image404 from './404.png';
 import './NotFound.scss'
 import instance from "../../API/Instance";
+import {Helmet} from "react-helmet";
 
 function NotFound() {
   let navigate = useNavigate();
@@ -58,6 +59,10 @@ function NotFound() {
 
   return (
     <div className="NotFoundPage">
+		<Helmet>
+			<meta charSet="utf-8" />
+			<title> 404 - transcendence </title>
+		</Helmet>
       <img src={"/404.png"} alt="404"></img>
       <button onClick={() => navigate("/")}> Home </button>
     </div>

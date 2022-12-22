@@ -4,6 +4,7 @@ import GameBoard from "../GameBoard/GameBoard";
 import "./GamePlay.scss";
 import useImage from 'use-image';
 import useEventListener from "@use-it/event-listener";
+import {Helmet} from "react-helmet";
 
 interface props {
   socket: Socket | undefined;
@@ -87,8 +88,17 @@ function GamePlay(props: props) {
   const [image] = (props?.room?.settings?.background == "background1" ? useImage("https://cdn.discordapp.com/attachments/768496887720181770/1047556063500709908/image.png") : useImage("https://cdn.discordapp.com/attachments/768496887720181770/1047556063500709908/image.png"));
   const [imageA] = (props.room?.playerA.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id));
   const [imageB] = (props.room?.playerB.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id));
-  const [windowsWidth, setWindowsWidth] = useState(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth /2);
-  const [windowsHeight, setWindowsHeight] = useState(window.innerHeight - 100 > maxHeight ? maxHeight : window.innerHeight /2  - 60); // game board
+  
+  let mult = 0.5;
+  if (window.innerWidth < 500)
+    mult = 0.9;
+  let _t = window.innerHeight *mult ;
+  let _r = (window.innerWidth*mult) / (window.innerHeight * mult);
+  if (_r < 16 / 9) {
+    _t = (window.innerWidth * mult) * (9 / 16);
+  }
+  const [windowsWidth, setWindowsWidth] = useState((16 * _t) / 9);
+  const [windowsHeight, setWindowsHeight] = useState(_t); // game board
   const [boardWidth, setBoardWidth] = useState<number>(
     props.room?.settings.boardWidth
       ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -144,32 +154,51 @@ function GamePlay(props: props) {
       contextRef.current.fillStyle = "white";
       contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight );
       contextRef.current.fillStyle = "white";
-      contextRef.current.font = "30px Arial";
       // print name of players and score
       //contextRef.current.fillText(props.room?.playerA.name + " : " + props.room?.scoreA, windowsWidth / 2 - 400, 50);
       //contextRef.current.fillText(props.room?.playerB.name + " : " + props.room?.scoreB, windowsWidth / 2 + 100, 50);
       //contextRef.current.font = "30px Arial";
       // On top left corner put the imageA (of player A) 
-      if (imageA)
-        contextRef.current.drawImage(imageA, windowsWidth / 2 - 100, 0, 50, 50);
-      // On top right corner put the imageB (of player B)
-      if (imageB)
-        contextRef.current.drawImage(imageB, windowsWidth / 2 + 50, 0, 50, 50);
-      if (props.room?.scoreA)
-        contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
+      let display = 50;
+      if (window.innerWidth < 500)
+      {  display = 30;
+        mult = 0.9;
+        contextRef.current.font = "20px Arial";
+        if (props.room?.scoreA)
+          contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
+        else
+          contextRef.current.fillText("0", windowsWidth / 2 - 20, 25);
+        if (props.room?.scoreB)
+          contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
+        else
+          contextRef.current.fillText("0", windowsWidth / 2 + 10, 25);
+        
+      }
       else
-        contextRef.current.fillText("0", windowsWidth / 2 - 35, 35);
-      if (props.room?.scoreB)
-        contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
-      else
-        contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
+      {
+        mult = 0.5;
+        contextRef.current.font = "30px Arial";
+        if (imageA)
+         contextRef.current.drawImage(imageA, windowsWidth / 2 - 100, 0, display, display);
+        /// On top right corner put the imageB (of player B)
+        if (imageB)
+        contextRef.current.drawImage(imageB, windowsWidth / 2 + 50, 0, display, display);
+        if (props.room?.scoreA)
+          contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
+        else
+          contextRef.current.fillText("0", windowsWidth / 2 - 35, 35);
+        if (props.room?.scoreB)
+          contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
+        else
+          contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
+      }
       // Create a border around the score
       contextRef.current.fillStyle = "red";
       // Size of the border
       contextRef.current.lineWidth = 1;
       // color of the border
       contextRef.current.strokeStyle = "white";
-      contextRef.current.strokeRect(windowsWidth / 2 - 50, 0, 100, 50);
+      //contextRef.current.strokeRect(windowsWidth / 2 - 50, 0, 100, 50);
       
       //  contextRef.current.fillText("10", windowsWidth / 2 + 11, 35);
       //  contextRef.current.fillText("10", windowsWidth / 2 - 45, 35);
@@ -257,8 +286,28 @@ function GamePlay(props: props) {
 
   useEventListener("mousemove", mousemove);
   function handleResize() {
-    setWindowsWidth(window.innerWidth > maxWidth ?  maxWidth : window.innerWidth /2);
-    setWindowsHeight(window.innerHeight - 100 > maxHeight ? maxHeight: window.innerHeight /2 - 60);
+    // Make a ratio of 16:9 on the window
+
+    let t = window.innerHeight *mult ;
+    let r = (window.innerWidth*mult) / (window.innerHeight * mult);
+    if (r < 16 / 9) {
+      t = (window.innerWidth * mult) * (9 / 16);
+    }
+    setWindowsHeight(t /*- 200*/);
+    setWindowsWidth((16 * t) / 9);
+    
+    //if (window.innerHeight < window.innerWidth)
+    //{
+    //setWindowsHeight(9 * (window.innerWidth /2) / 16);
+    //setWindowsWidth(  (window.innerWidth / 2));
+    //}
+    //else
+    //{
+    //  setWindowsHeight((window.innerHeight /2));
+    //  setWindowsWidth(9 * (window.innerHeight /2) / 16);
+//
+    //}
+    console.log(window.innerHeight, window.innerWidth, windowsHeight, windowsWidth, window.innerWidth / window.innerHeight, windowsWidth / windowsHeight)
     //setWindowsHeight(t /*- 200*/);
     setBoardWidth(
       props.room?.settings.boardWidth
@@ -345,6 +394,11 @@ function GamePlay(props: props) {
   });
   return (
     <div id="gameMain" className="cursor">
+		<Helmet>
+			<meta charSet="utf-8" />
+			<title>Game - transcendence </title>
+		</Helmet>
+    <GameBoard socket={props.socket} room={props.room}/>
       <canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
     </div>
   );

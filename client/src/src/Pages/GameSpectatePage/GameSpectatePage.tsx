@@ -17,6 +17,8 @@ import KillSocket from "../../Components/KillSocket/KillSocket";
 import Popup from "../../Components/Popup/Popup";
 import { getUser, setUser } from "../../Redux/authSlice";
 import instance from "../../API/Instance";
+import './GameSpectatePage.scss'
+import {Helmet} from "react-helmet";
 
 interface IPlayer {
   id: string;
@@ -48,6 +50,7 @@ interface IRoom {
   settings: ISettings;
   configurationA: IConfiguration;
   configurationB: IConfiguration;
+  lastActivity: number;
 }
 
 interface IConfiguration {
@@ -84,6 +87,7 @@ function GameSpectatePage() {
     );
 
     if (messages?.data) {
+      console.log(messages?.data);
       setRooms(messages.data);
     }
   };
@@ -140,7 +144,7 @@ function GameSpectatePage() {
           "gameForceEnd donc erreur 'sorry l'autre connard a crash'",
           data
         );
-          createNotification("info", "The other player has left the game");
+          createNotification("info", "The opponent player has left the game");
         //setNotificaton(true);
         setDisplay(false);
         setRoom(undefined);
@@ -195,12 +199,16 @@ function GameSpectatePage() {
 
   return (
 	<>
-		<div className='blur'>
-			<div className="main">
-			{ <NavBar /> }
+  { <NavBar /> }
+  <div className='roomPage'>
+  	<Helmet>
+		<meta charSet="utf-8" />
+		<title> Spectate - transcendence </title>
+	</Helmet>
 			{!roomId ? (
-				<div>
-				<p>List of game :</p>
+    <div className='container'>
+      <h3 className="title">Current's game</h3>
+				<div className="roomInfos">
 				{rooms.map((room: IRoom) => (
 					<RoomSpectateInfo
 					key={room.id}
@@ -211,16 +219,23 @@ function GameSpectatePage() {
 					name={room.name}
 					createdAt={room.createdAt}
 					settings={room.settings}
+          lastActivity={room.lastActivity}
+          playerAName={room.playerA?.name}
+          playerBName={room.playerB?.name}
+          scoreA={room.scoreA}
+          scoreB={room.scoreB}
+          playerAId={room.playerA?.id}
+          playerBId={room.playerB?.id}
 					/>
 				))}
 				</div>
+		</div>
 			) : (
 				<div>
 				{room ? <GameSpectate setRoom={setRoom} socket={socket} room={room} /> : null}
 				</div>
-			)}
+			)}  
 			</div>
-		</div>
 	</>
   );
 }

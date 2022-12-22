@@ -97,7 +97,7 @@ export class RoomGateway {
     for (let i = 0; i < rooms.length; i++) {
       const room = rooms[i];
       
-      if (room && room?.status == 'configuring') {
+      if (room && room?.status.includes('configuring')) {
         if (room.lastActivity < Date.now() - 20000) {
           console.log('room ' + room.id + ' destroyed');
           await this.roomService.updateRoom(room.id, {status: 'destroy'});
@@ -105,6 +105,7 @@ export class RoomGateway {
         }
         //send time to players if the time have taken more than 1 second
         if (Date.now() - lastTime > 1000) {
+          // REACTIVER CA AVANT DE PUSH OU BAN
           lastTime = Date.now();
           this.server.in('room-' + room.id).emit('roomTimeout', {time: Math.floor((room.lastActivity - Date.now() + 20000) / 1000)});
         }
@@ -150,6 +151,7 @@ export class RoomGateway {
           this.server.in('room-' + room.id).emit('ballMovement', room);
           //console.log('playerA.id: ' + room.playerA.id + ' - playerB.id: ' + room.playerB.id);
           this.server.in('room-' + room.id).emit('roomUpdated', room);
+          this.server.emit('roomUpdated-'+ room.id, room);
         } else {
           // Use checkHitBox to check if the ball hit a player or a wall
           if (this.checkHitBox(room.playerA.x, room.playerA.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
@@ -158,9 +160,11 @@ export class RoomGateway {
             let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45) ;
             let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45) ;
             //console.log('playerA hit the ball', room.ball.direction, x, ' ', y)
-            while (x < room.ball.x) {
+            let antiLoop = 0;
+            while (x < room.ball.x  && antiLoop <= 15) {
               //console.log('Je suis dans la boucle A', room.ball.direction, x, ' ', y)
               room.ball.direction =  room.ball.direction + 0.1;
+              antiLoop++;
               x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.45;
               y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.45;
             }
@@ -175,8 +179,10 @@ export class RoomGateway {
             let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45) ;
             let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45) ;
             //console.log('playerB hit the ball', room.ball.direction, x, ' ', y)
-            while (x > room.ball.x) {
+            let antiLoop = 0;
+            while (x > room.ball.x  && antiLoop <= 15) {
              //console.log('Je suis dans la boucle B', room.ball.direction, x, ' ', y)
+              antiLoop++;
               room.ball.direction =  room.ball.direction - 0.1;
               x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.45;
               y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.45;
@@ -191,8 +197,10 @@ export class RoomGateway {
             room.ball.direction = this.newDirection(room.ball.direction, 0);
             let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
             let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
-            while ((this.checkHitBox(0, -50, 100, 51, x, y)))
+            let antiLoop = 0;
+            while ((this.checkHitBox(0, -50, 100, 51, x, y)) && antiLoop <= 15)
             {
+              antiLoop++;
               room.ball.direction =  room.ball.direction + 0.35;
               x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
               y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
@@ -205,9 +213,11 @@ export class RoomGateway {
             room.ball.direction = this.newDirection(room.ball.direction, 0);
             let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
             let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
-            while ((this.checkHitBox(0, 99, 100, 51, x, y)))
+            let antiLoop = 0;
+            while ((this.checkHitBox(0, 99, 100, 51, x, y))  && antiLoop <= 15)
             {
               room.ball.direction =  room.ball.direction + 0.35;
+              antiLoop++;
               x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
               y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
             }

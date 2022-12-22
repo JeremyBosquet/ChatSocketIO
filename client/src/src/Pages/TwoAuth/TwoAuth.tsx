@@ -1,13 +1,16 @@
 
 import { useEffect, useRef, useState } from "react";
-import SignIn from "../Components/Auth/Signin";
+import SignIn from "../../Components/Auth/Signin";
 import { redirect, useNavigate, useLocation } from "react-router-dom";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
-import { createNotification } from "../Components/notif/Notif";
+import { createNotification } from "../../Components/notif/Notif";
 import React from "react";
-import KillSocket from "../Components/KillSocket/KillSocket";
-import instance from "../API/Instance";
+import KillSocket from "../../Components/KillSocket/KillSocket";
+import instance from "../../API/Instance";
+import {Helmet} from "react-helmet";
+import {BsArrowRightCircleFill} from 'react-icons/bs'
+import "./TwoAuth.scss";
 
 function TwoAuth() {
   KillSocket("all");
@@ -98,13 +101,18 @@ function TwoAuth() {
 		setOfPrint();
   }, [IsTwoAuthActivated]);
   return (
-    <div>
+    <div className="TwoAuthPage">
+		<Helmet>
+			<meta charSet="utf-8" />
+			<title> Two-Factor Auth - transcendence </title>
+		</Helmet>
       {print ? (
-        <div>
-          <form onSubmit={LogTwoAuth}>
-            <p>
-              {" "}
+        <>
+            <h2>
               Enter Google authenticator code
+			</h2>
+		<div className="Form">
+          <form onSubmit={LogTwoAuth}>
               <input
                 type="text"
                 id="code"
@@ -112,16 +120,13 @@ function TwoAuth() {
                 required
                 onChange={(e) => setAuthCode(e.target.value)}
               />
-              <button type="submit">Submit</button>
-            </p>
+              <button type="submit"><span><BsArrowRightCircleFill/></span></button>
           </form>
+		</div>
           <p> {messageCode} </p>
-        </div>
+        </>
       ) : (
-        <div>
-          <p> Not logged in or two auth authentication not activated </p>
-          <button onClick={() => navigate("/")}> Home </button>
-        </div>
+        null
       )}
     </div>
   );

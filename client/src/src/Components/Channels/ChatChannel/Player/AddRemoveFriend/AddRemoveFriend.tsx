@@ -59,8 +59,8 @@ function AddRemoveFriend(props : props) {
 				dispatch(setFriendList(users));
 				socketSocial?.emit('removeOrBlock', {uuid : uuid, myUUID : me.uuid})
 				setIsFriend(false);
-				// setIsRequest(false);
-				// setIsRequested(false);
+				setIsRequest(false);
+				setIsRequested(false);
 			}).catch((err) => {
 				setIsFriend(false);
 				console.log(err.response.data.message);
@@ -81,6 +81,7 @@ function AddRemoveFriend(props : props) {
 				dispatch(setRequestedList(requested));
 				socketSocial?.emit('CancelFriendAdd', {uuid : uuid, myUUID : me.uuid});
 				setIsFriend(false);
+				setIsRequest(false);
 			}).catch((err) => {
 				setIsFriend(false);
 				console.log(err.response.data.message);
@@ -115,7 +116,7 @@ function AddRemoveFriend(props : props) {
 				})
 			}).then((res) => {
 				const request : any[] = requestList.filter((element : any) => element.uuid !== uuid);
-				dispatch(setFriendList([...friendList, {uuid : uuid , username : test[0].username, image : import.meta.env.VITE_URL_API + ":7000/" + acceptThisUser?.image}]));
+				dispatch(setFriendList([...friendList, {uuid : uuid , username : test[0].username, image : acceptThisUser?.image}]));
 				dispatch(setRequestList(request));
 				socketSocial?.emit('acceptFriend', {uuid : uuid, myUUID : me.uuid});
 				setIsFriend(true);

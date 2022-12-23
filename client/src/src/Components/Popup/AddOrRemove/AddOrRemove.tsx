@@ -17,7 +17,7 @@ function AddOrRemove(props : props) {
 	const requestedList = useSelector(getRequestedList);
 	const profilePage = useSelector(getProfilePage);
 	
-	function IsFriend(uuid : string) {
+	function IsntFriend(uuid : string) {
 		const userFriends : any[] = friendList;
 		const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
 		if (!test.length)
@@ -59,9 +59,9 @@ function AddOrRemove(props : props) {
 
 	return (
 		props.UserUuid ?
-			<button onClick={() => (AddOrRemoveFriend(props.UserUuid))} > {IsFriend(props.UserUuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+			<button onClick={() => (AddOrRemoveFriend(props.UserUuid))} > {IsntFriend(props.UserUuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
 		:
-			<button onClick={() => (AddOrRemoveFriend(profilePage.uuid))} > {IsFriend(profilePage.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+			<button onClick={() => (AddOrRemoveFriend(profilePage.uuid))} > {IsntFriend(profilePage.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
 	)
 }
 

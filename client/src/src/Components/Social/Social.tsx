@@ -69,23 +69,6 @@ function Social() {
 				setUser(undefined);
 				navigate("/");
 			});
-			await instance.get(`user/ListFriendRequest`, {
-				headers: ({
-					Authorization: 'Bearer ' + token,
-				})
-			}).then((res) => {
-				requestTab = res.data.usernameList;
-				dispatch(setRequestList(requestTab));
-				if (requestTab.length) {
-					setFriendRequest(requestTab.length);
-					//createNotification('success', "You have a new friend request");
-				}
-				else
-					setFriendRequest(undefined);
-			}).catch((err) => {
-				console.log(err.message);
-				setFriendRequest(undefined);
-			});
 		}
 		else
 			navigate("/");
@@ -143,7 +126,7 @@ function Social() {
 			});
 	}
 
-	function IsRequested(uuid : string) {
+	function IsntRequested(uuid : string) {
 		const userRequested : any[] = requestedList;
 		const test : any[] = userRequested.filter(requested => requested.uuid === uuid);
 		if (!test.length)
@@ -151,7 +134,7 @@ function Social() {
 		return false;
 	}
 
-	function IsRequest(uuid : string) {
+	function IsntRequest(uuid : string) {
 		const userRequest : any[] = requestList;
 		const request : any[] = userRequest.filter(request => request.uuid === uuid);
 		if (!request.length)
@@ -162,7 +145,7 @@ function Social() {
 	function IsBlocked(uuid : string) {
 		const userBlocked : any[] = blockList;
 		const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid);
-		if (!test.length)
+		if (!test)
 			return true;
 		return false;
 	}
@@ -220,9 +203,9 @@ function Social() {
 												</div>
 												<div>
 												{
-													IsRequested(user.uuid) ?
+													IsntRequested(user.uuid) ?
 													(
-														IsRequest(user.uuid) ?
+														IsntRequest(user.uuid) ?
 														(
 															<div className='buttons2'>
 																<AddOrRemove User={User} UserUuid={user.uuid}/>
@@ -233,7 +216,7 @@ function Social() {
 
 														(
 															<div className='buttons2'>
-																<Accept User={User} UserUuid={user.uuid} UserImg={import.meta.env.VITE_URL_API + ":7000/" + user?.image}/>
+																<Accept User={User} UserUuid={user.uuid} UserImg={user?.image}/>
 																<Decline User={User} UserUuid={user.uuid} />
 															</div>
 														)

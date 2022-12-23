@@ -79,11 +79,11 @@ function DMChannel(props: props) {
 
   useEffect(() => {
     const userId = dm?.users[0]?.uuid === user.uuid ? dm?.users[1]?.uuid : dm?.users[0]?.uuid;
-
+    
     isBlocked(userId);
     isBlockedBy(userId);
     //eslint-disable-next-line
-  }, [])
+  }, [dm])
 
   const getUsersChannel = async () => {
     await instance.get("chat/dms/user")

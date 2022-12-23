@@ -7,6 +7,7 @@ import { InformationEvent } from 'http';
 import { UsersService } from 'src/users/users.service';
 import { In, Repository } from 'typeorm';
 import { Room } from './Entities/room.entity';
+import { IInGame } from './Interfaces/InGame';
 import { SendGameHistoryDto } from './room.dto';
 import { RoomGateway } from './room.gateway';
 
@@ -51,6 +52,23 @@ export class RoomService {
     //private readonly roomGateway: RoomGateway,
   ) {
     this.clearDatabase();
+  }
+  async getInGamePlayers(): Promise<any> {
+    let lista = await this.roomRepository.find({
+      where: { status: In(['playing', 'waiting']) },
+    });
+    let listb = [];
+    for (let i = 0; i < lista.length; i++) {
+      if (lista[i].playerA !== null) {
+        if (listb.findIndex((player) => player.id == lista[i].playerA.id) == -1)
+          listb.push(lista[i].playerA.id);
+      }
+      if (lista[i].playerB !== null) {
+        if (listb.findIndex((player) => player.id == lista[i].playerB.id) == -1)
+          listb.push(lista[i].playerB.id);
+      }
+    }
+    return listb;
   }
   async updateRoom(roomId: string, data: any): Promise<any> {
     if (roomList.findIndex((_room) => _room.id == roomId) != -1) {

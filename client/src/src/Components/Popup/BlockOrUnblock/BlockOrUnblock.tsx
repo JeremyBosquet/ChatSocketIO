@@ -62,7 +62,7 @@ function BlockOrUnblock (props : props) {
 		}
 	}
 
-	function IsBlocked(uuid : string) {
+	function IsntBlocked(uuid : string) {
 		const userBlocked : any[] = blockList;
 		const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid);
 		if (!test.length)
@@ -72,9 +72,9 @@ function BlockOrUnblock (props : props) {
 
 	return (
 		props.UserUuid ?
-			<button onClick={() => (BlockOrUnblockUser(props.UserUuid))} > {IsBlocked(props.UserUuid) ? <MdBlock/>: <CgUnblock/>} </button>
+			<button onClick={() => (BlockOrUnblockUser(props.UserUuid))} > {IsntBlocked(props.UserUuid) ? <MdBlock/>: <CgUnblock/>} </button>
 		:
-			<button onClick={() => (BlockOrUnblockUser(profilePage.uuid))} > {IsBlocked(profilePage.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
+			<button onClick={() => (BlockOrUnblockUser(profilePage.uuid))} > {IsntBlocked(profilePage.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
 	);
 }
 

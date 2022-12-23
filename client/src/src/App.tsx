@@ -129,13 +129,9 @@ function App() {
 			socketSocial.on("newFriend", (data: any) => {
 				if (data.uuid === user.uuid && data?.username) {
 					createNotification("info", "New friend request from: " + data.username);
-					instance.get(`user/ListFriendRequest`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-					}).then((res) => {
+					instance.get(`user/ListFriendRequest`).then((res) => {
 						let requestTab = res.data.usernameList;
-						if (requestTab.length)
+						if (requestTab)
 							dispatch(setRequestList(requestTab));
 						else
 							dispatch(setRequestList([]));
@@ -157,7 +153,7 @@ function App() {
 						const requested = requestedList.filter((e : any) => e.uuid !== data.friendUuid);
 						dispatch(setRequestedList(requested));
 						let friendList = res.data.friendList;
-						if (friendList.length)
+						if (friendList)
 							dispatch(setFriendList(friendList));
 					}).catch((err) => {
 						console.log(err.message);
@@ -167,14 +163,13 @@ function App() {
 			socketSocial.removeListener("removedOrBlocked");
 			socketSocial.on("removedOrBlocked", (data: any) => {
 				if (data.uuid === user.uuid && data?.username) {
-					//createNotification("info", data.username + " accepted your friend request");
 					instance.get(`user/ListFriends`, {
 					headers: ({
 						Authorization: 'Bearer ' + localStorage.getItem('token'),
 					})
 					}).then((res) => {
 						let friendList = res.data.friendList;
-						if (friendList.length)
+						if (friendList)
 							dispatch(setFriendList(res.data.friendList));
 					}).catch((err) => {
 						console.log(err.message);
@@ -226,7 +221,7 @@ function App() {
 					})
 					}).then((res) => {
 						let requestTab = res.data.usernameList;
-						if (requestTab.length)
+						if (requestTab)
 							dispatch(setRequestList(requestTab));
 						else
 							dispatch(setRequestList([]));
@@ -245,7 +240,7 @@ function App() {
 					})
 					}).then((res) => {
 						let requestedTab = res.data.ListFriendsRequested;
-						if (requestedTab.length)
+						if (requestedTab)
 							dispatch(setRequestedList(requestedTab));
 						else
 							dispatch(setRequestedList([]));

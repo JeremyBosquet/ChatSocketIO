@@ -31,14 +31,15 @@
 			//position: absolute;
 		}
 		[type=text]{
-			padding: 4px 10px;
+			padding: 5px 12px;
 			border-radius: 30px;
 			border: none;
+			outline: none;
 		}
 		span {
 			display: flex;
 			color :rgb(255, 255, 255);
-			font-size: x-large;
+			font-size: 25px;
 		}
 	}
 

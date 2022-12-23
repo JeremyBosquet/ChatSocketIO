@@ -54,22 +54,6 @@ function NavBar(props: any) {
         .catch((err) => {
           console.log(err.message);
         });
-      await instance.get(`user/ListFriendRequest`, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-        })
-        .then((res) => {
-          tab = res.data.ListFriendsRequest;
-          if (tab.length) {
-            setFriendRequest(tab.length);
-          } else setFriendRequest(0);
-          setCompt(tab.length);
-        })
-        .catch((err) => {
-          console.log(err.message);
-          setFriendRequest(0);
-        });
     }
     setbooleffect2(false);
   }

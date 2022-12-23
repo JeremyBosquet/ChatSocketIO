@@ -5,6 +5,8 @@ import "./GamePlay.scss";
 import useImage from 'use-image';
 import useEventListener from "@use-it/event-listener";
 import {Helmet} from "react-helmet";
+import { useSelector } from "react-redux";
+import { getSocketSocial } from "../../Redux/authSlice";
 
 interface props {
   socket: Socket | undefined;
@@ -140,7 +142,13 @@ function GamePlay(props: props) {
     percentY: 50,
   });
   const [timeouts, setTimeouts] = useState<Number>(30);
-
+  const socketSocial = useSelector(getSocketSocial);
+  useEffect(() => {
+    socketSocial?.emit("joinGame");
+    return () => {
+      socketSocial?.emit("leaveGame");
+    };
+  }, [socketSocial]);
   function updateDisplay() : void {
     // Clear context and reprint everything
     if (contextRef.current)

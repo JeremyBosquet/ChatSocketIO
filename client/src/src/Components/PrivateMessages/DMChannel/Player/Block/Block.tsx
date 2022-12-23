@@ -31,11 +31,9 @@ function Block(props : props) {
       let userFinded = blockedUsers.find((userBlocked : any) => userBlocked.uuid === user.uuid);
       if (userFinded)
       {
-        console.log(user, " est bloqué");
         setBlocked(true);
         return (true);
       }
-      console.log(user, " est pas bloqué");
       setBlocked(false);
       return (false);
     }

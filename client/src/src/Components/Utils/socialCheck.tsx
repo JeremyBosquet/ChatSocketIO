@@ -11,7 +11,7 @@ export function IsFriend(uuid : string) {
 	const friendList = useSelector(getFriendList);	
 	const userFriends : any[] = friendList;
 	const test : any[] = userFriends.filter(friend => friend.uuid === uuid);
-	if (!test.length)
+	if (!test)
 		return true;
 	return false;
 }
@@ -20,7 +20,7 @@ export function IsRequested(uuid : string) {
 	const requestedList = useSelector(getRequestedList);
 	const userRequested : any[] = requestedList;
 	const test : any[] = userRequested.filter(requested => requested.uuid === uuid);
-	if (!test.length)
+	if (!test)
 		return true;
 	return false;
 }
@@ -29,7 +29,7 @@ export function IsRequest(uuid : string) {
 	const requestList = useSelector(getRequestList);
 	const userRequest : any[] = requestList;
 	const request : any[] = userRequest.filter(request => request.uuid === uuid);
-	if (!request.length)
+	if (!request)
 		return true;
 	return false;
 }
@@ -41,7 +41,7 @@ export async function AddOrRemoveFriend(uuid : string, User : any) {
 	const requestedList = useSelector(getRequestedList);
 	const userFriends : any[] = friendList;
 	const test : any[] = userFriends.filter(friend => friend.uuid === uuid)
-	if (!test.length)
+	if (!test)
 	{
 		await instance.post(`user/AddFriend`, {uuid : uuid}, {
 				headers: ({
@@ -76,7 +76,7 @@ export async function AcceptFriend(uuid : string, image : any, User : any) {
 	const friendList = useSelector(getFriendList);
 	const requestList = useSelector(getRequestList);
 	const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
-	if (test.length)
+	if (test)
 	{
 		await instance.post(`user/AcceptFriend`, {uuid : uuid}, {
 				headers: ({
@@ -98,7 +98,7 @@ export async function DeclineFriendAdd(uuid : string, User : any) {
 	const socket = useSelector(getSocketSocial);
 	const requestList = useSelector(getRequestList);
 	const test : any[] = requestList.filter((friend : any) => friend.uuid === uuid)
-	if (test.length)
+	if (test)
 	{
 		await instance.post(`user/DeclineFriendAdd`, {uuid : uuid}, {
 				headers: ({
@@ -119,7 +119,7 @@ export async function CancelFriendAdd(uuid : string, User : any) {
 	const socket = useSelector(getSocketSocial);
 	const requestedList = useSelector(getRequestedList);
 	const test : any[] = requestedList.filter((friend : any) => friend.uuid === uuid)
-	if (test.length)
+	if (test)
 	{
 		await instance.post(`user/CancelFriendAdd`, {uuid : uuid}, {
 				headers: ({
@@ -144,7 +144,7 @@ export async function BlockOrUnblockUser(uuid : string, User : any) {
 	const requestList = useSelector(getRequestList);
 	const userBlocked : any[] = blockList;
 	const test : any[] = userBlocked.filter(blocked => blocked.uuid === uuid)
-	if (!test.length)
+	if (!test)
 	{
 		await instance.post(`user/BlockUser`, {uuid : uuid}, {
 				headers: ({

@@ -8,11 +8,12 @@ import {
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { AppService } from './app.service';
+import { RoomService } from './Game/room.service';
 import { UsersService } from './users/users.service';
 
 @WebSocketGateway(7003, { cors: '*:*' })
 export class AppGateway {
-  constructor(private UsersService: UsersService) {}
+  constructor(private UsersService: UsersService, private RoomService : RoomService) {}
   @WebSocketServer()
   server: any;
 
@@ -22,9 +23,7 @@ export class AppGateway {
 	  if (myUser)
 	  {
 		console.log("connected", data);
-		// console.log('hereerer');
 		client.data.uuid = data.uuid;
-		//this.UsersService.IsLoggedIn(data.uuid)
 		const sockets = await this.server.fetchSockets()
 
         let users = [];
@@ -39,6 +38,24 @@ export class AppGateway {
 
 	}
     return;
+  }
+
+  @SubscribeMessage('joinGame')
+  async joinGame(@MessageBody() data: any,@ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
+		let myUser = await this.UsersService.findUserByUuid(client.data.uuid);
+		if (myUser)
+		{
+			client.broadcast.emit('playing', {user : client.data.uuid});
+		}
+		return;
+  }
+
+  @SubscribeMessage('leaveGame')
+  async leaveGame(@MessageBody() data: any,@ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
+		let myUser = await this.UsersService.findUserByUuid(client.data.uuid);
+		if (myUser)
+			client.broadcast.emit('notPlaying', {user : client.data.uuid});
+		return;
   }
 
   @SubscribeMessage('disconnect')

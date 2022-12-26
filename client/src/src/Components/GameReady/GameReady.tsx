@@ -73,8 +73,8 @@ function GameReady(props: props) {
   const [tmpUser, setTmpUser] = useState<any>(null);
   const [tmpUserBoolean, setTmpUserBoolean] = useState<boolean>(false);
   const [configuringDisplay, setConfiguringDisplay] = useState<boolean>(false);
-  const [settings, setSettings] = useState<IConfiguration>({difficulty: "easy", background: "background1", confirmed: false});
-  const [settingsBis, setSettingsBis] = useState<IConfiguration>({difficulty: "easy", background: "background1", confirmed: false});
+  const [settings, setSettings] = useState<IConfiguration>({difficulty: "easy", background: "background 1", confirmed: false});
+  const [settingsBis, setSettingsBis] = useState<IConfiguration>({difficulty: "easy", background: "background 1", confirmed: false});
   //const [notification, setNotificaton] = useState<Boolean>(false);
   const socket = useSelector(getSockeGame);
 

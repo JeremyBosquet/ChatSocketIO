@@ -55,17 +55,23 @@ export class RoomService {
   }
   async getInGamePlayers(): Promise<any> {
     let lista = await this.roomRepository.find({
-      where: { status: In(['playing', 'waiting']) },
+      where: { status: In(['playing']) },
     });
     let listb = [];
     for (let i = 0; i < lista.length; i++) {
       if (lista[i].playerA !== null) {
         if (listb.findIndex((player) => player.id == lista[i].playerA.id) == -1)
-          listb.push(lista[i].playerA.id);
+        {
+          const temp = {uuid: lista[i].playerA.id};
+          listb.push(temp);
+        }
       }
       if (lista[i].playerB !== null) {
         if (listb.findIndex((player) => player.id == lista[i].playerB.id) == -1)
-          listb.push(lista[i].playerB.id);
+        {
+          const temp = {uuid: lista[i].playerB.id};
+          listb.push(temp);
+        }
       }
     }
     return listb;

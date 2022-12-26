@@ -10,7 +10,7 @@ import TwoAuth from "./Pages/TwoAuth/TwoAuth";
 
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
-import { getConnectedList, getRequestedList, getSocketSocial, getUser, setBlockedByList, setConnectedList, setFriendList, setRequestedList, setRequestList, setSocketSocial, setUser, setBlockList } from "./Redux/authSlice";
+import { getConnectedList, getRequestedList, getSocketSocial, getUser, setBlockedByList, setConnectedList, setFriendList, setRequestedList, setRequestList, setSocketSocial, setUser, setBlockList, setInGameList } from "./Redux/authSlice";
 import { getSocket, setSocket } from "./Redux/chatSlice";
 import ChannelPage from "./Pages/ChannelPage/ChannelPage";
 import DMPage from "./Pages/DMPage/DMPage";
@@ -145,11 +145,7 @@ function App() {
 			socketSocial.on("friendAccepted", (data: any) => {
 				if (data.uuid === user.uuid && data?.username && data?.friendUuid) {
 					createNotification("info", data.username + " accepted your friend request");
-					instance.get(`user/ListFriends`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
-					}).then((res) => {
+					instance.get(`user/ListFriends`).then((res) => {
 						const requested = requestedList.filter((e : any) => e.uuid !== data.friendUuid);
 						dispatch(setRequestedList(requested));
 						let friendList = res.data.friendList;
@@ -310,9 +306,21 @@ function App() {
 			
 			socketSocial?.removeListener("disconnectFromServer");
 			socketSocial.on('disconnectFromServer', (data : any) => {
-				listUsers = listUsers.filter((user: any) => user.uuid !== data.uuid);
-				dispatch(setConnectedList(listUsers));
+				callFilter(data, true);
 			})
+
+			socketSocial?.removeListener("playing");
+			socketSocial.on('playing', (data : any) => {
+				console.log("playing" , data.users)
+				dispatch(setInGameList(data.users));
+			})
+
+			socketSocial?.removeListener("notPlaying");
+			socketSocial.on('notPlaying', (data : any) => {
+				console.log("notPlaying" , data.users)
+				dispatch(setInGameList(data.users));
+			})
+
 		}
 	}, [socketSocial, ConnectedList]);
   return (

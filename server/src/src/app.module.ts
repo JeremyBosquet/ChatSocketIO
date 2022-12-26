@@ -22,6 +22,7 @@ import { AppGateway } from './app.gateway';
 import { DM } from './Chat/Entities/dm.entity';
 import { Room } from './Game/Entities/room.entity';
 import { ScheduleModule } from '@nestjs/schedule';
+import { RoomService } from './Game/room.service';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     UsersService,
     AppService,
     JwtStrategy,
+	RoomService,
     JwtTwoFactorStrategy,
     AppGateway,
   ],

@@ -145,8 +145,10 @@ function GamePlay(props: props) {
   const socketSocial = useSelector(getSocketSocial);
   useEffect(() => {
     socketSocial?.emit("joinGame");
+    console.log("joinGame");
     return () => {
       socketSocial?.emit("leaveGame");
+      console.log("leaveGame");
     };
   }, [socketSocial]);
   function updateDisplay() : void {
@@ -407,8 +409,8 @@ function GamePlay(props: props) {
 			<title>Game - transcendence </title>
 		</Helmet>
     <GameBoard socket={props.socket} room={props.room}/>
-      <canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
-    </div>
+      {/*<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
+    **/}</div>
   );
 }
 

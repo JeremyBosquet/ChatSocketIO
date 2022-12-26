@@ -34,8 +34,9 @@ export class AppGateway {
 		}
 		this.server.to(client.id).emit('listUsersConnected', {users : users});
 		client.broadcast.emit('connectedToServer', {users : users});
+		this.server.emit('playing', {users : await this.RoomService.getInGamePlayers()});
 		console.log(users);
-
+		console.log("players in game : ", await this.RoomService.getInGamePlayers());
 	}
     return;
   }
@@ -45,7 +46,8 @@ export class AppGateway {
 		let myUser = await this.UsersService.findUserByUuid(client.data.uuid);
 		if (myUser)
 		{
-			client.broadcast.emit('playing', {user : client.data.uuid});
+			this.server.emit('playing', {users : await this.RoomService.getInGamePlayers()});
+			console.log("players in game enter : ", await this.RoomService.getInGamePlayers());
 		}
 		return;
   }
@@ -54,7 +56,10 @@ export class AppGateway {
   async leaveGame(@MessageBody() data: any,@ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
 		let myUser = await this.UsersService.findUserByUuid(client.data.uuid);
 		if (myUser)
-			client.broadcast.emit('notPlaying', {user : client.data.uuid});
+		{
+			this.server.emit('notPlaying', {users : await this.RoomService.getInGamePlayers()});
+			console.log("players in game leave : ", await this.RoomService.getInGamePlayers());
+		}
 		return;
   }
 
@@ -65,6 +70,7 @@ export class AppGateway {
 		console.log("Bonsoir", client.data)
 		//this.UsersService.IsntLoggedIn(client.data.uuid);
 		this.server.emit('disconnectFromServer', {uuid : client.data.uuid});
+		console.log("players in game leave logout: ", await this.RoomService.getInGamePlayers());
 		client.data.uuid = "";
 	}
   }
@@ -75,6 +81,7 @@ export class AppGateway {
 	  {
 		console.log("Bonsoir", client.data)
 		this.server.emit('disconnectFromServer', {uuid : client.data.uuid});
+		console.log("players in game leave logout  : ", await this.RoomService.getInGamePlayers());
 		client.data.uuid = "";
 	}
   }

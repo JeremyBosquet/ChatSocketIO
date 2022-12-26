@@ -18,6 +18,7 @@ const initialState = {
   userImg : undefined,
   UserUsername : "",
   connectedList : [],
+  inGameList : [],
 };
 
 export const authSlice = createSlice({
@@ -73,10 +74,13 @@ export const authSlice = createSlice({
 	setBlockedByList: (state: any, action: PayloadAction<any[]>) => {
 		state.blockedByList = action.payload;
 	},
+	setInGameList: (state: any, action: PayloadAction<any[]>) => {
+		state.inGameList = action.payload;
+	},
   },
 });
 
-export const { setUser, setLogged, setConnected, setActivated, setSocketSocial, setFriendList, setBlockList, setHistoryList, setProfileDisplayed, setProfilePage, setRequestList, setRequestedList, setUserImg, setUserUsername, setConnectedList, setBlockedByList } = authSlice.actions;
+export const { setUser, setLogged, setConnected, setActivated, setSocketSocial, setFriendList, setBlockList, setHistoryList, setProfileDisplayed, setProfilePage, setRequestList, setRequestedList, setUserImg, setUserUsername, setConnectedList, setBlockedByList, setInGameList } = authSlice.actions;
 
 export const getUser = (state: any) => state.auth.user;
 export const getLogged = (state: any) => state.auth.logged;
@@ -94,5 +98,6 @@ export const getProfileDisplayed = (state: any) => state.auth.profileDisplayed;
 export const getUserImg = (state: any) => state.auth.userImg;
 export const getUserUsername = (state: any) => state.auth.userUsername;
 export const getConnectedList = (state: any) => state.auth.connectedList;
+export const getInGameList = (state: any) => state.auth.inGameList;
 
 export default authSlice.reducer;

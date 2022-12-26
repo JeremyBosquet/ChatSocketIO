@@ -1,7 +1,7 @@
 import { Menu, MenuButton } from "@szhsin/react-menu";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { getBlockedByList, getBlockList, getUser } from "../../../../Redux/authSlice";
+import { getBlockedByList, getBlockList, getUser } from "../../../../Redux/userSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
 // import './Player.scss';
 import React from 'react';

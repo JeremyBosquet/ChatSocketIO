@@ -134,6 +134,25 @@ export class UsersService {
     return [];
   }
 
+  async Leaderboard() {
+	const find = (await this.userRepository.find()).sort((a, b) => b.exp - a.exp);
+	if (find)
+		return find;
+	return [];
+  }
+
+  async LeaderboardWithUuid(uuid : string) {
+	const find = await this.Leaderboard();
+	if (find)
+	{
+		for (let i = 0; i < find.length; i++)
+			if (find[i].uuid === uuid)
+				return (i + 1);
+		return 1;
+	}
+	return 1;
+  }
+
   async GetProfilesWithUuidTab(listUuid: any[]) {
     let user: any;
     let userSend: any;

@@ -9,8 +9,8 @@ import React from 'react';
 import './Social.scss';
 import NavBar from '../Nav/NavBar';
 // import { AddOrRemoveFriend, CancelFriendAdd, AcceptFriend, DeclineFriendAdd, BlockOrUnblockUser} from "../../Components/Utils/socialCheck"
-import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage} from "../../Redux/authSlice";
-import {setFriendList, setRequestList, setRequestedList, setProfileDisplayed, setHistoryList, setBlockList, setProfilePage} from '../../Redux/authSlice'
+import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage} from "../../Redux/userSlice";
+import {setFriendList, setRequestList, setRequestedList, setProfileDisplayed, setHistoryList, setBlockList, setProfilePage} from '../../Redux/userSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import Show from '../Popup/Show/Show';
 import BlockOrUnblock from '../Popup/BlockOrUnblock/BlockOrUnblock';

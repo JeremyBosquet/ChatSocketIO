@@ -2,7 +2,7 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getBlockList, getFriendList, getRequestedList, getRequestList, getSocketSocial, getUser, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../../../Redux/authSlice";
+import { getBlockList, getFriendList, getRequestedList, getRequestList, getSocketSocial, getUser, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../../../Redux/userSlice";
 import { getSocket } from "../../../../../Redux/chatSlice";
 import { Iuser, IuserDb } from "../../interfaces/users";
 import React, { useEffect, useState } from 'react';

@@ -6,7 +6,7 @@ import useImage from 'use-image';
 import useEventListener from "@use-it/event-listener";
 import {Helmet} from "react-helmet";
 import { useSelector } from "react-redux";
-import { getSocketSocial } from "../../Redux/authSlice";
+import { getSocketSocial } from "../../Redux/userSlice";
 
 interface props {
   socket: Socket | undefined;

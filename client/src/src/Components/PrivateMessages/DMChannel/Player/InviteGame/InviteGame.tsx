@@ -1,7 +1,7 @@
 
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUser } from "../../../../../Redux/authSlice";
+import { getUser } from "../../../../../Redux/userSlice";
 import { IuserDb } from "../../interfaces/users";
 import React from 'react';
 import { getSockeGameChat } from "../../../../../Redux/gameSlice";

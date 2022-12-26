@@ -1,6 +1,6 @@
 import React from "react"
 import {MdCancelScheduleSend, MdBlock} from "react-icons/md";
-import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/authSlice";
+import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/userSlice";
 import {CgUnblock} from "react-icons/cg";
 import { useDispatch, useSelector } from "react-redux";
 import instance from "../../../API/Instance";

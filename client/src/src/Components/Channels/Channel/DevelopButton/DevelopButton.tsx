@@ -2,7 +2,7 @@ import Leave from '../../Leave/Leave';
 import { ControlledMenu } from '@szhsin/react-menu';
 import { useSelector } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
-import { getUser } from '../../../../Redux/authSlice';
+import { getUser } from '../../../../Redux/userSlice';
 import { useState } from 'react';
 import { useRef } from 'react';
 import React from 'react';

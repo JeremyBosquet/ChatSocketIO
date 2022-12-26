@@ -1,7 +1,7 @@
 
 import { useSelector, useDispatch } from 'react-redux';
 import { getSocket, setChannels } from '../../../Redux/chatSlice';
-import { getUser } from '../../../Redux/authSlice';
+import { getUser } from '../../../Redux/userSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 import { createNotification } from '../../notif/Notif';

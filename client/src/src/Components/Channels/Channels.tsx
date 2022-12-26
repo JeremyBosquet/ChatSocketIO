@@ -4,7 +4,7 @@ import ChatChannel from './ChatChannel/ChatChannel';
 import { useDispatch, useSelector } from 'react-redux';
 import { getChannels, setChannels } from '../../Redux/chatSlice';
 import { useParams } from 'react-router-dom';
-import { getUser } from '../../Redux/authSlice';
+import { getUser } from '../../Redux/userSlice';
 import './Channels.scss';
 import instance from '../../API/Instance';
 interface IInvites {

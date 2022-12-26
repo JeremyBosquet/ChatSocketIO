@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getConnectedList, getInGameList } from '../../Redux/authSlice';
+import { getConnectedList, getInGameList } from '../../Redux/userSlice';
 import { GoPrimitiveDot } from 'react-icons/go';
 import React from 'react';
 

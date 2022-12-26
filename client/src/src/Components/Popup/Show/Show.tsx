@@ -1,5 +1,5 @@
 import React from "react"
-import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setHistoryList, setProfileDisplayed, setProfilePage, setRequestedList, setRequestList } from "../../../Redux/authSlice";
+import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setHistoryList, setProfileDisplayed, setProfilePage, setRequestedList, setRequestList } from "../../../Redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Link, useNavigate } from "react-router-dom";

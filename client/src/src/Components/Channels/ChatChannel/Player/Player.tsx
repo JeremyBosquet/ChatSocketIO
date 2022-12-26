@@ -1,7 +1,7 @@
 import { Menu, MenuButton } from "@szhsin/react-menu";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { getBlockedByList, getBlockList, getUser } from "../../../../Redux/authSlice";
+import { getBlockedByList, getBlockList, getUser } from "../../../../Redux/userSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
 import Admin from "./Admin/Admin";
 import Ban from "./Ban/Ban";

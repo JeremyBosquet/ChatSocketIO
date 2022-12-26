@@ -7,7 +7,7 @@ import Messages from './Messages/Messages';
 import { Imessage } from './interfaces/messages';
 import { useDispatch, useSelector } from 'react-redux';
 import { getChannels, getSocket, setChannels } from '../../../Redux/chatSlice';
-import { getUser, setUser } from '../../../Redux/authSlice';
+import { getUser, setUser } from '../../../Redux/userSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 import { MdPublic } from 'react-icons/md';

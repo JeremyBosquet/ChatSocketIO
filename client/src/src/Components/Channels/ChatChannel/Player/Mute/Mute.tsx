@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { getUser } from "../../../../../Redux/authSlice";
+import { getUser } from "../../../../../Redux/userSlice";
 import { getSocket } from "../../../../../Redux/chatSlice";
 import { IuserDb } from "../../interfaces/users";
 import 'react-datetime-picker/dist/DateTimePicker.css';

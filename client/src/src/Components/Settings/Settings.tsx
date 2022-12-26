@@ -18,7 +18,7 @@ import {Tb2Fa} from 'react-icons/tb'
 import {ImCross, ImCheckmark} from "react-icons/im";
 import './Settings.scss'
 import { useDispatch, useSelector } from "react-redux";
-import { getUserImg, setHistoryList, setUserImg, setUserUsername } from "../../Redux/authSlice";
+import { getUserImg, setHistoryList, setUserImg, setUserUsername } from "../../Redux/userSlice";
 import instance from "../../API/Instance";
 
 function Settings() {

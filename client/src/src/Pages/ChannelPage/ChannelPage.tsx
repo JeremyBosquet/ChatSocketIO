@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import Channels from '../../Components/Channels/Channels';
 import NavBar from '../../Components/Nav/NavBar';
-import { getLogged, getUser, setLogged, setUser } from '../../Redux/authSlice';
+import { getLogged, getUser, setLogged, setUser } from '../../Redux/userSlice';
 import './ChannelPage.scss';
 import "../../Pages/Home/HomePage.scss";
 import { createNotification } from '../../Components/notif/Notif';

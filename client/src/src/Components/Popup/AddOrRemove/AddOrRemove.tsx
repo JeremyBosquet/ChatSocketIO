@@ -1,7 +1,7 @@
 import React from "react"
 import { useNavigate } from "react-router-dom";
 import {IoPersonRemoveSharp, IoPersonAddSharp} from 'react-icons/io5';
-import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/authSlice";
+import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../../Redux/userSlice";
 
 import { useDispatch, useSelector } from "react-redux";
 import instance from "../../../API/Instance";

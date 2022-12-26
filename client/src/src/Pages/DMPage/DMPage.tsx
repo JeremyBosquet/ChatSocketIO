@@ -9,7 +9,7 @@ import { createNotification } from '../../Components/notif/Notif';
 import Popup from '../../Components/Popup/Popup';
 import DM from '../../Components/PrivateMessages/DM/DM';
 import PrivateMessages from '../../Components/PrivateMessages/PrivateMessages';
-import { getLogged, getUser, setLogged, setUser } from '../../Redux/authSlice';
+import { getLogged, getUser, setLogged, setUser } from '../../Redux/userSlice';
 import { getDMs, getMode, setDMs } from '../../Redux/chatSlice';
 import './DMPage.scss'
 import instance from '../../API/Instance';

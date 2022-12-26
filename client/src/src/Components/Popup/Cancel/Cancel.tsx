@@ -1,7 +1,7 @@
 
 import React from "react"
 import { useDispatch, useSelector } from "react-redux";
-import {getFriendList, getProfilePage, getRequestedList, getSocketSocial, setRequestedList } from "../../../Redux/authSlice";
+import {getFriendList, getProfilePage, getRequestedList, getSocketSocial, setRequestedList } from "../../../Redux/userSlice";
 import {MdCancelScheduleSend} from "react-icons/md";
 import instance from "../../../API/Instance";
 

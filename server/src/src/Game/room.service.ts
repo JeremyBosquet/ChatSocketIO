@@ -35,7 +35,7 @@ export class RoomService {
     }
   }
   async clearDatabase() {
-    console.log('Clear database in progress :');
+    //console.log('Clear database in progressg :');
     const list = await this.roomRepository.find();
     for (let i = 0; i < list.length; i++) {
       if (list[i].status != 'finished' && list[i].status != 'destroy') {
@@ -133,10 +133,10 @@ export class RoomService {
     playerName: string,
   ): Promise<Room> {
 
-    /*if (room.playerA !== null && room.playerA.id === playerId)
+    if (room.playerA !== null && room.playerA.id === playerId)
       throw new Error("Player already in a room");
     else if (room.playerB !== null && room.playerB.id === playerId)
-      throw new Error("Player already in a room");*/
+      throw new Error("Player already in a room");
     // reactiver` ca
     if (room.playerA === null)
       room.playerA = {

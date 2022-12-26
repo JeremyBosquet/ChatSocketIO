@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { getUser } from '../../Redux/authSlice';
+import { getUser } from '../../Redux/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, setChannels } from '../../Redux/chatSlice';
 import React from 'react';

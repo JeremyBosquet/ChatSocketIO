@@ -4,7 +4,7 @@ import { ControlledMenu } from '@szhsin/react-menu';
 import { useSelector } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
 import { getSocket } from '../../../Redux/chatSlice';
-import { getUser } from '../../../Redux/authSlice';
+import { getUser } from '../../../Redux/userSlice';
 import { useState } from 'react';
 import Manage from '../Manage/Manage';
 import { useRef } from 'react';

@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame, getSockeSpectate, setSocketGame, setSocketSpectate } from "../../Redux/gameSlice";
 import KillSocket from "../../Components/KillSocket/KillSocket";
 import Popup from "../../Components/Popup/Popup";
-import { getUser, setUser } from "../../Redux/authSlice";
+import { getUser, setUser } from "../../Redux/userSlice";
 import instance from "../../API/Instance";
 import './GameSpectatePage.scss'
 import {Helmet} from "react-helmet";

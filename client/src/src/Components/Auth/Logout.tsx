@@ -9,7 +9,7 @@ import {
   useParams,
 } from "react-router-dom";
 import instance from "../../API/Instance";
-import { getSocketSocial } from "../../Redux/authSlice";
+import { getSocketSocial } from "../../Redux/userSlice";
 import { createNotification } from "../notif/Notif";
 
 function Logout() {

@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import chatReducer from './chatSlice'
-import authReducer from './authSlice'
+import authReducer from './userSlice'
 import gameReducer from './gameSlice'
 
 export default configureStore({

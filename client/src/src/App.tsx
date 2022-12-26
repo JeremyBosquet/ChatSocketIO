@@ -10,7 +10,7 @@ import TwoAuth from "./Pages/TwoAuth/TwoAuth";
 
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
-import { getConnectedList, getRequestedList, getSocketSocial, getUser, setBlockedByList, setConnectedList, setFriendList, setRequestedList, setRequestList, setSocketSocial, setUser, setBlockList, setInGameList } from "./Redux/authSlice";
+import { getConnectedList, getRequestedList, getSocketSocial, getUser, setBlockedByList, setConnectedList, setFriendList, setRequestedList, setRequestList, setSocketSocial, setUser, setBlockList, setInGameList } from "./Redux/userSlice";
 import { getSocket, setSocket } from "./Redux/chatSlice";
 import ChannelPage from "./Pages/ChannelPage/ChannelPage";
 import DMPage from "./Pages/DMPage/DMPage";
@@ -22,6 +22,7 @@ import { createNotification } from "./Components/notif/Notif";
 import Profile from "./Pages/Profile/Profile";
 import instance from "./API/Instance";
 import ProtectedTwoAuth from "./ProtectedTwoAuth";
+import Leaderboard from "./Pages/Leaderboard/Leaderboard";
 //import TestPage from "./Pages/test";
 //import './Pages/PhaserGame'
 
@@ -336,6 +337,7 @@ function App() {
 			<Route path="/logout" element={<Protected><Logout /></Protected>}></Route>
 			<Route path="/twoAuth" element={<ProtectedTwoAuth><TwoAuth /></ProtectedTwoAuth>}></Route>
 			<Route path="/profile/:Username" element={<Protected><Profile /></Protected>}></Route>
+			<Route path="/leaderboard" element={<Protected><Leaderboard /></Protected>}></Route>
 			{/* <Route path=":UserId" element={<Protected><Social /></Protected>}></Route> */}
 			{/*</Routes>Route path="/game/" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}
 			{/*</Routes>Route path="/game/:roomId" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}

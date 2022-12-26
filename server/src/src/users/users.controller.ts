@@ -135,23 +135,6 @@ export class UsersController {
 		});
 	}
 
-	//@Get('getProfilePicture/:uuid')
-	//async getProfilePicture(@Param() param: any, @Res() res: any) {
-	//	const User = await this.userService.findUserByUuid(param?.uuid);
-	//	if (User) {
-	//		if (User.image) {
-	//			res.setHeader('Content-Type', 'image/webp');
-	//			return res.status(HttpStatus.OK).send(User.image);
-	//		}
-	//	}
-	//	return res.status(HttpStatus.NOT_FOUND).json({
-	//		statusCode: HttpStatus.NOT_FOUND,
-	//		message: 'user not found',
-	//		error: 'NOT_FOUND',
-	//	});
-//
-	//}
-
 	@Get('CompareToken')
 	@UseGuards(JwtTwoFactorGuard)
 	async CompareToken(@Req() req: any, @Res() res: any) {
@@ -829,6 +812,46 @@ export class UsersController {
 		});
 	}
 
+	@Get('Leaderboard')
+	@UseGuards(JwtTwoFactorGuard)
+	async Leaderboard(@Req() req: any, @Res() res: any) {
+		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
+		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		if (User) {
+			const add = await this.userService.Leaderboard();
+			return res.status(HttpStatus.OK).json({
+				statusCode: HttpStatus.OK,
+				message: 'succes',
+				Leaderboard: add,
+			});
+		}
+		return res.status(HttpStatus.NOT_FOUND).json({
+			statusCode: HttpStatus.NOT_FOUND,
+			message: 'User not found',
+			error: 'NOT_FOUND',
+		});
+	}
+
+	@Get('LeaderboardWithUuid/:uuid')
+	@UseGuards(JwtTwoFactorGuard)
+	async LeaderboardWithUuid(@Req() req: any, @Res() res: any) {
+		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
+		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		if (User) {
+			const add = await this.userService.LeaderboardWithUuid(User.uuid);
+			return res.status(HttpStatus.OK).json({
+				statusCode: HttpStatus.OK,
+				message: 'succes',
+				Position : add,
+			});
+		}
+		return res.status(HttpStatus.NOT_FOUND).json({
+			statusCode: HttpStatus.NOT_FOUND,
+			message: 'User not found',
+			error: 'NOT_FOUND',
+		});
+	}
+
 	@Post('changeUsername')
 	@UseGuards(JwtTwoFactorGuard)
 	async ChangeUsername(
@@ -967,7 +990,6 @@ export class UsersController {
 
 	@Get('findUser/:uuid')
 	@UseGuards(JwtTwoFactorGuard)
-	//@UseGuards(AuthenticatedGuard)
 	async findUserByUuid(
 		@Res() res: any,
 		@Req() req: any,

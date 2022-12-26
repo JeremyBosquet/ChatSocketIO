@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import instance from "../../API/Instance";
-import { setUser } from "../../Redux/authSlice";
+import { setUser } from "../../Redux/userSlice";
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../../Redux/authSlice';
 import { createNotification } from "../notif/Notif";
 

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../Redux/authSlice";
-import { setProfileDisplayed} from '../../Redux/authSlice'
+import { getBlockList, getFriendList, getHistoryList, getProfileDisplayed, getProfilePage, getRequestedList, getRequestList, getSocketSocial, setBlockList, setFriendList, setRequestedList, setRequestList } from "../../Redux/userSlice";
+import { setProfileDisplayed} from '../../Redux/userSlice'
 import { whoWon } from "../Utils/whoWon";
 import ClosePopup from "./ClosePopup/ClosePopup";
 import BlockOrUnblock from "./BlockOrUnblock/BlockOrUnblock";

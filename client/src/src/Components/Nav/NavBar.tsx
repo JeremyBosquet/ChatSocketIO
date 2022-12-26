@@ -8,14 +8,11 @@ import {
   useParams,
   NavLink,
 } from "react-router-dom";
-import { createNotification } from "../notif/Notif";
-import { FaUserCircle, FaUserFriends } from "react-icons/fa";
+import { FaUserFriends } from "react-icons/fa";
 import { IoMdChatbubbles, IoMdSettings } from "react-icons/io";
 import { IoLogOutSharp } from "react-icons/io5";
-import { IoGameController } from "react-icons/io5";
 import { BsFillEyeFill } from "react-icons/bs";
-import { GrClose } from "react-icons/gr";
-import {AiOutlineClose} from "react-icons/ai";
+import {AiOutlineClose, AiFillTrophy} from "react-icons/ai";
 import './NavBar.scss';
 import Social from "../Social/Social";
 import { useDispatch, useSelector } from "react-redux";
@@ -143,47 +140,29 @@ function NavBar(props: any) {
 			</div>
         <>
             <div id="navButtons">
-			<NavLink to="/chat" id="chat" className="click" onClick={() => handleClickNav("/chat")}>
-                <IoMdChatbubbles className="icon" />
-            </NavLink>
-			
-			<>
-                {friendRequest ? (
-                  <button id="social" className="click" onClick={() => {openSocial()}}>
-                        <FaUserFriends className="icon"/>
-                    {/* <button id='menu_text' onClick={() => {
-                    socket?.disconnect();
-                    setSocket(undefined);
-                    navigate("/social")
-                  }}> Social({compt}) </button> */}
-                  </button>
-                ) : (
-                  <button id="social" className="click" onClick={() => {openSocial()}}>
-                        <FaUserFriends className="icon"/>
-                    {/* <button id='menu_text' onClick={() => {
-                  socket?.disconnect();
-                  setSocket(undefined);
-                  navigate("/social")
-                }}> Social </button> */}
-                  </button>
-                )}
-              </>
+				<NavLink to="/chat" id="chat" className="click" onClick={() => handleClickNav("/chat")}>
+					<IoMdChatbubbles className="icon" />
+				</NavLink>
+				
+				<NavLink to="/game/spectate" id="spectate" className="click" onClick={() => handleClickNav("/game/spectate")}>
+					<BsFillEyeFill className="icon"/>
+				</NavLink>
 
-              {/* <NavLink to="/game" id="game" className="click" onClick={() => handleClickNav("/game")}>
-                <IoGameController className="icon"/>
-              </NavLink> */}
-              
-              <NavLink to="/game/spectate" id="spectate" className="click" onClick={() => handleClickNav("/game/spectate")}>
-                <BsFillEyeFill className="icon"/>
-              </NavLink>
+				<NavLink to="/leaderboard" id="leaderboard" className="click">
+					<AiFillTrophy className="icon"/>
+				</NavLink>
 
-			  <button id="settings" className="click" onClick={() => {openSettings()}}>
-                <IoMdSettings className="icon"/>
-              </button>
+				<button id="social" className="click" onClick={() => {openSocial()}}>
+					<FaUserFriends className="icon"/>
+				</button>
+	
+				<button id="settings" className="click" onClick={() => {openSettings()}}>
+					<IoMdSettings className="icon"/>
+				</button>
 
-              <NavLink to="/logout" id="logout" className="click">
-                <IoLogOutSharp className="icon"/>
-              </NavLink>
+				<NavLink to="/logout" id="logout" className="click">
+					<IoLogOutSharp className="icon"/>
+				</NavLink>
             </div>
             <div id="mySidenavSocial" className="sidenavSocial">
               <button className="closebtn" onClick={() => openSocial()}>

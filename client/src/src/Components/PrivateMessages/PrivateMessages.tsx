@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import './Channels.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser } from '../../Redux/authSlice';
+import { getUser } from '../../Redux/userSlice';
 import DMChannel from './DMChannel/DMChannel';
 import { useParams } from 'react-router-dom';
 import React from 'react';

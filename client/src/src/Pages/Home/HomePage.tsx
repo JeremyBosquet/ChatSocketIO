@@ -9,7 +9,7 @@ import NavBar from "../../Components/Nav/NavBar";
 import { getMyExp } from '../../Components/Utils/getExp'
 import { whoWon } from "../../Components/Utils/whoWon";
 import KillSocket from "../../Components/KillSocket/KillSocket";
-import {getHistoryList, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList} from "../../Redux/authSlice";
+import {getHistoryList, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList} from "../../Redux/userSlice";
 import io from "socket.io-client";
 import GameReady from "../../Components/GameReady/GameReady";
 import GamePlay from "../../Components/GamePlay/GamePlay";

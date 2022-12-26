@@ -2,8 +2,8 @@ import React from "react";
 
 import { Socket } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
-import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage } from "../../Redux/authSlice";
-import {setFriendList, setRequestList, setRequestedList, setProfileDisplayed, setBlockList} from '../../Redux/authSlice'
+import { getSocketSocial, getFriendList, getBlockList, getRequestList, getRequestedList, getHistoryList, getProfileDisplayed, getProfilePage } from "../../Redux/userSlice";
+import {setFriendList, setRequestList, setRequestedList, setProfileDisplayed, setBlockList} from '../../Redux/userSlice'
 import { useDispatch, useSelector } from "react-redux";
 import instance from "../../API/Instance";
 

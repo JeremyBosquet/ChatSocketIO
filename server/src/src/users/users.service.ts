@@ -141,7 +141,7 @@ export class UsersService {
 	return [];
   }
 
-  async LeaderboardWithUuid(uuid : string) {
+  async Ranking(uuid : string) {
 	const find = await this.Leaderboard();
 	if (find)
 	{

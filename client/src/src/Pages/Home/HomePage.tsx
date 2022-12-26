@@ -9,7 +9,7 @@ import NavBar from "../../Components/Nav/NavBar";
 import { getMyExp } from '../../Components/Utils/getExp'
 import { whoWon } from "../../Components/Utils/whoWon";
 import KillSocket from "../../Components/KillSocket/KillSocket";
-import {getHistoryList, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList} from "../../Redux/userSlice";
+import {getHistoryList, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList, setRanking, getRanking} from "../../Redux/userSlice";
 import io from "socket.io-client";
 import GameReady from "../../Components/GameReady/GameReady";
 import GamePlay from "../../Components/GamePlay/GamePlay";
@@ -17,6 +17,7 @@ import "../../Pages/Home/HomePage.scss";
 import { getSockeGame, getSockeGameChat, setSocketGame } from "../../Redux/gameSlice";
 import instance from "../../API/Instance";
 import {Helmet} from "react-helmet";
+import {GiRank3} from "react-icons/gi";
 
 interface IPlayer {
 	id: string;
@@ -85,9 +86,10 @@ function HomePage() {
 	KillSocket("spectate");
 	const dispatch = useDispatch();
 
-	const userImg = useSelector(getUserImg);
-	const userUsername = useSelector(getUserUsername);
-	const myHistoryList = useSelector(getHistoryList);
+	const userImg : any = useSelector(getUserImg);
+	const userUsername : string = useSelector(getUserUsername);
+	const myHistoryList : any[] = useSelector(getHistoryList);
+	const Rank : number = useSelector(getRanking);
 	useEffect(() => {
 		console.log("socketGame", socketGame);
 		if (socketGame)
@@ -175,16 +177,17 @@ function HomePage() {
 					dispatch(setUserUsername(res.data.User.username));
 					dispatch(setUserImg(import.meta.env.VITE_URL_API + ":7000/" + res.data.User.image));
 					setTrueUsername(res.data.User.trueUsername);
-					instance.get(`room/getGameOfUser/` + res.data.User.uuid,
-					{
-						headers: {
-							Authorization: "Bearer " + localStorage.getItem("token"),
-						},
-					}).then((res) => {
+					instance.get(`room/getGameOfUser/` + res.data.User.uuid).then((res) => {
 						if (res.data && res.data.length)
 							dispatch(setHistoryList(res.data));
 						else if (res.data)
 							dispatch(setHistoryList([]));
+						console.log("History", res.data)
+					});
+					instance.get(`user/Ranking`).then((res) => {
+						if (res.data && res.data.Rank)
+							dispatch(setRanking(res.data.Rank));
+						console.log("Ranking", res.data)
 					});
 					console.log(res.data.User);
 				}).catch((err) => {
@@ -194,7 +197,7 @@ function HomePage() {
 		setbooleffect2(false);
 	}
 
-	async function reloadHistoryList() {
+	async function reloadHistoryAndRank() {
 		await instance.get(`room/getGameOfUser/` + User.uuid,
 		{
 			headers: {
@@ -206,6 +209,11 @@ function HomePage() {
 			else if (res.data)
 				dispatch(setHistoryList([]));
 		});
+		await instance.get(`user/Ranking`).then((res) => {
+			if (res.data && res.data.Rank)
+				dispatch(setRanking(res.data.Rank));
+			console.log("Rank salam", res.data)
+		});
 	}
 
 	useEffect(() => {
@@ -214,7 +222,7 @@ function HomePage() {
 
 	useEffect(() => {
 		if (User)
-			reloadHistoryList();
+			reloadHistoryAndRank();
 	}, [playing]);
 
 	useEffect(() => {
@@ -255,7 +263,10 @@ function HomePage() {
 												height="256"
 											/>
 											<div className="userInfo">
-												<h3> {userUsername} </h3>
+												<div className="Rank">
+													<h3> {userUsername} </h3>
+													<h4> <GiRank3/>{Rank} </h4>
+												</div>
 												<h4> @{trueUsername} </h4>
 												<div className="expBar">
 													<span className="myExp"> </span>

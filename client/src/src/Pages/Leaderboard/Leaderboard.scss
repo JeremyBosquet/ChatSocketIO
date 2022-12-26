@@ -53,7 +53,7 @@
 
     .image {
       border-radius: 50%;
-      border: 3px solid #b159ffcc;
+      border: 3px solid #ffffff;
     }
 
     .leader:nth-child(1) {
@@ -61,22 +61,6 @@
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
-
-      &:after {
-        content: '1';
-        width: 30px;
-        height: 30px;
-        background: #ffc500;
-        border-radius: 50%;
-        position: absolute;
-        right: 0;
-        font-family: sans-serif;
-        text-align: center;
-        line-height: 30px;
-        font-weight: 700;
-        box-shadow: 1px 1px 4px black;
-      }
-
       .image {
         width: 130px;
         height: 130px;
@@ -99,21 +83,6 @@
       transform: translateX(-15%);
       bottom: -20%;
 
-      &:after {
-        content: '2';
-        width: 30px;
-        height: 30px;
-        background: #d4d4d4;
-        border-radius: 50%;
-        position: absolute;
-        right: 0;
-        font-family: sans-serif;
-        text-align: center;
-        line-height: 30px;
-        font-weight: 700;
-        box-shadow: 1px 1px 4px black;
-      }
-
       .image {
         width: 110px;
         height: 110px;
@@ -134,21 +103,6 @@
       left: 85%;
       transform: translateX(-85%);
       bottom: -20%;
-
-      &:after {
-        content: '3';
-        width: 30px;
-        height: 30px;
-        background: #ab6528;
-        border-radius: 50%;
-        position: absolute;
-        right: 0;
-        font-family: sans-serif;
-        text-align: center;
-        line-height: 30px;
-        font-weight: 700;
-        box-shadow: 1px 1px 4px black;
-      }
 
       .image {
         width: 110px;
@@ -192,10 +146,10 @@
   }
 
   .table {
-    margin-right: 0.1rem;
+    //margin-right: 0.1rem;
     display: grid;
     font-size: 14px;
-    grid-template-columns: 0.4fr 3fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 0.2fr 1fr 1fr;
     text-align: center;
 
     div:nth-child(2) {

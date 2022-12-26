@@ -832,17 +832,17 @@ export class UsersController {
 		});
 	}
 
-	@Get('LeaderboardWithUuid/:uuid')
+	@Get('Ranking')
 	@UseGuards(JwtTwoFactorGuard)
-	async LeaderboardWithUuid(@Req() req: any, @Res() res: any) {
+	async Ranking(@Req() req: any, @Res() res: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
 		if (User) {
-			const add = await this.userService.LeaderboardWithUuid(User.uuid);
+			const add = await this.userService.Ranking(User.uuid);
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
 				message: 'succes',
-				Position : add,
+				Rank : add,
 			});
 		}
 		return res.status(HttpStatus.NOT_FOUND).json({

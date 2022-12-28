@@ -262,6 +262,18 @@ function HomePage() {
 												width="384"
 												height="256"
 											/>
+											{myProfileExp < 5 ?
+														<img className="image" src={"./steel.png"} height={28} width={28}/>
+														: myProfileExp < 10 ?
+														<img className="image" src={"./bronze.png"} height={28} width={28}/>
+														: myProfileExp < 15 ?
+														<img className="image" src={"./silver.png"} height={28} width={28}/>
+														: myProfileExp < 21 ?
+														<img className="image" src={"./gold.png"} height={28} width={28}/>
+														: myProfileExp < 22 ?
+														<img className="image" src={"./diamond.png"} height={36} width={28}/>
+														: <img className="image" src={"./steel.png"} height={28} width={28}/>
+											}
 											<div className="userInfo">
 												<div className="Rank">
 													<h3> {userUsername} </h3>

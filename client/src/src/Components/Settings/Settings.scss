@@ -34,6 +34,8 @@
 					border-radius: 30px;
 					border: none;
 					max-width: 160px;
+					outline: none;
+
 				}
 				button {
 					display: flex;
@@ -46,6 +48,7 @@
 					color :rgb(255, 255, 255);
 					display: flex;
 					font-size: x-large;
+					cursor: pointer;
 				}
 			}
 		}
@@ -98,6 +101,7 @@
 				label{
 					display: flex;
 					font-size: x-large;
+					cursor: pointer;
 				}
 				button {
 					margin-left: 6px;
@@ -111,6 +115,7 @@
 					color :rgb(255, 255, 255);
 					display: flex;
 					font-size: x-large;
+					cursor: pointer;
 				}
 			}
 		}
@@ -133,6 +138,7 @@
 					border: none;
 					border-radius: 10px;
 					padding: 2px 4px;
+					cursor: pointer;
 				}
 				span {
 					display: flex;
@@ -158,6 +164,7 @@
 					border-radius: 30px;
 					border: none;
 					max-width: 150px;
+					outline: none;
 				}
 				button {
 					background: none;
@@ -168,6 +175,7 @@
 					color :rgb(255, 255, 255);
 					display: flex;
 					font-size: x-large;
+					cursor: pointer;
 				}
 				#cancel2auth {
 					font-size: 20px;
@@ -198,6 +206,7 @@
 					color :rgb(255, 255, 255);
 					display: flex;
 					font-size: x-large;
+					cursor: pointer;
 				}
 				#cancelDesac {
 					font-size: 20px;

@@ -168,7 +168,7 @@ function Social() {
 				!(booleffect3) ?
 				(
 					<>
-					<div className="container">
+					<div>
 						<div>
 							<div id='listSearchParent'>
 								<h3> Search Friends </h3>

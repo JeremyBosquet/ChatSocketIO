@@ -305,20 +305,6 @@ function GamePlay(props: props) {
     }
     setWindowsHeight(t /*- 200*/);
     setWindowsWidth((16 * t) / 9);
-    
-    //if (window.innerHeight < window.innerWidth)
-    //{
-    //setWindowsHeight(9 * (window.innerWidth /2) / 16);
-    //setWindowsWidth(  (window.innerWidth / 2));
-    //}
-    //else
-    //{
-    //  setWindowsHeight((window.innerHeight /2));
-    //  setWindowsWidth(9 * (window.innerHeight /2) / 16);
-//
-    //}
-    console.log(window.innerHeight, window.innerWidth, windowsHeight, windowsWidth, window.innerWidth / window.innerHeight, windowsWidth / windowsHeight)
-    //setWindowsHeight(t /*- 200*/);
     setBoardWidth(
       props.room?.settings.boardWidth
         ? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -409,8 +395,8 @@ function GamePlay(props: props) {
 			<title>Game - transcendence </title>
 		</Helmet>
     <GameBoard socket={props.socket} room={props.room}/>
-      {/*<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
-    **/}</div>
+      {<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
+    }</div>
   );
 }
 

@@ -5,21 +5,49 @@
 		flex-direction: column;
 		align-items: center;
 		margin-top: 40px;
-		h3 {
+		.Rank {
+			display: flex;
+			align-items: center;
+			height: auto;
+			height: 31.5px;
 			margin-top: 10px;
-			font-size: 25px;
-			color :rgb(255, 255, 255);
+			h4 {
+				display: flex;
+				align-items: center;
+				color : white;
+				font-size: 18px;
+				margin-left: 12px;
+				height: 31.5px;
+			}
+			h3 {
+				color: #fff;
+				font-size: 26px;
+			}
+			img {
+				display: flex;
+				align-items: center;
+				top: 50px;
+				margin-right: 5px;
+			}
 		}
 		h4 {
 			//font-size: px;
 			margin-top: 2px;
 			color :rgb(129, 129, 129);
 		}
-		img {
+		.userImg {
 			width: 200px;
 			height: 200px;
 			object-fit: cover;
 			border-radius: 50%;
+		}
+		.image {
+			display: flex;
+			align-items: center;
+			position: absolute;
+			top: 255px;
+			margin-left: 65px;
+			//right: 555px;
 		}
 	
 		// .Buttons{
@@ -215,6 +243,16 @@
 				li {
 					flex-direction: column;
 				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 550px) {
+	.profilePage {
+		#userProfile{
+			.image {
+				top: 295px;
 			}
 		}
 	}

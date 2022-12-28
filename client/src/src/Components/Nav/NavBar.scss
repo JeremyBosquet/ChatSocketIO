@@ -187,6 +187,7 @@
 .NavBar .sidenavSocial.active {
 	visibility: visible;
 	  .closebtn {
+		cursor: pointer;
 		opacity: unset;
 		&:hover
 		{
@@ -208,6 +209,7 @@
 .NavBar .sidenavSettings.active {
 	visibility: visible;
 	  .closebtn {
+		cursor: pointer;
 		opacity: unset;
 		&:hover
 		{

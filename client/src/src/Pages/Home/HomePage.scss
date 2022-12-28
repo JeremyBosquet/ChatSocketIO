@@ -32,6 +32,12 @@
 		object-fit: cover;
 		border-radius: 50%;
 	}
+	.image {
+		display: flex;
+		position: absolute;
+		top: 195px;
+		margin-left: 125px;
+	}
 	.Rank {
 		display: flex;
 		align-items: center;
@@ -49,6 +55,11 @@
 			top: 50px;
 			color: #fff;
 			font-size: 26px;
+		}
+		img {
+			position: relative;
+			top: 50px;
+			margin-right: 5px;
 		}
 	}
 	h4 {
@@ -236,6 +247,9 @@
 				width: 80%;
 				margin: 0;
 			}
+			.image{
+				margin-left: 55px;
+			}
 			#listMyGameParent
 			{
 				#listMyGameScroll {
@@ -266,6 +280,16 @@
 				li {
 					flex-direction: column;
 				}
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 550px) {
+	.HomePage {
+		#myProfile{
+			.image {
+				top: 235px;
 			}
 		}
 	}

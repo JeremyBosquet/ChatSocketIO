@@ -852,6 +852,26 @@ export class UsersController {
 		});
 	}
 
+	@Get('RankingByUuid/:uuid')
+	@UseGuards(JwtTwoFactorGuard)
+	async RankingByUuid(@Req() req: any, @Res() res: any, @Param(ValidationPipe) param: FriendsDto) {
+		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
+		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		if (User) {
+			const add = await this.userService.Ranking(param.uuid);
+			return res.status(HttpStatus.OK).json({
+				statusCode: HttpStatus.OK,
+				message: 'succes',
+				Rank : add,
+			});
+		}
+		return res.status(HttpStatus.NOT_FOUND).json({
+			statusCode: HttpStatus.NOT_FOUND,
+			message: 'User not found',
+			error: 'NOT_FOUND',
+		});
+	}
+
 	@Post('changeUsername')
 	@UseGuards(JwtTwoFactorGuard)
 	async ChangeUsername(

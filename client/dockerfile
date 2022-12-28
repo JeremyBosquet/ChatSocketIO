@@ -22,4 +22,4 @@ RUN pnpm i -g serve
 
 EXPOSE 5999
 
-CMD [ "serve", "dist/", "-l", "5999"]
+CMD [ "serve", "-s", "dist/", "-l", "5999"]

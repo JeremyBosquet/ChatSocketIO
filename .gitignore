@@ -4,3 +4,9 @@ server/data/
 server/src/src/uploads/avatar/
 
 client/data/
+
+.env
+
+server/src/.env
+
+client/src/.env

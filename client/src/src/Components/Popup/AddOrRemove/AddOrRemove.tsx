@@ -59,9 +59,9 @@ function AddOrRemove(props : props) {
 
 	return (
 		props.UserUuid ?
-			<button onClick={() => (AddOrRemoveFriend(props.UserUuid))} > {IsntFriend(props.UserUuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+			<button title="Add or remove friend" onClick={() => (AddOrRemoveFriend(props.UserUuid))} > {IsntFriend(props.UserUuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
 		:
-			<button onClick={() => (AddOrRemoveFriend(profilePage.uuid))} > {IsntFriend(profilePage.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
+			<button title="Add or remove friend" onClick={() => (AddOrRemoveFriend(profilePage.uuid))} > {IsntFriend(profilePage.uuid) ? <IoPersonAddSharp/> : <IoPersonRemoveSharp/>} </button>
 	)
 }
 

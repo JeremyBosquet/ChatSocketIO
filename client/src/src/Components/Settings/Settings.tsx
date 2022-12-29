@@ -273,7 +273,7 @@ function Settings() {
 								maxLength={10}
 								onChange={(e) => setChangename(e.target.value)}
 								/>
-								<button className="clickset" type="submit"><span><BsArrowRightCircleFill/></span></button>
+								<button title="submit" className="clickset" type="submit"><span><BsArrowRightCircleFill/></span></button>
 							</form>
 						</div>
 						<div id="AvatarGroup">
@@ -290,7 +290,7 @@ function Settings() {
 							<h3>
 								New Avatar
 							</h3>
-							<form id="AvatarForm" onSubmit={ChangeAvatar}>
+							<form title="choose file" id="AvatarForm" onSubmit={ChangeAvatar}>
 								<label htmlFor="avatar"><IoIosFolderOpen/></label>
 								<input
 								type="file"
@@ -304,7 +304,7 @@ function Settings() {
 								}
 								/>
 								<p> {fileName}</p>
-								<button className="clickset" type="submit" ><span><BsArrowRightCircleFill/></span></button>
+								<button title="submit" className="clickset" type="submit" ><span><BsArrowRightCircleFill/></span></button>
 							</form>
 						</div>
 						<div id="QrCodeGroup">
@@ -312,9 +312,7 @@ function Settings() {
 							{
 								!IsTwoAuthActivated && !QrCode ? 
 								(
-									// <div>
-									<button className="clickset" onClick={(e) => GetQrCode(e)}> <span><Tb2Fa/></span></button>
-									// </div>
+									<button title="Activate two factor auth" className="clickset" onClick={(e) => GetQrCode(e)}> <span><Tb2Fa/></span></button>
 								)
 								:
 									null
@@ -336,7 +334,7 @@ function Settings() {
 												required
 												onChange={(e) => setAuthCode(e.target.value)}
 											/>
-											<button className="clickset" type="submit"><span><BsArrowRightCircleFill/></span></button>
+											<button title="submit" className="clickset" type="submit"><span><BsArrowRightCircleFill/></span></button>
 											<button onClick={() => setQrCode(undefined)}> <span id="cancel2auth"><ImCross/></span> </button>
 										</form>
 									</div>
@@ -360,7 +358,7 @@ function Settings() {
 												setAuthCode(e.target.value)
 												}
 											/>
-											<button className="clickset" type="submit"><span><BsArrowRightCircleFill/></span></button>
+											<button title="submit" className="clickset" type="submit"><span><BsArrowRightCircleFill/></span></button>
 											<button onClick={() => setTurnedOff(false)}> <span id="cancelDesac"><ImCross/></span> </button>
 										</form>
 										</>

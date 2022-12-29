@@ -120,7 +120,7 @@ export class RoomGateway {
             room.scoreA += 1
             this.roomService.updateRoom(room.id, { scoreA: room.scoreA });
           }
-          if (room.scoreA >= 1000 || room.scoreB >= 1000) {
+          if (room.scoreA >= 10 || room.scoreB >= 10) {
             room.status = 'finished';
             if (room.scoreA >= 10) {
               //console.log("je donne ton ptn d'xp");
@@ -715,6 +715,7 @@ export class RoomGateway {
           if (room.playerA && room.playerB) {
             await this.server.to('room-' + room.id).emit('configuring', room);
             room.status = 'configuring' + "|" + room.playerA.id + "|" + room.playerB.id;
+            room.lastActivity = Date.now();
             await this.roomService.save(room);
             const playerA = room.status.split('|')[1];
             const playerB = room.status.split('|')[2];

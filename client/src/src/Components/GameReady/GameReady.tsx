@@ -10,6 +10,8 @@ import { useSelector } from "react-redux";
 import { getSockeGame } from "../../Redux/gameSlice";
 import instance from "../../API/Instance";
 import {Helmet} from "react-helmet";
+import { Link } from "react-router-dom";
+import {ImFileText2} from "react-icons/im";
 /*
   Check if player search on another tab
 */
@@ -179,11 +181,12 @@ function GameReady(props: props) {
   return (
 	<>
 		{!searchingDisplay && !configuringDisplay ? (
-			<>
+			<div className="buttonAndRules">
 			<button onClick={handleReady} className="play-button">
 				Search for a game
 			</button>
-			</>
+			<Link className="rules" to="/rules"><ImFileText2/></Link>
+			</div>
 		) : null}
 		{
 			searchingDisplay || configuringDisplay

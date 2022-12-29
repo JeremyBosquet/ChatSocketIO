@@ -109,88 +109,98 @@
 			}
 		}
 		#listGameParent{
-			//margin-left : 180px;
-			width: 80%;
-			margin-top: 35px;
-			background: #181818;
+			margin-top: 40px;
+			font-size: 16px;
+			background-color: #131313;
+			overflow: hidden;
+			color: white;
+			font-family: 'Roboto Condensed', sans-serif;
 			padding: 10px;
-			//margin-bottom: 20px;
 			border-radius: 5px;
-			::-webkit-scrollbar { 
-				width: 15px;         /* width of the entire scrollbar */
-			}
-			::-webkit-scrollbar-track {
-				background: #ffffff; 
-				border-radius: 10px;      /* color of the tracking area */
+			width: calc(80% - 20px);
+			p:nth-child(1) {
+				text-align: center;
+				margin-left: 2px;
+			  }
+		
+			p:nth-child(3) {
+				text-align: right;
 			}
 			
-			::-webkit-scrollbar-thumb {
-				background: #181818;    /* color of the scroll thumb */
-				border-radius: 10px;       /* roundness of the scroll thumb */
-				border: 1px solid #ffffff; /* creates padding around scroll thumb */
-			}
-			#listGameScroll{
-				scrollbar-color: var(--black) #ffffff;
-				overflow:hidden;
-				overflow-y:scroll;
-				height: 126px;
-				color : #ffffff;
 
-				li{
-					list-style-type: none;
-					display : flex;
-					flex-direction: row;
-					// position: relative;
-					font-size: 25px;
-					margin-bottom: 2px;
-					margin-right: 0px;
-					#playerName {
-						width: 50%;
-					}
-					#playerStatus {
-						width: 30%;
-					}
-					#playerScore {
-						width: 20%;
-					}
-				}
-				
+		.table {
+			display: grid;
+			font-size: 14px;
+			grid-template-columns: 1fr 1fr 0.4fr;
+			text-align: center;
+			margin-bottom: 5px;
+
+			div:nth-child(1) {
+				text-align: center;
+				margin-left: 2px;
 			}
 
-			#listGame{
-				height: 126px;
-				overflow: hidden;
-				color :rgb(255, 255, 255);
-				.green{
-					//color :#2fbb00
-					color :rgb(255, 255, 255);
-				}
+			div:nth-child(2) {
+			text-align: center;
+			}
 
-				.red{
-					//color :#bf0000
-					color : rgb(255, 255, 255);
-				}
-
-				li{
-					list-style-type: none;
-					display : flex;
-					flex-direction: row;
-					// position: relative;
-					font-size: 25px;
-					margin-bottom: 2px;
-					margin-right: 0px;
-					#playerName {
-						width: 50%;
-					}
-					#playerStatus {
-						width: 30%;
-					}
-					#playerScore {
-						width: 20%;
-					}
-				}
+			div:nth-child(3) {
+				text-align: center;
 			}
 		}
+
+		.user {
+				background-color: #2B2B2B;
+				display: grid;
+				grid-template-columns: 1fr 1fr 0.4fr;
+		
+				align-items: center;
+				min-height: 42px;
+				text-align: center;
+				margin: 0px 0px 10px 0px;
+				border-radius: 5px;
+				 p:nth-child(1) {
+					text-align: center;
+					display: inline;
+					a {
+						color: #fff;
+						text-decoration: none;
+						cursor: pointer;
+						&:hover {
+							text-decoration: underline;
+						}
+					}
+				  }
+
+				  p:nth-child(2) {
+					text-align: center;
+				  }
+			
+				p:nth-child(3) {
+					text-align: center;
+				}
+		}
+
+		#listGame {
+			overflow: scroll;
+			height: 200px;
+			overflow-x: hidden;
+			overflow-y: scroll;
+			scrollbar-width: none;
+		}
+
+		#listGame::-webkit-scrollbar
+		{
+			width: 6px;
+			background-color: #F5F5F5;
+			display: none;
+		}
+
+		#listGame::-webkit-scrollbar-thumb
+		{
+			background-color: #646464;
+		}
+	}
 	}
 }
 

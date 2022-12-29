@@ -18,6 +18,8 @@ import { getSockeGame, getSockeGameChat, setSocketGame } from "../../Redux/gameS
 import instance from "../../API/Instance";
 import {Helmet} from "react-helmet";
 import {GiRank3} from "react-icons/gi";
+import { Link } from "react-router-dom";
+import {ImFileText2} from "react-icons/im";
 
 interface IPlayer {
 	id: string;
@@ -212,7 +214,6 @@ function HomePage() {
 		await instance.get(`user/Ranking`).then((res) => {
 			if (res.data && res.data.Rank)
 				dispatch(setRanking(res.data.Rank));
-			console.log("Rank salam", res.data)
 		});
 	}
 
@@ -285,27 +286,36 @@ function HomePage() {
 													<p>{myProfileExp}</p>
 												</div>
 												<div id="listMyGameParent">
-													{myHistoryList.length ?
-														(
-															<div id={myHistoryList.length > 4 ? "listMyGameScroll" : "listMyGame"}>
-																{myHistoryList.map((game : any, index : number) => (
-																	<ul key={index}>
-																		<li>
-																			<p id="playerName">
-																				{game.playerA.name} vs {game.playerB.name}
-																			</p>
-																			<p id="playerStatus">
-																				|&nbsp;&nbsp;{whoWon(User.uuid, game)}
-																			</p>
-																			<p id="playerScore">
-																				|&nbsp;&nbsp;{game.scoreA < 0 ? (game.scoreA == -42 ? 0 : -game.scoreA) : game.scoreA} - {game.scoreB < 0 ? (game.scoreB == -42 ? 0 : -game.scoreB) : game.scoreB}
-																			</p>
-																		</li>
-																	</ul>
-																))}
-															</div>
-														)
-														: null}
+												<div className="table">
+												<div> Players </div>
+
+												<div> Results </div>
+
+
+												<div> Score </div>
+
+												</div>
+												{myHistoryList.length ?
+												(
+													<div id="listMyGame">
+															{myHistoryList.map((game : any, index : number) => (
+																<div className="user" key={index}>
+																	<p id="playerName">
+																			<Link to={"/profile/" + game.playerA.trueName}>{game.playerA.name}</Link>
+																			{" vs "}
+																			<Link to={"/profile/" + game.playerB.trueName}>{game.playerB.name}</Link>
+																	</p>
+																	<p id="playerStatus">
+																		{whoWon(User.uuid, game)}
+																	</p>
+																	<p id="playerScore">
+																		{game.scoreA < 0 ? (game.scoreA == -42 ? 0 : -game.scoreA) : game.scoreA} - {game.scoreB < 0 ? (game.scoreB == -42 ? 0 : -game.scoreB) : game.scoreB}
+																	</p>
+																</div>
+															))}
+														</div>
+												)
+												: null}
 												</div>
 											</div>
 										</div>

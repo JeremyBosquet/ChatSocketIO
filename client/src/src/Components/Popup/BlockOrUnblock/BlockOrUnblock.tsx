@@ -72,9 +72,9 @@ function BlockOrUnblock (props : props) {
 
 	return (
 		props.UserUuid ?
-			<button onClick={() => (BlockOrUnblockUser(props.UserUuid))} > {IsntBlocked(props.UserUuid) ? <MdBlock/>: <CgUnblock/>} </button>
+			<button title="Block or unblock user" onClick={() => (BlockOrUnblockUser(props.UserUuid))} > {IsntBlocked(props.UserUuid) ? <MdBlock/>: <CgUnblock/>} </button>
 		:
-			<button onClick={() => (BlockOrUnblockUser(profilePage.uuid))} > {IsntBlocked(profilePage.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
+			<button title="Block or unblock user" onClick={() => (BlockOrUnblockUser(profilePage.uuid))} > {IsntBlocked(profilePage.uuid) ? <MdBlock/>: <CgUnblock/>} </button>
 	);
 }
 

@@ -13,29 +13,51 @@
 	//margin-top: 200px;
 }
 
-.play-button {
-	margin-top: 200px;
+.buttonAndRules {
+	margin-top: 110px;
 	display: flex;
-	margin-left: auto;
-	margin-right: auto;
 	margin-bottom: 60px;
-	justify-content: unset;
-	align-items: center;
-	background: var(--black);
-	overflow: hidden;
-	color: white;
-	font-size: 16px;
-	padding: 16px 32px;
-	text-align: center;
-	text-decoration: none;
-	border: none;
-	border-radius: 8px;
-	cursor: pointer;
-	transition-duration: 0.4s;
-	font-weight: bold;
-	-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-	-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
-	box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	justify-content: center;
+	.play-button {
+		display: flex;
+		background: #131313;
+		color: white;
+		font-size: 16px;
+		padding: 16px 32px 0px 32px;
+		text-align: center;
+		text-decoration: none;
+		border: none;
+		border-radius: 8px;
+		cursor: pointer;
+		transition-duration: 0.4s;
+		font-weight: bold;
+		-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+	}
+	.rules {
+		svg {
+			margin-top : 2px;
+		}
+		margin-left: 3px;
+		background-color: #131313;
+		color: white;
+		font-size: 16px;
+		padding: 16px 20px;
+		text-align: center;
+		text-decoration: none;
+		border: none;
+		border-radius: 8px;
+		cursor: pointer;
+		transition-duration: 0.4s;
+		font-weight: bold;
+		-webkit-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		-moz-box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		box-shadow: 0px 5px 40px -10px rgba(0, 0, 0, 0.57);
+		&:hover {
+			background-color: var(--black);
+		}
+	}
 }
 
 .play-button:hover {

@@ -37,9 +37,9 @@ function Cancel(props : props){
 
 	return (
 		props.UserUuid ?
-			<button onClick={(e) => (CancelFriendAdd(props.UserUuid))} > <MdCancelScheduleSend/> </button>
+			<button title="Cancel friend request" onClick={(e) => (CancelFriendAdd(props.UserUuid))} > <MdCancelScheduleSend/> </button>
 		:
-			<button onClick={(e) => (CancelFriendAdd(profilePage.uuid))} > <MdCancelScheduleSend/> </button>	
+			<button title="Cancel friend request" onClick={(e) => (CancelFriendAdd(profilePage.uuid))} > <MdCancelScheduleSend/> </button>	
 	);
 }
 

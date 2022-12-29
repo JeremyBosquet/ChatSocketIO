@@ -144,7 +144,7 @@
 		align-items: center;
 		min-height: 42px;
 		text-align: center;
-		margin: 10px 0px 10px 0px;
+		margin: 0px 0px 10px 0px;
 		border-radius: 5px;
 		//padding-right: 0.4rem;
 		 span:nth-child(1) {
@@ -204,12 +204,15 @@
 				cursor: pointer;
 				text-decoration: none;
 				color: white;
+				&:hover {
+					text-decoration: underline;
+				}
 			}
 		}
 
 		.list {
 			overflow: scroll;
-			height: 455px;
+			height: 445px;
 			overflow-x: hidden;
 			overflow-y: scroll;
 			scrollbar-width: none;

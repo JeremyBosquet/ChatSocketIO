@@ -17,6 +17,7 @@ import {Helmet} from "react-helmet";
 import { getRanking, setRanking } from "../../Redux/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 import {GiRank3} from "react-icons/gi";
+import { Link } from "react-router-dom";
 // import { useDispatch, useSelector } from 'react-redux';
 // import { getLogged, getUser, setLogged, setUser, getActivated, setActivated, getConnected, setConnected } from '../Redux/authSlice';
 
@@ -132,29 +133,35 @@ function Profile() {
 						<p>{profileExp}</p>
 					</div>
 					<div id="listGameParent">
-					{
-						historyList.length ?
+						<div className="table">
+							<div> Players </div>
+
+							<div> Results </div>
+
+
+							<div> Score </div>
+						</div>
+						{historyList.length ?
 						(
-							<div id={historyList.length > 4 ? "listGameScroll" : "listGame"}>
-							{historyList.map((game, index) => (
-								<ul key={index}>
-									<li>
-									<p id="playerName">
-										{game.playerA.name} vs {game.playerB.name}
-									</p>
-									<p id="playerStatus">
-										|&nbsp;&nbsp;{whoWon(userProfile.uuid, game)}
-									</p>
-									<p id="playerScore">
-									|&nbsp;&nbsp;{game.scoreA < 0 ? (game.scoreA == -42 ? 0 : -game.scoreA) : game.scoreA} - {game.scoreB < 0 ? (game.scoreB == -42 ? 0 : -game.scoreB) : game.scoreB}
-									</p>
-									</li>
-								</ul>
-							))}
-							</div>
+							<div id="listGame">
+									{historyList.map((game : any, index : number) => (
+										<div className="user" key={index}>
+											<p id="playerName">
+												<Link to={"/profile/" + game.playerA.trueName}>{game.playerA.name}</Link>
+												{" vs "}
+												<Link to={"/profile/" + game.playerB.trueName}>{game.playerB.name}</Link>
+											</p>
+											<p id="playerStatus">
+												{whoWon(userProfile.uuid, game)}
+											</p>
+											<p id="playerScore">
+												{game.scoreA < 0 ? (game.scoreA == -42 ? 0 : -game.scoreA) : game.scoreA} - {game.scoreB < 0 ? (game.scoreB == -42 ? 0 : -game.scoreB) : game.scoreB}
+											</p>
+										</div>
+									))}
+								</div>
 						)
-						: null
-					}
+						: null}
 					</div>
 				</div>
 			</div>

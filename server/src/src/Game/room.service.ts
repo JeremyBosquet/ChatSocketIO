@@ -143,6 +143,7 @@ export class RoomService {
         id: playerId,
         name: playerName,
         status: 'ready',
+		trueName : null,
         x: 0,
         y: 0,
       };
@@ -150,6 +151,7 @@ export class RoomService {
       room.playerB = {
         id: playerId,
         name: playerName,
+		trueName : null,
         status: 'ready',
         x: 0,
         y: 0,
@@ -187,17 +189,23 @@ export class RoomService {
     for (let i = 0; i < info.length; i++) {
       if (info[i].playerA?.id && info[i].playerB.id)
       {
-      const findA = await this.userService.findUserByUuid(info[i].playerA.id);
-      if (findA)
-        info[i].playerA.name = findA.username;
-      const findB = await this.userService.findUserByUuid(info[i].playerB.id);
-      if (findB)
-        info[i].playerB.name = findB.username;
-      tab.push(
-        plainToClass(SendGameHistoryDto, info[i], {
-          excludeExtraneousValues: true,
-        }),
-      );
+		const findA = await this.userService.findUserByUuid(info[i].playerA.id);
+		if (findA)
+		{
+			info[i].playerA.name = findA.username;
+			info[i].playerA.trueName = findA.trueUsername;
+		}
+		const findB = await this.userService.findUserByUuid(info[i].playerB.id);
+		if (findB)
+		{
+			info[i].playerB.name = findB.username;
+			info[i].playerB.trueName = findB.trueUsername;
+		}
+		tab.push(
+			plainToClass(SendGameHistoryDto, info[i], {
+			excludeExtraneousValues: true,
+			}),
+		);
     }
     }
 	// return tab sorted from bigger tab.LastActivity to smaller tab.LastActivity

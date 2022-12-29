@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Socket } from "socket.io-client";
 import { createNotification } from "../notif/Notif";
 import React from "react";
-import "./GameChatReady.scss";
+import "../GameReady/GameReady.scss";
 import { ScaleLoader } from "react-spinners";
 import { useSelector } from "react-redux";
 import { getSockeGameChat } from "../../Redux/gameSlice";
@@ -323,25 +323,30 @@ function GameChatReady(props: props) {
 			</div>
           </div>
           <div className="game-config-secondary">
-            <p>Configuration of The opponent player</p>
-            <div className="ChannelRoomFormInput-Difficulty">
-              <label htmlFor="Difficulty">Difficulty </label>
-              {settingsBis?.difficulty ? (
-                <p>{settingsBis.difficulty}</p>
-              ) : (
-                <p>Easy</p>
-              )}
-            </div>
-            <div className="ChannelRoomFormInput-Background">
-              <label htmlFor="Difficulty">Background </label>
-              {settingsBis?.background ? (
-                <p>{settingsBis.background}</p>
-              ) : (
-                <p>Background1</p>
-              )}
-            </div>
-            Ready : {settingsBis?.confirmed ? <p>Yes</p> : <p>No</p>}
-          </div>
+			<p>Configuration of the other player</p>
+			<div className="line"></div>
+			<div className="ChannelRoomFormInput-Difficulty">
+				<label htmlFor="Difficulty">Difficulty :&nbsp;</label>
+				{settingsBis?.difficulty ? (
+				<p>{settingsBis.difficulty}</p>
+				) : (
+				<p>Easy1</p>
+				)}
+			</div>
+			<div className="line"></div>
+			<div className="ChannelRoomFormInput-Background">
+				<label htmlFor="Difficulty">Background :&nbsp;</label>
+				{settingsBis?.background ? (
+				<p>{settingsBis.background}</p>
+				) : (
+				<p>Background1</p>
+				)}
+			</div>
+			<div className="line"></div>
+			<div className="ChannelRoomFormInput-Status">
+				Ready :&nbsp;{settingsBis?.confirmed ? <p>Yes</p> : <p>No</p>}
+			</div>
+			</div>
         </div>
       ) : null}
       <div></div>

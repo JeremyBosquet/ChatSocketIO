@@ -13,7 +13,7 @@ interface props {
 function Show(props : props) {
 
 	return (
-		<Link to={"/profile/" + props.trueUsername}><FaUserCircle/> </Link>
+		<Link title="See profile" to={"/profile/" + props.trueUsername}><FaUserCircle/> </Link>
 	);
 }
 

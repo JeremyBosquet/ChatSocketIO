@@ -23,6 +23,7 @@ import Profile from "./Pages/Profile/Profile";
 import instance from "./API/Instance";
 import ProtectedTwoAuth from "./ProtectedTwoAuth";
 import Leaderboard from "./Pages/Leaderboard/Leaderboard";
+import Rules from "./Pages/Rules/Rules";
 //import TestPage from "./Pages/test";
 //import './Pages/PhaserGame'
 
@@ -338,6 +339,7 @@ function App() {
 			<Route path="/twoAuth" element={<ProtectedTwoAuth><TwoAuth /></ProtectedTwoAuth>}></Route>
 			<Route path="/profile/:Username" element={<Protected><Profile /></Protected>}></Route>
 			<Route path="/leaderboard" element={<Protected><Leaderboard /></Protected>}></Route>
+			<Route path="/rules" element={<Protected><Rules /></Protected>}></Route>
 			{/* <Route path=":UserId" element={<Protected><Social /></Protected>}></Route> */}
 			{/*</Routes>Route path="/game/" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}
 			{/*</Routes>Route path="/game/:roomId" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}

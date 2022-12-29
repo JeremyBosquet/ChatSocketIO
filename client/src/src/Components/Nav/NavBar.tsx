@@ -152,11 +152,11 @@ function NavBar(props: any) {
 					<AiFillTrophy className="icon"/>
 				</NavLink>
 
-				<button id="social" className="click" onClick={() => {openSocial()}}>
+				<button title="Social" id="social" className="click" onClick={() => {openSocial()}}>
 					<FaUserFriends className="icon"/>
 				</button>
 	
-				<button id="settings" className="click" onClick={() => {openSettings()}}>
+				<button title="Settings" id="settings" className="click" onClick={() => {openSettings()}}>
 					<IoMdSettings className="icon"/>
 				</button>
 

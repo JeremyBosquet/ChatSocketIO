@@ -1,27 +1,20 @@
 import {
-  ClassSerializerInterceptor,
   Controller,
-  Header,
   Post,
-  UseInterceptors,
   Res,
   UseGuards,
   Req,
-  Get,
-  HttpCode,
   Body,
   HttpStatus,
 } from '@nestjs/common';
 import { TwoFactorAuthenticationService } from './twoFactorAuthentication.service';
-//   import { AuthenticationService } from './auth.service';
 import { Response } from 'express';
-import { JwtAuthGuard } from '../login/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/Auth/guards/jwt-auth.guard';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/users/users.service';
-import { JwtTwoFactorGuard } from './jwt-two-factor.guard';
+import { UsersService } from 'src/Users/users.service';
+import { JwtTwoFactorGuard } from './guards/jwt-two-factor.guard';
 
 @Controller('api/2fa')
-//@UseInterceptors(ClassSerializerInterceptor)
 export class TwoFactorAuthenticationController {
   constructor(
     private readonly twoFactorAuthenticationService: TwoFactorAuthenticationService,
@@ -46,10 +39,6 @@ export class TwoFactorAuthenticationController {
       message: 'User not found',
       error: 'NOT_FOUND',
     });
-
-    //   res.status(HttpStatus.OK).json({
-    // 	statusCode: HttpStatus.OK,
-    // 	message : "succes"});
   }
 
   @Post('turn-on')
@@ -62,8 +51,6 @@ export class TwoFactorAuthenticationController {
     const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
     const User = await this.userService.findUserByUuid(Jwt['uuid']);
     if (User) {
-      console.log(body['twoFactorAuthenticationCode']);
-      console.log(User.twoFactorAuthenticationSecret);
       if (
         !body['twoFactorAuthenticationCode'] ||
         body['twoFactorAuthenticationCode'].length != 6
@@ -109,8 +96,6 @@ export class TwoFactorAuthenticationController {
     const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
     const User = await this.userService.findUserByUuid(Jwt['uuid']);
     if (User) {
-      console.log(body['twoFactorAuthenticationCode']);
-      console.log(User.twoFactorAuthenticationSecret);
       if (
         !body['twoFactorAuthenticationCode'] ||
         body['twoFactorAuthenticationCode'].length != 6
@@ -174,10 +159,6 @@ export class TwoFactorAuthenticationController {
           error: 'BAD_REQUEST',
         });
       }
-
-      // const accessTokenCookie = this.authenticationService.getCookieWithJwtAccessToken(User.id, true);
-
-      // req.res.setHeader('Set-Cookie', [accessTokenCookie]);
       await this.userService.IsAuthenticated(User.uuid);
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,

@@ -1,8 +1,8 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { JwtTwoFactorGuard } from 'src/2auth/jwt-two-factor.guard';
-import { JwtAuthGuard } from 'src/login/guards/jwt-auth.guard';
-import { UsersService } from 'src/users/users.service';
+import { JwtTwoFactorGuard } from 'src/TwoFactorAuth/guards/jwt-two-factor.guard';
+import { JwtAuthGuard } from 'src/Auth/guards/jwt-auth.guard';
+import { UsersService } from 'src/Users/users.service';
 import { ChatService } from './chat.service';
 
 @Controller('api/chat')

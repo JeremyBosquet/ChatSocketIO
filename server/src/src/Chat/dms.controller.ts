@@ -1,7 +1,7 @@
 import { Body, Controller, Get, HttpStatus, Param, Post, Req, Res, UseGuards, ValidationPipe } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { JwtTwoFactorGuard } from 'src/2auth/jwt-two-factor.guard';
-import { UsersService } from 'src/users/users.service';
+import { JwtTwoFactorGuard } from 'src/TwoFactorAuth/guards/jwt-two-factor.guard';
+import { UsersService } from 'src/Users/users.service';
 import { DMsService } from './dms.service';
 import { ChannelIdDTO, GetMessagesDTO, UserIdDTO } from './Interfaces/ChannelDTO';
 import { DmCheckDTO, DmIdDTO, GetMessagesDmDTO } from './Interfaces/DmDTO';

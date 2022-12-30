@@ -1,12 +1,9 @@
-import { HttpStatus, Injectable, Req, Res } from '@nestjs/common';
+import {Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ifriends, UserModel } from '../typeorm/user.entity';
 import { Repository } from 'typeorm';
-import { FriendsDto, SendUserDto } from './users.dto';
-import { any, number } from 'joi';
-import { JwtService } from '@nestjs/jwt';
+import { SendUserDto } from './users.dto';
 import { plainToClass } from 'class-transformer';
-import { User } from 'src/login/user.decorator';
 import * as bcrypt from 'bcrypt';
 import { promises as fs } from "fs";
 import { v4 as uuidv4 } from 'uuid';
@@ -56,7 +53,7 @@ export class UsersService {
   }
 
   async IsLoggedIn(uuid: string, token : string) {
-	const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+	const find = await this.userRepository.findOneBy({uuid : uuid});
 	if (find && find.isLoggedIn)
 	{
 		for (let i = 0; i < find.isLoggedIn.length; i++)
@@ -82,20 +79,20 @@ export class UsersService {
   }
 
   async IsntLoggedIn(uuid: string, token : string) {
-	const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
-	if (find && find.isLoggedIn)
-	{
-		let newTab = find.isLoggedIn;
-		for (let i = 0; i < newTab.length; i++)
-			if (await bcrypt.compare(token, find.isLoggedIn[i].token))
-				newTab.splice(i, 1);
-		return this.userRepository.update(
-		{ uuid },
-		{
-			isLoggedIn: newTab,
-		},
-		);
-	}
+    const find = await this.userRepository.findOneBy({uuid : uuid});
+    if (find && find.isLoggedIn)
+    {
+      let newTab = find.isLoggedIn;
+      for (let i = 0; i < newTab.length; i++)
+        if (await bcrypt.compare(token, find.isLoggedIn[i].token))
+          newTab.splice(i, 1);
+      return this.userRepository.update(
+      { uuid },
+      {
+        isLoggedIn: newTab,
+      },
+      );
+    }
   }
 
   async IsntAuthenticated(uuid: string) {
@@ -108,12 +105,12 @@ export class UsersService {
   }
 
   async findUserByUuid(uuid: string) {
-    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     return find;
   }
 
   async findFriendByUuid(Useruuid : string, uuid: string) {
-    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
 	if (find)
 	{
 		for (let i = 0; i < find.blocked.length; i++)
@@ -128,7 +125,7 @@ export class UsersService {
 
 
   async ListFriendsWithUuid(uuid: string) {
-    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find)
 		return find.friends;
     return [];
@@ -170,27 +167,21 @@ export class UsersService {
   }
 
   async ListFriendsRequestedWithUuid(uuid: string) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find)
 		return find.friendsNotacceptedYet;
     return null;
   }
 
   async ListFriendsRequestWithUuid(uuid: string) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find)
 		return find.friendRequest;
     return null;
   }
 
   async ListUsernameFriendsRequestWithUuid(uuid: string) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find) {
       let usernameList: any[] = [];
       for (let i = 0; i < find.friendRequest.length; i++) {
@@ -208,28 +199,28 @@ export class UsersService {
   }
 
   async ListBlockedWithUuid(uuid: string) {
-    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find)
 		return find.blocked;
     return null;
   }
 
   async ListBlockedByWithUuid(uuid: string) {
-    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find)
 		return find.blockedby;
     return null;
   }
 
   async getExp(uuid: string) {
-    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find)
 		return find.exp;
     return (undefined);
   }
 
   async addExp(uuid: string, exp : number) {
-    const find = (await this.userRepository.find()).filter((user) => user.uuid === uuid)[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find) {
       let oldexp = find.exp;
       if (Number(oldexp))
@@ -250,17 +241,13 @@ export class UsersService {
   }
 
   async IsFriendByUuid(uuid: string, userUuid: string) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === userUuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find) return find.friends.filter((user) => user.uuid === uuid);
     return null;
   }
 
   async addUserByUuid(uuid: string, User: UserModel) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find) {
       if (uuid === User.uuid) return 2;
       if (
@@ -311,9 +298,7 @@ export class UsersService {
   }
 
   async acceptUserByUuid(uuid: string, User: UserModel) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find) {
       if (User.friendRequest) {
         let i = 0;
@@ -365,9 +350,7 @@ export class UsersService {
   }
 
   async blockUserByUuid(uuid: string, User: UserModel) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find) {
       if (uuid === User.uuid) return 2;
       if (User.blocked) {
@@ -487,9 +470,7 @@ export class UsersService {
   }
 
   async removeFriendByUuid(uuid: string, User: UserModel) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find) {
       if (uuid === User.uuid) return 2;
       if (User.friends) {
@@ -530,9 +511,7 @@ export class UsersService {
   }
 
   async cancelFriendAddByUuid(uuid: string, User: UserModel) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find) {
       if (uuid === User.uuid) return 2;
       if (User.friendsNotacceptedYet) {
@@ -573,9 +552,7 @@ export class UsersService {
   }
 
   async refuseFriendAddByUuid(uuid: string, User: UserModel) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find) {
       if (uuid === User.uuid) return 2;
       if (User.friendRequest) {
@@ -616,9 +593,7 @@ export class UsersService {
   }
 
   async unblockUserByUuid(uuid: string, User: UserModel) {
-    const find = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const find = await this.userRepository.findOneBy({uuid : uuid});
     if (find) {
       if (uuid === User.uuid) return 2;
       let verify: boolean = false;
@@ -676,7 +651,7 @@ export class UsersService {
   }
 
   async findUserByUsername(username: string, Useruuid : string) {
-	const find = (await this.userRepository.find()).filter((user) => user.trueUsername === username)[0];
+	const find = await this.userRepository.findOneBy({trueUsername : username});
 	if (find)
 	{
 		for (let i = 0; i < find.blocked.length; i++)
@@ -690,13 +665,10 @@ export class UsersService {
   }
 
   async ChangeUsername(uuid: string, newName: string) {
-    const alreadyexist = await this.userRepository.find({
-      where: { username: newName },
-    });
-    if (alreadyexist[0]) return 0;
-    const user = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const alreadyexist = await this.userRepository.findOneBy({username : newName})
+    if (alreadyexist)
+		return 0;
+    const user = await this.userRepository.findOneBy({uuid : uuid});
     if (user) {
       await this.userRepository.update({ uuid }, { username: newName });
       return 1;
@@ -705,9 +677,7 @@ export class UsersService {
   }
 
   async ChangeAvatar(uuid: string, newAvatar: Buffer, type : string) {
-    const user = (await this.userRepository.find()).filter(
-      (user) => user.uuid === uuid,
-    )[0];
+    const user = await this.userRepository.findOneBy({uuid : uuid});
     if (user) {
 		const path = "./src/uploads/avatar/";
 		if (type.includes("image/"))
@@ -746,11 +716,4 @@ export class UsersService {
     }
     console.log('done');
   }
-
-  //   async getMyUser(userId: any) : Promise<UserModel> {
-  // 	const findUser = (await this.userRepository.find({ where: { id: userId} }));
-  // 	if (findUser[0])
-  // 		return (findUser[0]);
-  // 	return ;
-  //   }
 }

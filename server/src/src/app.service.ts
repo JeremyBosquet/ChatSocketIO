@@ -1,15 +1,12 @@
-import { Injectable, Req } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ifriends, ILogStatus, UserModel } from './typeorm/user.entity';
-import { MetadataAlreadyExistsError, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Profile } from 'passport-42';
-import { any, array, number } from 'joi';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
 import { randomInt } from 'crypto';
-import { UsersService } from './users/users.service';
-import * as bcrypt from 'bcrypt';
-import axios from 'axios';
+import { UsersService } from './Users/users.service';
 import { promises as fs } from "fs";
 
 @Injectable()
@@ -22,22 +19,15 @@ export class AppService {
   ) { }
 
   async logIn(user: Profile) {
-    const findUser = (await this.userRepository.find()).filter(
-      (users) => users.id === user.id,
-    );
-    if (findUser[0]) {
-      const payload = { uuid: findUser[0].uuid };
+    const findUser = await this.userRepository.findOneBy({id : user.id})
+    if (findUser) {
+      const payload = { uuid: findUser.uuid };
       const token = this.jwtService.sign(payload, { expiresIn: '2d' });
-      this.userService.IsLoggedIn(findUser[0].uuid, token);
-	  console.log(findUser[0].uuid, token);
+      this.userService.IsLoggedIn(findUser.uuid, token);
       return token;
     }
     else {
 		async function fetchAndStoreImage(apiUrl: string, path : string, name : string) {
-			// const response = await axios.get(apiUrl, { responseType: 'arraybuffer' });
-			// const imageData = response.data;
-			// return (Buffer.from(imageData));
-	
 	
 			const response = await fetch(apiUrl);
 	
@@ -95,7 +85,6 @@ export class AppService {
       await this.userRepository.save(newUser);
       const payload = { uuid: newUuid };
       const token = this.jwtService.sign(payload, { expiresIn: '2d' });
-      console.log(token);
       this.userService.IsLoggedIn(newUuid, token);
       return token;
     }

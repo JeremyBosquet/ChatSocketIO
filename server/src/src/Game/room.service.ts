@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { InformationEvent } from 'http';
 //import { Interval } from '@nestjs/schedule';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/Users/users.service';
 import { In, Repository } from 'typeorm';
 import { Room } from './Entities/room.entity';
 import { IInGame } from './Interfaces/InGame';
@@ -177,7 +177,6 @@ export class RoomService {
     return await this.roomRepository.save(room);
   }
   async getGameOfUser(uuid: string): Promise<Room[]> {
-    //console.log('getGameOfUser', uuid);
     const tab: Room[] = [];
     const info = (await this.roomRepository.find()).filter(
       (room) =>
@@ -208,11 +207,6 @@ export class RoomService {
 		);
     }
     }
-	// return tab sorted from bigger tab.LastActivity to smaller tab.LastActivity
 	return tab.sort((a, b) => b.lastActivity - a.lastActivity);
-
-
-    //tab.reverse();
-    return tab;
   }
 }

@@ -13,7 +13,7 @@ import { RoomService } from './room.service';
 import { v4 as uuidv4 } from 'uuid';
 import { time } from 'console';
 import { exit } from 'process';
-import { UsersService } from '../users/users.service';
+import { UsersService } from '../Users/users.service';
 import { date } from 'joi';
 import { Interval } from '@nestjs/schedule';
 

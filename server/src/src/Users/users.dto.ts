@@ -3,8 +3,6 @@ import {
   IsNotEmpty,
   IsString,
   Length,
-  minLength,
-  MinLength,
 } from 'class-validator';
 import { Expose } from 'class-transformer';
 
@@ -32,16 +30,6 @@ export class SendUserDto {
   @IsNotEmpty()
   @Expose()
   id: number;
-
-  // @IsNotEmpty()
-  // @IsBoolean()
-  // @Expose()
-  // isTwoFactorAuthenticationEnabled: boolean;
-
-  // @IsNotEmpty()
-  // @IsBoolean()
-  // @Expose()
-  // isSecondFactorAuthenticated: boolean;
 
   @IsNotEmpty()
   @IsBoolean()

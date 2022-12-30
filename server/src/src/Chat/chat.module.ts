@@ -10,7 +10,7 @@ import { Channel } from "./Entities/channel.entity";
 import { DM } from "./Entities/dm.entity";
 import { UserModel } from "src/typeorm";
 import { JwtService } from "@nestjs/jwt";
-import { UsersService } from "src/users/users.service";
+import { UsersService } from "src/Users/users.service";
 
 @Module({
     imports: [

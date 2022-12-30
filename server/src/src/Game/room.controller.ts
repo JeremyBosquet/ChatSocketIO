@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
 import { isUUID } from 'class-validator';
-import { JwtTwoFactorGuard } from 'src/2auth/jwt-two-factor.guard';
+import { JwtTwoFactorGuard } from 'src/TwoFactorAuth/guards/jwt-two-factor.guard';
 import { RoomService } from './room.service';
 
 @Controller('api/room')

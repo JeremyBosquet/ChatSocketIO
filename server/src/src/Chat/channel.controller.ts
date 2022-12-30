@@ -2,9 +2,9 @@ import { Body, Controller, Get, HttpStatus, Param, Post, Req, Res, UseGuards, Va
 import { ChatService } from './chat.service';
 import { BanPlayerDTO, ChannelIdDTO, ChannelsWhereUserDTO, CreateChannelDTO, editChannelPasswordDTO, GetMessagesDTO, JoinChannelCodeDTO, JoinChannelDTO, KickPlayerDTO, LeaveChannelDTO, MutePlayerDTO, setAdminDTO, UnmutePlayerDTO, UserIdDTO } from './Interfaces/ChannelDTO';
 import * as bcrypt from 'bcrypt';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/Users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { JwtTwoFactorGuard } from 'src/2auth/jwt-two-factor.guard';
+import { JwtTwoFactorGuard } from 'src/TwoFactorAuth/guards/jwt-two-factor.guard';
 
 @Controller('api/chat')
 export class ChannelController {

@@ -5,37 +5,24 @@ import {
 	Controller,
 	Get,
 	Param,
-	ParseUUIDPipe,
 	Post,
 	UseGuards,
-	UsePipes,
 	ValidationPipe,
 	HttpStatus,
-	Query,
 	UseInterceptors,
 	UploadedFile,
 	UnsupportedMediaTypeException,
-	MaxFileSizeValidator,
-	ParseFilePipe,
-	FileTypeValidator,
-	ParseFilePipeBuilder,
 	BadRequestException,
 } from '@nestjs/common';
-import { ExpDto, FriendsDto, SearchDto, SendUserDto, TokenDto } from './users.dto';
+import { FriendsDto, SearchDto, SendUserDto } from './users.dto';
 import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
-import { JwtAuthGuard } from 'src/login/guards/jwt-auth.guard';
+import { JwtAuthGuard } from 'src/Auth/guards/jwt-auth.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { extname } from 'path';
-import { JwtTwoFactorGuard } from 'src/2auth/jwt-two-factor.guard';
+import { JwtTwoFactorGuard } from 'src/TwoFactorAuth/guards/jwt-two-factor.guard';
 import { plainToClass } from 'class-transformer';
 import * as bcrypt from 'bcrypt';
-import { fileTypeFromFile } from 'file-type';
-import got from 'got';
-import { fileTypeFromStream } from 'file-type';
-// import { Express } from 'express';
 import axios from 'axios';
-import { JwtTwoFactorStrategy } from 'src/2auth/auth.strategy';
 
 @Controller('api/user')
 export class UsersController {
@@ -71,7 +58,6 @@ export class UsersController {
 		if (User) {
 			if (User.image) {
 				res.setHeader('Content-Type', 'image/webp');
-				console.log(process.env.BACK + User.image);
 				const response = await axios.get(process.env.BACK + User.image, {
 					responseType: 'arraybuffer',
 				});
@@ -945,7 +931,6 @@ export class UsersController {
 	async ChangeAvatar(@UploadedFile() file: Express.Multer.File, @Req() req: any, @Res() res: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
-		console.log(file);
 		if (!file)
 			return res.status(HttpStatus.BAD_REQUEST).json({
 				statusCode: HttpStatus.BAD_REQUEST,

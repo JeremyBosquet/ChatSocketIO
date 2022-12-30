@@ -1,17 +1,11 @@
-import { UUIDVersion } from 'class-validator';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  OneToMany,
-  OneToOne,
-  JoinColumn,
-  Long,
 } from 'typeorm';
 
 import { Exclude, Expose } from 'class-transformer';
-import bytea from 'postgres-bytea';
 export interface Ifriends {
   uuid: string;
 }

@@ -3,18 +3,16 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LoginModule } from './login/login.module';
 import { UserModel } from './typeorm/user.entity';
-import entities from './typeorm';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './Users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { JwtModule } from '@nestjs/jwt';
 import { join } from 'path/posix';
-import { UsersService } from './users/users.service';
+import { UsersService } from './Users/users.service';
 import { AppService } from './app.service';
-import { JwtStrategy } from './login/jwt.strategy';
-import { twoAuthModule } from './2auth/twoFactorAuthentication.module';
-import { JwtTwoFactorStrategy } from './2auth/auth.strategy';
+import { JwtStrategy } from './Auth/strategy/jwt.strategy';
+import { twoAuthModule } from './TwoFactorAuth/twoFactorAuthentication.module';
+import { JwtTwoFactorStrategy } from './TwoFactorAuth/strategy/twoFactorAuth.strategy';
 import { ChatModule } from './Chat/chat.module';
 import { Channel } from './Chat/Entities/channel.entity';
 import { RoomModule } from './Game/room.module';
@@ -52,7 +50,7 @@ import { RoomService } from './Game/room.service';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'src/uploads/avatar'),
     }),
-    LoginModule,
+    // LoginModule,
     UsersModule,
     HttpModule,
     twoAuthModule,

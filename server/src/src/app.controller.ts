@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Redirect,
   Req,
   UseGuards,
   Res,
@@ -12,13 +11,13 @@ import {
 } from '@nestjs/common';
 import { Profile } from 'passport-42';
 import { HttpService } from '@nestjs/axios';
-import { UsersService } from './users/users.service';
+import { UsersService } from './Users/users.service';
 import { AppService } from './app.service';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserModel } from './typeorm';
 import { Repository } from 'typeorm';
-import { JwtTwoFactorGuard } from './2auth/jwt-two-factor.guard';
+import { JwtTwoFactorGuard } from './TwoFactorAuth/guards/jwt-two-factor.guard';
 
 @Controller('api')
 export class AppController {
@@ -44,9 +43,7 @@ export class AppController {
   async logIn(@Param() param: any, @Res() res: any) {
     if (!param.code) return;
 
-    console.log(param.code);
-
-    const r = await fetch(`https://api.intra.42.fr/oauth/token`, {
+    const getToken = await fetch(`https://api.intra.42.fr/oauth/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -60,13 +57,11 @@ export class AppController {
       }),
     });
 
-    if (!r || !r.ok) {
+    if (!getToken || !getToken.ok) {
       console.error('failed to get token');
     }
 
-    const json_data = await r.json();
-
-    console.log(json_data.access_token);
+    const json_data = await getToken.json();
 
     if (!('access_token' in json_data))
       return res.status(HttpStatus.FORBIDDEN).json({
@@ -75,19 +70,17 @@ export class AppController {
         error: 'FORBIDDEN',
       });
 
-    const r2 = await fetch(`https://api.intra.42.fr/v2/me`, {
+    const myUser = await fetch(`https://api.intra.42.fr/v2/me`, {
       headers: {
         Authorization: `Bearer ${json_data.access_token}`,
       },
     });
 
-    if (!r2 || !r2.ok) {
-      console.error(r2);
+    if (!myUser || !myUser.ok) {
+      console.error(myUser);
     }
 
-    const user = (await r2.json()) as Profile;
-
-    //console.log(user);
+    const user = (await myUser.json()) as Profile;
 
     if (user)
 	{
@@ -109,8 +102,6 @@ export class AppController {
   @Get('logout')
   @UseGuards(JwtTwoFactorGuard)
   async logOut(@Req() req: any, @Res() res: any) {
-    console.log('logout');
-    //this.userService.clearDatabase();
     const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
     const User = await this.userService.findUserByUuid(Jwt['uuid']);
     if (User) {
@@ -125,11 +116,4 @@ export class AppController {
     });
   }
 
-  // @Get('users/myUser')
-  // @UseGuards(AuthenticatedGuard)
-  // async myUser(user: Profile, @Res() res: any, @Req() req: any) {
-  // 	const getUser = await this.userService.getMyUser(user.id);
-  // 	if (getUser)
-  // 		return res.status(HttpStatus.OK).json(getUser);
-  // }
 }

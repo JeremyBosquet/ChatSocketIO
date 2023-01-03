@@ -214,7 +214,7 @@ function HomePage() {
 
 	return (
 		<>
-			{!booleffect2 && !ready && !playing ? (
+			{!booleffect2 && !ready && !playing? (
 				<div className="HomePage main">
 					<>
 						{!User ? (

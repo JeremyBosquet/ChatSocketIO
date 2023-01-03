@@ -26,6 +26,7 @@ const Protected = ({ children }: { children: any }) => {
 	}, []);
 
 	if (mounted && !isLoggedIn) {
+		localStorage.removeItem("token");
 		return <Navigate to="/" replace />;
 	}
 	if (mounted && isLoggedIn)

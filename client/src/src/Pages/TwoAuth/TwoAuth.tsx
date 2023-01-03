@@ -36,7 +36,6 @@ function TwoAuth() {
 					setbooleffect2(false);
 				})
 				.catch((err) => {
-					console.log(err.message);
 					setbooleffect2(false);
 				});
 		} else {
@@ -46,7 +45,6 @@ function TwoAuth() {
 	}
 
 	function setOfPrint() {
-		console.log(IsTwoAuthActivated);
 		if (IsTwoAuthActivated)
 			setPrint(true);
 		else

@@ -28,11 +28,9 @@ function Block(props: props) {
 		async function isBlocked(user: IuserDb) {
 			let userFinded = blockedUsers.find((userBlocked: any) => userBlocked.uuid === user.uuid);
 			if (userFinded) {
-				console.log(user, " est bloqué");
 				setBlocked(true);
 				return (true);
 			}
-			console.log(user, " est pas bloqué");
 			setBlocked(false);
 			return (false);
 		}
@@ -65,7 +63,6 @@ function Block(props: props) {
 
 				createNotification('success', 'You have successfully blocked the player.');
 			}).catch((err) => {
-				console.log(err.response.data.message);
 			});
 		} else {
 			await instance.post(`user/UnblockUser`, { uuid: targetId }, {
@@ -80,8 +77,6 @@ function Block(props: props) {
 				setBlocked(false);
 
 				createNotification('success', 'You have successfully unblocked the player.');
-			}).catch((err) => {
-				console.log(err.response.data.message);
 			});
 		}
 	}

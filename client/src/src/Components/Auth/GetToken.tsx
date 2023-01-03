@@ -22,14 +22,11 @@ function GetToken() {
 		if (localStorage.getItem("token")) {
 			await instance.get(`user/getLoggedInfo`)
 				.then((res) => {
-					console.log("1", res.data.isTwoFactorAuthenticationEnabled)
-					console.log("2", res.data.isSecondFactorAuthenticated)
 					setActivated(res.data.isTwoFactorAuthenticationEnabled);
 					setConnected(res.data.isSecondFactorAuthenticated);
 					setBooleffect3(true);
 				})
 				.catch((err) => {
-					console.log(err.message);
 					setBooleffect3(true);
 				});
 		}
@@ -40,7 +37,6 @@ function GetToken() {
 	}
 
 	async function NotActivated() {
-		console.log("Bearer " + localStorage.getItem("token"));
 		await instance.get(`user`, {
 			headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
@@ -48,12 +44,10 @@ function GetToken() {
 		})
 			.then((res) => {
 				dispatch(setUser(res.data.User));
-				console.log(res.data.message);
 				createNotification("success", "User connected");
 				navigate("/");
 			})
 			.catch((err) => {
-				console.log(err.message);
 				createNotification("error", "failed to connect");
 				navigate("/");
 			});
@@ -61,17 +55,14 @@ function GetToken() {
 	function AuthCall(): any {
 		const queryParams = new URLSearchParams(window.location.search);
 		const code = queryParams.get("code");
-		console.log(code);
 		instance.get(`login/42/return/` + code)
 			.then((res) => {
 				if (res.data) {
 					localStorage.setItem("token", res.data.token);
-					console.log("token", res.data.token);
 					GetLoggedInfo();
 				}
 			})
 			.catch((err) => {
-				console.log(err.message);
 				navigate("/");
 			});
 	}
@@ -83,7 +74,6 @@ function GetToken() {
 	}, []);
 	useEffect(() => {
 		if (firstrender.current) {
-			console.log("first render");
 			firstrender.current = false;
 			return;
 		}

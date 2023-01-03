@@ -62,8 +62,6 @@ function Block(props: props) {
 				setBlocked(true);
 
 				createNotification('success', 'You have successfully blocked the player.');
-			}).catch((err) => {
-				console.log(err.response.data.message);
 			});
 		} else {
 			await instance.post(`user/UnblockUser`, { uuid: targetId }, {
@@ -78,8 +76,6 @@ function Block(props: props) {
 				setBlocked(false);
 
 				createNotification('success', 'You have successfully unblocked the player.');
-			}).catch((err) => {
-				console.log(err.response.data.message);
 			});
 		}
 	}

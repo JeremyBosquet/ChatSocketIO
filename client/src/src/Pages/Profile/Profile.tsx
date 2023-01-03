@@ -56,13 +56,11 @@ function Profile() {
 					instance.get(`user/RankingByUuid/` + res.data.User.uuid).then((res) => {
 						if (res.data && res.data.Rank)
 							dispatch(setRanking(res.data.Rank));
-						console.log("Ranking", res.data)
 					});
 				}
 				else
 					navigate('/');
 			}).catch((err) => {
-				console.log(err)
 				navigate('/');
 			});
 		}

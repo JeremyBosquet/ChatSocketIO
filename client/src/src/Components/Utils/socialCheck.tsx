@@ -46,8 +46,6 @@ export async function AddOrRemoveFriend(uuid: string, User: any) {
 		}).then((res) => {
 			dispatch(setRequestedList([...requestedList, { uuid: uuid }]));
 			socket?.emit('addFriend', { uuid: uuid, myUUID: User.uuid })
-		}).catch((err) => {
-			console.log(err.response.data.message);
 		});
 	}
 	else {
@@ -59,8 +57,6 @@ export async function AddOrRemoveFriend(uuid: string, User: any) {
 			const users: any[] = friendList.filter((element: any) => element.uuid !== uuid);
 			dispatch(setFriendList(users));
 			socket?.emit('removeOrBlock', { uuid: uuid, myUUID: User.uuid })
-		}).catch((err) => {
-			console.log(err.response.data.message);
 		});
 	}
 }
@@ -81,8 +77,6 @@ export async function AcceptFriend(uuid: string, image: any, User: any) {
 			dispatch(setFriendList([...friendList, { uuid: uuid, username: test[0].username, image: import.meta.env.VITE_URL_API + ":7000/" + image }]));
 			dispatch(setRequestList(request));
 			socket?.emit('acceptFriend', { uuid: uuid, myUUID: User.uuid });
-		}).catch((err) => {
-			console.log(err.response.data.message);
 		});
 	}
 }
@@ -101,8 +95,6 @@ export async function DeclineFriendAdd(uuid: string, User: any) {
 			const request: any[] = requestList.filter((element: any) => element.uuid !== uuid);
 			dispatch(setRequestList(request));
 			socket?.emit('DeclineFriendAdd', { uuid: uuid, myUUID: User.uuid });
-		}).catch((err) => {
-			console.log(err.response.data.message);
 		});
 	}
 }
@@ -121,8 +113,6 @@ export async function CancelFriendAdd(uuid: string, User: any) {
 			const requested: any[] = requestedList.filter((element: any) => element.uuid !== uuid);
 			dispatch(setRequestedList(requested));
 			socket?.emit('CancelFriendAdd', { uuid: uuid, myUUID: User.uuid });
-		}).catch((err) => {
-			console.log(err.response.data.message);
 		});
 	}
 }
@@ -153,8 +143,6 @@ export async function BlockOrUnblockUser(uuid: string, User: any) {
 			socket?.emit('CancelFriendAdd', { uuid: uuid, myUUID: User.uuid });
 			socket?.emit('DeclineFriendAdd', { uuid: uuid, myUUID: User.uuid });
 			socket?.emit('Block', { uuid: uuid, myUUID: User.uuid });
-		}).catch((err) => {
-			console.log(err.response.data.message);
 		});
 	}
 	else {
@@ -167,8 +155,6 @@ export async function BlockOrUnblockUser(uuid: string, User: any) {
 			dispatch(setFriendList(users));
 			dispatch(setBlockList(blockList.filter((user: any) => user.uuid !== uuid)));
 			socket?.emit('Unblock', { uuid: uuid, myUUID: User.uuid });
-		}).catch((err) => {
-			console.log(err.response.data.message);
 		});
 	}
 }

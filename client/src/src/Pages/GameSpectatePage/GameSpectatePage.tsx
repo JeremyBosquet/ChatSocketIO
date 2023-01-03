@@ -82,12 +82,10 @@ function GameSpectatePage() {
 		);
 
 		if (messages?.data) {
-			console.log(messages?.data);
 			setRooms(messages.data);
 		}
 	};
 	useEffect(() => {
-		console.log("socket", socket);
 		if (socket)
 			socket?.close();
 		const newSocket = io(import.meta.env.VITE_URL_API + ":7002");
@@ -119,7 +117,6 @@ function GameSpectatePage() {
 				setRoom(room);
 			});
 			socket.on("gameEnd", (data: IRoom) => {
-				console.log("gameEnd", data);
 				if (data.scoreA === 10)
 					createNotification("success", "PlayerA a gagner");
 				else if (data.scoreB === 10)
@@ -129,10 +126,6 @@ function GameSpectatePage() {
 				navigate("/game/spectate");
 			});
 			socket.on("gameForceEnd", (data: IRoom) => {
-				console.log(
-					"gameForceEnd donc erreur 'sorry l'autre connard a crash'",
-					data
-				);
 				createNotification("info", "The opponent player has left the game");
 				setDisplay(false);
 				setRoom(undefined);
@@ -148,7 +141,6 @@ function GameSpectatePage() {
 	useEffect(() => {
 		const checkId = async () => {
 			if (roomId) {
-				console.log("room", roomId);
 				const result = await instance.get(`room/checkGame/` + roomId);
 				if (result.data) {
 					setDisplay(true);

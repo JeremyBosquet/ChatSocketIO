@@ -28,8 +28,6 @@ function Cancel(props: props) {
 				const requested: any[] = requestedList.filter((element: any) => element.uuid !== uuid);
 				dispatch(setRequestedList(requested));
 				socket?.emit('CancelFriendAdd', { uuid: uuid, myUUID: props.User.uuid });
-			}).catch((err) => {
-				console.log(err.response.data.message);
 			});
 		}
 	}

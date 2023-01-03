@@ -92,7 +92,6 @@ function HomePage() {
 	const myHistoryList: any[] = useSelector(getHistoryList);
 	const Rank: number = useSelector(getRanking);
 	useEffect(() => {
-		console.log("socketGame", socketGame);
 		if (socketGame)
 			socketGame?.close();
 		const newSocket = io(import.meta.env.VITE_URL_API + ":7002");
@@ -100,7 +99,7 @@ function HomePage() {
 	}, []);
 
 	useEffect(() => {
-		console.log("newSocket gfgdfgdf", socketGame)
+=
 		socketGame?.emit("searching");
 	}, [socketGame]);
 
@@ -111,18 +110,13 @@ function HomePage() {
 	socketGame?.removeListener("gameEnd");
 	socketGame?.removeListener("gameForceEnd");
 	socketGame?.removeListener("roomUpdated");
-	socketGame?.on("errorRoomIsFull", (id: string) => {
-		console.log("errorRoomIsFull", id);
-	});
 
 	socketGame?.on("playerReady", (data: IRoom) => {
 		if (ready) {
 			setRoom(data);
-			console.log("hey gameStart", data);
 		}
 	});
 	socketGame?.on("gameStart", (data: IRoom) => {
-		console.log("hey gameStart", data);
 		setRoom(data);
 		setPlaying(true);
 		setReady(false);
@@ -131,14 +125,12 @@ function HomePage() {
 	socketGame?.on("playerDisconnected", (data: IRoom) => {
 		if (ready) {
 			createNotification("info", "The opponent player has left the game");
-			console.log("aPlayerDisconnected : ", data);
 			if (playing) {
 				setPlaying(false);
 			} else setRoom(data);
 		}
 	});
 	socketGame?.on("gameEnd", (data: IRoom) => {
-		console.log("gameEnd", data);
 		if (data.scoreA === 10)
 			createNotification("success", "PlayerA a gagner");
 		else if (data.scoreB === 10)
@@ -149,10 +141,6 @@ function HomePage() {
 		setReady(false);
 	});
 	socketGame?.on("gameForceEnd", (data: IRoom) => {
-		console.log(
-			"gameForceEnd donc erreur 'sorry l'autre connard a crash'",
-			data
-		);
 		createNotification("info", "The opponent player has left the game");
 		setRoom(data);
 		setPlaying(false);
@@ -167,7 +155,6 @@ function HomePage() {
 
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem("token")) {
-			console.log("GetLoggedInfoAndUser");
 			await instance.get(`user`, {
 				headers: {
 					Authorization: "Bearer " + localStorage.getItem("token"),
@@ -183,16 +170,11 @@ function HomePage() {
 							dispatch(setHistoryList(res.data));
 						else if (res.data)
 							dispatch(setHistoryList([]));
-						console.log("History", res.data)
 					});
 					instance.get(`user/Ranking`).then((res) => {
 						if (res.data && res.data.Rank)
 							dispatch(setRanking(res.data.Rank));
-						console.log("Ranking", res.data)
 					});
-					console.log(res.data.User);
-				}).catch((err) => {
-					console.log(err.message);
 				});
 		}
 		setbooleffect2(false);

@@ -92,9 +92,7 @@ function RoomSpectateInfo(props: props) {
 		navigate(`/game/spectate/${id}`);
 	}
 
-	console.log("hey je setup roomUpdated");
 	socket?.on("roomUpdated-" + props.id, (data: IRoom) => {
-		console.log("data");
 		if (data) {
 			setScoreA(data.scoreA);
 			setScoreB(data.scoreB);

@@ -36,7 +36,6 @@ function AddRemoveFriend(props: props) {
 				setIsRequested(true);
 			}).catch((err) => {
 				setIsRequested(false);
-				console.log(err.response.data.message);
 			});
 		}
 		else {
@@ -53,7 +52,6 @@ function AddRemoveFriend(props: props) {
 				setIsRequested(false);
 			}).catch((err) => {
 				setIsFriend(false);
-				console.log(err.response.data.message);
 			});
 		}
 	}
@@ -73,7 +71,6 @@ function AddRemoveFriend(props: props) {
 				setIsRequest(false);
 			}).catch((err) => {
 				setIsFriend(false);
-				console.log(err.response.data.message);
 			});
 		}
 	}
@@ -82,7 +79,6 @@ function AddRemoveFriend(props: props) {
 		let userData: any = [];
 		await instance.get(`findUser/` + uuid)
 			.then((res) => {
-				console.log(res.data.User)
 				if (res.data.User)
 					userData = res.data.User;
 			})
@@ -107,7 +103,6 @@ function AddRemoveFriend(props: props) {
 				setIsFriend(true);
 			}).catch((err) => {
 				setIsFriend(false);
-				console.log(err.response.data.message);
 			});
 		}
 	}
@@ -116,7 +111,6 @@ function AddRemoveFriend(props: props) {
 		function IsFriend(uuid: string) {
 			const userFriends: any[] = friendList;
 			const test: any[] = userFriends.filter(friend => friend.uuid === uuid);
-			console.log(test)
 			if (test.length) {
 				setIsFriend(true);
 				return true;
@@ -154,9 +148,6 @@ function AddRemoveFriend(props: props) {
 			setIsRequested(false);
 			return (false);
 		}
-
-
-		console.log()
 		IsFriend(props.user.uuid);
 		IsRequest(props.user);
 		IsRequested(props.user);

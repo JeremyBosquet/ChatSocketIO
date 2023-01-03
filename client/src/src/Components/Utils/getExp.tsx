@@ -28,7 +28,6 @@ export async function getExp(uuid: string, setProfileExp: any) {
 			for (let i = 0; elem[i]; i++) {
 				(elem[i] as HTMLElement).style.setProperty('--expAmount', '00%');
 			}
-			console.log(err.message);
 		});
 }
 
@@ -59,7 +58,6 @@ export async function getExpProfile(uuid: string, setProfileExp: any) {
 			for (let i = 0; elem[i]; i++) {
 				(elem[i] as HTMLElement).style.setProperty('--expAmount', '00%');
 			}
-			console.log(err.message);
 		});
 }
 
@@ -78,9 +76,8 @@ export async function getMyExp(uuid: string, setProfileExp: any) {
 					cut = res.data.Exp.slice(2);
 				else
 					cut = res.data.Exp.slice(3);
-				console.log("h");
 				for (let i = 0; elem[i]; i++) {
-					console.log("v");
+
 					(elem[i] as HTMLElement).style.setProperty('--expAmount', cut.toString() + '%');
 				}
 			}
@@ -98,6 +95,5 @@ export async function getMyExp(uuid: string, setProfileExp: any) {
 			for (let i = 0; elem[i]; i++) {
 				(elem[i] as HTMLElement).style.setProperty('--expAmount', '0%');
 			}
-			console.log(err.message);
 		});
 }

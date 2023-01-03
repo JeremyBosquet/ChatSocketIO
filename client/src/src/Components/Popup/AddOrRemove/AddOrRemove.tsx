@@ -34,8 +34,6 @@ function AddOrRemove(props: props) {
 			}).then((res) => {
 				dispatch(setRequestedList([...requestedList, { uuid: uuid }]));
 				socket?.emit('addFriend', { uuid: uuid, myUUID: props.User.uuid })
-			}).catch((err) => {
-				console.log(err.response.data.message);
 			});
 		}
 		else {
@@ -47,8 +45,6 @@ function AddOrRemove(props: props) {
 				const users: any[] = friendList.filter((element: any) => element.uuid !== uuid);
 				dispatch(setFriendList(users));
 				socket?.emit('removeOrBlock', { uuid: uuid, myUUID: props.User.uuid })
-			}).catch((err) => {
-				console.log(err.response.data.message);
 			});
 		}
 	}

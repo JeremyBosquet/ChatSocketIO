@@ -139,7 +139,6 @@ function DMChannel(props: props) {
 
 			socket.removeListener('usersConnected');
 			socket.on('usersConnected', (usersConnected: Iuser[]) => {
-				console.log(usersConnected)
 				setUsersConnected(usersConnected);
 			});
 		}

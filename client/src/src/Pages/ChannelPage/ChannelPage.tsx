@@ -162,9 +162,8 @@ function ChannelPage() {
 	socketGame?.removeListener("gameFetchInvite");
 
 	socketGame?.on("gameRemoveInvite", (data: any) => {
-		console.log("gameRemoveInvite", data);
 		if (data?.target && data?.room) {
-			console.log("gameFetchInvite", data?.target, user.uuid)
+
 			if (data?.target === user.uuid && data.room?.id) {
 				setInviteGames(inviteGames.filter((invite) => invite.roomId !== data.room?.id));
 			}
@@ -174,9 +173,8 @@ function ChannelPage() {
 	socketGame?.emit("gameAskInvite", { id: user.uuid });
 	socketGame?.on("gameFetchInvite", (data: any) => {
 		if (data?.target && data?.room && data?.switch == true) {
-			console.log("gameFetchInvite", data?.target, user.uuid)
+
 			if (data?.target === user.uuid) {
-				console.log("gameFetchInvite", data)
 				setRoom(data?.room);
 				setPlayerId(data?.target);
 				setPlayerName(data?.targetName);
@@ -197,10 +195,6 @@ function ChannelPage() {
 		}
 	});
 
-	socketGame?.on("errorRoomIsFull", (id: string) => {
-		console.log("errorRoomIsFull", id);
-	});
-
 	socketGame?.on("playerReady", (data: IRoom) => {
 		if (ready) {
 			setRoom(data);
@@ -214,7 +208,6 @@ function ChannelPage() {
 	socketGame?.on("playerDisconnected", (data: IRoom) => {
 		if (ready) {
 			createNotification("info", "The other player has left the game");
-			console.log("aPlayerDisconnected : ", data);
 			if (playing) {
 				setPlaying(false);
 			} else setRoom(data);
@@ -226,7 +219,6 @@ function ChannelPage() {
 		quitGame();
 	});
 	socketGame?.on("gameEnd", (data: IRoom) => {
-		console.log("gameEnd", data);
 		if (data.scoreA === 10)
 			createNotification("success", "PlayerA a gagner");
 		else if (data.scoreB === 10)
@@ -238,10 +230,6 @@ function ChannelPage() {
 		quitGame();
 	});
 	socketGame?.on("gameForceEnd", (data: IRoom) => {
-		console.log(
-			"gameForceEnd donc erreur 'sorry l'autre connard a crash'",
-			data
-		);
 		createNotification("info", "The other asshole has crashed");
 		setRoom(undefined);
 		setPlaying(false);

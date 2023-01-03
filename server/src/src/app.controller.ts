@@ -11,14 +11,11 @@ import { Profile } from 'passport-42';
 import { UsersService } from './Users/users.service';
 import { AppService } from './app.service';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserModel } from './typeorm';
 import { JwtTwoFactorGuard } from './TwoFactorAuth/guards/jwt-two-factor.guard';
 
 @Controller('api')
 export class AppController {
 	constructor(
-		@InjectRepository(UserModel)
 		private readonly userService: UsersService,
 		private readonly appService: AppService,
 		private jwtService: JwtService,

@@ -19,8 +19,8 @@ RUN pnpm i -g serve
 
 COPY src/. .
 
-RUN pnpm build
-
-EXPOSE 80
-
-CMD [ "serve", "-s", "dist/", "-l", "80"]
+CMD ["pnpm", "start"]
+#RUN pnpm build
+#
+#EXPOSE 80
+##CMD [ "serve", "-s", "dist/", "-l", "80"]

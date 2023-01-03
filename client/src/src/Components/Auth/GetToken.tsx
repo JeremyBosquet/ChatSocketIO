@@ -13,7 +13,7 @@ function GetToken() {
 	const firstrender = useRef<boolean>(true);
 
 	const [IsTwoAuthActivated, setActivated] = useState<boolean>(false);
-	const [setConnected] = useState<boolean>();
+	const [connected, setConnected] = useState<boolean>(false);
 	const [booleffect3, setBooleffect3] = useState<boolean>(false);
 
 	const dispatch = useDispatch();

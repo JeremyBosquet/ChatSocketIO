@@ -84,7 +84,6 @@ function GamePlay(props: props) {
 	let boardAX = 0.025;
 	let boardBX = 0.025;
 
-	const [image] = (props?.room?.settings?.background == "background1" ? useImage("https://cdn.discordapp.com/attachments/768496887720181770/1047556063500709908/image.png") : useImage("https://cdn.discordapp.com/attachments/768496887720181770/1047556063500709908/image.png"));
 	const [imageA] = (props.room?.playerA.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id));
 	const [imageB] = (props.room?.playerB.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id));
 
@@ -148,13 +147,20 @@ function GamePlay(props: props) {
 	function updateDisplay(): void {
 		if (contextRef.current) {
 			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
-			contextRef.current.fillStyle = "black";
+			if (props.room?.settings.background === "background1")
+				contextRef.current.fillStyle = "black";
+			else if (props.room?.settings.background === "background2")
+				contextRef.current.fillStyle = "white";
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
-			if (image)
-				contextRef.current.drawImage(image, 0, 0, windowsWidth, windowsHeight);
-			contextRef.current.fillStyle = "white";
+			if (props.room?.settings.background === "background1")
+				contextRef.current.fillStyle = "white";
+			else if (props.room?.settings.background === "background2")
+				contextRef.current.fillStyle = "black";
 			contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
-			contextRef.current.fillStyle = "white";
+			if (props.room?.settings.background === "background1")
+				contextRef.current.fillStyle = "white";
+			else if (props.room?.settings.background === "background2")
+				contextRef.current.fillStyle = "black";
 			let display = 50;
 			if (window.innerWidth < 500) {
 				display = 30;
@@ -186,16 +192,14 @@ function GamePlay(props: props) {
 				else
 					contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
 			}
-			contextRef.current.fillStyle = "red";
-			contextRef.current.lineWidth = 1;
-			contextRef.current.strokeStyle = "white";
-			contextRef.current.fillStyle = "white";
+			if (props.room?.settings.background === "background1")
+				contextRef.current.fillStyle = "white";
+			else if (props.room?.settings.background === "background2")
+				contextRef.current.fillStyle = "black";
 			contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
-			contextRef.current.fillStyle = "white";
 			contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
 			contextRef.current.beginPath();
 			contextRef.current.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
-			contextRef.current.fillStyle = "white";
 			contextRef.current.fill();
 		}
 	}

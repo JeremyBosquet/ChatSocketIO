@@ -21,6 +21,12 @@ export class AppService {
 	async logIn(user: Profile) {
 		const findUser = await this.userRepository.findOneBy({ id: user.id })
 		if (findUser) {
+			const path = "./src/uploads/avatar/"
+			if (findUser.image && !fs.existsSync(path + findUser.image))
+			{
+				findUser.image = 'unknow.png';
+				this.userRepository.update(findUser.uuid, { image: findUser.image });
+			}
 			const payload = { uuid: findUser.uuid };
 			const token = this.jwtService.sign(payload, { expiresIn: '2d' });
 			this.userService.IsLoggedIn(findUser.uuid, token);

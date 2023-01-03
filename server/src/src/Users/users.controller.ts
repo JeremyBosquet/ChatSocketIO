@@ -58,6 +58,7 @@ export class UsersController {
 		if (User) {
 			if (User.image) {
 				res.setHeader('Content-Type', 'image/webp');
+				console.log(process.env.BACK + User.image);
 				const response = await axios.get(process.env.BACK + User.image, {
 					responseType: 'arraybuffer',
 				});

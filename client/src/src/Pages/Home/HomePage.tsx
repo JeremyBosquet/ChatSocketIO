@@ -175,6 +175,8 @@ function HomePage() {
 					});
 				});
 		}
+		else
+			setUser(undefined);
 		setbooleffect2(false);
 	}
 

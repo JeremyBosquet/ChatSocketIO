@@ -153,11 +153,7 @@ function HomePage() {
 
 	async function GetLoggedInfoAndUser() {
 		if (localStorage.getItem("token")) {
-			await instance.get(`user`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("token"),
-				},
-			})
+			await instance.get(`user`)
 				.then((res) => {
 					setUser(res.data.User);
 					dispatch(setUserUsername(res.data.User.username));
@@ -173,6 +169,9 @@ function HomePage() {
 						if (res.data && res.data.Rank)
 							dispatch(setRanking(res.data.Rank));
 					});
+				}).catch(() => {
+					console.log("token must be invalid or expired");
+					setUser(undefined);
 				});
 		}
 		else

@@ -7,19 +7,20 @@ WORKDIR /usr/src/app
 
 COPY src/package*.json ./
 
-RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+RUN npm i -g pnpm
 
 ENV PATH="/pnpm:$PATH"
 ENV PNPM_HOME="/pnpm"
 
 RUN pnpm install
 
+RUN pnpm i -g serve
+
+
 COPY src/. .
 
 RUN pnpm build
 
-RUN pnpm i -g serve
+EXPOSE 80
 
-EXPOSE 5999
-
-CMD [ "serve", "-s", "dist/", "-l", "5999"]
+CMD [ "serve", "-s", "dist/", "-l", "80"]

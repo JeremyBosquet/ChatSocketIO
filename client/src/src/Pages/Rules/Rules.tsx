@@ -1,9 +1,11 @@
 import React from "react";
 import { Helmet } from "react-helmet";
+import KillSocket from "../../Components/KillSocket/KillSocket";
 import NavBar from "../../Components/Nav/NavBar";
 import "./Rules.scss";
 
 const Rules = () => {
+	KillSocket("all");
 	return (
 		<div className="RulesPage">
 			<NavBar />

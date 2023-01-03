@@ -24,11 +24,9 @@ import instance from "./API/Instance";
 import ProtectedTwoAuth from "./ProtectedTwoAuth";
 import Leaderboard from "./Pages/Leaderboard/Leaderboard";
 import Rules from "./Pages/Rules/Rules";
-//import TestPage from "./Pages/test";
-//import './Pages/PhaserGame'
 
 function App() {
-  const [APIStatus, setAPIStatus] = useState<boolean>(true);
+  	const [APIStatus] = useState<boolean>(true);
 	const dispatch = useDispatch();
 	const user = useSelector(getUser);
 	const socketSocial = useSelector(getSocketSocial);
@@ -36,18 +34,15 @@ function App() {
 	const ConnectedList = useSelector(getConnectedList);
 	const requestedList = useSelector(getRequestedList);
 	const [booleffect, setBooleffect] = useState<boolean>(false);
-	const [booleffect2, setBooleffect2] = useState<boolean>(false);
 	
-	useEffect(() => { // Connect to the socket
+	useEffect(() => {
 		if (!socketChat)
 		{
 			const newSocket = io('http://90.66.199.176:7004');
 			dispatch(setSocket(newSocket));
 		}
-		// socketSocial?.removeAllListeners();
-		
-		//eslint-disable-next-line
 	}, []);
+
 	useEffect(() => {
 		if (localStorage.getItem('token'))
 		{
@@ -284,7 +279,6 @@ function App() {
 					}
 				}
 			});
-			setBooleffect2(true);
 		}
 		async function callFilter(data : any, special : boolean) {
 			await filterBlockedUsers(data);
@@ -334,15 +328,11 @@ function App() {
 			<Route path="/login" element={<SignIn />}></Route>
 			<Route path="/login/return/" element={<GetToken />}></Route>
 			<Route path="/settings" element={<Settings />}></Route>
-			{/* <Route path="/profile" element={<Protected><Profile /></Protected>}></Route> */}
 			<Route path="/logout" element={<Protected><Logout /></Protected>}></Route>
 			<Route path="/twoAuth" element={<ProtectedTwoAuth><TwoAuth /></ProtectedTwoAuth>}></Route>
 			<Route path="/profile/:Username" element={<Protected><Profile /></Protected>}></Route>
 			<Route path="/leaderboard" element={<Protected><Leaderboard /></Protected>}></Route>
 			<Route path="/rules" element={<Protected><Rules /></Protected>}></Route>
-			{/* <Route path=":UserId" element={<Protected><Social /></Protected>}></Route> */}
-			{/*</Routes>Route path="/game/" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}
-			{/*</Routes>Route path="/game/:roomId" element={<Protected><GamePlayingPage /></Protected>}></Route>*/}
 			<Route path="/game/spectate" element={<Protected><GameSpectatePage /></Protected>}></Route>
 			<Route path="/game/spectate/:roomId" element={<Protected><GameSpectatePage /></Protected>}></Route>
 			<Route path="/chat/" element={<Protected><ChannelPage /></Protected>}></Route>
@@ -365,6 +355,3 @@ function App() {
 }
 
 export default App;
-
-/* <Route path="/chat" element={<ChatPage />}></Route> */
-

@@ -1,73 +1,73 @@
 .channel {
-    height: 57px;
-    margin: 20px;
-    background-color: #2B2B2B;
-    padding: 10px;
-    transition-duration: 0.2s;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+	height: 57px;
+	margin: 20px;
+	background-color: #2B2B2B;
+	padding: 10px;
+	transition-duration: 0.2s;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 
-    &:hover {
-        background-color: #1F1F1F;
-        cursor: pointer;
-        transform: scale(1.01);
-    }
+	&:hover {
+		background-color: #1F1F1F;
+		cursor: pointer;
+		transform: scale(1.01);
+	}
 
-    .channelInfoName {
-        display: flex;
-        justify-content: space-between;
+	.channelInfoName {
+		display: flex;
+		justify-content: space-between;
 
-        .channelIcon {
-            width: 20px;
-            height: 20px;
-        }
-    }
-    
-    .channelInfoDate {
-        display: flex;
-        justify-content: space-between;
-    }
+		.channelIcon {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	.channelInfoDate {
+		display: flex;
+		justify-content: space-between;
+	}
 }
 
 
 .channelMenu {
-    // width: 150px;
-    display: flex;
-    flex-direction: column;
-    align-self: flex-start;
-    border: none;
-    background-color: #00000000;
-    
-    .channelMenuButton {
-        width: 100%;
-        padding: 10px 10px;
-        background-color: #2B2B2B;
-        border: 1px solid #666666;
-        border-top: none;
-        color: #b3b2b2;
-        cursor: pointer;
-        transition-duration: 0.2s;
+	// width: 150px;
+	display: flex;
+	flex-direction: column;
+	align-self: flex-start;
+	border: none;
+	background-color: #00000000;
 
-        &:hover {
-            background-color: #1F1F1F;
-            color: #b3b2b2;
-        }
+	.channelMenuButton {
+		width: 100%;
+		padding: 10px 10px;
+		background-color: #2B2B2B;
+		border: 1px solid #666666;
+		border-top: none;
+		color: #b3b2b2;
+		cursor: pointer;
+		transition-duration: 0.2s;
 
-        &:nth-child(2) {
-            border-top: 1px solid #666666;
-        }
-    }
+		&:hover {
+			background-color: #1F1F1F;
+			color: #b3b2b2;
+		}
+
+		&:nth-child(2) {
+			border-top: 1px solid #666666;
+		}
+	}
 }
 
 .developChannel {
-    border: none;
-    width: 20px;
-    height: 20px;
-    background-color: #b3b2b2;
-    cursor: pointer;
-    color: #1c1c1c;
-    text-align: center;
-    font-size: 18px;
-    position: relative;
+	border: none;
+	width: 20px;
+	height: 20px;
+	background-color: #b3b2b2;
+	cursor: pointer;
+	color: #1c1c1c;
+	text-align: center;
+	font-size: 18px;
+	position: relative;
 }

@@ -9,17 +9,16 @@ import NavBar from "../../Components/Nav/NavBar";
 import { getMyExp } from '../../Components/Utils/getExp'
 import { whoWon } from "../../Components/Utils/whoWon";
 import KillSocket from "../../Components/KillSocket/KillSocket";
-import {getHistoryList, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList, setRanking, getRanking} from "../../Redux/userSlice";
+import { getHistoryList, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList, setRanking, getRanking } from "../../Redux/userSlice";
 import io from "socket.io-client";
 import GameReady from "../../Components/GameReady/GameReady";
 import GamePlay from "../../Components/GamePlay/GamePlay";
 import "../../Pages/Home/HomePage.scss";
-import { getSockeGame, getSockeGameChat, setSocketGame } from "../../Redux/gameSlice";
+import { getSockeGame, setSocketGame } from "../../Redux/gameSlice";
 import instance from "../../API/Instance";
-import {Helmet} from "react-helmet";
-import {GiRank3} from "react-icons/gi";
+import { Helmet } from "react-helmet";
+import { GiRank3 } from "react-icons/gi";
 import { Link } from "react-router-dom";
-import {ImFileText2} from "react-icons/im";
 
 interface IPlayer {
 	id: string;
@@ -88,10 +87,10 @@ function HomePage() {
 	KillSocket("spectate");
 	const dispatch = useDispatch();
 
-	const userImg : any = useSelector(getUserImg);
-	const userUsername : string = useSelector(getUserUsername);
-	const myHistoryList : any[] = useSelector(getHistoryList);
-	const Rank : number = useSelector(getRanking);
+	const userImg: any = useSelector(getUserImg);
+	const userUsername: string = useSelector(getUserUsername);
+	const myHistoryList: any[] = useSelector(getHistoryList);
+	const Rank: number = useSelector(getRanking);
 	useEffect(() => {
 		console.log("socketGame", socketGame);
 		if (socketGame)
@@ -154,7 +153,7 @@ function HomePage() {
 			"gameForceEnd donc erreur 'sorry l'autre connard a crash'",
 			data
 		);
-			createNotification("info", "The opponent player has left the game");
+		createNotification("info", "The opponent player has left the game");
 		setRoom(data);
 		setPlaying(false);
 		setDisplay(true);
@@ -163,7 +162,7 @@ function HomePage() {
 	});
 	socketGame?.on("roomUpdated", (data: IRoom) => {
 		if (room)
-			setRoom({...room, scoreA: data.scoreA, scoreB: data.scoreB});
+			setRoom({ ...room, scoreA: data.scoreA, scoreB: data.scoreB });
 	});
 
 	async function GetLoggedInfoAndUser() {
@@ -194,23 +193,23 @@ function HomePage() {
 					console.log(res.data.User);
 				}).catch((err) => {
 					console.log(err.message);
-			});
+				});
 		}
 		setbooleffect2(false);
 	}
 
 	async function reloadHistoryAndRank() {
 		await instance.get(`room/getGameOfUser/` + User.uuid,
-		{
-			headers: {
-				Authorization: "Bearer " + localStorage.getItem("token"),
-			},
-		}).then((res) => {
-			if (res.data && res.data.length)
-				dispatch(setHistoryList(res.data));
-			else if (res.data)
-				dispatch(setHistoryList([]));
-		});
+			{
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("token"),
+				},
+			}).then((res) => {
+				if (res.data && res.data.length)
+					dispatch(setHistoryList(res.data));
+				else if (res.data)
+					dispatch(setHistoryList([]));
+			});
 		await instance.get(`user/Ranking`).then((res) => {
 			if (res.data && res.data.Rank)
 				dispatch(setRanking(res.data.Rank));
@@ -249,61 +248,61 @@ function HomePage() {
 							</>
 						) : (
 							<>
-									<NavBar />
-									{display ? (
-										<div id="myProfile">
-											<Helmet>
+								<NavBar />
+								{display ? (
+									<div id="myProfile">
+										<Helmet>
 											<meta charSet="utf-8" />
 											<title> Home - transcendence </title>
-											</Helmet>
-											<img
-												src={userImg}
-												alt="user_img"
-												className="userImg"
-												width="384"
-												height="256"
-											/>
-											{myProfileExp < 5 ?
-														<img className="image" src={"./steel.png"} height={28} width={28}/>
-														: myProfileExp < 10 ?
-														<img className="image" src={"./bronze.png"} height={28} width={28}/>
-														: myProfileExp < 15 ?
-														<img className="image" src={"./silver.png"} height={28} width={28}/>
-														: myProfileExp < 21 ?
-														<img className="image" src={"./gold.png"} height={28} width={28}/>
+										</Helmet>
+										<img
+											src={userImg}
+											alt="user_img"
+											className="userImg"
+											width="384"
+											height="256"
+										/>
+										{myProfileExp < 5 ?
+											<img className="image" src={"./steel.png"} height={28} width={28} />
+											: myProfileExp < 10 ?
+												<img className="image" src={"./bronze.png"} height={28} width={28} />
+												: myProfileExp < 15 ?
+													<img className="image" src={"./silver.png"} height={28} width={28} />
+													: myProfileExp < 21 ?
+														<img className="image" src={"./gold.png"} height={28} width={28} />
 														: myProfileExp < 22 ?
-														<img className="image" src={"./diamond.png"} height={36} width={28}/>
-														: <img className="image" src={"./steel.png"} height={28} width={28}/>
-											}
-											<div className="userInfo">
-												<div className="Rank">
-													<h3> {userUsername} </h3>
-													<h4> <GiRank3/>{Rank} </h4>
-												</div>
-												<h4> @{trueUsername} </h4>
-												<div className="expBar">
-													<span className="myExp"> </span>
-													<p>{myProfileExp}</p>
-												</div>
-												<div id="listMyGameParent">
+															<img className="image" src={"./diamond.png"} height={36} width={28} />
+															: <img className="image" src={"./steel.png"} height={28} width={28} />
+										}
+										<div className="userInfo">
+											<div className="Rank">
+												<h3> {userUsername} </h3>
+												<h4> <GiRank3 />{Rank} </h4>
+											</div>
+											<h4> @{trueUsername} </h4>
+											<div className="expBar">
+												<span className="myExp"> </span>
+												<p>{myProfileExp}</p>
+											</div>
+											<div id="listMyGameParent">
 												<div className="table">
-												<div> Players </div>
+													<div> Players </div>
 
-												<div> Results </div>
+													<div> Results </div>
 
 
-												<div> Score </div>
+													<div> Score </div>
 
 												</div>
 												{myHistoryList.length ?
-												(
-													<div id="listMyGame">
-															{myHistoryList.map((game : any, index : number) => (
+													(
+														<div id="listMyGame">
+															{myHistoryList.map((game: any, index: number) => (
 																<div className="user" key={index}>
 																	<p id="playerName">
-																			<Link to={"/profile/" + game.playerA.trueName}>{game.playerA.name}</Link>
-																			{" vs "}
-																			<Link to={"/profile/" + game.playerB.trueName}>{game.playerB.name}</Link>
+																		<Link to={"/profile/" + game.playerA.trueName}>{game.playerA.name}</Link>
+																		{" vs "}
+																		<Link to={"/profile/" + game.playerB.trueName}>{game.playerB.name}</Link>
 																	</p>
 																	<p id="playerStatus">
 																		{whoWon(User.uuid, game)}
@@ -314,19 +313,19 @@ function HomePage() {
 																</div>
 															))}
 														</div>
-												)
-												: null}
-												</div>
+													)
+													: null}
 											</div>
 										</div>
-									) : (null)}
-									<GameReady
-										socket={socketGame}
-										setDisplay={setDisplay}
-										setReady={setReady}
-										setPlayerId={setPlayerId}
-										setPlayerName={setPlayerName}
-									/>
+									</div>
+								) : (null)}
+								<GameReady
+									socket={socketGame}
+									setDisplay={setDisplay}
+									setReady={setReady}
+									setPlayerId={setPlayerId}
+									setPlayerName={setPlayerName}
+								/>
 							</>
 						)}
 					</>

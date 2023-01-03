@@ -4,22 +4,20 @@ import { Navigate } from "react-router-dom";
 import instance from "./API/Instance";
 
 
-const Protected = ({children}: {children: any}) => {
-	// let isLoggedIn : boolean = false;
+const Protected = ({ children }: { children: any }) => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [mounted, setMounted] = useState(false);
 
-	// console.log(children)
 	useEffect(() => {
-		const checkAuth = async () => {	
+		const checkAuth = async () => {
 			if (localStorage.getItem("token")) {
 				await instance.get(`user/CompareToken`)
-				.then((res) => {
-					setIsLoggedIn(true);
-				})
-				.catch(() => {
-					setIsLoggedIn(false);
-				});
+					.then((res) => {
+						setIsLoggedIn(true);
+					})
+					.catch(() => {
+						setIsLoggedIn(false);
+					});
 			}
 			setMounted(true);
 		}
@@ -32,6 +30,6 @@ const Protected = ({children}: {children: any}) => {
 	}
 	if (mounted && isLoggedIn)
 		return children;
- 	<div></div>
+	<div></div>
 };
 export default Protected;

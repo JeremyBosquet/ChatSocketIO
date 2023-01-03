@@ -13,14 +13,13 @@ import { io } from 'socket.io-client';
 import GamePlay from '../../Components/GamePlay/GamePlay';
 import GameChatReady from '../../Components/GameChatReady/GameChatReady';
 import KillSocket from '../../Components/KillSocket/KillSocket';
-import Popup from '../../Components/Popup/Popup';
 import Channel from '../../Components/Channels/Channel/Channel';
 import { getChannels, setChannels } from '../../Redux/chatSlice';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
 import Search from '../../Components/Channels/Search/Search';
 import instance from '../../API/Instance';
-import {Helmet} from "react-helmet";
+import { Helmet } from "react-helmet";
 
 interface IPlayer {
 	id: string;
@@ -28,16 +27,16 @@ interface IPlayer {
 	status: string;
 	x: number;
 	y: number;
-  }
-  
-  interface IBall {
+}
+
+interface IBall {
 	x: number;
 	y: number;
 	speed: number;
 	direction: number;
-  }
-  
-  interface IRoom {
+}
+
+interface IRoom {
 	id: string;
 	name: string;
 	nbPlayers: number;
@@ -52,33 +51,33 @@ interface IPlayer {
 	settings: ISettings;
 	configurationA: IConfiguration;
 	configurationB: IConfiguration;
-  }
-  
-  interface IConfiguration {
+}
+
+interface IConfiguration {
 	difficulty: string;
 	background: string;
 	confirmed: boolean;
-  }
-  
-  interface ISettings {
+}
+
+interface ISettings {
 	defaultSpeed: number;
 	defaultDirection: number;
 	boardWidth: number;
 	boardHeight: number;
 	ballRadius: number;
 	background: string;
-  }
+}
 
-  interface IInvites {
+interface IInvites {
 	requestFrom: string;
 	roomId: string;
-  }
+}
 
 function ChannelPage() {
 	const params = useParams();
 	const logged = useSelector(getLogged);
-    const user = useSelector(getUser);
-    const dispatch = useDispatch();
+	const user = useSelector(getUser);
+	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const socketGame = useSelector(getSockeGameChat);
 	const [inGame, setInGame] = useState<boolean>(false);
@@ -88,56 +87,53 @@ function ChannelPage() {
 	const [playerName, setPlayerName] = useState<string>("");
 	const [room, setRoom] = useState<IRoom>();
 	const [inviteGames, setInviteGames] = useState<IInvites[]>([]);
-	//const [notification, setNotificaton] = useState<Boolean>(false);
-    const [searchChannel, setSearchChannel] = useState<string>("");
+	const [searchChannel, setSearchChannel] = useState<string>("");
 	const [channelsFind, setChannelsFind] = useState<[]>([]);
 
 	const channels = useSelector(getChannels);
-  
+
 	KillSocket("game");
 	KillSocket("spectate");
 
 	useEffect(() => {
 		const getUserInfos = async () => {
 			await instance.get(`user`, {
-			  headers: {
-				Authorization: "Bearer " + localStorage.getItem("token"),
-			  },
+				headers: {
+					Authorization: "Bearer " + localStorage.getItem("token"),
+				},
 			})
-			.then((res) => {
-			  dispatch(setUser(res.data.User));
-			  dispatch(setLogged(true));
-			})
-			.catch((err) => {
-			  setUser({});
-			  createNotification("error", "User not found");
-			  navigate("/");
-			});
+				.then((res) => {
+					dispatch(setUser(res.data.User));
+					dispatch(setLogged(true));
+				})
+				.catch((err) => {
+					setUser({});
+					createNotification("error", "User not found");
+					navigate("/");
+				});
 		}
 
 		if (localStorage.getItem("token"))
 			getUserInfos();
 	}, []);
-	
+
 	const handleChangeMode = (newMode: string) => {
 		if (newMode === "channels")
-			return ;
+			return;
 		if (newMode === "dm")
 			navigate("/chat/dm")
 	}
 
-	    
-    const getUsersChannel = async () => {
-        await instance.get(`api/chat/channels/user`)
-        .then((res) => {
-            if (res)
-                dispatch(setChannels(res.data));
-        })
-    }
 
-	// Game part
+	const getUsersChannel = async () => {
+		await instance.get(`api/chat/channels/user`)
+			.then((res) => {
+				if (res)
+					dispatch(setChannels(res.data));
+			})
+	}
+
 	useEffect(() => {
-		// Connect to the socket
 		if (socketGame)
 			socketGame?.close();
 		const newSocket = io(import.meta.env.VITE_URL_API + ":7002");
@@ -151,138 +147,123 @@ function ChannelPage() {
 		setPlayerId("");
 		setPlayerName("");
 		setRoom(undefined);
-		// Re create the socket
 		const newSocket = io(import.meta.env.VITE_URL_API + ":7002");
 		socketGame?.close();
 		dispatch(setSocketGameChat(newSocket));
 	}
 
-			socketGame?.removeListener("errorRoomIsFull");
-		  	socketGame?.removeListener("playerReady");
-		  	socketGame?.removeListener("gameStart");
-		  	socketGame?.removeListener("playerDisconnected");
-		  	socketGame?.removeListener("gameEnd");
-		  	socketGame?.removeListener("gameForceEnd");
-		  	socketGame?.removeListener("roomUpdated");
-		  	socketGame?.removeListener("gameFetchInvite");
-		  
-			socketGame?.on("gameRemoveInvite", (data: any) => {
-				console.log("gameRemoveInvite", data);
-				if (data?.target && data?.room)
-				{
-					console.log("gameFetchInvite", data?.target, user.uuid)
-					if (data?.target === user.uuid && data.room?.id)
-					{
-						setInviteGames(inviteGames.filter((invite) => invite.roomId !== data.room?.id));
-					}
-				}
-			});
+	socketGame?.removeListener("errorRoomIsFull");
+	socketGame?.removeListener("playerReady");
+	socketGame?.removeListener("gameStart");
+	socketGame?.removeListener("playerDisconnected");
+	socketGame?.removeListener("gameEnd");
+	socketGame?.removeListener("gameForceEnd");
+	socketGame?.removeListener("roomUpdated");
+	socketGame?.removeListener("gameFetchInvite");
 
-			socketGame?.emit("gameAskInvite", {id: user.uuid});
-			socketGame?.on("gameFetchInvite", (data: any) => {
-				if (data?.target && data?.room && data?.switch == true)
-				{
-					console.log("gameFetchInvite", data?.target, user.uuid)
-					if (data?.target === user.uuid)
-					{
-						console.log("gameFetchInvite", data)
-						setRoom(data?.room);
-						setPlayerId(data?.target);
-						setPlayerName(data?.targetName);
-						setInGame(true);
-						setReady(false);
-						setPlaying(false);
-					}
-				}
-				else if (data?.target && data?.room && data?.switch == false)
-				{
-					if (data?.target === user.uuid)
-					{
-						const newInvitation : IInvites = {
-							requestFrom : data.room?.playerA.id,
-							roomId: data.room?.id, 
-						}
-						if (inviteGames.filter((invite) => invite.roomId === data.room.id).length === 0)
-							setInviteGames([...inviteGames, newInvitation]);
-					}
-				}
-			});
-
-			socketGame?.on("errorRoomIsFull", (id: string) => {
-			console.log("errorRoomIsFull", id);
-			});
-
-			socketGame?.on("playerReady", (data: IRoom) => {
-			if (ready) {
-			  setRoom(data);
+	socketGame?.on("gameRemoveInvite", (data: any) => {
+		console.log("gameRemoveInvite", data);
+		if (data?.target && data?.room) {
+			console.log("gameFetchInvite", data?.target, user.uuid)
+			if (data?.target === user.uuid && data.room?.id) {
+				setInviteGames(inviteGames.filter((invite) => invite.roomId !== data.room?.id));
 			}
-			});
-			socketGame?.on("gameStart", (data: IRoom) => {
-			setRoom(data);
-			setPlaying(true);
-			setReady(false);
-			//setNotificaton(false);
-			});
-			socketGame?.on("playerDisconnected", (data: IRoom) => {
-			if (ready) {
-			  //if (!notification)
-				createNotification("info", "The other player has left the game");
-			  //setNotificaton(true);
-			  console.log("aPlayerDisconnected : ", data);
-			  if (playing) {
+		}
+	});
+
+	socketGame?.emit("gameAskInvite", { id: user.uuid });
+	socketGame?.on("gameFetchInvite", (data: any) => {
+		if (data?.target && data?.room && data?.switch == true) {
+			console.log("gameFetchInvite", data?.target, user.uuid)
+			if (data?.target === user.uuid) {
+				console.log("gameFetchInvite", data)
+				setRoom(data?.room);
+				setPlayerId(data?.target);
+				setPlayerName(data?.targetName);
+				setInGame(true);
+				setReady(false);
 				setPlaying(false);
-				// C'est la merde faut pause la room
-			  } else setRoom(data);
 			}
-			setInGame(false);
-			setRoom(undefined);
-			setPlaying(false);
-			setReady(false);
-			quitGame();
-			});
-			socketGame?.on("gameEnd", (data: IRoom) => {
-			console.log("gameEnd", data);
-			if (data.scoreA === 10)
-			  createNotification("success", "PlayerA a gagner");
-			else if (data.scoreB === 10)
-			  createNotification("success", "PlayerB a gagner");
-			//setNotificaton(true);
-			setRoom(undefined);
-			setPlaying(false);
-			setReady(false);
-			setInGame(false);
-			quitGame();
-			});
-			socketGame?.on("gameForceEnd", (data: IRoom) => {
-			console.log(
-			  "gameForceEnd donc erreur 'sorry l'autre connard a crash'",
-			  data
-			);
-			  createNotification("info", "The other asshole has crashed");
-			//setNotificaton(true);
-			setRoom(undefined);
-			setPlaying(false);
-			setReady(false);
-			// quit game
-			setInGame(false);
-			quitGame();
-			});
-			socketGame?.on("roomUpdated", (data: IRoom) => {
-				if (room) // update scoreA and scoreB only
-					setRoom({...room, scoreA: data.scoreA, scoreB: data.scoreB});
-			});
-		
-	  
+		}
+		else if (data?.target && data?.room && data?.switch == false) {
+			if (data?.target === user.uuid) {
+				const newInvitation: IInvites = {
+					requestFrom: data.room?.playerA.id,
+					roomId: data.room?.id,
+				}
+				if (inviteGames.filter((invite) => invite.roomId === data.room.id).length === 0)
+					setInviteGames([...inviteGames, newInvitation]);
+			}
+		}
+	});
+
+	socketGame?.on("errorRoomIsFull", (id: string) => {
+		console.log("errorRoomIsFull", id);
+	});
+
+	socketGame?.on("playerReady", (data: IRoom) => {
+		if (ready) {
+			setRoom(data);
+		}
+	});
+	socketGame?.on("gameStart", (data: IRoom) => {
+		setRoom(data);
+		setPlaying(true);
+		setReady(false);
+	});
+	socketGame?.on("playerDisconnected", (data: IRoom) => {
+		if (ready) {
+			createNotification("info", "The other player has left the game");
+			console.log("aPlayerDisconnected : ", data);
+			if (playing) {
+				setPlaying(false);
+			} else setRoom(data);
+		}
+		setInGame(false);
+		setRoom(undefined);
+		setPlaying(false);
+		setReady(false);
+		quitGame();
+	});
+	socketGame?.on("gameEnd", (data: IRoom) => {
+		console.log("gameEnd", data);
+		if (data.scoreA === 10)
+			createNotification("success", "PlayerA a gagner");
+		else if (data.scoreB === 10)
+			createNotification("success", "PlayerB a gagner");
+		setRoom(undefined);
+		setPlaying(false);
+		setReady(false);
+		setInGame(false);
+		quitGame();
+	});
+	socketGame?.on("gameForceEnd", (data: IRoom) => {
+		console.log(
+			"gameForceEnd donc erreur 'sorry l'autre connard a crash'",
+			data
+		);
+		createNotification("info", "The other asshole has crashed");
+		setRoom(undefined);
+		setPlaying(false);
+		setReady(false);
+		setInGame(false);
+		quitGame();
+	});
+	socketGame?.on("roomUpdated", (data: IRoom) => {
+		if (room)
+			setRoom({ ...room, scoreA: data.scoreA, scoreB: data.scoreB });
+	});
+
+
 	useEffect(() => {
-		// If in game or configuring during a url change we need to quit the game
 		if (inGame || ready) {
 			quitGame();
 		}
 	}, [params.id]);
-	
+
 	return (
 		<>
-		
+
 			<div className="blur">
 				<NavBar />
 				{!inGame ? (
@@ -292,7 +273,7 @@ function ChannelPage() {
 							<title> Channel - transcendence </title>
 						</Helmet>
 						<div className='container'>
-							{ logged === false ?
+							{logged === false ?
 								(
 									<div className='notLogged'>
 										<p>Pending...</p>
@@ -300,70 +281,70 @@ function ChannelPage() {
 								)
 								:
 								(
-								<>
-									{params.id ?
-										(
-											<div className="backButtonDiv">
-												<button className="backButton" onClick={() => navigate('/chat/')}><IoArrowBackOutline className='backIcon'/> Back</button>
-											</div>
-										) : null
-									}
-									<div className={params.id ? 'leftSide hideSmall' : 'leftSide'}>
-										<div className='topActions'>
-											<div className='selectChannelOrDm'>
-												<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
-												<button className="selectedButton" onClick={() => handleChangeMode("dm")}>DM</button>
-											</div>
-											<div className="searchBar">
-												<Search searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} getUsersChannel={getUsersChannel}/>
-											</div>
-										</div>
-										<div className='channelsInfos'>
-											{searchChannel === "" ? 
-												<div className='channelsInfo'>
-													{channels && channels.map((channel : any) => (
-														<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={false}/>
-													))}
+									<>
+										{params.id ?
+											(
+												<div className="backButtonDiv">
+													<button className="backButton" onClick={() => navigate('/chat/')}><IoArrowBackOutline className='backIcon' /> Back</button>
 												</div>
-											:
-												<div className='channelsInfo'>
-													{channelsFind && channelsFind.map((channel) => (
-														<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={true}/>
-													))}
-													{ channelsFind.length === 0 ? (<p className="noChannel">No channel found.</p>) :null}
+											) : null
+										}
+										<div className={params.id ? 'leftSide hideSmall' : 'leftSide'}>
+											<div className='topActions'>
+												<div className='selectChannelOrDm'>
+													<button className="selectedButton" onClick={() => handleChangeMode("channels")}>Channels</button>
+													<button className="selectedButton" onClick={() => handleChangeMode("dm")}>DM</button>
 												</div>
-											}
+												<div className="searchBar">
+													<Search searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} getUsersChannel={getUsersChannel} />
+												</div>
+											</div>
+											<div className='channelsInfos'>
+												{searchChannel === "" ?
+													<div className='channelsInfo'>
+														{channels && channels.map((channel: any) => (
+															<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={false} />
+														))}
+													</div>
+													:
+													<div className='channelsInfo'>
+														{channelsFind && channelsFind.map((channel) => (
+															<Channel key={channel["id"]} channel={channel} setSearchChannel={setSearchChannel} foundChannel={true} />
+														))}
+														{channelsFind.length === 0 ? (<p className="noChannel">No channel found.</p>) : null}
+													</div>
+												}
+											</div>
+											<FormCreateChannel />
 										</div>
-										<FormCreateChannel />
-									</div>
-									<Channels searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} invites={inviteGames} />
-								</>
-							)}
+										<Channels searchChannel={searchChannel} setSearchChannel={setSearchChannel} setChannelsFind={setChannelsFind} invites={inviteGames} />
+									</>
+								)}
 						</div>
 					</div>
 				) : (
 					<>
 						{!ready && !playing && room ? (
 							<GameChatReady
-							room={room}
-							quitGame={quitGame}
-							socket={socketGame}
-							setReady={setReady}
-							setPlayerId={setPlayerId}
-							setPlayerName={setPlayerName}
+								room={room}
+								quitGame={quitGame}
+								socket={socketGame}
+								setReady={setReady}
+								setPlayerId={setPlayerId}
+								setPlayerName={setPlayerName}
 							/>
-							) : null}
-			{playing ? (
-				<GamePlay
-				playerName={playerName}
-				playerId={playerId}
-				socket={socketGame}
-				room={room}
-				/>
-				) : null}
+						) : null}
+						{playing ? (
+							<GamePlay
+								playerName={playerName}
+								playerId={playerId}
+								socket={socketGame}
+								room={room}
+							/>
+						) : null}
 					</>
-			)}
-		</div>
+				)}
+			</div>
 		</>
 	);
 }

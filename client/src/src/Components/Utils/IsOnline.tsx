@@ -5,9 +5,9 @@ import { GoPrimitiveDot } from 'react-icons/go';
 import React from 'react';
 
 interface Props {
-	uuid : string;
+	uuid: string;
 }
-function IsOnline(props : Props) {
+function IsOnline(props: Props) {
 	const ConnectedList = useSelector(getConnectedList);
 	const inGameList = useSelector(getInGameList);
 	const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -15,33 +15,33 @@ function IsOnline(props : Props) {
 
 	useEffect(() => {
 		if (ConnectedList && ConnectedList.length > 0)
-			setIsConnected(ConnectedList.find((userInList : any) => userInList.uuid === props?.uuid) ? true : false);
+			setIsConnected(ConnectedList.find((userInList: any) => userInList.uuid === props?.uuid) ? true : false);
 		else
 			setIsConnected(false);
 	}, [ConnectedList]);
 
 	useEffect(() => {
 		if (inGameList && inGameList.length > 0)
-			setIsInGame(inGameList.find((userInList : any) => userInList.uuid === props?.uuid) ? true : false);
+			setIsInGame(inGameList.find((userInList: any) => userInList.uuid === props?.uuid) ? true : false);
 		else
 			setIsInGame(false);
 	}, [inGameList]);
 
-  return (
-	<>
-	{isInGame ?
-			<span className={"Yellow"}> <GoPrimitiveDot/> </span>
-		:
-
-			isConnected ?
-				<span className={"Green"}> <GoPrimitiveDot/> </span>
-
+	return (
+		<>
+			{isInGame ?
+				<span className={"Yellow"}> <GoPrimitiveDot /> </span>
 				:
 
-				<span className={"Red"}> <GoPrimitiveDot/> </span>
-	}
-	</>
-  )
+				isConnected ?
+					<span className={"Green"}> <GoPrimitiveDot /> </span>
+
+					:
+
+					<span className={"Red"}> <GoPrimitiveDot /> </span>
+			}
+		</>
+	)
 }
 
 export default IsOnline;

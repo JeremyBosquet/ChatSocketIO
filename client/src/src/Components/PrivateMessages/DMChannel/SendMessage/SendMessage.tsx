@@ -6,31 +6,31 @@ import { createNotification } from "../../../notif/Notif";
 
 interface props {
 	channelId: string;
-	user: {uuid: string};
+	user: { uuid: string };
 	blocked: boolean;
 }
 
-function SendMessage(props : props) {
+function SendMessage(props: props) {
 	const [message, setMessage] = useState<string>("");
 	const socket = useSelector(getSocket);
 
-	const handleSubmit = (e : any) => {
+	const handleSubmit = (e: any) => {
 		e.preventDefault();
 		if (message === "")
-			return ;
+			return;
 		if (props.blocked)
 			createNotification("error", "You are blocked or you have blocked this player.");
 
 		socket?.emit('message', { userId: props.user.uuid, message: message, channelId: props.channelId, type: "dm" });
 		setMessage("");
-  	}
+	}
 
 	return (
 		<form className="sendForm" onSubmit={handleSubmit}>
 			{
 				!props.blocked ?
 					<input className="sendInput" type="text" placeholder="Enter message" value={message} onChange={(e) => setMessage(e.target.value)}></input>
-				:
+					:
 					<input className="sendInput" type="text" placeholder="You are blocked or you have blocked this player." value={message} disabled></input>
 			}
 			<button className="sendButton" type="submit">Send</button>

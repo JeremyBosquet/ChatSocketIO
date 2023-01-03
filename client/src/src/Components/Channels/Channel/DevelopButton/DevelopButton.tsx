@@ -12,64 +12,64 @@ interface props {
 	channel: any;
 	setSearchChannel: any;
 	foundChannel: boolean;
-    setManageMode: any;
+	setManageMode: any;
 }
 
 function DevelopButton(props: props) {
-    const ref = useRef(null);
-    const user = useSelector(getUser);
+	const ref = useRef(null);
+	const user = useSelector(getUser);
 
-    const [toggleMenu, setToggleMenu] = useState<boolean>(false);
+	const [toggleMenu, setToggleMenu] = useState<boolean>(false);
 
-    function isOwner() {
-        const userFinded = props.channel.users.find((userFind: any) => userFind.id === user.uuid);
-        return (userFinded && userFinded.role === "owner");
-    }
+	function isOwner() {
+		const userFinded = props.channel.users.find((userFind: any) => userFind.id === user.uuid);
+		return (userFinded && userFinded.role === "owner");
+	}
 
-  const handleClick = (e: any) => {
-        e.cancelBubble = true;
-        e.stopPropagation();
+	const handleClick = (e: any) => {
+		e.cancelBubble = true;
+		e.stopPropagation();
 
-        setToggleMenu(!toggleMenu);
-  }
+		setToggleMenu(!toggleMenu);
+	}
 
-  const handleManageMode = (e : any) => {
-        e.cancelBubble = true;
-        e.stopPropagation();
-        
-        props.setManageMode(true);
-  }
+	const handleManageMode = (e: any) => {
+		e.cancelBubble = true;
+		e.stopPropagation();
 
-  return (
-	<>
-        { !props.foundChannel ? 
-        (
-            <>
-                <button ref={ref} onClick={e => handleClick(e)} className="developChannel">{toggleMenu ? '-' : '+'}</button>
-                { toggleMenu ?
-                <>
-                    <ControlledMenu 
-                        anchorRef={ref}
-                        state={toggleMenu ? 'open' : 'closed'}
-                        className="channelMenu"
-                        direction='left'
-                        viewScroll='close'
-                        onClick={(e) => e.stopPropagation()}
-                        onClose={() => setToggleMenu(false)}
-                        onAuxClickCapture={() => setToggleMenu(false)}
-                    >
-                        { isOwner() ? <button className='channelMenuButton' onClick={e => handleManageMode(e)}>Manage channel</button> : null }
-                        <Leave channelId={props.channel["id"]} setSearchChannel={props.setSearchChannel} />
-                    </ControlledMenu>
-                </>
-                    :
-                    null
-                }
-            </>
+		props.setManageMode(true);
+	}
 
-        ) : null}
-	</>
-  );
+	return (
+		<>
+			{!props.foundChannel ?
+				(
+					<>
+						<button ref={ref} onClick={e => handleClick(e)} className="developChannel">{toggleMenu ? '-' : '+'}</button>
+						{toggleMenu ?
+							<>
+								<ControlledMenu
+									anchorRef={ref}
+									state={toggleMenu ? 'open' : 'closed'}
+									className="channelMenu"
+									direction='left'
+									viewScroll='close'
+									onClick={(e) => e.stopPropagation()}
+									onClose={() => setToggleMenu(false)}
+									onAuxClickCapture={() => setToggleMenu(false)}
+								>
+									{isOwner() ? <button className='channelMenuButton' onClick={e => handleManageMode(e)}>Manage channel</button> : null}
+									<Leave channelId={props.channel["id"]} setSearchChannel={props.setSearchChannel} />
+								</ControlledMenu>
+							</>
+							:
+							null
+						}
+					</>
+
+				) : null}
+		</>
+	);
 }
 
 export default DevelopButton;

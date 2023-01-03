@@ -1,97 +1,98 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500,700);
 
-.blur.active{
-	color : white;
-	filter : blur(5px);
+.blur.active {
+	color: white;
+	filter: blur(5px);
 	pointer-events: none;
-	user-select : none;
+	user-select: none;
 }
 
-.main
-{
-  --black : #181818;
-//   background: #222222;
-  font-family: 'Roboto', sans-serif;
+.main {
+	--black: #181818;
+	font-family: 'Roboto', sans-serif;
 }
 
 .HomePage #myProfile {
 	display: flex;
-	.userInfo
-	{
+
+	.userInfo {
 		width: 100%;
 		margin-left: 18px;
 		margin-right: 18px;
 	}
-	.userImg
-	{
+
+	.userImg {
 		width: 150px;
 		height: 150px;
-		position : relative;
-		top : 20px;
+		position: relative;
+		top: 20px;
 		margin-left: 10px;
 		object-fit: cover;
 		border-radius: 50%;
 	}
+
 	.image {
 		display: flex;
 		position: absolute;
 		top: 195px;
 		margin-left: 125px;
 	}
+
 	.Rank {
 		display: flex;
 		align-items: center;
 		height: auto;
+
 		h4 {
 			display: flex;
 			align-items: center;
-			color : white;
+			color: white;
 			font-size: 18px;
 			margin-left: 10px;
 			height: 31.5px;
 		}
+
 		h3 {
 			position: relative;
 			top: 50px;
 			color: #fff;
 			font-size: 26px;
 		}
+
 		img {
 			position: relative;
 			top: 50px;
 			margin-right: 5px;
 		}
 	}
+
 	h4 {
 		position: relative;
 		top: 50px;
 		color: rgb(129, 129, 129);
 		font-size: 15px;
 	}
-	.expBar
-	{
-		width : 100%;
+
+	.expBar {
+		width: 100%;
 		background: var(--black);
 		height: 35px;
-		top : 70px;
+		top: 70px;
 		position: relative;
 		border-radius: 4px;
-		.myExp{
-			--expAmount : 0%;
-			//background-color: #4158D0;
-			background: linear-gradient(90deg, #8E2DE2, #4A00E0);
 
-			//background: linear-gradient(135deg, rgb(120, 136, 152) , rgb(47, 79, 80));
-			width : var(--expAmount);
+		.myExp {
+			--expAmount: 0%;
+			background: linear-gradient(90deg, #8E2DE2, #4A00E0);
+			width: var(--expAmount);
 			border: #000000;
 			height: 35px;
 			border-radius: 4px;
-			//top : 15px;
-			// left : 40px;
 			position: absolute;
 		}
-		p{
-			top : 4px;
+
+		p {
+			top: 4px;
 			color: #fff;
 			font-size: 24px;
 			display: flex;
@@ -100,27 +101,28 @@
 			position: relative;
 		}
 	}
-	#listMyGameParent{
-			margin-top: 100px;
-			font-size: 16px;
-			background-color: #131313;
-			overflow: hidden;
-			color: white;
-			font-family: 'Roboto Condensed', sans-serif;
-			padding: 10px;
-			border-radius: 5px;
-			p:nth-child(1) {
-				text-align: center;
-				margin-left: 2px;
-			  }
-		
-			p:nth-child(3) {
-				text-align: right;
-			}
-			
+
+	#listMyGameParent {
+		margin-top: 100px;
+		font-size: 16px;
+		background-color: #131313;
+		overflow: hidden;
+		color: white;
+		font-family: 'Roboto Condensed', sans-serif;
+		padding: 10px;
+		border-radius: 5px;
+
+		p:nth-child(1) {
+			text-align: center;
+			margin-left: 2px;
+		}
+
+		p:nth-child(3) {
+			text-align: right;
+		}
+
 
 		.table {
-			//margin-right: 0.1rem;
 			display: grid;
 			font-size: 14px;
 			grid-template-columns: 1fr 1fr 0.4fr;
@@ -133,7 +135,7 @@
 			}
 
 			div:nth-child(2) {
-			text-align: center;
+				text-align: center;
 			}
 
 			div:nth-child(3) {
@@ -142,37 +144,39 @@
 		}
 
 		.user {
-				background-color: #2B2B2B;
-				display: grid;
-				grid-template-columns: 1fr 1fr 0.4fr;
-		
-				align-items: center;
-				min-height: 42px;
-				text-align: center;
-				margin: 0px 0px 10px 0px;
-				border-radius: 5px;
-				 p:nth-child(1) {
-					text-align: center;
-					display : inline;
-					margin:0;
-					a {
-						color: #fff;
-						text-decoration: none;
-						cursor: pointer;
-						&:hover {
-							//underline the text
-							text-decoration: underline;
-						}
-					}
-				  }
+			background-color: #2B2B2B;
+			display: grid;
+			grid-template-columns: 1fr 1fr 0.4fr;
 
-				  p:nth-child(2) {
-					text-align: center;
-				  }
-			
-				p:nth-child(3) {
-					text-align: center;
+			align-items: center;
+			min-height: 42px;
+			text-align: center;
+			margin: 0px 0px 10px 0px;
+			border-radius: 5px;
+
+			p:nth-child(1) {
+				text-align: center;
+				display: inline;
+				margin: 0;
+
+				a {
+					color: #fff;
+					text-decoration: none;
+					cursor: pointer;
+
+					&:hover {
+						text-decoration: underline;
+					}
 				}
+			}
+
+			p:nth-child(2) {
+				text-align: center;
+			}
+
+			p:nth-child(3) {
+				text-align: center;
+			}
 		}
 
 		#listMyGame {
@@ -183,22 +187,19 @@
 			scrollbar-width: none;
 		}
 
-		#listMyGame::-webkit-scrollbar
-		{
+		#listMyGame::-webkit-scrollbar {
 			width: 6px;
 			background-color: #F5F5F5;
 			display: none;
 		}
 
-		#listMyGame::-webkit-scrollbar-thumb
-		{
+		#listMyGame::-webkit-scrollbar-thumb {
 			background-color: #646464;
 		}
 	}
 }
 
-.HomePage #login
-{
+.HomePage #login {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -207,9 +208,7 @@
 	background: var(--black);
 	border: none;
 	padding: 10px;
-	outline : none;
-	// width: 200px;
-	// height: 100px;
+	outline: none;
 	color: rgb(255, 255, 255);
 	font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 	font-size: 50px;
@@ -218,8 +217,7 @@
 	box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
 }
 
-.HomePage #loginTitle
-{
+.HomePage #loginTitle {
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -248,45 +246,52 @@
 
 @media screen and (max-width: 674px) {
 	.HomePage {
-		#loginTitle
-		{
+		#loginTitle {
 			font-size: 30px;
 		}
-		#login
-		{
+
+		#login {
 			margin-top: 70px;
 			font-size: 30px;
 		}
-		#myProfile{
+
+		#myProfile {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+
 			.Rank {
 				justify-content: center;
 			}
+
 			h3 {
 				text-align: center;
 			}
+
 			h4 {
 				margin-top: 4px;
 				text-align: center;
 			}
+
 			.userInfo {
 				align-items: center;
 				width: 80%;
 				margin: 0;
 			}
-			.image{
+
+			.image {
 				margin-left: 55px;
 			}
-			#listMyGameParent
-			{
+
+			#listMyGameParent {
 				#listMyGameScroll {
 					height: 66px;
 				}
+
 				p {
 					font-size: 12.5px;
 				}
+
 				li {
 					flex-direction: column;
 				}
@@ -297,15 +302,16 @@
 
 @media screen and (max-width: 926px) and (min-width: 674px) {
 	.HomePage {
-		#myProfile{
-			#listMyGameParent
-			{
+		#myProfile {
+			#listMyGameParent {
 				#listMyGameScroll {
 					height: 84px;
 				}
+
 				p {
 					font-size: 16px;
 				}
+
 				li {
 					flex-direction: column;
 				}
@@ -316,7 +322,7 @@
 
 @media screen and (max-width: 550px) {
 	.HomePage {
-		#myProfile{
+		#myProfile {
 			.image {
 				top: 235px;
 			}

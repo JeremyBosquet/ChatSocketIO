@@ -1,15 +1,17 @@
 .SettingsPage {
 	.Container {
-		display : flex;
+		display: flex;
 		flex-direction: column;
 		align-items: center;
+
 		#UsernameGroup {
 			margin-top: 10px;
 			padding: 2px 14px 6px 14px;
 			border-radius: 14px;
-			width : 215px;
+			width: 215px;
 			border: 1px solid;
 			border-color: rgb(255, 255, 255);
+
 			h3 {
 				text-align: center;
 				display: flex;
@@ -17,19 +19,22 @@
 				align-items: center;
 				margin-top: 6px;
 				margin-bottom: 6px;
-				color :rgb(255, 255, 255);
+				color: rgb(255, 255, 255);
 			}
+
 			.line {
 				height: 1px;
-				width : 100%;
+				width: 100%;
 				background: rgb(255, 255, 255);
 			}
+
 			#UsernameForm {
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				margin-bottom: 4px;
-				[type=text]{
+
+				[type=text] {
 					padding: 4px 10px;
 					border-radius: 30px;
 					border: none;
@@ -37,6 +42,7 @@
 					outline: none;
 
 				}
+
 				button {
 					display: flex;
 					border-radius: 30px;
@@ -44,192 +50,210 @@
 					border: none;
 					background: black;
 				}
+
 				span {
-					color :rgb(255, 255, 255);
+					color: rgb(255, 255, 255);
 					display: flex;
 					font-size: x-large;
 					cursor: pointer;
 				}
 			}
 		}
+
 		#AvatarGroup {
 			margin-top: 10px;
 			padding: 2px 14px 6px 14px;
 			border-radius: 14px;
-			width : 215px;
+			width: 215px;
 			border: 1px solid;
 			border-color: rgb(255, 255, 255);
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			//justify-content: center;
-			//width : 215px;
+
 			h3 {
 				margin-top: 6px;
 				margin-bottom: 6px;
-				color :rgb(255, 255, 255);
+				color: rgb(255, 255, 255);
 			}
+
 			img {
 				object-fit: cover;
 				height: 100px;
-				width : 100px;
+				width: 100px;
 				border-radius: 50%;
 			}
+
 			.line {
 				margin-top: 10px;
 				height: 1px;
-				width : 100%;
+				width: 100%;
 				background: rgb(255, 255, 255);
 			}
-			#AvatarForm{
+
+			#AvatarForm {
 				display: flex;
 				align-items: center;
 				justify-content: center;
-				color :rgb(255, 255, 255);
-				[type=file]{
+				color: rgb(255, 255, 255);
+
+				[type=file] {
 					display: none;
 					border-radius: 10px;
 					border: none;
-					//width : 80px;
 				}
+
 				p {
 					margin-left: 6px;
-					//display: flex;
-					max-width : 160px;
+					max-width: 160px;
 					overflow: hidden;
 				}
-				label{
+
+				label {
 					display: flex;
 					font-size: x-large;
 					cursor: pointer;
 				}
+
 				button {
 					margin-left: 6px;
 					display: flex;
 					border-radius: 30px;
-					//margin-left: 6px;
 					border: none;
 					background: rgb(0, 0, 0);
 				}
+
 				span {
-					color :rgb(255, 255, 255);
+					color: rgb(255, 255, 255);
 					display: flex;
 					font-size: x-large;
 					cursor: pointer;
 				}
 			}
 		}
+
 		#QrCodeGroup {
 			margin-top: 10px;
 			padding: 10px 14px 10px 14px;
 			border-radius: 14px;
-			width : 215px;
+			width: 215px;
 			border: 1px solid;
 			border-color: rgb(255, 255, 255);
 			display: flex;
 			flex-direction: column;
 			align-items: center;
+
 			#Activate2auth {
 				display: flex;
+
 				button {
 					font-size: medium;
 					background: #ffffff;
-					color :#000000;
+					color: #000000;
 					border: none;
 					border-radius: 10px;
 					padding: 2px 4px;
 					cursor: pointer;
 				}
+
 				span {
 					display: flex;
 					justify-content: center;
 				}
 			}
+
 			#QrCodeOpened {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
+
 				h3 {
 					text-align: center;
 					margin: 14px 0px 14px 0px;
-					color :#ffffff;
+					color: #ffffff;
 				}
+
 				form {
 					display: flex;
 					align-items: center;
 					background: #000000;
 				}
-				[type=text]{
+
+				[type=text] {
 					padding: 4px 10px;
 					border-radius: 30px;
 					border: none;
 					max-width: 150px;
 					outline: none;
 				}
+
 				button {
 					background: none;
 					border: none;
 					margin-left: 6px;
 				}
+
 				span {
-					color :rgb(255, 255, 255);
+					color: rgb(255, 255, 255);
 					display: flex;
 					font-size: x-large;
 					cursor: pointer;
 				}
+
 				#cancel2auth {
 					font-size: 20px;
 				}
 			}
+
 			#TwoAuthActivated {
 				h3 {
 					text-align: center;
-					color :#ffffff;
+					color: #ffffff;
 				}
+
 				button {
 					background: none;
 					border: none;
 					margin-left: 6px;
 				}
+
 				form {
 					margin-top: 10px;
 					display: flex;
 					justify-content: center;
 					align-items: center;
 				}
-				[type=text]{
+
+				[type=text] {
 					padding: 4px 10px;
 					border-radius: 30px;
 					border: none;
 				}
+
 				span {
-					color :rgb(255, 255, 255);
+					color: rgb(255, 255, 255);
 					display: flex;
 					font-size: x-large;
 					cursor: pointer;
 				}
+
 				#cancelDesac {
 					font-size: 20px;
 				}
 			}
 		}
 	}
-	// .clickset {
-	// 	display : flex;
-	// 	align-items: center;
-	// 	background-color: rgb(255, 0, 0);
-	// 	margin: 0;
-	// }
 }
 
 @media screen and (max-width: 550px) {
-	.SettingsPage{
+	.SettingsPage {
 		height: calc(100vh - 140px);
-		overflow:hidden;
-		overflow-y:scroll;
+		overflow: hidden;
+		overflow-y: scroll;
 		scrollbar-width: none;
-		&::-webkit-scrollbar { 
-			display: none;  /* Safari and Chrome */
+
+		&::-webkit-scrollbar {
+			display: none;
 		}
 	}
 }

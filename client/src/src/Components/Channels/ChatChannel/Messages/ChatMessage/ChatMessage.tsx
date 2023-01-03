@@ -2,7 +2,6 @@ import { Imessage } from "../../interfaces/messages";
 import { IuserDb } from "../../interfaces/users";
 import React, { useEffect, useState } from 'react';
 import './ChatMessage.scss';
-import { AiOutlineConsoleSql } from "react-icons/ai";
 
 interface props {
 	userId: string;

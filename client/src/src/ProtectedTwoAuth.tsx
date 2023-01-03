@@ -4,20 +4,20 @@ import { Navigate } from "react-router-dom";
 import instance from "./API/Instance";
 
 
-const ProtectedTwoAuth = ({children}: {children: any}) => {
+const ProtectedTwoAuth = ({ children }: { children: any }) => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => {
-		const checkAuth = async () => {	
+		const checkAuth = async () => {
 			if (localStorage.getItem("token")) {
 				await instance.get(`user/CompareTokenTwoAuth`)
-				.then((res) => {
-					setIsLoggedIn(true);
-				})
-				.catch(() => {
-					setIsLoggedIn(false);
-				});
+					.then((res) => {
+						setIsLoggedIn(true);
+					})
+					.catch(() => {
+						setIsLoggedIn(false);
+					});
 			}
 			setMounted(true);
 		}
@@ -30,6 +30,6 @@ const ProtectedTwoAuth = ({children}: {children: any}) => {
 	}
 	if (mounted && isLoggedIn)
 		return children;
- 	<div></div>
+	<div></div>
 };
 export default ProtectedTwoAuth;

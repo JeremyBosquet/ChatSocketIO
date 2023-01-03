@@ -1,127 +1,135 @@
 .manageChannel {
-    position: absolute;
-    z-index: 101;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.501);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    .manageContainer {
-        background-color: #2c2c2c;
-        width: 500px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        max-height: auto;
-        transition-duration: 0.1s;
+	position: absolute;
+	z-index: 101;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.501);
+	display: flex;
+	justify-content: center;
+	align-items: center;
 
-        transition: max-height 0.25s ease-in;
+	.manageContainer {
+		background-color: #2c2c2c;
+		width: 500px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		max-height: auto;
+		transition-duration: 0.1s;
 
-        .manageForm {
-            display: flex;
-            flex-direction: column;
-            // align-items: center;
-        }
+		transition: max-height 0.25s ease-in;
 
-        .manageChannelInfos {
-            width: 90%;
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-            color: white;
-            font-size: 24px;
-            margin-bottom: 20px;
+		.manageForm {
+			display: flex;
+			flex-direction: column;
+			// align-items: center;
+		}
 
-            h3 {
-                margin: 0;
-                font-size: x-large;
-            }
-            span {
-                cursor: pointer;
-                transition-duration: .2s;
+		.manageChannelInfos {
+			width: 90%;
+			display: flex;
+			justify-content: space-between;
+			padding: 20px;
+			color: white;
+			font-size: 24px;
+			margin-bottom: 20px;
 
-                &:hover {
-                    color: #acacac;
-                    transform: scale(1.1);
-                }
-            }
-        }
+			h3 {
+				margin: 0;
+				font-size: x-large;
+			}
 
-        .manageVisibilityChoice {
-            display: flex;
-            flex-direction: column;
+			span {
+				cursor: pointer;
+				transition-duration: .2s;
 
-            .manageVisibilityItem {
-                width: 120px;
-                display: flex;
-                align-items: center;
-                margin: 10px 0;
-            }
-        }
+				&:hover {
+					color: #acacac;
+					transform: scale(1.1);
+				}
+			}
+		}
 
-        .manageChangePasswordInput, .manageChangePasswordSelect, .manageChangeButton {
-            height: 30px;
-            padding: 5px;
-            margin: 5px;
-            margin-top: 10px;
-            border: none;
-            border-bottom: 4px solid #1c1c1c;
-            outline: none;
-            transition-duration: .2s;
-            background-color: white;
-            border-radius: 2px;
-            color: #1c1c1c;
+		.manageVisibilityChoice {
+			display: flex;
+			flex-direction: column;
 
-            &:focus, &:active, &:valid {
-                border-bottom: 4px solid #781cc9;
-            }
-        }
-        .manageChangePasswordSelect, .manageChangeButton {
-            height: 44px;
-        }
-        
-        .manageChangeButton {
-            font-size: 14px;
-            cursor: pointer;
-            color: #2c2c2c;
-            border-bottom: 4px solid #1c1c1c;
-            margin-bottom: 70px;
-            transition-duration: .2s;
-            
-            &:hover {
-                background-color: #781cc9;
-                color: white;
-                border-bottom: 4px solid #781cc9;
-            }
-        }
-    }
-    
+			.manageVisibilityItem {
+				width: 120px;
+				display: flex;
+				align-items: center;
+				margin: 10px 0;
+			}
+		}
+
+		.manageChangePasswordInput,
+		.manageChangePasswordSelect,
+		.manageChangeButton {
+			height: 30px;
+			padding: 5px;
+			margin: 5px;
+			margin-top: 10px;
+			border: none;
+			border-bottom: 4px solid #1c1c1c;
+			outline: none;
+			transition-duration: .2s;
+			background-color: white;
+			border-radius: 2px;
+			color: #1c1c1c;
+
+			&:focus,
+			&:active,
+			&:valid {
+				border-bottom: 4px solid #781cc9;
+			}
+		}
+
+		.manageChangePasswordSelect,
+		.manageChangeButton {
+			height: 44px;
+		}
+
+		.manageChangeButton {
+			font-size: 14px;
+			cursor: pointer;
+			color: #2c2c2c;
+			border-bottom: 4px solid #1c1c1c;
+			margin-bottom: 70px;
+			transition-duration: .2s;
+
+			&:hover {
+				background-color: #781cc9;
+				color: white;
+				border-bottom: 4px solid #781cc9;
+			}
+		}
+	}
+
 }
 
 @media screen and (max-width: 550px) {
-    .manageChannel {
-        .manageContainer {
-            width: 90%;
-            // height: 90%;
-            .CreateChannelInfos {
-                font-size: 18px;
-            }
+	.manageChannel {
+		.manageContainer {
+			width: 90%;
 
-            .manageChangePasswordInput {
-                // margin: 5px 0;
-                // margin-top: 10px;
-                width: calc(100% - 20px);
-            }
+			// height: 90%;
+			.CreateChannelInfos {
+				font-size: 18px;
+			}
 
-            .manageVisibilityChoice {
-                display: flex;
-                flex-direction: column;
-                width: 80%;
-            }
-        }
-    }
+			.manageChangePasswordInput {
+				// margin: 5px 0;
+				// margin-top: 10px;
+				width: calc(100% - 20px);
+			}
+
+			.manageVisibilityChoice {
+				display: flex;
+				flex-direction: column;
+				width: 80%;
+			}
+		}
+	}
 }

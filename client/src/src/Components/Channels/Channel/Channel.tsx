@@ -1,6 +1,4 @@
 import Join from '../Join/Join';
-import Leave from '../Leave/Leave';
-import { ControlledMenu } from '@szhsin/react-menu';
 import { useSelector } from 'react-redux';
 import '@szhsin/react-menu/dist/core.css';
 import { getSocket } from '../../../Redux/chatSlice';

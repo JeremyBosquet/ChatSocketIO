@@ -5,15 +5,20 @@
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-	selector { cursor: none; }
+
+	selector {
+		cursor: none;
+	}
 }
+
 .gameMainCanvas {
-   cursor: none;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   
+	cursor: none;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
 }
+
 .cursor {
 	cursor: none;
 }

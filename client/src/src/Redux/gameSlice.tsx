@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Socket } from 'socket.io-client';
 
 const initialState = {
     socket : null,

@@ -1,34 +1,30 @@
-// A nav bar with a the left the information about the playerA and the right the information about the playerB and the game status at the middle
-
 .nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 5rem;
-  padding: 0 2rem;
-  background-color: #f44336;
-  color: #fff;
-  font-size: 1.5rem;
-  font-weight: bold;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: 5rem;
+	padding: 0 2rem;
+	background-color: #f44336;
+	color: #fff;
+	font-size: 1.5rem;
+	font-weight: bold;
 }
 
-// The game board with the cards
-
 .game-board {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 1rem;
-  margin-top: 30px;
-  margin-bottom:20px;
-  .game-board__player__name
-  {
-	color : white;
-	font-size: larger;
-  }
-  .game-board__player__score
-  {
-	color : white;
-	
-  }
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 1rem;
+	margin-top: 30px;
+	margin-bottom: 20px;
+
+	.game-board__player__name {
+		color: white;
+		font-size: larger;
+	}
+
+	.game-board__player__score {
+		color: white;
+
+	}
 }

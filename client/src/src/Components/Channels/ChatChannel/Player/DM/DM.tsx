@@ -7,31 +7,31 @@ import React from 'react';
 import instance from "../../../../../API/Instance";
 
 interface props {
-    user: IuserDb;
+	user: IuserDb;
 }
 
-function DM(props : props) {
+function DM(props: props) {
 
-  const me = useSelector(getUser);
-  const params = useParams();
-  const navigate = useNavigate();
+	const me = useSelector(getUser);
+	const params = useParams();
+	const navigate = useNavigate();
 
-  const handleDM = async (targetId: string) => {
-    if (!params.id)
-      navigate('/chat/channel');
+	const handleDM = async (targetId: string) => {
+		if (!params.id)
+			navigate('/chat/channel');
 
-    await instance.post(`chat/dm/`, {
-      user1: me.uuid,
-      user2: targetId,
-    }).then(res => {
-      if (res.data.id)
-        navigate(`/chat/dm/${res.data.id}`);
-    });
-  }
+		await instance.post(`chat/dm/`, {
+			user1: me.uuid,
+			user2: targetId,
+		}).then(res => {
+			if (res.data.id)
+				navigate(`/chat/dm/${res.data.id}`);
+		});
+	}
 
-  return (
-    <button className="actionButton" onClick={() => handleDM(props.user.uuid)}>DM</button>
-  );
+	return (
+		<button className="actionButton" onClick={() => handleDM(props.user.uuid)}>DM</button>
+	);
 }
 
 export default DM;

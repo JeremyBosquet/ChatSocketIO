@@ -32,8 +32,6 @@ export const chatSlice = createSlice({
 
 export const { setSocket, setChannels, setDMs, setMode } = chatSlice.actions;
 
-// export const getSelectedChannel = (state : any) => state.chat.selectedChannel;
-// export const getSelectedChannelDM = (state : any) => state.chat.selectedChannelDM;
 export const getSocket = (state : any) => state.chat.socket;
 export const getChannels = (state : any) => state.chat.channels;
 export const getDMs = (state : any) => state.chat.dms;

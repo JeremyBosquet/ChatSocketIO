@@ -1,7 +1,10 @@
 
 server/data/
 
-server/src/src/uploads/avatar/
+server/src/src/uploads/avatar/*.jpg
+server/src/src/uploads/avatar/*.jpeg
+server/src/src/uploads/avatar/*.png
+
 
 client/data/
 

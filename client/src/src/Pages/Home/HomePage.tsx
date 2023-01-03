@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createNotification } from "../../Components/notif/Notif";
@@ -99,7 +98,6 @@ function HomePage() {
 	}, []);
 
 	useEffect(() => {
-=
 		socketGame?.emit("searching");
 	}, [socketGame]);
 

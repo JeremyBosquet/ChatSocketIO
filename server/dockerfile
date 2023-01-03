@@ -32,12 +32,12 @@ ENV DB_PORT=5432
 
 WORKDIR /usr/src/app
 
-COPY src/package*.json ./
-
 RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
 
 ENV PATH="/pnpm:$PATH"
 ENV PNPM_HOME="/pnpm"
+
+COPY src/package*.json ./
 
 RUN pnpm install
 

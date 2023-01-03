@@ -828,7 +828,7 @@ export class UsersController {
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
 				message: 'succes',
-				Rank : add,
+				Rank: add,
 			});
 		}
 		return res.status(HttpStatus.NOT_FOUND).json({
@@ -848,7 +848,7 @@ export class UsersController {
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
 				message: 'succes',
-				Rank : add,
+				Rank: add,
 			});
 		}
 		return res.status(HttpStatus.NOT_FOUND).json({
@@ -917,7 +917,7 @@ export class UsersController {
 				'image/jpg',
 			]
 			if (!file)
-				return cb( new BadRequestException('No file provided'), false);
+				return cb(new BadRequestException('No file provided'), false);
 			if (!whitelist.includes(file.mimetype))
 				return cb(
 					new UnsupportedMediaTypeException('No files other than jpg/png/jpeg are accepted'), false);

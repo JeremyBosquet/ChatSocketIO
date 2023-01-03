@@ -31,8 +31,6 @@ function Accept(props: props) {
 				dispatch(setFriendList([...friendList, { uuid: uuid, username: test[0].username, image: image }]));
 				dispatch(setRequestList(request));
 				socket?.emit('acceptFriend', { uuid: uuid, myUUID: props.User.uuid });
-			}).catch((err) => {
-				console.log(err.response.data.message);
 			});
 		}
 	}

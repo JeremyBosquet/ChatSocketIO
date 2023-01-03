@@ -83,7 +83,6 @@ function GameReady(props: props) {
 				setRoom(data);
 			});
 			socket?.emit("searching", tmpUser);
-			console.log("emit searching", socket);
 		}
 	}, [searching, tmpUser, tmpUserBoolean, socket]);
 	const [timeouts, setTimeouts] = useState<number>(20);
@@ -94,12 +93,10 @@ function GameReady(props: props) {
 	socket?.removeListener("roomTimeout");
 
 	socket?.on("configuring", (data: IRoom) => {
-		console.log("receive configuring", data);
 		setSearchingDisplay(false);
 		setConfiguringDisplay(true);
 	});
 	socket?.on("roomDestroyed", (data: any) => {
-		console.log("Room destroyed");
 		createNotification("info", "Un des deux jouers n'a pas confirmé la configuration");
 		socket?.emit("cancelSearching", { tmpUser, room });
 		setSearchingDisplay(false);
@@ -110,24 +107,13 @@ function GameReady(props: props) {
 		props.setDisplay(true);
 	});
 	socket?.on("roomTimeout", (data: any) => {
-		console.log("Timeout", data.time);
 		setTimeouts(data.time);
 	});
 	socket?.on("configurationUpdated", (data: IRoom) => {
-		console.log(
-			"receive configurationUpdated",
-			data.configurationB,
-			data.configurationA,
-			data.playerA,
-			data.playerB,
-			tmpUser,
-			data
-		);
 		if (data.playerA?.id === tmpUser?.id) setSettingsBis(data.configurationB);
 		else setSettingsBis(data.configurationA);
 	});
 	socket?.on("playerLeave", () => {
-		console.log("receive cancelSearching");
 		createNotification("info", "The other player left the room");
 		setSearchingDisplay(true);
 		setSearching(true);
@@ -141,15 +127,8 @@ function GameReady(props: props) {
 			headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			},
-		})
-			.catch((err) => {
-				console.log(err);
-			});
+		});
 		if (messages?.data && messages.data?.User) {
-			console.log(messages.data.User, {
-				id: messages.data.User.uuid,
-				name: messages.data.User.username,
-			});
 			setTmpUser({
 				id: messages.data.User.uuid,
 				name: messages.data.User.username,
@@ -160,7 +139,6 @@ function GameReady(props: props) {
 		getUser();
 	}, []);
 	async function handleReady() {
-		console.log("hey", socket);
 		props.setPlayerId(tmpUser.id);
 		props.setPlayerName(tmpUser.name);
 		setSearching(true);
@@ -295,7 +273,6 @@ function GameReady(props: props) {
 												className="game-config-button"
 												onClick={
 													() => {
-														console.log("cancel searching", tmpUser);
 														socket?.emit("cancelSearching", { tmpUser, room });
 														setSearchingDisplay(false);
 														setSearching(false);
@@ -320,9 +297,6 @@ function GameReady(props: props) {
 															) {
 																setSettings({ ...settings, confirmed: true });
 																socket?.emit("confirmConfiguration", settings);
-															}
-															else {
-																console.log("settings", settings);
 															}
 														}
 													}

@@ -15,7 +15,6 @@ function InviteGame(props: props) {
 	const socket = useSelector(getSockeGameChat);
 
 	const handleGame = async (targetId: string) => {
-		console.log("handleGame");
 		socket.emit("inviteGame", { targetId: targetId, ownId: me.uuid });
 	}
 

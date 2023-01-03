@@ -82,7 +82,6 @@ function GameChatReady(props: props) {
 	socket?.removeListener("roomTimeout");
 	socket?.removeListener("roomDestroyed");
 	socket?.on("roomDestroyed", (data: any) => {
-		console.log("Room destroyed");
 		createNotification("info", "Un des deux jouers n'a pas confirmé la configuration");
 		socket?.emit("cancelSearching", { tmpUser, room });
 		setSearchingDisplay(false);
@@ -93,29 +92,17 @@ function GameChatReady(props: props) {
 		props.quitGame();
 	});
 	socket?.on("roomTimeout", (data: any) => {
-		console.log("Timeout", data.time);
 		setTimeouts(data.time);
 	});
 	socket?.on("configuring", (data: IRoom) => {
-		console.log("receive configuring", data);
 		setSearchingDisplay(false);
 		setConfiguringDisplay(true);
 	});
 	socket?.on("configurationUpdated", (data: IRoom) => {
-		console.log(
-			"receive configurationUpdated",
-			data.configurationB,
-			data.configurationA,
-			data.playerA,
-			data.playerB,
-			tmpUser,
-			data
-		);
 		if (data.playerA?.id === tmpUser?.id) setSettingsBis(data.configurationB);
 		else setSettingsBis(data.configurationA);
 	});
 	socket?.on("playerLeave", () => {
-		console.log("receive cancelSearching");
 		createNotification("info", "The opponent player left the game");
 		setSearchingDisplay(true);
 		setSearching(true);
@@ -130,15 +117,8 @@ function GameChatReady(props: props) {
 			headers: {
 				Authorization: "Bearer " + localStorage.getItem("token"),
 			},
-		})
-			.catch((err) => {
-				console.log(err);
-			});
+		});
 		if (messages?.data && messages.data?.User) {
-			console.log(messages.data.User, {
-				id: messages.data.User.uuid,
-				name: messages.data.User.username,
-			});
 			setTmpUser({
 				id: messages.data.User.uuid,
 				name: messages.data.User.username,
@@ -275,7 +255,6 @@ function GameChatReady(props: props) {
 								className="game-config-button"
 								onClick={
 									() => {
-										console.log("cancel searching", tmpUser);
 										socket?.emit("cancelSearching", { tmpUser, room });
 										setSearchingDisplay(false);
 										setSearching(false);
@@ -299,9 +278,6 @@ function GameChatReady(props: props) {
 											) {
 												setSettings({ ...settings, confirmed: true });
 												socket?.emit("confirmConfiguration", settings);
-											}
-											else {
-												console.log("settings", settings);
 											}
 										}
 									}

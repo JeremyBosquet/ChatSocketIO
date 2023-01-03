@@ -17,7 +17,7 @@ interface props {
 	setMessages: any;
 }
 
-function Messages(props : props) {
+function Messages(props: props) {
 	const messageEl = useRef<HTMLDivElement>(null);
 	const [usersChannel, setUsersChannel] = useState<IuserDb[]>(props.users);
 	const blockedByList = useSelector(getBlockedByList);
@@ -26,35 +26,29 @@ function Messages(props : props) {
 	useEffect(() => {
 		const getUsername = async () => {
 			let temp = usersChannel;
-				 for (let i = 0; i < props.messages.length; i++)
-				 {
-					 const userFinded = temp.find(user => user.uuid === props.messages[i].userId);``
-					 if (!userFinded)
-					 {
-						 await instance.get(`chat/user/` + props.messages[i].userId).then(res => {
-							 if (res.data)
-								 temp = [...temp, {...res.data, print: false}];
-							 }).catch(err => console.log(err));
-					 }
-				 }
-				 setUsersChannel(temp);
-	}
+			for (let i = 0; i < props.messages.length; i++) {
+				const userFinded = temp.find(user => user.uuid === props.messages[i].userId); ``
+				if (!userFinded) {
+					await instance.get(`chat/user/` + props.messages[i].userId).then(res => {
+						if (res.data)
+							temp = [...temp, { ...res.data, print: false }];
+					});
+				}
+			}
+			setUsersChannel(temp);
+		}
 
 		setTimeout(() => {
 			if (messageEl.current)
-				messageEl.current.scroll({top: messageEl.current.scrollHeight, behavior: 'auto'});
+				messageEl.current.scroll({ top: messageEl.current.scrollHeight, behavior: 'auto' });
 		}, 1)
 
 		getUsername();
 	}, [props.messages]);
 
-	useEffect(() => {
-		console.log(blockedByList)
-	}, [blockList, blockedByList]);
-
 	return (
 		<div id="messages" className='messages' ref={messageEl}>
-			{props.messages.map((message : Imessage, index) => (
+			{props.messages.map((message: Imessage, index) => (
 				<ChatMessage key={index} message={message} users={usersChannel} userId={props.userId} setUsers={setUsersChannel} blockedByList={blockedByList} blockList={blockList} />
 			))}
 		</div>

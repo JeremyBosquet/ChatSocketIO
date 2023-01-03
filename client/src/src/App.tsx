@@ -26,7 +26,7 @@ import Leaderboard from "./Pages/Leaderboard/Leaderboard";
 import Rules from "./Pages/Rules/Rules";
 
 function App() {
-  	const [APIStatus] = useState<boolean>(true);
+	const [APIStatus] = useState<boolean>(true);
 	const dispatch = useDispatch();
 	const user = useSelector(getUser);
 	const socketSocial = useSelector(getSocketSocial);
@@ -34,36 +34,32 @@ function App() {
 	const ConnectedList = useSelector(getConnectedList);
 	const requestedList = useSelector(getRequestedList);
 	const [booleffect, setBooleffect] = useState<boolean>(false);
-	
+
 	useEffect(() => {
-		if (!socketChat)
-		{
+		if (!socketChat) {
 			const newSocket = io('http://90.66.199.176:7004');
 			dispatch(setSocket(newSocket));
 		}
 	}, []);
 
 	useEffect(() => {
-		if (localStorage.getItem('token'))
-		{
+		if (localStorage.getItem('token')) {
 			async function ListFriends() {
 				await instance.get(`user/ListFriends`, {
-						headers: ({
-							Authorization: 'Bearer ' + localStorage.getItem('token'),
-						})
-					}).then((res) => {
-						dispatch(setFriendList(res.data.friendList));
-					}).catch((err) => {
-						//console.log(err.message);
-					});
+					headers: ({
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					})
+				}).then((res) => {
+					dispatch(setFriendList(res.data.friendList));
+				});
 
 				await instance.get(`user/ListBlockedBy`, {
-				headers: ({
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})}).then((res) => {
-					let blockedByList : any[] = res.data.ListBlockedBy;
-					if (blockedByList)
-					{
+					headers: ({
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					})
+				}).then((res) => {
+					let blockedByList: any[] = res.data.ListBlockedBy;
+					if (blockedByList) {
 						dispatch(setBlockedByList(blockedByList));
 					}
 					else
@@ -71,12 +67,12 @@ function App() {
 				});
 
 				await instance.get(`user/ListBlockedBy`, {
-				headers: ({
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})}).then((res) => {
-					let blockedByList : any[] = res.data.ListBlockedBy;
-					if (blockedByList)
-					{
+					headers: ({
+						Authorization: 'Bearer ' + localStorage.getItem('token'),
+					})
+				}).then((res) => {
+					let blockedByList: any[] = res.data.ListBlockedBy;
+					if (blockedByList) {
 						dispatch(setBlockedByList(blockedByList));
 					}
 					else
@@ -90,37 +86,29 @@ function App() {
 						Authorization: "Bearer " + localStorage.getItem("token"),
 					},
 				})
-				.then((res) => {
-					if (res.data.User)
-					{
-						socketSocial?.close();
-						console.log("get user and emit socket");
-						const newSocketSocial = io('http://90.66.199.176:7003');
-						dispatch(setSocketSocial(newSocketSocial));
-						dispatch(setUser(res.data.User));
-						
-						ListFriends();
-					}
-				}).catch((err) => {
-					console.log(err)
-				});
-				console.log("trefsvre" , localStorage.getItem("token"));
-					
+					.then((res) => {
+						if (res.data.User) {
+							socketSocial?.close();
+							const newSocketSocial = io('http://90.66.199.176:7003');
+							dispatch(setSocketSocial(newSocketSocial));
+							dispatch(setUser(res.data.User));
+
+							ListFriends();
+						}
+					});
 			}
 			socketSet();
 		}
 	}, [localStorage]);
 	useEffect(() => {
-		if (user && !booleffect && socketSocial)
-		{
+		if (user && !booleffect && socketSocial) {
 			setBooleffect(true);
-			socketSocial.emit("connected", {uuid: user.uuid});
+			socketSocial.emit("connected", { uuid: user.uuid });
 		}
 	}, [socketSocial, user]);
 
 	useEffect(() => {
-		if (user && socketSocial)
-		{
+		if (user && socketSocial) {
 
 			socketSocial.removeListener("newFriend");
 			socketSocial.on("newFriend", (data: any) => {
@@ -132,9 +120,6 @@ function App() {
 							dispatch(setRequestList(requestTab));
 						else
 							dispatch(setRequestList([]));
-					}).catch((err) => {
-						console.log(err.message);
-						// SetRequestList([]);
 					});
 				}
 			});
@@ -143,13 +128,11 @@ function App() {
 				if (data.uuid === user.uuid && data?.username && data?.friendUuid) {
 					createNotification("info", data.username + " accepted your friend request");
 					instance.get(`user/ListFriends`).then((res) => {
-						const requested = requestedList.filter((e : any) => e.uuid !== data.friendUuid);
+						const requested = requestedList.filter((e: any) => e.uuid !== data.friendUuid);
 						dispatch(setRequestedList(requested));
 						let friendList = res.data.friendList;
 						if (friendList)
 							dispatch(setFriendList(friendList));
-					}).catch((err) => {
-						console.log(err.message);
 					});
 				}
 			});
@@ -157,15 +140,13 @@ function App() {
 			socketSocial.on("removedOrBlocked", (data: any) => {
 				if (data.uuid === user.uuid && data?.username) {
 					instance.get(`user/ListFriends`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
+						headers: ({
+							Authorization: 'Bearer ' + localStorage.getItem('token'),
+						})
 					}).then((res) => {
 						let friendList = res.data.friendList;
 						if (friendList)
 							dispatch(setFriendList(res.data.friendList));
-					}).catch((err) => {
-						console.log(err.message);
 					});
 				}
 			});
@@ -174,14 +155,14 @@ function App() {
 				if (data.uuid === user.uuid && data?.username) {
 					//createNotification("info", data.username + " accepted your friend request");
 					instance.get(`user/ListBlockedBy`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})}).then((res) => {
-						let blockedByList : any[] = res.data.ListBlockedBy;
-						if (blockedByList)
-						{
+						headers: ({
+							Authorization: 'Bearer ' + localStorage.getItem('token'),
+						})
+					}).then((res) => {
+						let blockedByList: any[] = res.data.ListBlockedBy;
+						if (blockedByList) {
 							dispatch(setBlockedByList(blockedByList));
-							return ;
+							return;
 						}
 					});
 					dispatch(setBlockedByList([]));
@@ -192,14 +173,14 @@ function App() {
 				if (data.uuid === user.uuid && data?.username) {
 					//createNotification("info", data.username + " accepted your friend request");
 					instance.get(`user/ListBlockedBy`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})}).then((res) => {
-						let blockedByList : any[] = res.data.ListBlockedBy;
-						if (blockedByList)
-						{
+						headers: ({
+							Authorization: 'Bearer ' + localStorage.getItem('token'),
+						})
+					}).then((res) => {
+						let blockedByList: any[] = res.data.ListBlockedBy;
+						if (blockedByList) {
 							dispatch(setBlockedByList(blockedByList));
-							return ;
+							return;
 						}
 					});
 					dispatch(setBlockedByList([]));
@@ -209,18 +190,15 @@ function App() {
 			socketSocial.on("CancelFriend", (data: any) => {
 				if (data.uuid === user.uuid) {
 					instance.get(`user/ListFriendRequest`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
+						headers: ({
+							Authorization: 'Bearer ' + localStorage.getItem('token'),
+						})
 					}).then((res) => {
 						let requestTab = res.data.usernameList;
 						if (requestTab)
 							dispatch(setRequestList(requestTab));
 						else
 							dispatch(setRequestList([]));
-					}).catch((err) => {
-						console.log(err.message);
-						//SetRequestList([]);
 					});
 				}
 			});
@@ -228,18 +206,15 @@ function App() {
 			socketSocial.on("DeclineFriend", (data: any) => {
 				if (data.uuid === user.uuid) {
 					instance.get(`user/ListFriendRequested`, {
-					headers: ({
-						Authorization: 'Bearer ' + localStorage.getItem('token'),
-					})
+						headers: ({
+							Authorization: 'Bearer ' + localStorage.getItem('token'),
+						})
 					}).then((res) => {
 						let requestedTab = res.data.ListFriendsRequested;
 						if (requestedTab)
 							dispatch(setRequestedList(requestedTab));
 						else
 							dispatch(setRequestedList([]));
-					}).catch((err) => {
-						console.log(err.message);
-						//SetRequestList([]);
 					});
 				}
 			});
@@ -247,111 +222,106 @@ function App() {
 	}, [socketSocial]);
 
 	useEffect(() => {
-		console.log("update socket on")
-		console.log(`socketSocial ${socketSocial}`);
-		let listUsers : any[] = [];
-		async function filterBlockedUsers(data : any) {
+
+		let listUsers: any[] = [];
+		async function filterBlockedUsers(data: any) {
 			if (data.users)
-				listUsers = [... data.users];
+				listUsers = [...data.users];
 			await instance.get(`user/ListUsersBlocked`, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})})
-			.then((res) => {
-				let blockedList : any[] = res.data.ListUsersblocked;
-				if (blockedList)
-				{
-					for (let i = 0; i < blockedList.length; i++) {
-						listUsers = listUsers.filter((e : any) => e.uuid !== blockedList[i].uuid);
+				})
+			})
+				.then((res) => {
+					let blockedList: any[] = res.data.ListUsersblocked;
+					if (blockedList) {
+						for (let i = 0; i < blockedList.length; i++) {
+							listUsers = listUsers.filter((e: any) => e.uuid !== blockedList[i].uuid);
+						}
 					}
-				}
-			});
+				});
 			await instance.get(`user/ListBlockedBy`, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
-			})})
-			.then((res) => {
-				let blockedByList : any[] = res.data.ListBlockedBy;
-				if (blockedByList)
-				{
-					for (let i = 0; i < blockedByList.length; i++) {
-						listUsers = listUsers.filter((e : any) => e.uuid !== blockedByList[i].uuid);
+				})
+			})
+				.then((res) => {
+					let blockedByList: any[] = res.data.ListBlockedBy;
+					if (blockedByList) {
+						for (let i = 0; i < blockedByList.length; i++) {
+							listUsers = listUsers.filter((e: any) => e.uuid !== blockedByList[i].uuid);
+						}
 					}
-				}
-			});
+				});
 		}
-		async function callFilter(data : any, special : boolean) {
+		async function callFilter(data: any, special: boolean) {
 			await filterBlockedUsers(data);
 			if (special)
 				listUsers = listUsers.filter((user: any) => user.uuid !== data.uuid);
 			dispatch(setConnectedList(listUsers));
 		}
-		if (socketSocial)
-		{
-			console.log('la')
+		if (socketSocial) {
 			socketSocial?.removeListener("listUsersConnected");
-			socketSocial.on('listUsersConnected', (data : any) => {
-					callFilter(data, false);
-				}
+			socketSocial.on('listUsersConnected', (data: any) => {
+				callFilter(data, false);
+			}
 			)
-			
+
 			socketSocial?.removeListener("connectedToServer");
-			socketSocial.on('connectedToServer', (data : any) => {
+			socketSocial.on('connectedToServer', (data: any) => {
 				callFilter(data, false);
 			})
-			
+
 			socketSocial?.removeListener("disconnectFromServer");
-			socketSocial.on('disconnectFromServer', (data : any) => {
+			socketSocial.on('disconnectFromServer', (data: any) => {
 				callFilter(data, true);
 			})
 
 			socketSocial?.removeListener("playing");
-			socketSocial.on('playing', (data : any) => {
-				console.log("playing" , data.users)
+			socketSocial.on('playing', (data: any) => {
 				dispatch(setInGameList(data.users));
 			})
 
 			socketSocial?.removeListener("notPlaying");
-			socketSocial.on('notPlaying', (data : any) => {
-				console.log("notPlaying" , data.users)
+			socketSocial.on('notPlaying', (data: any) => {
 				dispatch(setInGameList(data.users));
 			})
 
 		}
 	}, [socketSocial, ConnectedList]);
-  return (
-    <Router>
-      {APIStatus ? (
-        <Routes>
-			
-			<Route path="/" element={<HomePage />}></Route>
-			<Route path="/login" element={<SignIn />}></Route>
-			<Route path="/login/return/" element={<GetToken />}></Route>
-			<Route path="/settings" element={<Settings />}></Route>
-			<Route path="/logout" element={<Protected><Logout /></Protected>}></Route>
-			<Route path="/twoAuth" element={<ProtectedTwoAuth><TwoAuth /></ProtectedTwoAuth>}></Route>
-			<Route path="/profile/:Username" element={<Protected><Profile /></Protected>}></Route>
-			<Route path="/leaderboard" element={<Protected><Leaderboard /></Protected>}></Route>
-			<Route path="/rules" element={<Protected><Rules /></Protected>}></Route>
-			<Route path="/game/spectate" element={<Protected><GameSpectatePage /></Protected>}></Route>
-			<Route path="/game/spectate/:roomId" element={<Protected><GameSpectatePage /></Protected>}></Route>
-			<Route path="/chat/" element={<Protected><ChannelPage /></Protected>}></Route>
-			<Route path="/chat/channel" element={<Protected><ChannelPage /></Protected>}></Route>
-			<Route path="/chat/channel/:id" element={<Protected><ChannelPage /></Protected>}></Route>
-			<Route path="/chat/dm" element={<Protected><DMPage /></Protected>}></Route>
-			<Route path="/chat/dm/:id" element={<Protected><DMPage /></Protected>}></Route>
-			<Route path="*" element={<NotFound />}></Route>
-    </Routes>
-      ) : (
-        <Routes>
-          <Route
-            path="*"
-            element={<div>{APIStatus ? "API is up" : "API is down"}</div>}
-          ></Route>
-        </Routes>
-      )}
-    </Router>
-  );
+	return (
+		<Router>
+			{APIStatus ? (
+				<Routes>
+
+					<Route path="/" element={<HomePage />}></Route>
+					<Route path="/login" element={<SignIn />}></Route>
+					<Route path="/login/return/" element={<GetToken />}></Route>
+					<Route path="/settings" element={<Settings />}></Route>
+					<Route path="/logout" element={<Protected><Logout /></Protected>}></Route>
+					<Route path="/twoAuth" element={<ProtectedTwoAuth><TwoAuth /></ProtectedTwoAuth>}></Route>
+					<Route path="/profile/:Username" element={<Protected><Profile /></Protected>}></Route>
+					<Route path="/leaderboard" element={<Protected><Leaderboard /></Protected>}></Route>
+					<Route path="/rules" element={<Protected><Rules /></Protected>}></Route>
+					<Route path="/game/spectate" element={<Protected><GameSpectatePage /></Protected>}></Route>
+					<Route path="/game/spectate/:roomId" element={<Protected><GameSpectatePage /></Protected>}></Route>
+					<Route path="/chat/" element={<Protected><ChannelPage /></Protected>}></Route>
+					<Route path="/chat/channel" element={<Protected><ChannelPage /></Protected>}></Route>
+					<Route path="/chat/channel/:id" element={<Protected><ChannelPage /></Protected>}></Route>
+					<Route path="/chat/dm" element={<Protected><DMPage /></Protected>}></Route>
+					<Route path="/chat/dm/:id" element={<Protected><DMPage /></Protected>}></Route>
+					<Route path="*" element={<NotFound />}></Route>
+				</Routes>
+			) : (
+				<Routes>
+					<Route
+						path="*"
+						element={<div>{APIStatus ? "API is up" : "API is down"}</div>}
+					></Route>
+				</Routes>
+			)}
+		</Router>
+	);
 }
 
 export default App;

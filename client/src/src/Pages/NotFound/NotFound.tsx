@@ -10,48 +10,6 @@ import { Helmet } from "react-helmet";
 function NotFound() {
 	let navigate = useNavigate();
 	KillSocket("all");
-	let booleffect = false;
-
-
-	const [User, setUser] = useState<any>();
-	const [IsTwoAuthActivated, setActivated] = useState<boolean>();
-	const [IsTwoAuthConnected, setConnected] = useState<boolean>();
-
-	async function GetLoggedInfoAndUser() {
-		if (localStorage.getItem("token")) {
-			await instance.get(`user/getLoggedInfo`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("token"),
-				},
-			})
-				.then((res) => {
-					setActivated(res.data.isTwoFactorAuthenticationEnabled);
-					setConnected(res.data.isSecondFactorAuthenticated);
-				})
-				.catch((err) => {
-					console.log(err.message);
-				});
-			await instance.get(`user`, {
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("token"),
-				},
-			})
-				.then((res) => {
-					setUser(JSON.stringify(res.data.User));
-					console.log(User);
-				})
-				.catch((err) => {
-					console.log(err.message);
-				});
-		}
-	}
-
-	useEffect(() => {
-		if (!booleffect) {
-			GetLoggedInfoAndUser();
-			booleffect = true;
-		}
-	}, []);
 
 	return (
 		<div className="NotFoundPage">

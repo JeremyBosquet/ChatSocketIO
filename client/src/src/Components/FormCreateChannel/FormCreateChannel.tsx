@@ -89,7 +89,6 @@ function FormCreateChannel() {
 			}
 			).catch((error: any) => {
 				if (error) {
-					console.log(error)
 					if (error.response?.data?.message)
 						createNotification("error", error.response?.data?.message);
 				}

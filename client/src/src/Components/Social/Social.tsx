@@ -38,7 +38,6 @@ function Social() {
 			}).then((res) => {
 				setUser(res.data.User);
 			}).catch((err) => {
-				console.log(err.message);
 				setUser(undefined);
 				navigate("/");
 			});
@@ -55,8 +54,6 @@ function Social() {
 			})
 		}).then((res) => {
 			dispatch(setFriendList(res.data.friendList));
-		}).catch((err) => {
-			console.log(err.message);
 		});
 	}
 
@@ -67,8 +64,6 @@ function Social() {
 			})
 		}).then((res) => {
 			dispatch(setRequestedList(res.data.ListFriendsRequested));
-		}).catch((err) => {
-			console.log(err.message);
 		});
 	}
 
@@ -79,8 +74,6 @@ function Social() {
 			})
 		}).then((res) => {
 			dispatch(setBlockList(res.data.ListUsersblocked));
-		}).catch((err) => {
-			console.log(err.message);
 		});
 	}
 
@@ -94,8 +87,6 @@ function Social() {
 				SetsearchList(res.data.searchResult)
 			else
 				SetsearchList([]);
-		}).catch((err) => {
-			console.log(err.response.data.message);
 		});
 	}
 

@@ -140,10 +140,8 @@ function GamePlay(props: props) {
 	const socketSocial = useSelector(getSocketSocial);
 	useEffect(() => {
 		socketSocial?.emit("joinGame");
-		console.log("joinGame");
 		return () => {
 			socketSocial?.emit("leaveGame");
-			console.log("leaveGame");
 		};
 	}, [socketSocial]);
 	function updateDisplay(): void {
@@ -304,14 +302,6 @@ function GamePlay(props: props) {
 			percentX: ball.percentX,
 			percentY: ball.percentY,
 		});
-		console.log(
-			"width:",
-			windowsWidth,
-			"height:",
-			windowsHeight,
-			"ballRadius:",
-			ball?.radius
-		);
 		setPlayerA({
 			...playerA,
 			id: "playerA",

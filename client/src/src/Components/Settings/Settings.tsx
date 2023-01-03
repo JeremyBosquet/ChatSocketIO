@@ -43,9 +43,6 @@ function Settings() {
 				.then((res) => {
 					setActivated(res.data.isTwoFactorAuthenticationEnabled);
 					setConnected(res.data.isSecondFactorAuthenticated);
-				})
-				.catch((err) => {
-					console.log(err.message);
 				});
 			await instance.get(`user`, {
 				headers: {
@@ -58,7 +55,6 @@ function Settings() {
 					dispatch(setUserUsername(res.data.User.username));
 				})
 				.catch((err) => {
-					console.log(err.message);
 					setUser(undefined);
 					navigate("/");
 				});
@@ -97,21 +93,17 @@ function Settings() {
 			}
 		)
 			.then((res) => {
-				console.log(res.data.message);
 				GetLoggedInfoAndUser();
 				createNotification("success", "two auth auth succefully deactivated");
 				setTurnedOff(false);
 				setQrCode(undefined);
 			})
 			.catch((err) => {
-				console.log(err.message);
-
 				createNotification("error", err.response.data.message);
 			});
 	};
 	const ChangeUsername = async (event: any) => {
 		event.preventDefault();
-		console.log(changename);
 		await instance.post(`user/changeUsername`,
 			{ newName: changename },
 			{
@@ -121,7 +113,6 @@ function Settings() {
 			}
 		)
 			.then((res) => {
-				console.log(res.data.message);
 				GetLoggedInfoAndUser();
 				reloadHistoryList();
 				createNotification("success", "Username succefuly changed");
@@ -145,7 +136,7 @@ function Settings() {
 			data.append("file", changeavatar, changeavatar.name);
 			setFileName("");
 			setChangeavatar(undefined)
-			console.log(data.get("file"));
+
 			await instance({
 				url: `user/changeAvatar`,
 				method: "POST",
@@ -155,14 +146,10 @@ function Settings() {
 				}
 			})
 				.then((res) => {
-					console.log(res);
-					console.log(res.data.message);
 					GetLoggedInfoAndUser();
 					createNotification("success", "Avatar succefully changed");
 				})
 				.catch((err) => {
-					console.log(err);
-					console.log(err.response.statusText);
 					createNotification("error", err.response.statusText);
 				});
 		}
@@ -183,7 +170,6 @@ function Settings() {
 				setQrCode(res.data);
 			})
 			.catch((err) => {
-				console.log(err.response.statusText);
 				createNotification("error", err.response.statusText);
 			});
 	};
@@ -199,7 +185,6 @@ function Settings() {
 			}
 		)
 			.then((res) => {
-				console.log(res.data.message);
 				GetLoggedInfoAndUser();
 			});
 
@@ -212,12 +197,10 @@ function Settings() {
 			}
 		)
 			.then((res) => {
-				console.log(res.data.message);
 				createNotification("success", res.data.message);
 				GetLoggedInfoAndUser();
 			})
 			.catch((err) => {
-				console.log(err.response.data.message);
 				createNotification("error", err.response.data.message);
 			});
 	};

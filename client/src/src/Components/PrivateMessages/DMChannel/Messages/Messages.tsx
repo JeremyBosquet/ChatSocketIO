@@ -31,7 +31,7 @@ function Messages(props: props) {
 					await instance.get(`chat/user/` + props.messages[i].userId).then(res => {
 						if (res.data)
 							temp = [...temp, { ...res.data, print: false }];
-					}).catch(err => console.log(err));
+					});
 				}
 			}
 			setUsersChannel(temp);
@@ -44,10 +44,6 @@ function Messages(props: props) {
 
 		getUsername();
 	}, [props.messages]);
-
-	useEffect(() => {
-		console.log(blockedByList)
-	}, [blockList, blockedByList]);
 
 	return (
 		<div id="messages" className='messages' ref={messageEl}>

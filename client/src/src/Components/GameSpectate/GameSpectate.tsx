@@ -226,14 +226,6 @@ function GameSpectate(props: props) {
 			percentX: ball.percentX,
 			percentY: ball.percentY,
 		});
-		console.log(
-			"width:",
-			windowsWidth,
-			"height:",
-			windowsHeight,
-			"ballRadius:",
-			ball?.radius
-		);
 		setPlayerA({
 			...playerA,
 			id: "playerA",

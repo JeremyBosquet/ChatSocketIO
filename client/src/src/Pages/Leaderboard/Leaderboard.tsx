@@ -10,7 +10,6 @@ const Leaderboard = () => {
 	const [leaderboard, setLeaderboard] = useState<any[]>([]);
 	const setLeaderBoard = () => {
 		instance.get('user/Leaderboard').then((res) => {
-			console.log("ok", res);
 			if (res.data && res.data.Leaderboard)
 				setLeaderboard(res.data.Leaderboard);
 		});

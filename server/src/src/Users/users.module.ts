@@ -6,8 +6,8 @@ import { UsersService } from './users.service';
 import { JwtService } from '@nestjs/jwt';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserModel])],
-  controllers: [UsersController],
-  providers: [UsersService, JwtService],
+	imports: [TypeOrmModule.forFeature([UserModel])],
+	controllers: [UsersController],
+	providers: [UsersService, JwtService],
 })
-export class UsersModule {}
+export class UsersModule { }

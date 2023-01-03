@@ -52,7 +52,6 @@ function ChatChannel(props: props) {
 	const getUsersChannel = async () => {
 		await instance.get("chat/channels/user")
 			.then((res) => {
-				console.log(res.data);
 				if (res)
 					dispatch(setChannels(res.data));
 			})
@@ -84,7 +83,6 @@ function ChatChannel(props: props) {
 			const getChannel = async () => {
 				const channel = (await instance.get("chat/channel/" + selectedChannel)).data;
 				if (channel) {
-					console.log(channel);
 					setChannel(channel);
 					setUsers(channel.users);
 					dispatch(setUser({ ...user, role: channel.users.find((u: IuserDb) => u.uuid === user.uuid)?.role }));

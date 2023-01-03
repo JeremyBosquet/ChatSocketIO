@@ -28,8 +28,6 @@ function Decline(props: props) {
 				const request: any[] = requestList.filter((element: any) => element.uuid !== uuid);
 				dispatch(setRequestList(request));
 				socket?.emit('DeclineFriendAdd', { uuid: uuid, myUUID: props.User.uuid });
-			}).catch((err) => {
-				console.log(err.response.data.message);
 			});
 		}
 	}

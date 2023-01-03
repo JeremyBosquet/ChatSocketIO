@@ -7,7 +7,7 @@ require('dotenv').config();
 export default defineConfig({
     plugins: [react(), viteTsconfigPaths()],
     server: {
-        port: 80,
+        port: 5999,
         host: '0.0.0.0',
     },
 });

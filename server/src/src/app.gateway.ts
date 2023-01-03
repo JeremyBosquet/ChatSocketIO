@@ -17,7 +17,7 @@ export class AppGateway {
 	server: any;
 
 	@SubscribeMessage('connected')
-	async connected(@MessageBody() data: any, @ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
+	async connected(@MessageBody() data: any, @ConnectedSocket() client: Socket): Promise<WsResponse<any>> {
 		let myUser = await this.UsersService.findUserByUuid(data.uuid);
 		if (myUser) {
 			client.data.uuid = data.uuid;
@@ -29,8 +29,7 @@ export class AppGateway {
 					if (!(await users.find((user) => (user.uuid === socket.data.uuid))))
 						users.push({ uuid: socket.data.uuid });
 			}
-			this.server.to(client.id).emit('listUsersConnected', { users: users });
-			client.broadcast.emit('connectedToServer', { users: users });
+			this.server.emit('listUsersConnected', { users: users });
 			this.server.emit('playing', { users: await this.RoomService.getInGamePlayers() });
 		}
 		return;
@@ -54,18 +53,20 @@ export class AppGateway {
 
 	@SubscribeMessage('disconnect')
 	async handleDisconnect(@ConnectedSocket() client: Socket): Promise<void> {
-		if (await this.UsersService.findUserByUuid(client.data.uuid)) {
-			this.server.emit('disconnectFromServer', { uuid: client.data.uuid });
-			client.data.uuid = "";
-		}
+		if (client.data.uuid)
+			if (await this.UsersService.findUserByUuid(client.data.uuid)) {
+				this.server.emit('disconnectFromServer', { uuid: client.data.uuid });
+				client.data.uuid = "";
+			}
 	}
 
 	@SubscribeMessage('logout')
 	async handleLogout(@ConnectedSocket() client: Socket): Promise<void> {
-		if (await this.UsersService.findUserByUuid(client.data.uuid)) {
-			this.server.emit('disconnectFromServer', { uuid: client.data.uuid });
-			client.data.uuid = "";
-		}
+		if (client.data.uuid)
+			if (await this.UsersService.findUserByUuid(client.data.uuid)) {
+				this.server.emit('disconnectFromServer', { uuid: client.data.uuid });
+				client.data.uuid = "";
+			}
 	}
 
 	@SubscribeMessage('addFriend')

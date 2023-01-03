@@ -23,24 +23,22 @@ function Logout() {
 		})
 			.then((res) => {
 				if (res.data.User)
-					socketSocial?.emit("logout", res.data.User.uuid);
+				{
+					socketSocial?.disconnect();
+					localStorage.clear();
+					navigate("/");
+					createNotification("success", "User disconnected");
+				}
 			}).catch(() => {
-			})
+			});
 	}
 
 	async function CallLogout() {
-		await instance.get(`logout`, {
-			headers: {
-				Authorization: "Bearer " + localStorage.getItem("token"),
-			},
-		})
-			.then((res) => {
+		await instance.get(`logout`)
+			.then(() => {
 				GetLoggedInfo();
-				localStorage.clear();
-				createNotification("success", "User disconnected");
-				navigate("/");
 			})
-			.catch((err) => {
+			.catch(() => {
 				createNotification("error", "couldn't disconnect user");
 				navigate("/");
 			});

@@ -1,9 +1,11 @@
 
-server/data/
+server/data/*
 
-server/src/src/uploads/avatar/
+client/data/*
 
-client/data/
+server/src/src/uploads/avatar/*.jpg
+server/src/src/uploads/avatar/*.jpeg
+server/src/src/uploads/avatar/*.png
 
 .env
 

@@ -37,7 +37,7 @@ function App() {
 
 	useEffect(() => {
 		if (!socketChat) {
-			const newSocket = io('http://90.66.199.176:7004');
+			const newSocket = io(import.meta.env.VITE_URL_API + ':7004');
 			dispatch(setSocket(newSocket));
 		}
 	}, []);
@@ -89,7 +89,7 @@ function App() {
 					.then((res) => {
 						if (res.data.User) {
 							socketSocial?.close();
-							const newSocketSocial = io('http://90.66.199.176:7003');
+							const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
 							dispatch(setSocketSocial(newSocketSocial));
 							dispatch(setUser(res.data.User));
 

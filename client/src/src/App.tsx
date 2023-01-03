@@ -100,6 +100,7 @@ function App() {
 			socketSet();
 		}
 	}, [localStorage]);
+
 	useEffect(() => {
 		if (user && !booleffect && socketSocial) {
 			setBooleffect(true);
@@ -107,188 +108,177 @@ function App() {
 		}
 	}, [socketSocial, user]);
 
-	useEffect(() => {
-		if (user && socketSocial) {
-
-			socketSocial.removeListener("newFriend");
-			socketSocial.on("newFriend", (data: any) => {
-				if (data.uuid === user.uuid && data?.username) {
-					createNotification("info", "New friend request from: " + data.username);
-					instance.get(`user/ListFriendRequest`).then((res) => {
-						let requestTab = res.data.usernameList;
-						if (requestTab)
-							dispatch(setRequestList(requestTab));
-						else
-							dispatch(setRequestList([]));
-					});
-				}
-			});
-			socketSocial.removeListener("friendAccepted");
-			socketSocial.on("friendAccepted", (data: any) => {
-				if (data.uuid === user.uuid && data?.username && data?.friendUuid) {
-					createNotification("info", data.username + " accepted your friend request");
-					instance.get(`user/ListFriends`).then((res) => {
-						const requested = requestedList.filter((e: any) => e.uuid !== data.friendUuid);
-						dispatch(setRequestedList(requested));
-						let friendList = res.data.friendList;
-						if (friendList)
-							dispatch(setFriendList(friendList));
-					});
-				}
-			});
-			socketSocial.removeListener("removedOrBlocked");
-			socketSocial.on("removedOrBlocked", (data: any) => {
-				if (data.uuid === user.uuid && data?.username) {
-					instance.get(`user/ListFriends`, {
-						headers: ({
-							Authorization: 'Bearer ' + localStorage.getItem('token'),
-						})
-					}).then((res) => {
-						let friendList = res.data.friendList;
-						if (friendList)
-							dispatch(setFriendList(res.data.friendList));
-					});
-				}
-			});
-			socketSocial.removeListener("Unblocked");
-			socketSocial.on("Unblocked", (data: any) => {
-				if (data.uuid === user.uuid && data?.username) {
-					//createNotification("info", data.username + " accepted your friend request");
-					instance.get(`user/ListBlockedBy`, {
-						headers: ({
-							Authorization: 'Bearer ' + localStorage.getItem('token'),
-						})
-					}).then((res) => {
-						let blockedByList: any[] = res.data.ListBlockedBy;
-						if (blockedByList) {
-							dispatch(setBlockedByList(blockedByList));
-							return;
-						}
-					});
-					dispatch(setBlockedByList([]));
-				}
-			});
-			socketSocial.removeListener("Block");
-			socketSocial.on("Block", (data: any) => {
-				if (data.uuid === user.uuid && data?.username) {
-					//createNotification("info", data.username + " accepted your friend request");
-					instance.get(`user/ListBlockedBy`, {
-						headers: ({
-							Authorization: 'Bearer ' + localStorage.getItem('token'),
-						})
-					}).then((res) => {
-						let blockedByList: any[] = res.data.ListBlockedBy;
-						if (blockedByList) {
-							dispatch(setBlockedByList(blockedByList));
-							return;
-						}
-					});
-					dispatch(setBlockedByList([]));
-				}
-			});
-			socketSocial.removeListener("CancelFriend");
-			socketSocial.on("CancelFriend", (data: any) => {
-				if (data.uuid === user.uuid) {
-					instance.get(`user/ListFriendRequest`, {
-						headers: ({
-							Authorization: 'Bearer ' + localStorage.getItem('token'),
-						})
-					}).then((res) => {
-						let requestTab = res.data.usernameList;
-						if (requestTab)
-							dispatch(setRequestList(requestTab));
-						else
-							dispatch(setRequestList([]));
-					});
-				}
-			});
-			socketSocial.removeListener("DeclineFriend");
-			socketSocial.on("DeclineFriend", (data: any) => {
-				if (data.uuid === user.uuid) {
-					instance.get(`user/ListFriendRequested`, {
-						headers: ({
-							Authorization: 'Bearer ' + localStorage.getItem('token'),
-						})
-					}).then((res) => {
-						let requestedTab = res.data.ListFriendsRequested;
-						if (requestedTab)
-							dispatch(setRequestedList(requestedTab));
-						else
-							dispatch(setRequestedList([]));
-					});
-				}
+	socketSocial.removeListener("newFriend");
+	socketSocial.on("newFriend", (data: any) => {
+		if (user && data.uuid === user.uuid && data?.username) {
+			createNotification("info", "New friend request from: " + data.username);
+			instance.get(`user/ListFriendRequest`).then((res) => {
+				let requestTab = res.data.usernameList;
+				if (requestTab)
+					dispatch(setRequestList(requestTab));
+				else
+					dispatch(setRequestList([]));
 			});
 		}
-	}, [socketSocial]);
-
-	useEffect(() => {
-
-		let listUsers: any[] = [];
-		async function filterBlockedUsers(data: any) {
-			if (data.users)
-				listUsers = [...data.users];
-			await instance.get(`user/ListUsersBlocked`, {
+	});
+	socketSocial.removeListener("friendAccepted");
+	socketSocial.on("friendAccepted", (data: any) => {
+		if (user && data.uuid === user.uuid && data?.username && data?.friendUuid) {
+			createNotification("info", data.username + " accepted your friend request");
+			instance.get(`user/ListFriends`).then((res) => {
+				const requested = requestedList.filter((e: any) => e.uuid !== data.friendUuid);
+				dispatch(setRequestedList(requested));
+				let friendList = res.data.friendList;
+				if (friendList)
+					dispatch(setFriendList(friendList));
+			});
+		}
+	});
+	socketSocial.removeListener("removedOrBlocked");
+	socketSocial.on("removedOrBlocked", (data: any) => {
+		if (user && data.uuid === user.uuid && data?.username) {
+			instance.get(`user/ListFriends`, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
-			})
-				.then((res) => {
-					let blockedList: any[] = res.data.ListUsersblocked;
-					if (blockedList) {
-						for (let i = 0; i < blockedList.length; i++) {
-							listUsers = listUsers.filter((e: any) => e.uuid !== blockedList[i].uuid);
-						}
-					}
-				});
-			await instance.get(`user/ListBlockedBy`, {
+			}).then((res) => {
+				let friendList = res.data.friendList;
+				if (friendList)
+					dispatch(setFriendList(res.data.friendList));
+			});
+		}
+	});
+	socketSocial.removeListener("Unblocked");
+	socketSocial.on("Unblocked", (data: any) => {
+		if (user && data.uuid === user.uuid && data?.username) {
+			//createNotification("info", data.username + " accepted your friend request");
+			instance.get(`user/ListBlockedBy`, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				})
+			}).then((res) => {
+				let blockedByList: any[] = res.data.ListBlockedBy;
+				if (blockedByList) {
+					dispatch(setBlockedByList(blockedByList));
+					return;
+				}
+			});
+			dispatch(setBlockedByList([]));
+		}
+	});
+	socketSocial.removeListener("Block");
+	socketSocial.on("Block", (data: any) => {
+		if (user && data.uuid === user.uuid && data?.username) {
+			//createNotification("info", data.username + " accepted your friend request");
+			instance.get(`user/ListBlockedBy`, {
+				headers: ({
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				})
+			}).then((res) => {
+				let blockedByList: any[] = res.data.ListBlockedBy;
+				if (blockedByList) {
+					dispatch(setBlockedByList(blockedByList));
+					return;
+				}
+			});
+			dispatch(setBlockedByList([]));
+		}
+	});
+	socketSocial.removeListener("CancelFriend");
+	socketSocial.on("CancelFriend", (data: any) => {
+		if (user && data.uuid === user.uuid) {
+			instance.get(`user/ListFriendRequest`, {
+				headers: ({
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				})
+			}).then((res) => {
+				let requestTab = res.data.usernameList;
+				if (requestTab)
+					dispatch(setRequestList(requestTab));
+				else
+					dispatch(setRequestList([]));
+			});
+		}
+	});
+	socketSocial.removeListener("DeclineFriend");
+	socketSocial.on("DeclineFriend", (data: any) => {
+		if (user && data.uuid === user.uuid) {
+			instance.get(`user/ListFriendRequested`, {
+				headers: ({
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				})
+			}).then((res) => {
+				let requestedTab = res.data.ListFriendsRequested;
+				if (requestedTab)
+					dispatch(setRequestedList(requestedTab));
+				else
+					dispatch(setRequestedList([]));
+			});
+		}
+	});
+
+	let listUsers: any[] = [];
+	async function filterBlockedUsers(data: any) {
+		if (data.users)
+			listUsers = [...data.users];
+		await instance.get(`user/ListUsersBlocked`, {
+			headers: ({
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})
-				.then((res) => {
-					let blockedByList: any[] = res.data.ListBlockedBy;
-					if (blockedByList) {
-						for (let i = 0; i < blockedByList.length; i++) {
-							listUsers = listUsers.filter((e: any) => e.uuid !== blockedByList[i].uuid);
-						}
+		})
+			.then((res) => {
+				let blockedList: any[] = res.data.ListUsersblocked;
+				if (blockedList) {
+					for (let i = 0; i < blockedList.length; i++) {
+						listUsers = listUsers.filter((e: any) => e.uuid !== blockedList[i].uuid);
 					}
-				});
-		}
-		async function callFilter(data: any, special: boolean) {
-			await filterBlockedUsers(data);
-			if (special)
-				listUsers = listUsers.filter((user: any) => user.uuid !== data.uuid);
-			dispatch(setConnectedList(listUsers));
-		}
-		if (socketSocial) {
-			socketSocial?.removeListener("listUsersConnected");
-			socketSocial.on('listUsersConnected', (data: any) => {
-				callFilter(data, false);
-			}
-			)
-
-			socketSocial?.removeListener("connectedToServer");
-			socketSocial.on('connectedToServer', (data: any) => {
-				callFilter(data, false);
+				}
+			});
+		await instance.get(`user/ListBlockedBy`, {
+			headers: ({
+				Authorization: 'Bearer ' + localStorage.getItem('token'),
 			})
+		})
+			.then((res) => {
+				let blockedByList: any[] = res.data.ListBlockedBy;
+				if (blockedByList) {
+					for (let i = 0; i < blockedByList.length; i++) {
+						listUsers = listUsers.filter((e: any) => e.uuid !== blockedByList[i].uuid);
+					}
+				}
+			});
+	}
+	async function callFilter(data: any, special: boolean) {
+		await filterBlockedUsers(data);
+		if (special)
+			listUsers = listUsers.filter((user: any) => user.uuid !== data.uuid);
+		dispatch(setConnectedList(listUsers));
+	}
+	socketSocial?.removeListener("listUsersConnected");
+	socketSocial.on('listUsersConnected', (data: any) => {
+		callFilter(data, false);
+	}
+	)
 
-			socketSocial?.removeListener("disconnectFromServer");
-			socketSocial.on('disconnectFromServer', (data: any) => {
-				callFilter(data, true);
-			})
+	socketSocial?.removeListener("connectedToServer");
+	socketSocial.on('connectedToServer', (data: any) => {
+		callFilter(data, false);
+	})
 
-			socketSocial?.removeListener("playing");
-			socketSocial.on('playing', (data: any) => {
-				dispatch(setInGameList(data.users));
-			})
+	socketSocial?.removeListener("disconnectFromServer");
+	socketSocial.on('disconnectFromServer', (data: any) => {
+		callFilter(data, true);
+	})
 
-			socketSocial?.removeListener("notPlaying");
-			socketSocial.on('notPlaying', (data: any) => {
-				dispatch(setInGameList(data.users));
-			})
+	socketSocial?.removeListener("playing");
+	socketSocial.on('playing', (data: any) => {
+		dispatch(setInGameList(data.users));
+	})
 
-		}
-	}, [socketSocial, ConnectedList]);
+	socketSocial?.removeListener("notPlaying");
+	socketSocial.on('notPlaying', (data: any) => {
+		dispatch(setInGameList(data.users));
+	})
 	return (
 		<Router>
 			{APIStatus ? (

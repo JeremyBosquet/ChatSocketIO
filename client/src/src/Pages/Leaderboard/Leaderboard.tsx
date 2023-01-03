@@ -4,9 +4,10 @@ import { Helmet } from "react-helmet";
 import NavBar from "../../Components/Nav/NavBar";
 import instance from "../../API/Instance";
 import { Link } from "react-router-dom";
+import KillSocket from "../../Components/KillSocket/KillSocket";
 
 const Leaderboard = () => {
-
+	KillSocket("all");
 	const [leaderboard, setLeaderboard] = useState<any[]>([]);
 	const setLeaderBoard = () => {
 		instance.get('user/Leaderboard').then((res) => {

@@ -18,6 +18,13 @@ function SendMessage(props: props) {
 		e.preventDefault();
 		if (message === "")
 			return;
+
+		if (message.length > 2000) {
+			setMessage("");
+			createNotification("error", "Message too long (max 2000 characters)")
+			return;
+		}
+		
 		if (props.blocked)
 			createNotification("error", "You are blocked or you have blocked this player.");
 

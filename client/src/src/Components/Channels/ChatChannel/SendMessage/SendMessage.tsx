@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { getSocket } from "../../../../Redux/chatSlice";
 import React from 'react';
 import './SendMessage.scss'
+import { createNotification } from "../../../notif/Notif";
 
 interface props {
 	channelId: string;
@@ -17,6 +18,13 @@ function SendMessage(props: props) {
 		e.preventDefault();
 		if (message === "")
 			return;
+
+		if (message.length > 2000) {
+			setMessage("");
+			createNotification("error", "Message too long (max 2000 characters)")
+			return;
+		}
+		
 		socket?.emit('message', { userId: props.user.uuid, message: message, channelId: props.channelId, type: "message" });
 		setMessage("");
 	}

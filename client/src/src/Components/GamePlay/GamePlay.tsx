@@ -149,17 +149,17 @@ function GamePlay(props: props) {
 			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
 			if (props.room?.settings.background === "background1")
 				contextRef.current.fillStyle = "black";
-			else if (props.room?.settings.background === "background2")
+			else
 				contextRef.current.fillStyle = "white";
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
 			if (props.room?.settings.background === "background1")
 				contextRef.current.fillStyle = "white";
-			else if (props.room?.settings.background === "background2")
+			else
 				contextRef.current.fillStyle = "black";
 			contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
 			if (props.room?.settings.background === "background1")
 				contextRef.current.fillStyle = "white";
-			else if (props.room?.settings.background === "background2")
+			else
 				contextRef.current.fillStyle = "black";
 			let display = 50;
 			if (window.innerWidth < 500) {
@@ -194,12 +194,24 @@ function GamePlay(props: props) {
 			}
 			if (props.room?.settings.background === "background1")
 				contextRef.current.fillStyle = "white";
-			else if (props.room?.settings.background === "background2")
+			else
 				contextRef.current.fillStyle = "black";
+			if (props.room?.settings.background === "background1")
+				contextRef.current.strokeStyle = "white";
+			else
+				contextRef.current.strokeStyle = "black";
 			contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
+			if (props.room?.settings.background === "background1")
+				contextRef.current.fillStyle = "white";
+			else
+				contextRef.current.fillStyle = "black";
 			contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
 			contextRef.current.beginPath();
 			contextRef.current.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
+			if (props.room?.settings.background === "background1")
+				contextRef.current.fillStyle = "white";
+			else
+				contextRef.current.fillStyle = "black";
 			contextRef.current.fill();
 		}
 	}

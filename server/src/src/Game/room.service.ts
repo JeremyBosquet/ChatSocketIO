@@ -18,38 +18,18 @@ const lasttimestamp = [];
 const roomList = [];
 @Injectable()
 export class RoomService {
-  //@Interval(1000)
-  //async update() {
-  //  console.log("RoomList", roomList, roomList.length);
-  //  for(let i = 0; i < roomList.length; i++)
-  //  {
-  //    console.log("Room", roomList[i].status);
-  //  }
-  //}
-  async checkDatabase() {
-    const list = await this.roomRepository.find();
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].status != 'finished') {
-        // Pas sur que ca sois utile
-      }
-    }
-  }
   async clearDatabase() {
-    //console.log('Clear database in progressg :');
     const list = await this.roomRepository.find();
     for (let i = 0; i < list.length; i++) {
       if (list[i].status != 'finished' && list[i].status != 'destroy') {
-        //console.log('Clearing room', list[i].id);
         await this.roomRepository.remove(list[i]);
-      } //else console.log('Finished room', list[i].id);
+      }
     }
-    //console.log('done');
   }
 
   constructor(
     @InjectRepository(Room) private roomRepository: Repository<Room>,
     private readonly userService: UsersService,
-    //private readonly roomGateway: RoomGateway,
   ) {
     this.clearDatabase();
   }
@@ -87,12 +67,9 @@ export class RoomService {
       await this.roomRepository.update(roomId, data);
     }
 
-    //return roomList[roomId] = { ...roomList[roomId], ...data };
-    //return await this.roomRepository.update(roomId, data);
   }
 
   async getRoomSpectates(): Promise<Room[]> {
-    //return await this.roomRepository.find();
     if (roomList.length > 0) 
     {
       const _roomList = roomList.filter((room) => room.status == 'playing');
@@ -107,10 +84,8 @@ export class RoomService {
   async getRooms(): Promise<Room[]> {
     if (roomList.length > 0) return roomList;
     else return await this.roomRepository.find();
-    //return await this.roomRepository.find();
   }
   async createRoom(room: Room): Promise<Room> {
-    // Set speed by configuration and direction by random
     room.ball = {
       x: 50,
       y: 50,
@@ -137,7 +112,6 @@ export class RoomService {
       throw new Error("Player already in a room");
     else if (room.playerB !== null && room.playerB.id === playerId)
       throw new Error("Player already in a room");
-    // reactiver` ca
     if (room.playerA === null)
       room.playerA = {
         id: playerId,
@@ -163,9 +137,7 @@ export class RoomService {
     roomList[room.id] = room;
     return await this.roomRepository.save(room);
   }
-  // save room
   async save(room: Room): Promise<Room> {
-    //roomList[room.id] = room;
     if (roomList.findIndex((_room) => _room.id == room.id) != -1) {
       const _index = roomList.findIndex((_room) => _room.id == room.id);
       roomList[_index] = room;

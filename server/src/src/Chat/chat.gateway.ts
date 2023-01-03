@@ -47,6 +47,10 @@ export class ChatGateway {
 
     @SubscribeMessage('join')
     async handleEvent(@MessageBody() data: IUserJoin, @ConnectedSocket() client: Socket): Promise<void>  {
+
+        if (!data.channelId || !data.userId)
+            return ;
+
         // Leave the room if the user is already in one
         client.leave(client.data.channelId);
         this.server.emit('leaveFromServer', {channelId: client.data.channelId, userId: client.data.userId});
@@ -63,7 +67,7 @@ export class ChatGateway {
         client.join(data.channelId);
         
         client.data.userId = data.userId;
-        client.data.username = (await this.chatService.getUser(data.userId)).username;
+        client.data.username = (await this.chatService.getUser(data.userId))?.username;
         client.data.channelId = data.channelId;
         
         this.server.emit('joinFromServer', data);

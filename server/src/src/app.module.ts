@@ -23,49 +23,47 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { RoomService } from './Game/room.service';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, ScheduleModule.forRoot()],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('DB_HOST'),
-        port: +configService.get<number>('DB_PORT'),
-        username: configService.get('DB_USER'),
-        password: configService.get('DB_PASS'),
-        database: configService.get('DB_NAME'),
-        entities: [UserModel, Channel, Room, DM],
-        synchronize: true,
-      }),
-      inject: [ConfigService],
-    }),
-    TypeOrmModule.forFeature([UserModel, Channel, DM, Room]),
-    JwtModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
-      }),
-      inject: [ConfigService],
-    }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'src/uploads/avatar'),
-    }),
-    // LoginModule,
-    UsersModule,
-    HttpModule,
-    twoAuthModule,
-    ChatModule,
-    RoomModule,
-  ],
-  controllers: [AppController],
-  providers: [
-    UsersService,
-    AppService,
-    JwtStrategy,
-	RoomService,
-    JwtTwoFactorStrategy,
-    AppGateway,
-  ],
-  //   exports: [AppService],
+	imports: [
+		ConfigModule.forRoot({ isGlobal: true }),
+		TypeOrmModule.forRootAsync({
+			imports: [ConfigModule, ScheduleModule.forRoot()],
+			useFactory: (configService: ConfigService) => ({
+				type: 'postgres',
+				host: configService.get('DB_HOST'),
+				port: +configService.get<number>('DB_PORT'),
+				username: configService.get('DB_USER'),
+				password: configService.get('DB_PASS'),
+				database: configService.get('DB_NAME'),
+				entities: [UserModel, Channel, Room, DM],
+				synchronize: true,
+			}),
+			inject: [ConfigService],
+		}),
+		TypeOrmModule.forFeature([UserModel, Channel, DM, Room]),
+		JwtModule.registerAsync({
+			imports: [ConfigModule],
+			useFactory: async (configService: ConfigService) => ({
+				secret: configService.get('JWT_SECRET'),
+			}),
+			inject: [ConfigService],
+		}),
+		ServeStaticModule.forRoot({
+			rootPath: join(__dirname, '..', 'src/uploads/avatar'),
+		}),
+		UsersModule,
+		HttpModule,
+		twoAuthModule,
+		ChatModule,
+		RoomModule,
+	],
+	controllers: [AppController],
+	providers: [
+		UsersService,
+		AppService,
+		JwtStrategy,
+		RoomService,
+		JwtTwoFactorStrategy,
+		AppGateway,
+	],
 })
-export class AppModule {}
+export class AppModule { }

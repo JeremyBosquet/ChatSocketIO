@@ -7,8 +7,8 @@ import { TwoFactorAuthenticationService } from './twoFactorAuthentication.servic
 import { UsersService } from 'src/Users/users.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserModel])],
-  controllers: [TwoFactorAuthenticationController],
-  providers: [TwoFactorAuthenticationService, UsersService, JwtService],
+	imports: [TypeOrmModule.forFeature([UserModel])],
+	controllers: [TwoFactorAuthenticationController],
+	providers: [TwoFactorAuthenticationService, UsersService, JwtService],
 })
-export class twoAuthModule {}
+export class twoAuthModule { }

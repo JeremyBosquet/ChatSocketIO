@@ -75,7 +75,6 @@ function App() {
 						if (res.data.User) {
 							socketSocial?.close();
 							const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
-							console.log("new", newSocketSocial)
 							dispatch(setSocketSocial(newSocketSocial));
 							dispatch(setUser(res.data.User));
 							ListFriends();
@@ -87,10 +86,7 @@ function App() {
 	}, []);
 
 	useEffect(() => {
-		console.log("here", user)
 		if (user && user.uuid) {
-			console.log("sended")
-			console.log(socketSocial);
 			socketSocial?.emit("connected", { uuid: user.uuid });
 		}
 		else if (user)

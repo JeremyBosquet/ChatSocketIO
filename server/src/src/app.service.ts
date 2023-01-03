@@ -45,7 +45,6 @@ export class AppService {
 
 				await fs.writeFile(path + name, buffer, (err) => {
 					if (err) {
-						console.log(err);
 					}
 				});
 

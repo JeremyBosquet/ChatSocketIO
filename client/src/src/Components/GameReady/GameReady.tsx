@@ -71,8 +71,8 @@ function GameReady(props: props) {
 	const [tmpUser, setTmpUser] = useState<any>(null);
 	const [tmpUserBoolean, setTmpUserBoolean] = useState<boolean>(false);
 	const [configuringDisplay, setConfiguringDisplay] = useState<boolean>(false);
-	const [settings, setSettings] = useState<IConfiguration>({ difficulty: "easy", background: "background 1", confirmed: false });
-	const [settingsBis, setSettingsBis] = useState<IConfiguration>({ difficulty: "easy", background: "background 1", confirmed: false });
+	const [settings, setSettings] = useState<IConfiguration>({ difficulty: "easy", background: "basic", confirmed: false });
+	const [settingsBis, setSettingsBis] = useState<IConfiguration>({ difficulty: "easy", background: "inverted", confirmed: false });
 	const socket = useSelector(getSockeGame);
 
 	useEffect(() => {
@@ -103,7 +103,7 @@ function GameReady(props: props) {
 		setSearching(false);
 		setTmpUserBoolean(false);
 		setConfiguringDisplay(false);
-		setSettings({ difficulty: "easy", background: "background1", confirmed: false });
+		setSettings({ difficulty: "easy", background: "basic", confirmed: false });
 		props.setDisplay(true);
 	});
 	socket?.on("roomTimeout", (data: any) => {
@@ -119,7 +119,7 @@ function GameReady(props: props) {
 		setSearching(true);
 		setTmpUserBoolean(true);
 		setConfiguringDisplay(false);
-		setSettings({ difficulty: "easy", background: "background1", confirmed: false });
+		setSettings({ difficulty: "easy", background: "basic", confirmed: false });
 	});
 
 	const getUser = async () => {
@@ -241,7 +241,7 @@ function GameReady(props: props) {
 											<select
 												disabled={settings?.confirmed}
 												className="game-config-select"
-												defaultValue="background1"
+												defaultValue="basic"
 												id="Background"
 												onChange={(e) => {
 													if (e.target.value === "undefined") return;
@@ -260,11 +260,11 @@ function GameReady(props: props) {
 													});
 												}}
 											>
-												<option key="background1" value="background1">
-													Background 1
+												<option key="basic" value="basic">
+													basic
 												</option>
-												<option key="background2" value="background2">
-													Background 2
+												<option key="inverted" value="inverted">
+													inverted
 												</option>
 											</select>
 										</div>
@@ -278,7 +278,7 @@ function GameReady(props: props) {
 														setSearching(false);
 														setTmpUserBoolean(false);
 														setConfiguringDisplay(false);
-														setSettings({ difficulty: "easy", background: "background1", confirmed: false });
+														setSettings({ difficulty: "easy", background: "basic", confirmed: false });
 														props.setDisplay(true);
 													}
 												}
@@ -323,7 +323,7 @@ function GameReady(props: props) {
 											{settingsBis?.background ? (
 												<p>{settingsBis.background}</p>
 											) : (
-												<p>Background1</p>
+												<p>basic</p>
 											)}
 										</div>
 										<div className="line"></div>

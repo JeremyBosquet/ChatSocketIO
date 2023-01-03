@@ -170,7 +170,6 @@ function HomePage() {
 							dispatch(setRanking(res.data.Rank));
 					});
 				}).catch(() => {
-					console.log("token must be invalid or expired");
 					setUser(undefined);
 				});
 		}

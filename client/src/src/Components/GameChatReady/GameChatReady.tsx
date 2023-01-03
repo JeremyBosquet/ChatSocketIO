@@ -71,8 +71,8 @@ function GameChatReady(props: props) {
 	const [tmpUser, setTmpUser] = useState<any>(null);
 	const [tmpUserBoolean, setTmpUserBoolean] = useState<boolean>(false);
 	const [configuringDisplay, setConfiguringDisplay] = useState<boolean>(false);
-	const [settings, setSettings] = useState<IConfiguration>({ difficulty: "easy", background: "background 1", confirmed: false });
-	const [settingsBis, setSettingsBis] = useState<IConfiguration>({ difficulty: "easy", background: "background 1", confirmed: false });
+	const [settings, setSettings] = useState<IConfiguration>({ difficulty: "easy", background: "basic", confirmed: false });
+	const [settingsBis, setSettingsBis] = useState<IConfiguration>({ difficulty: "easy", background: "basic", confirmed: false });
 	const socket = useSelector(getSockeGameChat);
 	const [timeouts, setTimeouts] = useState<number>(20);
 
@@ -88,7 +88,7 @@ function GameChatReady(props: props) {
 		setSearching(false);
 		setTmpUserBoolean(false);
 		setConfiguringDisplay(false);
-		setSettings({ difficulty: "easy", background: "background1", confirmed: false });
+		setSettings({ difficulty: "easy", background: "basic", confirmed: false });
 		props.quitGame();
 	});
 	socket?.on("roomTimeout", (data: any) => {
@@ -108,7 +108,7 @@ function GameChatReady(props: props) {
 		setSearching(true);
 		setTmpUserBoolean(true);
 		setConfiguringDisplay(false);
-		setSettings({ difficulty: "easy", background: "background1", confirmed: false });
+		setSettings({ difficulty: "easy", background: "basic", confirmed: false });
 		props.quitGame();
 	});
 
@@ -242,11 +242,11 @@ function GameChatReady(props: props) {
 									});
 								}}
 							>
-								<option key="background1" value="background1">
-									Background 1
+								<option key="background1" value="basic">
+									Basic
 								</option>
-								<option key="background2" value="background2">
-									Background 2
+								<option key="background2" value="inverted">
+									Inverted
 								</option>
 							</select>
 						</div>
@@ -260,7 +260,7 @@ function GameChatReady(props: props) {
 										setSearching(false);
 										setTmpUserBoolean(false);
 										setConfiguringDisplay(false);
-										setSettings({ difficulty: "easy", background: "background1", confirmed: false });
+										setSettings({ difficulty: "easy", background: "basic", confirmed: false });
 									}
 								}
 							>
@@ -306,7 +306,7 @@ function GameChatReady(props: props) {
 							{settingsBis?.background ? (
 								<p>{settingsBis.background}</p>
 							) : (
-								<p>Background1</p>
+								<p>Basic</p>
 							)}
 						</div>
 						<div className="line"></div>

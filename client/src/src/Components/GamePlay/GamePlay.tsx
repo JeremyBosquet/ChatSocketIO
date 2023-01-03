@@ -147,20 +147,26 @@ function GamePlay(props: props) {
 	function updateDisplay(): void {
 		if (contextRef.current) {
 			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
-			if (props.room?.settings.background === "background1")
-				contextRef.current.fillStyle = "black";
+			// if id == playerA
+			let background;
+			if (props.room?.settings.background === "inverted")
+				background = "background1"
 			else
+				background = "background2"
+			if (background == "background1")
 				contextRef.current.fillStyle = "white";
+			else
+				contextRef.current.fillStyle = "black";
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
-			if (props.room?.settings.background === "background1")
-				contextRef.current.fillStyle = "white";
-			else
+			if (background == "background1")
 				contextRef.current.fillStyle = "black";
+			else
+				contextRef.current.fillStyle = "white";
 			contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
-			if (props.room?.settings.background === "background1")
-				contextRef.current.fillStyle = "white";
-			else
+			if (background == "background1")
 				contextRef.current.fillStyle = "black";
+			else
+				contextRef.current.fillStyle = "white";
 			let display = 50;
 			if (window.innerWidth < 500) {
 				display = 30;
@@ -192,26 +198,26 @@ function GamePlay(props: props) {
 				else
 					contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
 			}
-			if (props.room?.settings.background === "background1")
-				contextRef.current.fillStyle = "white";
-			else
+			if (background == "background1")
 				contextRef.current.fillStyle = "black";
-			if (props.room?.settings.background === "background1")
-				contextRef.current.strokeStyle = "white";
 			else
+				contextRef.current.fillStyle = "white";
+			if (background == "background1")
 				contextRef.current.strokeStyle = "black";
-			contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
-			if (props.room?.settings.background === "background1")
-				contextRef.current.fillStyle = "white";
 			else
+				contextRef.current.strokeStyle = "white";
+			contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
+			if (background == "background1")
 				contextRef.current.fillStyle = "black";
+			else
+				contextRef.current.fillStyle = "white";
 			contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
 			contextRef.current.beginPath();
 			contextRef.current.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
-			if (props.room?.settings.background === "background1")
-				contextRef.current.fillStyle = "white";
-			else
+			if (background == "background1")
 				contextRef.current.fillStyle = "black";
+			else
+				contextRef.current.fillStyle = "white";
 			contextRef.current.fill();
 		}
 	}

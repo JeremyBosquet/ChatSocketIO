@@ -55,7 +55,7 @@ const Leaderboard = () => {
 					</div>
 					: null}
 
-				<div className="playersList">
+				<div className={leaderboard.length > 2 ? "playersList" : "playersList noTop"}>
 					<div className="table">
 
 						<div>#</div>

@@ -105,7 +105,7 @@ export class RoomGateway {
             room.scoreA += 1
             this.roomService.updateRoom(room.id, { scoreA: room.scoreA });
           }
-          if (room.scoreA >= 100000 || room.scoreB >= 100000) {
+          if (room.scoreA >= 10 || room.scoreB >= 10) {
             room.status = 'finished';
             if (room.scoreA >= 10) {
               this.usersService.addExp(room.playerA.id, 0.42);

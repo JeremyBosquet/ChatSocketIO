@@ -146,27 +146,26 @@ function GamePlay(props: props) {
 	}, [socketSocial]);
 	function updateDisplay(): void {
 		if (contextRef.current) {
-			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
-			// if id == playerA
-			let background;
+			let primeColor;
+			let secondColor;
+
 			if (props.room?.settings.background === "inverted")
-				background = "background1"
-			else
-				background = "background2"
-			if (background == "background1")
-				contextRef.current.fillStyle = "white";
-			else
-				contextRef.current.fillStyle = "black";
+			{
+				primeColor = "white";
+				secondColor = "black";
+			}
+			else {
+				primeColor = "black";
+				secondColor = "white";
+			}
+
+			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
+			contextRef.current.fillStyle = primeColor
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
-			if (background == "background1")
-				contextRef.current.fillStyle = "black";
-			else
-				contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
-			if (background == "background1")
-				contextRef.current.fillStyle = "black";
-			else
-				contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
+
 			let display = 50;
 			if (window.innerWidth < 500) {
 				display = 30;
@@ -198,26 +197,13 @@ function GamePlay(props: props) {
 				else
 					contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
 			}
-			if (background == "background1")
-				contextRef.current.fillStyle = "black";
-			else
-				contextRef.current.fillStyle = "white";
-			if (background == "background1")
-				contextRef.current.strokeStyle = "black";
-			else
-				contextRef.current.strokeStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
-			if (background == "background1")
-				contextRef.current.fillStyle = "black";
-			else
-				contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
 			contextRef.current.beginPath();
 			contextRef.current.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
-			if (background == "background1")
-				contextRef.current.fillStyle = "black";
-			else
-				contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fill();
 		}
 	}

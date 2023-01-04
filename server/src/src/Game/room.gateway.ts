@@ -29,15 +29,13 @@ interface Iready {
 
 const intervalList = [];
 const roomList = [];
-let averageTime = 0;
-const lasttimestamp = [];
+let lastTime = Date.now();
 
 let boardAX = 3;
 let boardBX = 3;
 
 const ballInterval = [];
 
-let lastTime = Date.now();
 @WebSocketGateway(7002, { cors: '*:*' })
 export class RoomGateway {
   constructor(private roomService: RoomService, private usersService: UsersService) { }
@@ -75,13 +73,6 @@ export class RoomGateway {
     return false;
   }
 
-  @SubscribeMessage('roomCreated')
-  async handleConnect(@MessageBody() data: Irooms[]): Promise<void> {
-    const rooms = await this.roomService.getRooms();
-    this.server.emit('roomCreated', rooms);
-  }
-
-
   @Interval(1000 / 180)
   async update() {
     const rooms = await this.roomService.getRooms();
@@ -99,8 +90,6 @@ export class RoomGateway {
         }
       }
       else if (room && room?.status == 'playing' && room?.settings) {
-        console.log("timestamp: ", Date.now() - lastTime);
-        lastTime = Date.now();
         const settings = room.settings;
         if (ballInterval[room.id] > 0) {
           if (Date.now() - ballInterval[room.id] > 2000) {
@@ -143,7 +132,7 @@ export class RoomGateway {
             room.ball.y = 50;
             room.ball.speed = room.settings.defaultSpeed;
             this.roomService.updateRoom(room.id, { ball: room.ball });
-            this.server.in('room-' + room.id).emit('ballMovement', room);
+            this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, timestamp: Date.now() });
             this.server.in('room-' + room.id).emit('roomUpdated', room);
             this.server.emit('roomUpdated-' + room.id, room);
             ballInterval[room.id] = Date.now();
@@ -213,7 +202,7 @@ export class RoomGateway {
               room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
               room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
             }
-            this.server.in('room-' + room.id).emit('ballMovement', room);
+            this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, timestamp: Date.now() });
           }
         }
         room.lastActivity = Date.now();
@@ -222,6 +211,12 @@ export class RoomGateway {
         this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
       }
     }
+  }
+
+  @SubscribeMessage('roomCreated')
+  async handleConnect(@MessageBody() data: Irooms[]): Promise<void> {
+    const rooms = await this.roomService.getRooms();
+    this.server.emit('roomCreated', rooms);
   }
 
   @SubscribeMessage('joinRoomSpectate')

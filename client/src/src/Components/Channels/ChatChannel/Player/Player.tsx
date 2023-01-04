@@ -110,7 +110,7 @@ function Player(props: props) {
 
 	useEffect(() => {
 		if (inGameList && inGameList.length > 0)
-			setIsInGame(inGameList.find((userInList: any) => userInList.uuid === props?.uuid) ? true : false);
+			setIsInGame(inGameList.find((userInList: any) => userInList.uuid === props?.user.uuid) ? true : false);
 		else
 			setIsInGame(false);
 	}, [inGameList]);

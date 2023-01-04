@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
 	useNavigate,
@@ -10,33 +10,15 @@ import { createNotification } from "../notif/Notif";
 
 function Logout() {
 	let navigate = useNavigate();
-	let location = useLocation();
-	let booleffect = false;
-
 	const socketSocial = useSelector(getSocketSocial);
-
-	async function GetLoggedInfo() {
-		await instance.get(`user`, {
-			headers: {
-				Authorization: "Bearer " + localStorage.getItem("token"),
-			},
-		})
-			.then((res) => {
-				if (res.data.User)
-				{
-					socketSocial?.disconnect();
-					localStorage.clear();
-					navigate("/");
-					createNotification("success", "User disconnected");
-				}
-			}).catch(() => {
-			});
-	}
 
 	async function CallLogout() {
 		await instance.get(`logout`)
 			.then(() => {
-				GetLoggedInfo();
+				socketSocial?.disconnect();
+				localStorage.clear();
+				createNotification("success", "User disconnected");
+				navigate("/");
 			})
 			.catch(() => {
 				createNotification("error", "couldn't disconnect user");
@@ -44,10 +26,7 @@ function Logout() {
 			});
 	}
 	useEffect(() => {
-		if (!booleffect) {
-			CallLogout();
-			booleffect = true;
-		}
+		CallLogout();
 	}, []);
 	return null;
 }

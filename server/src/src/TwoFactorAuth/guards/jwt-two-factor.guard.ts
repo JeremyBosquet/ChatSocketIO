@@ -11,10 +11,7 @@ export class JwtTwoFactorGuard extends AuthGuard('jwt-two-factor') {
 		private jwtService: JwtService,
 	){ super()}
 	async canActivate(context: ExecutionContext): Promise<boolean> {
-		// custom logic can go here
-		const parentCanActivate = (await super.canActivate(context)) as boolean; // this is necessary due to possibly returning `boolean | Promise<boolean> | Observable<boolean>
-		// custom logic goes here too
-		console.log()
+		const parentCanActivate = (await super.canActivate(context)) as boolean;
 		let result : boolean = false;
 		const tokenCrypted = context.switchToHttp().getRequest().headers.authorization.split(' ')[1];
 		if (tokenCrypted)
@@ -24,12 +21,11 @@ export class JwtTwoFactorGuard extends AuthGuard('jwt-two-factor') {
 			{
 				const User = await this.userService.findUserByUuid(token['uuid']);
 				for (let i = 0; i < User.isLoggedIn.length; i++) {
-					if (await bcrypt.compare(token['uuid'] , User.isLoggedIn[i].token)) {
+					if (await bcrypt.compare(tokenCrypted , User.isLoggedIn[i].token)) {
 						result = true;
 						break;
 					}
 				}
-				console.log(User.isLoggedIn)
 			}
 		}
 		return parentCanActivate && result;

@@ -56,10 +56,8 @@ export class RoomGateway {
     if (oldDirection < 0) oldDirection += 2 * Math.PI;
     if (oldDirection > 2 * Math.PI) oldDirection -= 2 * Math.PI;
     let newDirection = Math.PI - oldDirection;
-    console.log(ratioBetweenBallAndBoard);
     if (ratioBetweenBallAndBoard == 0) {
       newDirection = (-oldDirection);
-
     }
     else {
       newDirection = (newDirection + Math.PI / 2 * ratioBetweenBallAndBoard) % (2 * Math.PI);
@@ -150,7 +148,7 @@ export class RoomGateway {
           } else {
             if (this.checkHitBox(room.playerA.x, room.playerA.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
               room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerA.y) / room.settings.boardHeight);
-              //room.ball.speed += 0.1;
+              room.ball.speed += 0.1;
               let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45);
               let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45);
               let antiLoop = 0;
@@ -165,7 +163,7 @@ export class RoomGateway {
             }
             else if (this.checkHitBox(room.playerB.x, room.playerB.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
               room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerB.y) / room.settings.boardHeight);
-              //room.ball.speed += 0.1;
+              room.ball.speed += 0.1;
               let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45);
               let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45);
               let antiLoop = 0;
@@ -183,7 +181,6 @@ export class RoomGateway {
               let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
               let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
               let antiLoop = 0;
-              console.log('uwu', room.ball.direction);
               while ((this.checkHitBox(0, -50, 100, 51, x, y)) && antiLoop <= 15) {
                 antiLoop++;
                 if (room.ball.direction < 0)
@@ -220,26 +217,10 @@ export class RoomGateway {
         room.lastActivity = Date.now();
         if (room.ball.speed > 8)
           room.ball.speed = 8;
-        //this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
+        this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
       }
     }
   }
-  @SubscribeMessage('debugMouse')
-  async debugMouse(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() data: any,
-  ): Promise<void> {
-    if (client.data?.roomId) {
-      const room = await this.roomService.getRoom(client.data.roomId);
-      if (room) {
-        room.ball.x = data.x;
-        room.ball.y = data.y;
-        this.roomService.updateRoom(room.id, { ball: room.ball });
-        this.server.in('room-' + room.id).emit('ballMovement', room);
-      }
-    }
-  }
-  
 
   @SubscribeMessage('joinRoomSpectate')
   async joinRoomSpectate(

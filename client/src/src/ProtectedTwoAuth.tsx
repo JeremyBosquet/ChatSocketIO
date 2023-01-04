@@ -26,7 +26,6 @@ const ProtectedTwoAuth = ({ children }: { children: any }) => {
 			}
 			setMounted(true);
 		}
-		setMounted(false);
 		checkAuth();
 	}, [location.pathname]);
 

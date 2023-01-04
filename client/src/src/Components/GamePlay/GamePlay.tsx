@@ -211,7 +211,10 @@ function GamePlay(props: props) {
 			contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
 			contextRef.current.beginPath();
 			contextRef.current.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
-			contextRef.current.fillStyle = secondColor;
+			if (ball.x < windowsWidth / 2 + 2 && ball.x > windowsWidth / 2 - 2)
+				contextRef.current.fillStyle = "gray";
+			else
+				contextRef.current.fillStyle = secondColor;
 			contextRef.current.fill();
 		}
 	}
@@ -281,7 +284,6 @@ function GamePlay(props: props) {
 				setPlayerA({ ...playerA, x: boardAX * windowsWidth });
 				setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
 			}
-			//props.socket?.emit("debugMouse", { x: ((100 * (e.clientX - 250))  / windowsWidth), y: ((100 * (e.clientY - 250)) / windowsHeight)});
 		}
 
 	useEventListener("mousemove", mousemove);

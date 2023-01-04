@@ -5,12 +5,13 @@ import { createNotification } from "../notif/Notif";
 import React from "react";
 import "./GameReady.scss";
 import { ScaleLoader } from "react-spinners";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getSockeGame } from "../../Redux/gameSlice";
 import instance from "../../API/Instance";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ImFileText2 } from "react-icons/im";
+import { setUser } from "../../Redux/userSlice";
 interface props {
 	socket: Socket | undefined;
 	setReady: (ready: boolean) => void;
@@ -74,6 +75,8 @@ function GameReady(props: props) {
 	const [settings, setSettings] = useState<IConfiguration>({ difficulty: "easy", background: "basic", confirmed: false });
 	const [settingsBis, setSettingsBis] = useState<IConfiguration>({ difficulty: "easy", background: "basic", confirmed: false });
 	const socket = useSelector(getSockeGame);
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (searching && !tmpUserBoolean) {
@@ -139,10 +142,16 @@ function GameReady(props: props) {
 		getUser();
 	}, []);
 	async function handleReady() {
-		props.setPlayerId(tmpUser.id);
-		props.setPlayerName(tmpUser.name);
-		setSearching(true);
-		props.setDisplay(false);
+		await instance.get(`user`)
+		.then(() => {
+			props.setPlayerId(tmpUser.id);
+			props.setPlayerName(tmpUser.name);
+			setSearching(true);
+			props.setDisplay(false);
+		})
+		.catch(() => {
+			window.location.reload();
+		});
 	}
 	return (
 		<>

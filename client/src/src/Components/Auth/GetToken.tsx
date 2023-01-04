@@ -37,11 +37,7 @@ function GetToken() {
 	}
 
 	async function NotActivated() {
-		await instance.get(`user`, {
-			headers: {
-				Authorization: "Bearer " + localStorage.getItem("token"),
-			},
-		})
+		await instance.get(`user`)
 			.then((res) => {
 				dispatch(setUser(res.data.User));
 				createNotification("success", "User connected");

@@ -24,10 +24,9 @@ const Protected = ({ children }: { children: any }) => {
 						dispatch(setUser({}));
 					});
 			}
-			console.log(location.pathname);
 			setMounted(true);
 		}
-		setMounted(false);
+		//setMounted(false);
 		checkAuth();
 	}, [location.pathname]);
 

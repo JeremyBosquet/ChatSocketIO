@@ -73,6 +73,9 @@ interface ICanvasBall {
 	percentY: number;
 }
 
+let random = Math.random() * 1000;
+random = Math.floor(random);
+
 function GameSpectate(props: props) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const contextRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -80,9 +83,13 @@ function GameSpectate(props: props) {
 	let maxWidth = 1000;
 	let maxHeight = 600;
 
-	const [image] = (props?.room?.settings?.background == "background1" ? useImage("https://cdn.discordapp.com/attachments/768496887720181770/1047556063500709908/image.png") : useImage("https://cdn.discordapp.com/attachments/768496887720181770/1047556063500709908/image.png"));
-	const [imageA] = (useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id));
-	const [imageB] = (useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id));
+	useEffect(() => {
+		random = Math.random() * 1000;
+		random = Math.floor(random);
+	}, []);
+	
+	const [imageA] = (useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id  + "#" + random));
+	const [imageB] = (useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id  + "#" + random));
 
 	let mult = 0.5;
 	if (window.innerWidth < 500)
@@ -137,17 +144,27 @@ function GameSpectate(props: props) {
 	const [timeouts, setTimeouts] = useState<Number>(30);
 
 	function updateDisplay(): void {
-		// Clear context and reprint everything
 		if (contextRef.current) {
-			// Create background image and print it
+			let primeColor;
+			let secondColor;
+
+			if (props.room?.settings.background === "inverted")
+			{
+				primeColor = "white";
+				secondColor = "black";
+			}
+			else {
+				primeColor = "black";
+				secondColor = "white";
+			}
+
 			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
-			contextRef.current.fillStyle = "black";
+			contextRef.current.fillStyle = primeColor
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
-			if (image)
-				contextRef.current.drawImage(image, 0, 0, windowsWidth, windowsHeight);
-			contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
-			contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
+
 			let display = 50;
 			if (window.innerWidth < 500) {
 				display = 30;
@@ -168,7 +185,6 @@ function GameSpectate(props: props) {
 				contextRef.current.font = "30px Arial";
 				if (imageA)
 					contextRef.current.drawImage(imageA, windowsWidth / 2 - 100, 0, display, display);
-				/// On top right corner put the imageB (of player B)
 				if (imageB)
 					contextRef.current.drawImage(imageB, windowsWidth / 2 + 50, 0, display, display);
 				if (props.room?.scoreA)
@@ -180,16 +196,13 @@ function GameSpectate(props: props) {
 				else
 					contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
 			}
-			contextRef.current.fillStyle = "red";
-			contextRef.current.lineWidth = 1;
-			contextRef.current.strokeStyle = "white";
-			contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
-			contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
 			contextRef.current.beginPath();
 			contextRef.current.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
-			contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fill();
 		}
 	}
@@ -240,7 +253,6 @@ function GameSpectate(props: props) {
 			y: (playerB.percentY / 100) * windowsHeight,
 			percentY: playerB.percentY,
 		});
-		updateDisplay();
 	}
 	useEventListener("resize", handleResize);
 
@@ -276,13 +288,15 @@ function GameSpectate(props: props) {
 			percentX: room.ball.x,
 			percentY: room.ball.y,
 		});
-		updateDisplay();
 	});
 	props.socket?.removeListener("roomUpdated");
 	props.socket?.on("roomUpdated", (data: IRoom) => {
 		if (props.room)
 			props.setRoom({ ...props.room, scoreA: data.scoreA, scoreB: data.scoreB });
 	});
+	useEffect(() => {
+		updateDisplay();
+	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, imageA, imageB]);
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

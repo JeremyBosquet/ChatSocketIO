@@ -22,7 +22,7 @@ export class AppService {
 		const findUser = await this.userRepository.findOneBy({ id: user.id })
 		if (findUser) {
 			const path = "./src/uploads/avatar/"
-			if (findUser.image && !(await fs.existsSync(path + findUser.image)))
+			if (findUser.image && !(fs.existsSync(path + findUser.image)))
 			{
 				findUser.image = 'unknow.png';
 				this.userRepository.update(findUser.uuid, { image: findUser.image });
@@ -43,7 +43,7 @@ export class AppService {
 
 				const buffer = Buffer.from(arrayBuffer);
 
-				await fs.writeFile(path + name, buffer, (err) => {
+				fs.writeFile(path + name, buffer, (err) => {
 					if (err) {
 					}
 				});

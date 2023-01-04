@@ -33,15 +33,15 @@ services:
        - ARG_VITE_URL_API=${URL}
     ports:
       - "80:80"
-    volumes:
-      - front:/usr/src/app
+#    volumes:
+#      - front:/usr/src/app
     networks:
       - transcendence-network
     restart: always
   back:
     container_name: back
-    volumes:
-      - back:/usr/src/app
+#    volumes:
+#      - back:/usr/src/app
     networks:
       - transcendence-network
     depends_on:

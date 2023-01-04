@@ -215,9 +215,9 @@ function DMPage() {
 	socketGame?.on("gameEnd", (data: IRoom) => {
 
 		if (data.scoreA === 10)
-			createNotification("success", "PlayerA a gagner");
+			createNotification("success", (room?.playerA?.name != undefined ? room?.playerA.name : "PlayerA") + " won the game");
 		else if (data.scoreB === 10)
-			createNotification("success", "PlayerB a gagner");
+			createNotification("success", (room?.playerB?.name != undefined ? room?.playerB.name : "PlayerB") + " won the game");
 		setRoom(undefined);
 		setPlaying(false);
 		setReady(false);
@@ -225,7 +225,7 @@ function DMPage() {
 		quitGame();
 	});
 	socketGame?.on("gameForceEnd", (data: IRoom) => {
-		createNotification("info", "The other asshole has crashed");
+		createNotification("info", "The opponent has left the game");
 		setRoom(undefined);
 		setPlaying(false);
 		setReady(false);

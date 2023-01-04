@@ -77,6 +77,9 @@ interface ICanvasBall {
 	percentY: number;
 }
 
+let random = Math.random() * 1000;
+random = Math.floor(random);
+
 function GamePlay(props: props) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const contextRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -84,8 +87,13 @@ function GamePlay(props: props) {
 	let boardAX = 0.025;
 	let boardBX = 0.025;
 
-	const [imageA] = (props.room?.playerA.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id));
-	const [imageB] = (props.room?.playerB.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id));
+	useEffect(() => {
+		random = Math.random() * 1000;
+		random = Math.floor(random);
+	}, []);
+
+	const [imageA] = (props.room?.playerA.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random));
+	const [imageB] = (props.room?.playerB.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id + "#" + random) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id + "#" + random));
 
 	let mult = 0.5;
 	if (window.innerWidth < 500)
@@ -146,27 +154,26 @@ function GamePlay(props: props) {
 	}, [socketSocial]);
 	function updateDisplay(): void {
 		if (contextRef.current) {
-			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
-			// if id == playerA
-			let background;
+			let primeColor;
+			let secondColor;
+
 			if (props.room?.settings.background === "inverted")
-				background = "background1"
-			else
-				background = "background2"
-			if (background == "background1")
-				contextRef.current.fillStyle = "white";
-			else
-				contextRef.current.fillStyle = "black";
+			{
+				primeColor = "white";
+				secondColor = "black";
+			}
+			else {
+				primeColor = "black";
+				secondColor = "white";
+			}
+
+			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
+			contextRef.current.fillStyle = primeColor
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
-			if (background == "background1")
-				contextRef.current.fillStyle = "black";
-			else
-				contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
-			if (background == "background1")
-				contextRef.current.fillStyle = "black";
-			else
-				contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
+
 			let display = 50;
 			if (window.innerWidth < 500) {
 				display = 30;
@@ -198,26 +205,13 @@ function GamePlay(props: props) {
 				else
 					contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
 			}
-			if (background == "background1")
-				contextRef.current.fillStyle = "black";
-			else
-				contextRef.current.fillStyle = "white";
-			if (background == "background1")
-				contextRef.current.strokeStyle = "black";
-			else
-				contextRef.current.strokeStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
-			if (background == "background1")
-				contextRef.current.fillStyle = "black";
-			else
-				contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
 			contextRef.current.beginPath();
 			contextRef.current.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
-			if (background == "background1")
-				contextRef.current.fillStyle = "black";
-			else
-				contextRef.current.fillStyle = "white";
+			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fill();
 		}
 	}
@@ -287,7 +281,7 @@ function GamePlay(props: props) {
 				setPlayerA({ ...playerA, x: boardAX * windowsWidth });
 				setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
 			}
-			updateDisplay();
+			//props.socket?.emit("debugMouse", { x: ((100 * (e.clientX - 250))  / windowsWidth), y: ((100 * (e.clientY - 250)) / windowsHeight)});
 		}
 
 	useEventListener("mousemove", mousemove);
@@ -334,7 +328,6 @@ function GamePlay(props: props) {
 			y: (playerB.percentY / 100) * windowsHeight,
 			percentY: playerB.percentY,
 		});
-		updateDisplay();
 	}
 	useEventListener("resize", handleResize);
 
@@ -370,8 +363,10 @@ function GamePlay(props: props) {
 			percentX: room.ball.x,
 			percentY: room.ball.y,
 		});
-		updateDisplay();
 	});
+	useEffect(() => {
+		updateDisplay();
+	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, imageA, imageB]);
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

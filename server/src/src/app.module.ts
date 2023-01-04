@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModel } from './typeorm/user.entity';
 import { UsersModule } from './Users/users.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { join } from 'path/posix';
 import { UsersService } from './Users/users.service';
 import { AppService } from './app.service';

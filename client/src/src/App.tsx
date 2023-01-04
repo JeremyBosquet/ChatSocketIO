@@ -264,7 +264,7 @@ function App() {
 			{APIStatus ? (
 				<Routes>
 
-					<Route path="/" element={<HomePage />}></Route>
+					<Route path="/" element={<Protected><HomePage /></Protected>}></Route>
 					<Route path="/login" element={<SignIn />}></Route>
 					<Route path="/login/return/" element={<GetToken />}></Route>
 					<Route path="/settings" element={<Settings />}></Route>

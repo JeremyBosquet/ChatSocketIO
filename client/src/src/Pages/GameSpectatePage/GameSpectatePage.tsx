@@ -118,15 +118,15 @@ function GameSpectatePage() {
 			});
 			socket.on("gameEnd", (data: IRoom) => {
 				if (data.scoreA === 10)
-					createNotification("success", "PlayerA a gagner");
+					createNotification("success", (room?.playerA?.name != undefined ? room?.playerA.name : "PlayerA") + " won the game");
 				else if (data.scoreB === 10)
-					createNotification("success", "PlayerB a gagner");
+					createNotification("success", (room?.playerB?.name != undefined ? room?.playerB.name : "PlayerB") + " won the game");
 				setDisplay(false);
 				setRoom(undefined);
 				navigate("/game/spectate");
 			});
 			socket.on("gameForceEnd", (data: IRoom) => {
-				createNotification("info", "The opponent player has left the game");
+				createNotification("info", "The opponent has left the game");
 				setDisplay(false);
 				setRoom(undefined);
 				navigate("/game/spectate");

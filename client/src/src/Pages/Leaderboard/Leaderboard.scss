@@ -167,7 +167,6 @@
 			padding: 10px;
 			border-radius: 5px;
 
-
 			.table {
 				display: grid;
 				font-size: 14px;
@@ -219,6 +218,10 @@
 				overflow-y: scroll;
 				scrollbar-width: none;
 			}
+		}
+
+		.noTop {
+			margin-top: 0px;
 		}
 	}
 }

@@ -25,11 +25,11 @@ export class AppService {
 			if (findUser.image && !(fs.existsSync(path + findUser.image)))
 			{
 				findUser.image = 'unknow.png';
-				this.userRepository.update(findUser.uuid, { image: findUser.image });
+				await this.userRepository.update(findUser.uuid, { image: findUser.image });
 			}
 			const payload = { uuid: findUser.uuid };
 			const token = this.jwtService.sign(payload, { expiresIn: '2d' });
-			this.userService.IsLoggedIn(findUser.uuid, token);
+			await this.userService.IsLoggedIn(findUser.uuid, token);
 			return token;
 		}
 		else {

@@ -207,44 +207,6 @@ function GameSpectatePage() {
 									playerBId={room.playerB?.id}
 								/>
 							))}
-							{// Create a fake room to display the room info component
-							}
-							<RoomSpectateInfo
-								key={0}
-								id={0}
-								owner={""}
-								status={""}
-								nbPlayers={0}
-								name={""}
-								createdAt={""}
-								settings={{}}
-								lastActivity={""}
-								playerAName={"AAAAAAAAAH"}
-								playerBName={"AAAAAAAAAH"}
-								scoreA={0}
-								scoreB={0}
-								playerAId={""}
-								playerBId={""}
-							/>
-							<RoomSpectateInfo
-								key={1}
-								id={1}
-								owner={""}
-								status={""}
-								nbPlayers={0}
-								name={""}
-								createdAt={""}
-								settings={{}}
-								lastActivity={""}
-								playerAName={"AAAAAAAAAH"}
-								playerBName={"AAAAAAAAAH"}
-								scoreA={0}
-								scoreB={0}
-								playerAId={""}
-								playerBId={""}
-							/>
-
-
 						</div>
 					</div>
 				) : (

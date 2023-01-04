@@ -29,7 +29,6 @@ interface Iready {
 
 const intervalList = [];
 const roomList = [];
-let lastTime = Date.now();
 let averageTime = 0;
 const lasttimestamp = [];
 
@@ -38,6 +37,7 @@ let boardBX = 3;
 
 const ballInterval = [];
 
+let lastTime = Date.now();
 @WebSocketGateway(7002, { cors: '*:*' })
 export class RoomGateway {
   constructor(private roomService: RoomService, private usersService: UsersService) { }
@@ -99,6 +99,8 @@ export class RoomGateway {
         }
       }
       else if (room && room?.status == 'playing' && room?.settings) {
+        console.log("timestamp: ", Date.now() - lastTime);
+        lastTime = Date.now();
         const settings = room.settings;
         if (ballInterval[room.id] > 0) {
           if (Date.now() - ballInterval[room.id] > 2000) {

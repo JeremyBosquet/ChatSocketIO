@@ -77,6 +77,9 @@ interface ICanvasBall {
 	percentY: number;
 }
 
+let random = Math.random() * 1000;
+random = Math.floor(random);
+
 function GamePlay(props: props) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const contextRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -84,8 +87,13 @@ function GamePlay(props: props) {
 	let boardAX = 0.025;
 	let boardBX = 0.025;
 
-	const [imageA] = (props.room?.playerA.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id));
-	const [imageB] = (props.room?.playerB.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id));
+	useEffect(() => {
+		random = Math.random() * 1000;
+		random = Math.floor(random);
+	}, []);
+
+	const [imageA] = (props.room?.playerA.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random));
+	const [imageB] = (props.room?.playerB.name === props.playerName ? useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id + "#" + random) : useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id + "#" + random));
 
 	let mult = 0.5;
 	if (window.innerWidth < 500)
@@ -273,7 +281,6 @@ function GamePlay(props: props) {
 				setPlayerA({ ...playerA, x: boardAX * windowsWidth });
 				setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
 			}
-			updateDisplay();
 		}
 
 	useEventListener("mousemove", mousemove);
@@ -320,7 +327,6 @@ function GamePlay(props: props) {
 			y: (playerB.percentY / 100) * windowsHeight,
 			percentY: playerB.percentY,
 		});
-		updateDisplay();
 	}
 	useEventListener("resize", handleResize);
 
@@ -356,8 +362,10 @@ function GamePlay(props: props) {
 			percentX: room.ball.x,
 			percentY: room.ball.y,
 		});
-		updateDisplay();
 	});
+	useEffect(() => {
+		updateDisplay();
+	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, imageA, imageB]);
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

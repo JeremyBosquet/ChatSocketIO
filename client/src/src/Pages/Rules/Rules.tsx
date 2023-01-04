@@ -29,23 +29,23 @@ const Rules = () => {
 					</p>
 					<div className="line"></div>
 					<h2>Controls</h2>
-					<p> The controls are simple, by pressing the top arrow on your keyboard,
-						your board goes up, by pressing the bottom arrow, your board goes down
+					<p> The controls are simple, by moving your mouse up, 
+						your board also goes up, by moving it down, it goes down .
 					</p>
 					<div className="line"></div>
 					<h2> Configuration </h2>
-					<p> When you launch a game and you find an opponent,
+					<p> When you search a game and you find an opponent,
 						you are placed in a game configuration menu,
 						you can then choose a map and a difficulty.
 						The final parameters of the game will be decided randomly
-						between your choices and those of your opponent.
+						between your choices and those of your opponent .
 					</p>
 					<div className="line"></div>
 					<h2> Where do I play ? </h2>
 					<p> You have the choice between playing against random opponents
 						by clicking on the "Search for a game" button on the home page
 						or playing against your friends by inviting them from
-						discussion groups or private messages
+						discussion groups or private messages .
 					</p>
 				</div>
 			</div>

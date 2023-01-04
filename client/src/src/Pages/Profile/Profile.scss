@@ -45,7 +45,16 @@
 			align-items: center;
 			position: absolute;
 			top: 255px;
-			margin-left: 115px;
+			margin-left: 60px;
+		}
+		@supports (-moz-appearance:meterbar) {
+			.image {
+				display: flex;
+				align-items: center;
+				position: absolute;
+				top: 255px;
+				margin-left: 115px;
+			}
 		}
 	
 

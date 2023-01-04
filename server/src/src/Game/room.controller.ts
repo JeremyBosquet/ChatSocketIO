@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
+import {  Controller, Get, HttpStatus, Param, Res, UseGuards, ValidationPipe } from '@nestjs/common';
 import { isUUID } from 'class-validator';
 import { JwtTwoFactorGuard } from 'src/TwoFactorAuth/guards/jwt-two-factor.guard';
+import { uuidDto } from './Entities/dto';
 import { RoomService } from './room.service';
 
 @Controller('api/room')
@@ -15,20 +16,22 @@ export class RoomController {
 
   @Get('getGameOfUser/:uuid')
   @UseGuards(JwtTwoFactorGuard)
-  async getGameOfUser(@Res() res, @Param('uuid') uuid) {
-    const channels = await this.roomService.getGameOfUser(uuid);
+  async getGameOfUser(@Res() res, @Param(ValidationPipe) param: uuidDto) {
+    const channels = await this.roomService.getGameOfUser(param.uuid);
     res.json(channels);
   }
 
   @Get('checkGame/:uuid')
   @UseGuards(JwtTwoFactorGuard)
-  async checkgame(@Res() res, @Param('uuid') uuid) {
-    if (isUUID(uuid)) {
-      const room = await this.roomService.getRoom(uuid);
-      if (room.status == 'playing') {
-        res.json(room);
-      }
+  async checkgame(@Res() res, @Param(ValidationPipe) param: uuidDto) {
+    const room = await this.roomService.getRoom(param.uuid);
+    if (room?.status === 'playing') {
+      return res.status(HttpStatus.OK).json(room);
     }
-    res.json(undefined);
+    return res.status(HttpStatus.NOT_FOUND).json({
+      statusCode: HttpStatus.NOT_FOUND,
+			error: 'NOT_FOUND',
+			message: 'Game not found',
+    });
   }
 }

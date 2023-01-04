@@ -145,3 +145,21 @@
 		grid-template-areas: "a";
 	}
 }
+@media screen and (max-width: 620px) {
+	.room {
+		.roomInfoName {
+			flex-direction: column;
+		}
+
+		height: auto;
+		flex-direction: column;
+	}
+	.roomPage .container .roomInfos .roomInfo {
+		height: auto;
+
+		.room {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+}

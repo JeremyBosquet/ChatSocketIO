@@ -103,7 +103,7 @@ function GameSpectatePage() {
 		});
 	}, [socket]);
 	useEffect(() => {
-		if (socket && roomId && roomId.length > 0) {
+		if (socket && roomId && display && roomId.length > 0) {
 			socket.removeListener("gameEnd");
 			socket.removeListener("gameForceEnd");
 			socket.removeListener("roomUpdated");
@@ -136,19 +136,19 @@ function GameSpectatePage() {
 					setRoom({ ...room, scoreA: data.scoreA, scoreB: data.scoreB });
 			});
 		}
-	}, [socket, roomId, navigate]);
+	}, [socket, roomId, display]);
 
 	useEffect(() => {
 		const checkId = async () => {
 			if (roomId) {
-				const result = await instance.get(`room/checkGame/` + roomId);
-				if (result.data) {
+				const result = await instance.get(`room/checkGame/` + roomId).then((res) => {
 					setDisplay(true);
-				}
-				else {
+					console.log(res);
+				})
+				.catch((err) => {
 					navigate("/game/spectate");
 					setDisplay(false);
-				}
+				});
 			}
 		};
 		checkId();
@@ -207,6 +207,44 @@ function GameSpectatePage() {
 									playerBId={room.playerB?.id}
 								/>
 							))}
+							{// Create a fake room to display the room info component
+							}
+							<RoomSpectateInfo
+								key={0}
+								id={0}
+								owner={""}
+								status={""}
+								nbPlayers={0}
+								name={""}
+								createdAt={""}
+								settings={{}}
+								lastActivity={""}
+								playerAName={"AAAAAAAAAH"}
+								playerBName={"AAAAAAAAAH"}
+								scoreA={0}
+								scoreB={0}
+								playerAId={""}
+								playerBId={""}
+							/>
+							<RoomSpectateInfo
+								key={1}
+								id={1}
+								owner={""}
+								status={""}
+								nbPlayers={0}
+								name={""}
+								createdAt={""}
+								settings={{}}
+								lastActivity={""}
+								playerAName={"AAAAAAAAAH"}
+								playerBName={"AAAAAAAAAH"}
+								scoreA={0}
+								scoreB={0}
+								playerAId={""}
+								playerBId={""}
+							/>
+
+
 						</div>
 					</div>
 				) : (

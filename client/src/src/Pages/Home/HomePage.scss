@@ -280,7 +280,13 @@
 			}
 
 			.image {
-				margin-left: 108px;
+				margin-left: 56px;
+			}
+
+			@supports (-moz-appearance:meterbar) {
+				.image {
+					margin-left: 108px;
+				}
 			}
 
 			#listMyGameParent {

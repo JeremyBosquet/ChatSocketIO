@@ -75,13 +75,6 @@ export class RoomGateway {
     return false;
   }
 
-  @SubscribeMessage('roomCreated')
-  async handleConnect(@MessageBody() data: Irooms[]): Promise<void> {
-    const rooms = await this.roomService.getRooms();
-    this.server.emit('roomCreated', rooms);
-  }
-
-
   @Interval(1000 / 180)
   async update() {
     const rooms = await this.roomService.getRooms();
@@ -220,6 +213,12 @@ export class RoomGateway {
         this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
       }
     }
+  }
+
+  @SubscribeMessage('roomCreated')
+  async handleConnect(@MessageBody() data: Irooms[]): Promise<void> {
+    const rooms = await this.roomService.getRooms();
+    this.server.emit('roomCreated', rooms);
   }
 
   @SubscribeMessage('joinRoomSpectate')

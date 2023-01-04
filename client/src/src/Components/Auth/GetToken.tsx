@@ -1,5 +1,4 @@
 import React from "react";
-import { useRef } from "react";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -10,11 +9,11 @@ import { createNotification } from "../notif/Notif";
 function GetToken() {
 	let navigate = useNavigate();
 	let booleffect = false;
-	const firstrender = useRef<boolean>(true);
-
+	
 	const [IsTwoAuthActivated, setActivated] = useState<boolean>(false);
 	const [connected, setConnected] = useState<boolean>(false);
-	const [booleffect3, setBooleffect3] = useState<boolean>(false);
+	const [booleffect3, setBooleffect3] = useState<number>(0);
+	const [firstrender, setFirstRender] = useState<boolean>(false);
 
 	const dispatch = useDispatch();
 
@@ -24,29 +23,15 @@ function GetToken() {
 				.then((res) => {
 					setActivated(res.data.isTwoFactorAuthenticationEnabled);
 					setConnected(res.data.isSecondFactorAuthenticated);
-					setBooleffect3(true);
+					setBooleffect3(2);
 				})
 				.catch((err) => {
-					setBooleffect3(true);
+					setBooleffect3(-1);
+					setBooleffect3(-2);
 				});
 		}
-	}
-	function redirect() {
-		if (IsTwoAuthActivated)
-			navigate("/twoauth");
-	}
-
-	async function NotActivated() {
-		await instance.get(`user`)
-			.then((res) => {
-				dispatch(setUser(res.data.User));
-				createNotification("success", "User connected");
-				navigate("/");
-			})
-			.catch((err) => {
-				createNotification("error", "failed to connect");
-				navigate("/");
-			});
+		if (!firstrender)
+			setFirstRender(true)
 	}
 	async function AuthCall() {
 		const queryParams = new URLSearchParams(window.location.search);
@@ -63,23 +48,19 @@ function GetToken() {
 			});
 	}
 	useEffect(() => {
-		if (!booleffect) {
+		if (!firstrender)
 			AuthCall();
-			booleffect = true;
-		}
 	}, []);
 	useEffect(() => {
-		if (firstrender.current) {
-			firstrender.current = false;
-			return;
-		}
-		if (booleffect3) {
+		if (booleffect3 > 0) {
 			if (IsTwoAuthActivated)
-				redirect();
+				navigate("/twoauth");
 			else
-				NotActivated();
+				navigate("/");
 		}
-	}, [IsTwoAuthActivated, booleffect3]);
+		else
+			GetLoggedInfo();
+	}, [booleffect3]);
 	return (
 		<div>
 			<p> Login in process ...</p>

@@ -1,7 +1,7 @@
 import { ControlledMenu } from "@szhsin/react-menu";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { getBlockedByList, getBlockList, getUser } from "../../../../Redux/userSlice";
+import { getBlockedByList, getBlockList, getInGameList, getUser } from "../../../../Redux/userSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
 import Admin from "./Admin/Admin";
 import Ban from "./Ban/Ban";
@@ -40,6 +40,9 @@ function Player(props: props) {
 	const blockedByList = useSelector(getBlockedByList);
 	const [blocked, setBlocked] = useState<boolean>(false);
 	const [blockedBy, setBlockedBy] = useState<boolean>(false);
+	const [isInGame, setIsInGame] = useState<boolean>(false);
+	const inGameList = useSelector(getInGameList);
+
 	const topAnchor = useRef(null);
 
 	async function isBlocked(user: IuserDb) {
@@ -105,6 +108,13 @@ function Player(props: props) {
 		}
 	}
 
+	useEffect(() => {
+		if (inGameList && inGameList.length > 0)
+			setIsInGame(inGameList.find((userInList: any) => userInList.uuid === props?.uuid) ? true : false);
+		else
+			setIsInGame(false);
+	}, [inGameList]);
+
 	const usernameTrunc = (username: string) => {
 		function addSpace() {
 			let spaces = "";
@@ -138,7 +148,15 @@ function Player(props: props) {
 	return (
 		<div className='player' key={props.user?.uuid} >
 			<div style={{ display: "flex" }}>
-				{connected && !blocked && !blockedBy ? <span className="connected"></span> : <span className="disconnected"></span>}
+				{connected && !blocked && !blockedBy ? 
+					(
+						isInGame ?
+							<span className="inGame"></span> 
+						:	
+							<span className="connected"></span> 
+					)
+				: 
+					<span className="disconnected"></span>}
 				<p style={{ maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis" }}>{usernameTrunc(props.user?.username)}</p>
 			</div>
 			<div className="playerGroupActions">

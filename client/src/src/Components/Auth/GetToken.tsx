@@ -48,10 +48,10 @@ function GetToken() {
 				navigate("/");
 			});
 	}
-	function AuthCall(): any {
+	async function AuthCall() {
 		const queryParams = new URLSearchParams(window.location.search);
 		const code = queryParams.get("code");
-		instance.get(`login/42/return/` + code)
+		await instance.get(`login/42/return/` + code)
 			.then((res) => {
 				if (res.data) {
 					localStorage.setItem("token", res.data.token);

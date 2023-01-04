@@ -176,7 +176,6 @@ function AddRemoveFriend(props: props) {
 							:
 							<></>
 					}
-
 					{
 						isRequest && !isRequested && !isFriend
 							?

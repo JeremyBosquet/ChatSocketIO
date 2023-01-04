@@ -1,4 +1,4 @@
-import { Menu, MenuButton } from "@szhsin/react-menu";
+import { ControlledMenu } from "@szhsin/react-menu";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getBlockedByList, getBlockList, getUser } from "../../../../Redux/userSlice";
@@ -31,6 +31,8 @@ interface props {
 }
 
 function Player(props: props) {
+	const [mobileMode, setMobileMode] = useState<boolean>(false);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [connected, setConnected] = useState<boolean>(false);
 	const me = useSelector(getUser);
 	const socketGame = useSelector(getSockeGameChat);
@@ -121,11 +123,18 @@ function Player(props: props) {
 	}
 
 	function isMobile() {
-		if (window.innerWidth < 1165)
+		if (window.innerWidth < 1165) {
+			setMobileMode(true);
 			return (true);
+		}
+		setMobileMode(false);
 		return (false);
 	}
 
+	useEffect(() => {
+		isMobile()
+	}, [window.innerWidth])
+	
 	return (
 		<div className='player' key={props.user?.uuid} >
 			<div style={{ display: "flex" }}>
@@ -137,42 +146,54 @@ function Player(props: props) {
 					me?.uuid !== props.user?.uuid && hasInvited(props.user?.uuid) ?
 						<button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button>
 						:
-						null
+					null
 				}
 				{
 					props.user?.uuid === me.uuid ? null :
-						<Menu
-							viewScroll="close"
-							className="playerActions"
-							onKeyDown={(e: any) => e.stopPropagation()}
-							menuButton={<MenuButton ref={topAnchor}><TbDotsVertical className="playerDots" /></MenuButton>}
-							position={isMobile() ? "anchor" : "auto"}
-							direction={isMobile() ? "top" : "bottom"}
-							onClick={() => isMobile()}
-						>
-							{(me.role === "admin" &&
-								props.user.role !== 'admin' &&
-								props.user.role !== 'owner') ?
-								<>
-									<Ban user={props.user} />
-									<Kick user={props.user} />
-									<Mute user={props.user} mutedUsers={props.mutedUsers} />
-								</>
-								: (me.role === "owner") ?
+					<>
+						<span ref={topAnchor}>
+							<TbDotsVertical 
+								onPointerEnter={ !mobileMode ? () => setIsOpen(true) : () => {}}
+								onClick={ mobileMode ? () => setIsOpen((isOpen) => !isOpen) : () => {}}
+								className="playerDots"/>
+						</span>
+							<ControlledMenu
+								viewScroll="close"
+								className="playerActions"
+								onKeyDown={(e: any) => e.stopPropagation()}
+								state={isOpen ? "open" : "closed"}
+								position={mobileMode ? "anchor" : "auto"}
+								direction={mobileMode ? "top" : "bottom"}
+								onMouseLeave={() => {
+									setIsOpen(false)
+								}}
+								onScroll={() => setIsOpen(false)}
+								anchorRef={topAnchor}
+							>
+								{(me.role === "admin" &&
+									props.user.role !== 'admin' &&
+									props.user.role !== 'owner') ?
 									<>
 										<Ban user={props.user} />
 										<Kick user={props.user} />
 										<Mute user={props.user} mutedUsers={props.mutedUsers} />
-										<Admin user={props.user} users={props.users} setUsers={props.setUsers} />
 									</>
-									: null
-							}
-							<DM user={props.user} />
-							{connected && !blocked && !blockedBy && !hasInvited(props.user?.uuid) ? <InviteGame user={props.user} /> : null}
-							<Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
-							<Block user={props.user} />
-							<AddRemoveFriend user={props.user} />
-						</Menu>
+									: (me.role === "owner") ?
+										<>
+											<Ban user={props.user} />
+											<Kick user={props.user} />
+											<Mute user={props.user} mutedUsers={props.mutedUsers} />
+											<Admin user={props.user} users={props.users} setUsers={props.setUsers} />
+										</>
+										: null
+								}
+								<DM user={props.user} />
+								{connected && !blocked && !blockedBy && !hasInvited(props.user?.uuid) ? <InviteGame user={props.user} /> : null}
+								<Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
+								<Block user={props.user} />
+								<AddRemoveFriend user={props.user} />
+						</ControlledMenu>
+					</>
 				}
 			</div>
 		</div>

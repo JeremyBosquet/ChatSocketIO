@@ -1,5 +1,5 @@
-import { Menu, MenuButton } from "@szhsin/react-menu";
-import { useEffect, useState } from "react";
+import { ControlledMenu } from "@szhsin/react-menu";
+import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { getBlockedByList, getBlockList, getUser } from "../../../../Redux/userSlice";
 import { Iuser, IuserDb } from "../interfaces/users";
@@ -9,6 +9,7 @@ import Block from "./Block/Block";
 import AddRemoveFriend from "./AddRemoveFriend/AddRemoveFriend";
 import InviteGame from "./InviteGame/InviteGame";
 import { getSockeGameChat } from "../../../../Redux/gameSlice";
+import { TbDotsVertical } from "react-icons/tb";
 
 interface IInvites {
 	requestFrom: string;
@@ -24,6 +25,8 @@ interface props {
 }
 
 function Player(props: props) {
+	const [mobileMode, setMobileMode] = useState<boolean>(false);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [connected, setConnected] = useState<boolean>(false);
 	const me = useSelector(getUser);
 	const socketGame = useSelector(getSockeGameChat);
@@ -31,6 +34,7 @@ function Player(props: props) {
 	const blockedByList = useSelector(getBlockedByList);
 	const [blocked, setBlocked] = useState<boolean>(false);
 	const [blockedBy, setBlockedBy] = useState<boolean>(false);
+	const topAnchor = useRef(null);
 
 	async function isBlocked(user: IuserDb) {
 		let userFinded = blockList.find((blockedUser: any) => blockedUser.uuid === user.uuid);
@@ -112,6 +116,19 @@ function Player(props: props) {
 		return (username);
 	}
 
+	function isMobile() {
+		if (window.innerWidth < 1165) {
+			setMobileMode(true);
+			return (true);
+		}
+		setMobileMode(false);
+		return (false);
+	}
+
+	useEffect(() => {
+		isMobile()
+	}, [window.innerWidth])
+
 	return (
 		<div className='player' key={props.user?.uuid}>
 			<div style={{ display: "flex" }}>
@@ -127,17 +144,32 @@ function Player(props: props) {
 				}
 				{
 					props.user?.uuid === me.uuid ? null :
-						<Menu
-							viewScroll="close"
-							className="playerActions"
-							onKeyDown={(e) => e.stopPropagation()}
-							menuButton={<MenuButton>⁝</MenuButton>}
-						>
-							{connected && !blocked && !blockedBy && !hasInvited(props.user?.uuid) ? <InviteGame user={props.user} /> : null}
-							<Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
-							<Block user={props.user} />
-							<AddRemoveFriend user={props.user} />
-						</Menu>
+						<>
+							<span ref={topAnchor}>
+								<TbDotsVertical 
+									onPointerEnter={ !mobileMode ? () => setIsOpen(true) : () => {}}
+									onClick={ mobileMode ? () => setIsOpen((isOpen) => !isOpen) : () => {}}
+									className="playerDots"/>
+							</span>
+							<ControlledMenu
+								viewScroll="close"
+								className="playerActions"
+								onKeyDown={(e: any) => e.stopPropagation()}
+								state={isOpen ? "open" : "closed"}
+								position={mobileMode ? "anchor" : "auto"}
+								direction={mobileMode ? "top" : "bottom"}
+								onMouseLeave={() => {
+									setIsOpen(false)
+								}}
+								onScroll={() => setIsOpen(false)}
+								anchorRef={topAnchor}
+							>
+								{connected && !blocked && !blockedBy && !hasInvited(props.user?.uuid) ? <InviteGame user={props.user} /> : null}
+								<Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
+								<Block user={props.user} />
+								<AddRemoveFriend user={props.user} />
+							</ControlledMenu>
+						</>
 				}
 			</div>
 		</div>

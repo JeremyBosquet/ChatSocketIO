@@ -124,11 +124,11 @@ export class UsersController {
 	@Get('CompareToken')
 	@UseGuards(JwtTwoFactorGuard)
 	async CompareToken(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
+			const tokenCrypted = req.headers.authorization.split(' ')[1];
 			for (let i = 0; i < User.isLoggedIn.length; i++) {
-				if (await bcrypt.compare(req.headers.authorization.split(' ')[1], User.isLoggedIn[i].token)) {
+				if (await bcrypt.compare(tokenCrypted, User.isLoggedIn[i].token)) {
 					return res.status(HttpStatus.OK).json({
 						statusCode: HttpStatus.OK,
 						message: 'succes'
@@ -152,11 +152,11 @@ export class UsersController {
 	@Get('CompareTokenTwoAuth')
 	@UseGuards(JwtAuthGuard)
 	async CompareTokenTwoAuth(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
+			const tokenCrypted = req.headers.authorization.split(' ')[1];
 			for (let i = 0; i < User.isLoggedIn.length; i++) {
-				if (await bcrypt.compare(req.headers.authorization.split(' ')[1], User.isLoggedIn[i].token)) {
+				if (await bcrypt.compare(tokenCrypted, User.isLoggedIn[i].token)) {
 					return res.status(HttpStatus.OK).json({
 						statusCode: HttpStatus.OK,
 						message: 'succes'

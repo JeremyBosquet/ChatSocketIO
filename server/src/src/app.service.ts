@@ -43,7 +43,7 @@ export class AppService {
 
 				const buffer = Buffer.from(arrayBuffer);
 
-				await fs.writeFile(path + name, buffer, (err) => {
+				fs.writeFile(path + name, buffer, (err) => {
 					if (err) {
 					}
 				});

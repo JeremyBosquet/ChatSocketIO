@@ -1,17 +1,8 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { getUser } from "../../../../../Redux/userSlice";
-import { getSocket } from "../../../../../Redux/chatSlice";
-import { IuserDb } from "../../interfaces/users";
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
 import './JoinProtected.scss'
-import { useNavigate, useParams } from "react-router-dom";
 import React from 'react';
-import { createNotification } from "../../../../notif/Notif";
-import DatePicker from "../DatePicker/DatePicker";
-import instance from "../../../../../API/Instance";
 
 interface props {
 	channelId: string;

@@ -146,6 +146,7 @@ function GamePlay(props: props) {
 			: windowsHeight / 2 - boardHeight / 2,
 		percentY: 50,
 	});
+
 	const socketSocial = useSelector(getSocketSocial);
 	useEffect(() => {
 		socketSocial?.emit("joinGame");
@@ -153,6 +154,7 @@ function GamePlay(props: props) {
 			socketSocial?.emit("leaveGame");
 		};
 	}, [socketSocial]);
+
 	function updateDisplay(): void {
 		if (contextRef.current) {
 			let primeColor;
@@ -168,9 +170,8 @@ function GamePlay(props: props) {
 				secondColor = "white";
 			}
 
-			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
-			contextRef.current.fillStyle = primeColor
-			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
+			//contextRef.current.fillStyle = primeColor
+			//contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
 			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
 			contextRef.current.fillStyle = secondColor;
@@ -358,7 +359,7 @@ function GamePlay(props: props) {
 	});
 	props.socket?.removeListener("ballMovement");
 	props.socket?.on("ballMovement", (data: any) => {
-		if (lastTimestamp >= data.timestamp) return;
+		if (lastTimestamp > data.timestamp) return;
 		lastTimestamp = data.timestamp;
 		setBall({
 			...ball,
@@ -369,6 +370,7 @@ function GamePlay(props: props) {
 			percentY: data?.y,
 		});
 	});
+
 	useEffect(() => {
 		updateDisplay();
 	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, imageA, imageB]);

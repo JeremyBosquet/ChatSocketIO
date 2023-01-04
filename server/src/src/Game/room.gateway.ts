@@ -33,7 +33,6 @@ let lastTime = Date.now();
 
 let boardAX = 3;
 let boardBX = 3;
-
 const ballInterval = [];
 
 @WebSocketGateway(7002, { cors: '*:*' })
@@ -101,9 +100,11 @@ export class RoomGateway {
             if (room.ball.x + settings.ballRadius <= 0) {
               room.scoreB += 1
               this.roomService.updateRoom(room.id, { scoreB: room.scoreB });
+              this.server.in('room-' + room.id).emit('roomUpdated', room);
             } else if (room.ball.x + settings.ballRadius >= 100) {
               room.scoreA += 1
               this.roomService.updateRoom(room.id, { scoreA: room.scoreA });
+              this.server.in('room-' + room.id).emit('roomUpdated', room);
             }
             if (room.scoreA >= 10 || room.scoreB >= 10) {
               room.status = 'finished';

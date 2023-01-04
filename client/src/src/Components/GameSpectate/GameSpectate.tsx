@@ -76,6 +76,7 @@ interface ICanvasBall {
 
 let random = Math.random() * 1000;
 random = Math.floor(random);
+let lastTimestamp = 0;
 
 function GameSpectate(props: props) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -285,14 +286,16 @@ function GameSpectate(props: props) {
 		}
 	});
 	props.socket?.removeListener("ballMovement");
-	props.socket?.on("ballMovement", (room: IRoom) => {
+	props.socket?.on("ballMovement", (data: any) => {
+		if (lastTimestamp >= data.timestamp) return;
+		lastTimestamp = data.timestamp;
 		setBall({
 			...ball,
 			id: "ball",
-			x: (room.ball.x / 100) * windowsWidth,
-			y: (room.ball.y / 100) * windowsHeight,
-			percentX: room.ball.x,
-			percentY: room.ball.y,
+			x: (data?.x / 100) * windowsWidth,
+			y: (data?.y / 100) * windowsHeight,
+			percentX: data?.x,
+			percentY: data?.y,
 		});
 	});
 	props.socket?.removeListener("roomUpdated");

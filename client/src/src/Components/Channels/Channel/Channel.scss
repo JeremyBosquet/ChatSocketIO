@@ -11,7 +11,6 @@
 	&:hover {
 		background-color: #1F1F1F;
 		cursor: pointer;
-		transform: scale(1.01);
 	}
 
 	.channelInfoName {
@@ -32,7 +31,6 @@
 
 
 .channelMenu {
-	// width: 150px;
 	display: flex;
 	flex-direction: column;
 	align-self: flex-start;

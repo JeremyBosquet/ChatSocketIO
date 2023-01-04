@@ -391,8 +391,8 @@ export class ChannelController {
         if (!channel)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
         
-        const messages = await this.chatService.getMutedUsers(params.channelId);
-        res.json(messages);
+        const muted = await this.chatService.getMutedUsers(channel.uuid);
+        res.json(muted);
     }
 
     @Post('channel/kick') //Kick player from channel

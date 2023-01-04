@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { getUser } from '../../../Redux/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, setChannels } from '../../../Redux/chatSlice';
 import React from 'react';
 import { createNotification } from '../../notif/Notif';
 import './Join.scss';
 import instance from '../../../API/Instance';
+import JoinProtected from './JoinProtected/JoinProtected';
 
 interface props {
 	channelId: string;
@@ -14,14 +14,15 @@ interface props {
 }
 
 function Join(props: props) {
+	const [joinMenu, setJoinMenu] = useState(false);
 	const [password, setPassword] = useState<string>("");
 
 	const dispatch = useDispatch();
 
 	const socket = useSelector(getSocket);
 
-	const handleJoin = async (id: string) => {
-
+	const handleJoin = async (e: any, id: string) => {
+		e.preventDefault();
 		if (props.channelVisibility === "protected")
 			if (password === "")
 				return;
@@ -44,10 +45,11 @@ function Join(props: props) {
 				getUsersChannel();
 				socket?.emit('joinPermanent', { channelId: id });
 				createNotification("success", "You have successfully join the channel.");
+				setJoinMenu(false);
 				props.setSearchChannel("");
 			}).catch((err) => {
 				createNotification("error", err.response.data.message);
-			})
+		})
 	}
 
 	return (
@@ -55,12 +57,12 @@ function Join(props: props) {
 			{
 				props.channelVisibility === "protected" ?
 					<>
-						<input placeholder="password" value={password} onChange={e => setPassword(e.target.value)}></input>
-						<button className='joinChannelButton' onClick={e => handleJoin(props.channelId)}>Join</button>
+						<JoinProtected channelId={props.channelId} handleJoin={handleJoin} password={password} setPassword={setPassword} joinMenu={joinMenu} setJoinMenu={setJoinMenu}/>
+						{/* <button className='joinChannelButton' onClick={e => handleJoin(props.channelId)}>Join</button> */}
 					</>
 					:
 					<>
-						<button className='joinChannelButton' onClick={e => handleJoin(props.channelId)}>Join</button>
+						<button className='joinChannelButton' onClick={e => handleJoin(e, props.channelId)}>Join</button>
 					</>
 			}
 		</>

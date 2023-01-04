@@ -26,7 +26,7 @@ interface props {
 	setUsers: any;
 	user: IuserDb;
 	usersConnected: Iuser[];
-	mutedUsers: [];
+	mutedUsers: any[];
 	invites: IInvites[];
 }
 

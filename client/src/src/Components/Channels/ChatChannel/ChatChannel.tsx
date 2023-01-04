@@ -37,7 +37,7 @@ function ChatChannel(props: props) {
 	const [users, setUsers] = useState<IuserDb[]>([]);
 	const [usersConnected, setUsersConnected] = useState<Iuser[]>([]);
 	const [channel, setChannel] = useState<Ichannel>();
-	const [mutedUsers, setMutedUsers] = useState<[]>([]);
+	const [mutedUsers, setMutedUsers] = useState<any[]>([]);
 	const [showCode, setShowCode] = useState<boolean>(false);
 	const channels = useSelector(getChannels);
 	const params = useParams();
@@ -73,13 +73,6 @@ function ChatChannel(props: props) {
 
 	useEffect(() => {
 		if (params.id !== undefined) {
-			const getMutedUsers = async () => {
-				await instance.get("chat/mutes/" + selectedChannel)
-					.then(res => {
-						if (res.data)
-							setMutedUsers(res.data);
-					});
-			}
 			const getChannel = async () => {
 				const channel = (await instance.get("chat/channel/" + selectedChannel)).data;
 				if (channel) {
@@ -95,22 +88,38 @@ function ChatChannel(props: props) {
 
 			getChannel();
 
-			if (selectedChannel && channel?.users.filter(u => u.uuid === user.uuid)[0]?.role === ("admin" || "owner")) {
-				getMutedUsers();
-			}
 		} else
-			navigate("/chat/channel/");
+		navigate("/chat/channel/");
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [params.id])
+	
+	useEffect(() => {
+		if (params.id !== undefined && channel?.users) {
+			const getMutedUsers = async () => {
+				await instance.get("chat/mutes/" + selectedChannel)
+					.then(res => {
+						if (res.data)
+							setMutedUsers(res.data);
+					});
+			}
 
+			// check if user is admin or owner
+			if (selectedChannel && (channel?.users.filter(u => u.uuid === user.uuid)[0]?.role === "admin" || channel?.users.filter(u => u.uuid === user.uuid)[0]?.role === "owner")) {
+				getMutedUsers();
+			}
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [channel])
+	
 	useEffect(() => {
 		if (selectedChannel) {
 			const thisChannel = channels.filter((c: Ichannel) => c.id === selectedChannel)[0];
-
+			
 			if (thisChannel && thisChannel.visibility !== channel?.visibility) {
 				setChannel(thisChannel);
 			}
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [channels])
 
 	useEffect(() => {
@@ -132,8 +141,7 @@ function ChatChannel(props: props) {
 
 			socket.removeListener('updateMutes');
 			socket?.on('updateMutes', (usersDb: []) => {
-				if (channel?.users.filter(u => u.uuid === user.uuid)[0]?.role === ("admin" || "owner"))
-					setMutedUsers(usersDb);
+				setMutedUsers(usersDb);
 			});
 
 			socket.removeListener('kickFromChannel');

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getUser } from "../../../../../Redux/userSlice";
 import { getSocket } from "../../../../../Redux/chatSlice";
@@ -16,11 +16,12 @@ import instance from "../../../../../API/Instance";
 
 interface props {
 	user: IuserDb;
-	mutedUsers: [];
+	mutedUsers: any[];
 }
 
 function Mute(props: props) {
 	const [value, onChange] = useState<Date>(new Date());
+	const [muted, setMuted] = useState<boolean>(false);
 	const me = useSelector(getUser);
 	const socket = useSelector(getSocket);
 
@@ -76,14 +77,23 @@ function Mute(props: props) {
 	}
 
 	const isMuted = () => {
-		if (props.mutedUsers.filter((user: any) => user.id === props.user.uuid).length > 0)
+		if (props.mutedUsers.filter((user: any) => user.id === props.user.uuid).length) {
+			setMuted(true);
 			return true;
+		}
+		setMuted(false);
 		return false;
 	}
 
 	const changeTime = (e: any) => {
 		setTime(e.target.value);
 	}
+
+	useEffect(() => {
+		isMuted();
+	
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [props.mutedUsers]);
 
 	return (
 		<>
@@ -113,7 +123,7 @@ function Mute(props: props) {
 				: null
 			}
 			{
-				isMuted() ?
+				muted ?
 					<button className="actionButton" onClick={(e) => handleMute(e, props.user.uuid)}>Unmute</button>
 					:
 					<button className="actionButton" onClick={() => setMuteMenu(!muteMenu)}>Mute</button>

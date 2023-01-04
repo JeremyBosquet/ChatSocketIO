@@ -94,7 +94,7 @@ export class AppService {
 			await this.userRepository.save(newUser);
 			const payload = { uuid: newUuid };
 			const token = this.jwtService.sign(payload, { expiresIn: '2d' });
-			this.userService.IsLoggedIn(newUuid, token);
+			await this.userService.IsLoggedIn(newUuid, token);
 			return token;
 		}
 	}

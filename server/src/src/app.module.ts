@@ -55,6 +55,7 @@ import { RoomService } from './Game/room.service';
 		twoAuthModule,
 		ChatModule,
 		RoomModule,
+		JwtModule
 	],
 	controllers: [AppController],
 	providers: [

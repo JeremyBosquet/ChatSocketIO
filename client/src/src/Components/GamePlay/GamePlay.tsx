@@ -281,6 +281,7 @@ function GamePlay(props: props) {
 				setPlayerA({ ...playerA, x: boardAX * windowsWidth });
 				setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
 			}
+			//props.socket?.emit("debugMouse", { x: ((100 * (e.clientX - 250))  / windowsWidth), y: ((100 * (e.clientY - 250)) / windowsHeight)});
 		}
 
 	useEventListener("mousemove", mousemove);

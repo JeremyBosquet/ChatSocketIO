@@ -253,7 +253,6 @@ function GameSpectate(props: props) {
 			y: (playerB.percentY / 100) * windowsHeight,
 			percentY: playerB.percentY,
 		});
-		updateDisplay();
 	}
 	useEventListener("resize", handleResize);
 
@@ -289,13 +288,15 @@ function GameSpectate(props: props) {
 			percentX: room.ball.x,
 			percentY: room.ball.y,
 		});
-		updateDisplay();
 	});
 	props.socket?.removeListener("roomUpdated");
 	props.socket?.on("roomUpdated", (data: IRoom) => {
 		if (props.room)
 			props.setRoom({ ...props.room, scoreA: data.scoreA, scoreB: data.scoreB });
 	});
+	useEffect(() => {
+		updateDisplay();
+	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, imageA, imageB]);
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

@@ -72,7 +72,7 @@ function GameReady(props: props) {
 	const [tmpUserBoolean, setTmpUserBoolean] = useState<boolean>(false);
 	const [configuringDisplay, setConfiguringDisplay] = useState<boolean>(false);
 	const [settings, setSettings] = useState<IConfiguration>({ difficulty: "easy", background: "basic", confirmed: false });
-	const [settingsBis, setSettingsBis] = useState<IConfiguration>({ difficulty: "easy", background: "inverted", confirmed: false });
+	const [settingsBis, setSettingsBis] = useState<IConfiguration>({ difficulty: "easy", background: "basic", confirmed: false });
 	const socket = useSelector(getSockeGame);
 
 	useEffect(() => {

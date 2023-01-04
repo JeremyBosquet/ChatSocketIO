@@ -102,16 +102,16 @@ function Profile() {
 							</div>
 							<h4> @{userProfile?.trueUsername} </h4>
 							{profileExp < 5 ?
-								<img className="image" src={"../steel.png"} height={38} width={38} />
+								<img className="image" src={"/steel.png"} height={38} width={38} />
 								: profileExp < 10 ?
-									<img className="image" src={"../bronze.png"} height={38} width={38} />
+									<img className="image" src={"/bronze.png"} height={38} width={38} />
 									: profileExp < 15 ?
-										<img className="image" src={"./silver.png"} height={38} width={38} />
+										<img className="image" src={"/silver.png"} height={38} width={38} />
 										: profileExp < 21 ?
-											<img className="image" src={"../gold.png"} height={38} width={38} />
+											<img className="image" src={"/gold.png"} height={38} width={38} />
 											: profileExp < 22 ?
-												<img className="image" src={"../diamond.png"} height={46} width={38} />
-												: <img className="image" src={"../steel.png"} height={38} width={38} />
+												<img className="image" src={"/diamond.png"} height={46} width={38} />
+												: <img className="image" src={"/steel.png"} height={38} width={38} />
 							}
 							<div className="expBar">
 								<span className="Exp"> </span>

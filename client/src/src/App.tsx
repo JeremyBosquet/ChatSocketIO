@@ -59,13 +59,13 @@ function App() {
 						dispatch(setBlockedByList([]));
 				});
 
-				await instance.get(`user/ListBlockedBy`).then((res) => {
-					let blockedByList: any[] = res.data.ListBlockedBy;
-					if (blockedByList) {
-						dispatch(setBlockedByList(blockedByList));
+				await instance.get(`user/ListUsersBlocked`).then((res) => {
+					let blockList: any[] = res.data.ListUsersBlocked;
+					if (blockList) {
+						dispatch(setBlockList(blockList));
 					}
 					else
-						dispatch(setBlockedByList([]));
+						dispatch(setBlockList([]));
 				});
 			}
 

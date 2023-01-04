@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom"
 import React from 'react';
 import './Social.scss';
-import { getFriendList, getBlockList, getRequestList, getRequestedList } from "../../Redux/userSlice";
+import { getFriendList, getBlockList, getRequestList, getRequestedList, setRequestList } from "../../Redux/userSlice";
 import { setFriendList, setRequestedList, setBlockList } from '../../Redux/userSlice'
 import { useDispatch, useSelector } from 'react-redux';
 import Show from '../Popup/Show/Show';
@@ -48,41 +48,32 @@ function Social() {
 	}
 
 	async function ListFriends() {
-		await instance.get(`user/ListFriends`, {
-			headers: ({
-				Authorization: 'Bearer ' + token,
-			})
-		}).then((res) => {
+		await instance.get(`user/ListFriends`).then((res) => {
 			dispatch(setFriendList(res.data.friendList));
 		});
 	}
 
 	async function ListRequested() {
-		await instance.get(`user/ListFriendRequested`, {
-			headers: ({
-				Authorization: 'Bearer ' + token,
-			})
-		}).then((res) => {
+		await instance.get(`user/ListFriendRequested`).then((res) => {
 			dispatch(setRequestedList(res.data.ListFriendsRequested));
 		});
 	}
 
+	async function ListRequest() {
+		await instance.get(`user/ListFriendRequest`).then((res) => {
+			console.log(res.data.usernameList);
+			dispatch(setRequestList(res.data.usernameList));
+		});
+	}
+
 	async function ListBlocked() {
-		await instance.get(`user/ListUsersBlocked`, {
-			headers: ({
-				Authorization: 'Bearer ' + token,
-			})
-		}).then((res) => {
+		await instance.get(`user/ListUsersBlocked`).then((res) => {
 			dispatch(setBlockList(res.data.ListUsersblocked));
 		});
 	}
 
 	async function SearchFriend(username: string) {
-		await instance.get(`user/SearchFriend/` + username, {
-			headers: ({
-				Authorization: 'Bearer ' + token,
-			})
-		}).then((res) => {
+		await instance.get(`user/SearchFriend/` + username).then((res) => {
 			if (res && res.data)
 				SetsearchList(res.data.searchResult)
 			else
@@ -120,6 +111,7 @@ function Social() {
 			ListFriends();
 			ListBlocked()
 			ListRequested();
+			ListRequest();
 			booleffect.current = true;
 		}
 	}, []);

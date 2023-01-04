@@ -225,7 +225,12 @@ export class UsersController {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
 		if (User) {
-			const find = await this.userService.findUserByUsername(param.username, User.uuid);
+			function onlyLettersAndNumbers(str: string) {
+				return Boolean(str.match(/^[A-Za-z0-9]*$/));
+			}
+			let find = undefined;
+			if (onlyLettersAndNumbers(param.username))
+				find = await this.userService.findUserByUsername(param.username, User.uuid);
 			if (find) {
 				switch (find) {
 					case 2:
@@ -297,8 +302,8 @@ export class UsersController {
 	@Post('AddFriend')
 	@UseGuards(JwtTwoFactorGuard)
 	async AddFriendByUuid(@Req() req: any, @Res() res: any, @Body() body: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		// const Jwt = this.jwtService.decode(req.headers.authorization.);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const FriendUuid = body['uuid'];
 		if (User && FriendUuid) {
 			const add = await this.userService.addUserByUuid(FriendUuid, User);
@@ -742,8 +747,7 @@ export class UsersController {
 			const uuidList = await this.userService.ListFriendsRequestWithUuid(
 				User.uuid,
 			);
-			const usernameList =
-				await this.userService.ListUsernameFriendsRequestWithUuid(User.uuid);
+			const usernameList = await this.userService.ListUsernameFriendsRequestWithUuid(User.uuid);
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
 				message: 'succes',

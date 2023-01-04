@@ -72,15 +72,15 @@ const Leaderboard = () => {
 								<span> {index + 1} </span>
 								<div className="user">
 									{user.exp < 5 ?
-										<img className="image" src={"./steel.png"} height={28} width={28} />
+										<img className="image" src={"/steel.png"} height={28} width={28} />
 										: user.exp < 10 ?
-											<img className="image" src={"./bronze.png"} height={28} width={28} />
+											<img className="image" src={"/bronze.png"} height={28} width={28} />
 											: user.exp < 15 ?
-												<img className="image" src={"./silver.png"} height={28} width={28} />
+												<img className="image" src={"/silver.png"} height={28} width={28} />
 												: user.exp < 21 ?
-													<img className="image" src={"./gold.png"} height={28} width={28} />
+													<img className="image" src={"/gold.png"} height={28} width={28} />
 													: user.exp < 22 ?
-														<img className="image" src={"./diamond.png"} height={36} width={28} />
+														<img className="image" src={"/diamond.png"} height={36} width={28} />
 														: <img className="image" src={import.meta.env.VITE_URL_API + ":7000/" + user.image} height={28} width={28} />
 									}
 									<Link to={"/profile/" + user.trueUsername}> {user.username} </Link>

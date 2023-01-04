@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import './RoomSpectateInfo.scss'
 import { useSelector } from "react-redux";
 import { getSockeSpectate } from "../../Redux/gameSlice";
@@ -83,11 +83,17 @@ interface ISettings {
 	ballRadius: number;
 }
 
+let random = Math.random() * 1000;
+random = Math.floor(random);
 function RoomSpectateInfo(props: props) {
 	const socket = useSelector(getSockeSpectate);
 	const [scoreA, setScoreA] = useState<number>(props.scoreA);
 	const [scoreB, setScoreB] = useState<number>(props.scoreB);
 	const navigate = useNavigate();
+	useEffect(() => {
+		random = Math.random() * 1000;
+		random = Math.floor(random);
+	}, []);
 	function joinRoom(id: string) {
 		navigate(`/game/spectate/${id}`);
 	}
@@ -105,7 +111,7 @@ function RoomSpectateInfo(props: props) {
 				<div key={props.id} className="room" onClick={() => joinRoom(props.id)}>
 					<div className="roomInfoName">
 						<div className="roomUserInfos">
-							<img src={import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.playerAId} className="roomInfoUserImage" />
+							<img src={import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.playerAId  + "#" + random} className="roomInfoUserImage" />
 							<p>{props.playerAName}</p>
 						</div>
 						<div className="roomInfoScore">
@@ -113,7 +119,7 @@ function RoomSpectateInfo(props: props) {
 						</div>
 						<div className="roomUserInfos">
 							<p>{props.playerBName}</p>
-							<img src={import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.playerBId} className="roomInfoUserImage" />
+							<img src={import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.playerBId  + "#" + random} className="roomInfoUserImage" />
 						</div>
 					</div>
 

@@ -4,6 +4,7 @@ import "./GameSpectate.scss";
 import useEventListener from "@use-it/event-listener";
 import useImage from "use-image";
 import { Helmet } from "react-helmet";
+import GameBoard from "../GameBoard/GameBoard";
 
 interface props {
 	socket: Socket | undefined;
@@ -80,8 +81,8 @@ function GameSpectate(props: props) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
-	let maxWidth = 1000;
-	let maxHeight = 600;
+	let boardAX = 0.025;
+	let boardBX = 0.025;
 
 	useEffect(() => {
 		random = Math.random() * 1000;
@@ -216,8 +217,13 @@ function GameSpectate(props: props) {
 		}
 	}, []);
 	function handleResize() {
-		setWindowsWidth(window.innerWidth > maxWidth ? maxWidth : window.innerWidth);
-		setWindowsHeight(window.innerHeight > maxHeight + 200 ? maxHeight - 200 : window.innerHeight);
+		let t = window.innerHeight * mult;
+		let r = (window.innerWidth * mult) / (window.innerHeight * mult);
+		if (r < 16 / 9) {
+			t = (window.innerWidth * mult) * (9 / 16);
+		}
+		setWindowsHeight(t);
+		setWindowsWidth((16 * t) / 9);
 		setBoardWidth(
 			props.room?.settings.boardWidth
 				? (props.room?.settings.boardWidth / 100) * windowsWidth
@@ -242,14 +248,14 @@ function GameSpectate(props: props) {
 		setPlayerA({
 			...playerA,
 			id: "playerA",
-			x: (0.01 * windowsWidth),
+			x: (boardAX * windowsWidth),
 			y: (playerA.percentY / 100) * windowsHeight,
 			percentY: playerA.percentY,
 		});
 		setPlayerB({
 			...playerB,
 			id: "playerB",
-			x: (windowsWidth - 0.015 * windowsWidth),
+			x: (windowsWidth - boardBX * windowsWidth),
 			y: (playerB.percentY / 100) * windowsHeight,
 			percentY: playerB.percentY,
 		});
@@ -303,6 +309,7 @@ function GameSpectate(props: props) {
 				<meta charSet="utf-8" />
 				<title> Spectating - transcendence </title>
 			</Helmet>
+			<GameBoard socket={props.socket} room={props.room} />
 			<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
 		</div>
 	);

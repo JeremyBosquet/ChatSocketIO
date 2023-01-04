@@ -102,10 +102,11 @@ export class UsersController {
 	}
 
 	@Get('getLoggedInfo')
-	//@UseGuards(JwtAuthGuard)
+	@UseGuards(JwtAuthGuard)
 	async getLoggedInfo(@Req() req: any, @Res() res: any) {
 		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
 		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		console.log(User.uuid)
 		if (User) {
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,

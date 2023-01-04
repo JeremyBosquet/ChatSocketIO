@@ -10,7 +10,7 @@ import TwoAuth from "./Pages/TwoAuth/TwoAuth";
 
 import GameSpectatePage from "./Pages/GameSpectatePage/GameSpectatePage";
 import React from "react";
-import { getConnectedList, getRequestedList, getSocketSocial, getUser, setBlockedByList, setConnectedList, setFriendList, setRequestedList, setRequestList, setSocketSocial, setUser, setBlockList, setInGameList } from "./Redux/userSlice";
+import { getConnectedList, getRequestedList, getSocketSocial, getUser, setBlockedByList, setConnectedList, setFriendList, setRequestedList, setRequestList, setSocketSocial, setUser, setBlockList, setInGameList, getBlockedByList, getBlockList } from "./Redux/userSlice";
 import { getSocket, setSocket } from "./Redux/chatSlice";
 import ChannelPage from "./Pages/ChannelPage/ChannelPage";
 import DMPage from "./Pages/DMPage/DMPage";
@@ -33,6 +33,8 @@ function App() {
 	const socketChat = useSelector(getSocket);
 	const ConnectedList = useSelector(getConnectedList);
 	const requestedList = useSelector(getRequestedList);
+	const blockedByList = useSelector(getBlockedByList)
+	const blockList = useSelector(getBlockList)
 	const [booleffect, setBooleffect] = useState<boolean>(false);
 	let listUsers: any[] = [];
 
@@ -210,28 +212,16 @@ function App() {
 			listUsers = [...data.users];
 		if (localStorage.getItem("token"))
 		{
-			await instance.get(`user/ListUsersBlocked`)
-				.then((res) => {
-					let blockedList: any[] = res.data.ListUsersblocked;
-					if (blockedList) {
-						for (let i = 0; i < blockedList.length; i++) {
-							listUsers = listUsers.filter((e: any) => e.uuid !== blockedList[i].uuid);
-						}
-					}
-				});
-			await instance.get(`user/ListBlockedBy`, {
-				headers: ({
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				})
-			})
-				.then((res) => {
-					let blockedByList: any[] = res.data.ListBlockedBy;
-					if (blockedByList) {
-						for (let i = 0; i < blockedByList.length; i++) {
-							listUsers = listUsers.filter((e: any) => e.uuid !== blockedByList[i].uuid);
-						}
-					}
-				});
+			if (blockList) {
+				for (let i = 0; i < blockList.length; i++) {
+					listUsers = listUsers.filter((e: any) => e.uuid !== blockList[i].uuid);
+				}
+			}
+			if (blockedByList) {
+				for (let i = 0; i < blockedByList.length; i++) {
+					listUsers = listUsers.filter((e: any) => e.uuid !== blockedByList[i].uuid);
+				}
+			}
 		}
 	}
 	async function callFilter(data: any, special: boolean) {

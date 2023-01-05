@@ -166,7 +166,7 @@ function GameSpectatePage() {
 					dispatch(setUser(res.data.User));
 				})
 				.catch((err) => {
-					setUser({});
+					setUser(undefined);
 					createNotification("error", "User not found");
 					navigate("/");
 				});

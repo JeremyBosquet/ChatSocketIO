@@ -20,11 +20,10 @@ export class AppGateway {
 	async connected(@MessageBody() data: any, @ConnectedSocket() client: Socket): Promise<WsResponse<any>> {
 		let myUser = await this.UsersService.findUserByUuid(data.uuid);
 		if (myUser) {
-			client.data.uuid = myUser.uuid;
+			client.data.uuid = data.uuid;
 			const sockets = await this.server.fetchSockets()
-			console.log(sockets.length)
 
-			let users = [];
+			let users = []
 			for (const socket of sockets) {
 				console.log(socket.data)
 				if (socket.data.uuid)

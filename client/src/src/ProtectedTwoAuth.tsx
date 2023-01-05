@@ -21,7 +21,7 @@ const ProtectedTwoAuth = ({ children }: { children: any }) => {
 					.catch(() => {
 						setIsLoggedIn(false);
 						localStorage.removeItem("token");
-						dispatch(setUser({}));
+						dispatch(setUser(undefined));
 					});
 			}
 			setMounted(true);

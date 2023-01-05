@@ -21,7 +21,7 @@ const Protected = ({ children }: { children: any }) => {
 					.catch((err) => {
 						setIsLoggedIn(false);
 						localStorage.removeItem("token");
-						dispatch(setUser({}));
+						dispatch(setUser(undefined));
 					});
 			}
 			setMounted(true);

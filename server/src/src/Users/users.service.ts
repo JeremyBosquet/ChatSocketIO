@@ -53,6 +53,8 @@ export class UsersService {
 	}
 
 	async IsLoggedIn(uuid: string, token: string) {
+		if (!uuid)
+			return;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find && find.isLoggedIn) {
 			for (let i = 0; i < find.isLoggedIn.length; i++) {
@@ -77,6 +79,8 @@ export class UsersService {
 	}
 
 	async IsntLoggedIn(uuid: string, token: string) {
+		if (!uuid)
+			return;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find && find.isLoggedIn) {
 			let newTab = find.isLoggedIn;
@@ -102,11 +106,15 @@ export class UsersService {
 	}
 
 	async findUserByUuid(uuid: string) {
+		if (!uuid)
+			return;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		return find;
 	}
 
 	async findFriendByUuid(Useruuid: string, uuid: string) {
+		if (!uuid)
+			return;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
 			for (let i = 0; i < find.blocked.length; i++)
@@ -121,6 +129,8 @@ export class UsersService {
 
 
 	async ListFriendsWithUuid(uuid: string) {
+		if (!uuid)
+			return [];
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find)
 			return find.friends;
@@ -135,6 +145,8 @@ export class UsersService {
 	}
 
 	async Ranking(uuid: string) {
+		if (!uuid)
+			return 1;
 		const find = await this.Leaderboard();
 		if (find) {
 			for (let i = 0; i < find.length; i++)
@@ -162,6 +174,8 @@ export class UsersService {
 	}
 
 	async ListFriendsRequestedWithUuid(uuid: string) {
+		if (!uuid)
+			return null;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find)
 			return find.friendsNotacceptedYet;
@@ -169,6 +183,8 @@ export class UsersService {
 	}
 
 	async ListFriendsRequestWithUuid(uuid: string) {
+		if (!uuid)
+			return null;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find)
 			return find.friendRequest;
@@ -176,6 +192,8 @@ export class UsersService {
 	}
 
 	async ListUsernameFriendsRequestWithUuid(uuid: string) {
+		if (!uuid)
+			return null;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
 			let usernameList: any[] = [];
@@ -194,6 +212,8 @@ export class UsersService {
 	}
 
 	async ListBlockedWithUuid(uuid: string) {
+		if (!uuid)
+			return null;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find)
 			return find.blocked;
@@ -201,6 +221,8 @@ export class UsersService {
 	}
 
 	async ListBlockedByWithUuid(uuid: string) {
+		if (!uuid)
+			return null;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find)
 			return find.blockedby;
@@ -208,6 +230,8 @@ export class UsersService {
 	}
 
 	async getExp(uuid: string) {
+		if (!uuid)
+			return null;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find)
 			return find.exp;
@@ -215,6 +239,8 @@ export class UsersService {
 	}
 
 	async addExp(uuid: string, exp: number) {
+		if (!uuid)
+			return 0;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
 			let oldexp = find.exp;
@@ -235,12 +261,16 @@ export class UsersService {
 	}
 
 	async IsFriendByUuid(uuid: string, userUuid: string) {
+		if (!uuid)
+			return null;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) return find.friends.filter((user) => user.uuid === uuid);
 		return null;
 	}
 
 	async addUserByUuid(uuid: string, User: UserModel) {
+		if (!uuid)
+			return 0;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
 			if (uuid === User.uuid) return 2;
@@ -292,6 +322,8 @@ export class UsersService {
 	}
 
 	async acceptUserByUuid(uuid: string, User: UserModel) {
+		if (!uuid)
+			return 0;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
 			if (User.friendRequest) {
@@ -344,6 +376,8 @@ export class UsersService {
 	}
 
 	async blockUserByUuid(uuid: string, User: UserModel) {
+		if (!uuid)
+			return 0;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
 			if (uuid === User.uuid) return 2;
@@ -464,6 +498,8 @@ export class UsersService {
 	}
 
 	async removeFriendByUuid(uuid: string, User: UserModel) {
+		if (!uuid)
+			return 0;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
 			if (uuid === User.uuid) return 2;
@@ -505,6 +541,8 @@ export class UsersService {
 	}
 
 	async cancelFriendAddByUuid(uuid: string, User: UserModel) {
+		if (!uuid)
+			return 0;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
 			if (uuid === User.uuid) return 2;
@@ -546,6 +584,8 @@ export class UsersService {
 	}
 
 	async refuseFriendAddByUuid(uuid: string, User: UserModel) {
+		if (!uuid)
+			return 0;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
 			if (uuid === User.uuid) return 2;
@@ -587,6 +627,8 @@ export class UsersService {
 	}
 
 	async unblockUserByUuid(uuid: string, User: UserModel) {
+		if (!uuid)
+			return 0;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
 			if (uuid === User.uuid) return 2;
@@ -645,6 +687,8 @@ export class UsersService {
 	}
 
 	async findUserByUsername(username: string, Useruuid: string) {
+		if (!username || !Useruuid)
+			return ;
 		const find = await this.userRepository.findOneBy({ trueUsername: username });
 		if (find) {
 			for (let i = 0; i < find.blocked.length; i++)
@@ -658,6 +702,8 @@ export class UsersService {
 	}
 
 	async ChangeUsername(uuid: string, newName: string) {
+		if (!uuid || !newName)
+			return 0;
 		const alreadyexist = await this.userRepository.findOneBy({ username: newName })
 		if (alreadyexist)
 			return 0;
@@ -670,6 +716,8 @@ export class UsersService {
 	}
 
 	async ChangeAvatar(uuid: string, newAvatar: Buffer, type: string) {
+		if (!uuid || !newAvatar || !type)
+			return 0;
 		const user = await this.userRepository.findOneBy({ uuid: uuid });
 		if (user) {
 			const path = "./src/uploads/avatar/";

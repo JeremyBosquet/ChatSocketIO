@@ -290,7 +290,11 @@ function GamePlay(props: props) {
 			else {
 				setPlayerA({ ...playerA, x: boardAX * windowsWidth });
 				setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
-			}
+			}			
+			//props.socket?.emit("uwu", {
+			//	x: (100 * e.clientX) / windowsWidth,
+			//	y: (100 * e.clientY) / windowsHeight,
+			//});
 			updateDisplay();
 		}
 

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Socket } from "socket.io-client";
 
 const initialState = {
-  user: {},
+  user: undefined,
   logged: false,
   connected: false,
   activated: false,
@@ -30,7 +30,7 @@ export const authSlice = createSlice({
     setLogged: (state: any, action: PayloadAction<boolean>) => {
       state.logged = action.payload;
     },
-    setUser: (state: any, action: PayloadAction<{}>) => {
+    setUser: (state: any, action: PayloadAction<any>) => {
       state.user = action.payload;
     },
     setConnected: (state: any, action: PayloadAction<boolean>) => {

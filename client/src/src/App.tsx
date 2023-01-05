@@ -79,6 +79,7 @@ function App() {
 							{
 								socketSocial?.close();
 								const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
+								console.log("here")
 								newSocketSocial?.emit("connected", { uuid: res.data.User.uuid });
 								dispatch(setSocketSocial(newSocketSocial));
 							}
@@ -94,8 +95,10 @@ function App() {
 	useEffect(() => {
 		if (user && !socketSocial)
 		{
+			console.log(user);
 			socketSocial?.close();
 			const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
+			console.log("here2")
 			newSocketSocial?.emit("connected", { uuid: user.uuid });
 			dispatch(setSocketSocial(newSocketSocial));
 		}

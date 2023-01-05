@@ -107,7 +107,7 @@ function ChannelPage() {
 					dispatch(setLogged(true));
 				})
 				.catch((err) => {
-					setUser({});
+					setUser(undefined);
 					createNotification("error", "User not found");
 					navigate("/");
 				});

@@ -195,19 +195,11 @@ function GamePlay(props: props) {
 			else {
 				mult = 0.5;
 				contextRef.current.font = "30px Arial";
-<<<<<<< HEAD
-
-				if (_ImageA)
-					contextRef.current.drawImage(_ImageA, Math.floor(windowsWidth / 2 - 100), 0, display, display);
-				if (_ImageB)
-					contextRef.current.drawImage(_ImageB, Math.floor(windowsWidth / 2 + 50), 0, display, display);
-=======
 				
 				//if (_ImageA)
 				//	contextRef.current.drawImage(_ImageA, Math.floor(windowsWidth * 0.5 - 100), 0, display, display);
 				//if (_ImageB)
 				//	contextRef.current.drawImage(_ImageB, Math.floor(windowsWidth * 0.5 + 50), 0, display, display);
->>>>>>> 6eed0ebeeb429c2d97d93a364c8d1943ded8e492
 				if (props.room?.scoreA)
 					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth * 0.5 - 35), 35);
 				else

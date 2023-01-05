@@ -77,16 +77,20 @@ export class ChatService {
 			return true;
 		}
 
-		// const channels = await this.channelRepository.find({
-		// 	where: {
-		// 	  users: {
-		// 		id: userId
-		// 	  }
-		// 	}
-		// });
-		const channels = await this.channelRepository.find();
-
-		return (channels.filter(channel => containsPlayer(channel.users) === true));
+		const channels = await this.channelRepository.find({
+			where: {
+			  users: {
+				$elemMatch: {
+					id: userId
+				}
+			  }
+			}
+		});
+		return (channels)
+		
+		
+		// const channels = await this.channelRepository.find();
+		// return (channels.filter(channel => containsPlayer(channel.users) === true));
 	}
 
 	async getUsersInfosInChannel(channelId: string): Promise<any> {

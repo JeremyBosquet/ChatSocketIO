@@ -631,8 +631,8 @@ export class RoomGateway {
 				_room.settings.ballRadius = 1;
 				_room.settings.boardWidth = 1.5;
 				_room.settings.boardHeight = 15;
-				_room.ball.speed = _room.settings.defaultSpeed / 5/* 10*/;
-				_room.settings.defaultSpeed = _room.settings.defaultSpeed / 5/*/ 10*/;
+				_room.ball.speed = _room.settings.defaultSpeed/* 10*/;
+				_room.settings.defaultSpeed = _room.settings.defaultSpeed/*/ 10*/;
 				_room.status = 'playing';
 				_room.playerA.x = boardAX;
 				_room.playerA.y = 50 - (_room.settings.boardHeight * 0.5);

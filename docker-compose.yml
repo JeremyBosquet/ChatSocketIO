@@ -2,8 +2,6 @@ version: "3.5"
 
 networks:
   transcendence-network:
-    name: transcendence-network
-    driver: bridge
 
 volumes:
   back:

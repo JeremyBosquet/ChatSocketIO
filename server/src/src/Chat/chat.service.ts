@@ -84,6 +84,8 @@ export class ChatService {
 		// 	  }
 		// 	}
 		// });
+		const channels = await this.channelRepository.find();
+
 		return (channels.filter(channel => containsPlayer(channel.users) === true));
 	}
 

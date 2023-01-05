@@ -86,6 +86,8 @@ export class ChatService {
 			  }
 			}
 		});
+
+		console.log(channels, userId)
 		return (channels)
 		
 		

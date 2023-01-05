@@ -262,21 +262,20 @@ function GamePlay(props: props) {
 			if (e?.clientY) {
 				const y = e?.clientY;
 				// Check if the mouse is inside the canvas area
-				if (canvasRef.current?.getBoundingClientRect()) {
+				if (canvasRef.current?.getBoundingClientRect() && props.room?.settings.ballRadius != undefined) {
 					if (y < window.pageYOffset + canvasRef.current.getBoundingClientRect().top) return;
 					if (y > canvasRef.current.clientHeight + window.pageYOffset + canvasRef.current.getBoundingClientRect().top) return;
-					const _player = { id: "", x: 0, y: 0 };
+					const _player = { id: "", y: 0};
 					if (props.room?.playerA.name === props.playerName) {
 						_player.id = playerA.id;
-						_player.x = playerA.x;
 						_player.y = playerA.y;
 					} else {
 						_player.id = playerB.id;
-						_player.x = playerB.x;
 						_player.y = playerB.y;
 					}
 					_player.y = (e?.pageY - window.pageYOffset - canvasRef.current.getBoundingClientRect().top) / canvasRef.current.clientHeight;
 					_player.y = _player.y * windowsHeight;
+					_player.y = _player.y - boardHeight / 2;
 					if (_player.y < 0) _player.y = 0;
 					if (_player.y + boardHeight > windowsHeight)
 						_player.y = windowsHeight - boardHeight;

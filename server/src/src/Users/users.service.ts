@@ -245,7 +245,7 @@ export class UsersService {
 		if (find) {
 			let oldexp = find.exp;
 			if (Number(oldexp)) {
-				exp = exp - (Math.floor(Number(oldexp)) * 2 / 100);
+				exp = exp - (Math.floor(Number(oldexp)) * 2 * 0.01);
 				if (exp < 0)
 					exp = 0;
 			}

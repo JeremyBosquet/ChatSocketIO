@@ -40,38 +40,34 @@ export class RoomService {
     let listb = [];
     for (let i = 0; i < lista.length; i++) {
       if (lista[i].playerA !== null) {
-        if (listb.findIndex((player) => player.id == lista[i].playerA.id) == -1)
-        {
-          const temp = {uuid: lista[i].playerA.id};
+        if (listb.findIndex((player) => player.id == lista[i].playerA.id) == -1) {
+          const temp = { uuid: lista[i].playerA.id };
           listb.push(temp);
         }
       }
       if (lista[i].playerB !== null) {
-        if (listb.findIndex((player) => player.id == lista[i].playerB.id) == -1)
-        {
-          const temp = {uuid: lista[i].playerB.id};
+        if (listb.findIndex((player) => player.id == lista[i].playerB.id) == -1) {
+          const temp = { uuid: lista[i].playerB.id };
           listb.push(temp);
         }
       }
     }
     return listb;
   }
+
   async updateRoom(roomId: string, data: any): Promise<any> {
-    if (roomList.findIndex((_room) => _room.id == roomId) != -1) {
-      const _index = roomList.findIndex((_room) => _room.id == roomId);
+    let _index: number;
+    if ((_index = roomList.findIndex((_room) => _room.id == roomId)) != 1)
       roomList[_index] = { ...roomList[_index], ...data };
-    }
-    else
-    {
-      roomList.push({...await this.roomRepository.findOneBy({ id: roomId }), ...data });
+    else {
+      roomList.push({ ...await this.roomRepository.findOneBy({ id: roomId }), ...data });
       await this.roomRepository.update(roomId, data);
     }
 
   }
 
   async getRoomSpectates(): Promise<Room[]> {
-    if (roomList.length > 0) 
-    {
+    if (roomList.length > 0) {
       const _roomList = roomList.filter((room) => room.status == 'playing');
       return _roomList;
     }
@@ -123,7 +119,7 @@ export class RoomService {
         id: playerId,
         name: playerName,
         status: 'ready',
-		trueName : null,
+        trueName: null,
         x: 0,
         y: 0,
       };
@@ -131,7 +127,7 @@ export class RoomService {
       room.playerB = {
         id: playerId,
         name: playerName,
-		trueName : null,
+        trueName: null,
         status: 'ready',
         x: 0,
         y: 0,
@@ -148,8 +144,7 @@ export class RoomService {
       const _index = roomList.findIndex((_room) => _room.id == room.id);
       roomList[_index] = room;
     }
-    else
-    {
+    else {
       roomList.push(room);
     }
     return await this.roomRepository.save(room);
@@ -164,27 +159,24 @@ export class RoomService {
         (room.playerB !== null && room.playerB.id === uuid && room.status == 'finished'),
     );
     for (let i = 0; i < info.length; i++) {
-      if (info[i].playerA?.id && info[i].playerB.id)
-      {
-		const findA = await this.userService.findUserByUuid(info[i].playerA.id);
-		if (findA)
-		{
-			info[i].playerA.name = findA.username;
-			info[i].playerA.trueName = findA.trueUsername;
-		}
-		const findB = await this.userService.findUserByUuid(info[i].playerB.id);
-		if (findB)
-		{
-			info[i].playerB.name = findB.username;
-			info[i].playerB.trueName = findB.trueUsername;
-		}
-		tab.push(
-			plainToClass(SendGameHistoryDto, info[i], {
-			excludeExtraneousValues: true,
-			}),
-		);
+      if (info[i].playerA?.id && info[i].playerB.id) {
+        const findA = await this.userService.findUserByUuid(info[i].playerA.id);
+        if (findA) {
+          info[i].playerA.name = findA.username;
+          info[i].playerA.trueName = findA.trueUsername;
+        }
+        const findB = await this.userService.findUserByUuid(info[i].playerB.id);
+        if (findB) {
+          info[i].playerB.name = findB.username;
+          info[i].playerB.trueName = findB.trueUsername;
+        }
+        tab.push(
+          plainToClass(SendGameHistoryDto, info[i], {
+            excludeExtraneousValues: true,
+          }),
+        );
+      }
     }
-    }
-	return tab.sort((a, b) => b.lastActivity - a.lastActivity);
+    return tab.sort((a, b) => b.lastActivity - a.lastActivity);
   }
 }

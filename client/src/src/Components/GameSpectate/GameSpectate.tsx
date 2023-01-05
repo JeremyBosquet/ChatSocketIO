@@ -89,9 +89,10 @@ function GameSpectate(props: props) {
 		random = Math.random() * 1000;
 		random = Math.floor(random);
 	}, []);
-	
-	const [imageA] = (useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id  + "#" + random));
-	const [imageB] = (useImage(import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id  + "#" + random));
+	const _ImageA = new Image();
+	const _ImageB = new Image();
+	_ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id  + "#" + random;
+	_ImageB.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id  + "#" + random;
 
 	let mult = 0.5;
 	if (window.innerWidth < 500)
@@ -159,12 +160,11 @@ function GameSpectate(props: props) {
 				primeColor = "black";
 				secondColor = "white";
 			}
-
 			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
-			contextRef.current.fillStyle = primeColor
+			contextRef.current.fillStyle = primeColor;
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
 			contextRef.current.fillStyle = secondColor;
-			contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
+			contextRef.current.fillRect(Math.floor(windowsWidth / 2 - 2), 0, 4, windowsHeight);
 			contextRef.current.fillStyle = secondColor;
 
 			let display = 50;
@@ -173,39 +173,45 @@ function GameSpectate(props: props) {
 				mult = 0.9;
 				contextRef.current.font = "20px Arial";
 				if (props.room?.scoreA)
-					contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
+					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth / 2 - 35), 35);
 				else
-					contextRef.current.fillText("0", windowsWidth / 2 - 20, 25);
+					contextRef.current.fillText("0", Math.floor(windowsWidth / 2 - 20), 25);
 				if (props.room?.scoreB)
-					contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
+					contextRef.current.fillText(props.room?.scoreB.toString(), Math.floor(windowsWidth / 2 + 20), 35);
 				else
-					contextRef.current.fillText("0", windowsWidth / 2 + 10, 25);
+					contextRef.current.fillText("0", Math.floor(windowsWidth / 2 + 10), 25);
 
 			}
 			else {
 				mult = 0.5;
 				contextRef.current.font = "30px Arial";
-				if (imageA)
-					contextRef.current.drawImage(imageA, windowsWidth / 2 - 100, 0, display, display);
-				if (imageB)
-					contextRef.current.drawImage(imageB, windowsWidth / 2 + 50, 0, display, display);
+				
+				if (_ImageA)
+					contextRef.current.drawImage(_ImageA, Math.floor(windowsWidth / 2 - 100), 0, display, display);
+				if (_ImageB)
+					contextRef.current.drawImage(_ImageB, Math.floor(windowsWidth / 2 + 50), 0, display, display);
 				if (props.room?.scoreA)
-					contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
+					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth / 2 - 35), 35);
 				else
 					contextRef.current.fillText("0", windowsWidth / 2 - 35, 35);
 				if (props.room?.scoreB)
-					contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
+					contextRef.current.fillText(props.room?.scoreB.toString(), Math.floor(windowsWidth / 2 + 20), 35);
 				else
 					contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
 			}
 			contextRef.current.fillStyle = secondColor;
-			contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
+			contextRef.current.fillRect(Math.floor(playerA.x), Math.floor(playerA.y), Math.floor(boardWidth), Math.floor(boardHeight));
 			contextRef.current.fillStyle = secondColor;
-			contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
+			contextRef.current.fillRect(Math.floor(playerB.x), Math.floor(playerB.y), Math.floor(boardWidth), Math.floor(boardHeight));
 			contextRef.current.beginPath();
-			contextRef.current.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
-			contextRef.current.fillStyle = secondColor;
+			contextRef.current.arc(Math.floor(ball.x), Math.floor(ball.y), Math.floor(ball.radius), 0, 2 * Math.PI);
+			if (ball.x < windowsWidth / 2 + 2 && ball.x > windowsWidth / 2 - 2)
+				contextRef.current.fillStyle = "gray";
+			else
+				contextRef.current.fillStyle = secondColor;
+
 			contextRef.current.fill();
+			contextRef.current.closePath();
 		}
 	}
 
@@ -260,6 +266,7 @@ function GameSpectate(props: props) {
 			y: (playerB.percentY / 100) * windowsHeight,
 			percentY: playerB.percentY,
 		});
+		updateDisplay();
 	}
 	useEventListener("resize", handleResize);
 
@@ -284,6 +291,7 @@ function GameSpectate(props: props) {
 				});
 			}
 		}
+		updateDisplay();
 	});
 	props.socket?.removeListener("ballMovement");
 	props.socket?.on("ballMovement", (data: any) => {
@@ -297,6 +305,7 @@ function GameSpectate(props: props) {
 			percentX: data?.x,
 			percentY: data?.y,
 		});
+		updateDisplay();
 	});
 	props.socket?.removeListener("roomUpdated");
 	props.socket?.on("roomUpdated", (data: IRoom) => {
@@ -304,8 +313,12 @@ function GameSpectate(props: props) {
 			props.setRoom({ ...props.room, scoreA: data.scoreA, scoreB: data.scoreB });
 	});
 	useEffect(() => {
-		updateDisplay();
-	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, imageA, imageB]);
+		const interval = setInterval(() => {
+			updateDisplay();
+		}, 1000 / 60);
+		return () => clearInterval(interval);
+	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, _ImageA, _ImageB]);
+	
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

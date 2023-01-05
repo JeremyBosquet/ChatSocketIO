@@ -20,17 +20,19 @@ export class AppGateway {
 	async connected(@MessageBody() data: any, @ConnectedSocket() client: Socket): Promise<WsResponse<any>> {
 		let myUser = await this.UsersService.findUserByUuid(data.uuid);
 		if (myUser) {
-			client.data.uuid = data.uuid;
+			client.data.uuid = myUser.uuid;
 			const sockets = await this.server.fetchSockets()
+			console.log(sockets.length)
 
 			let users = [];
 			for (const socket of sockets) {
+				console.log(socket.data)
 				if (socket.data.uuid)
-					if (!(await users.find((user) => (user.uuid === socket.data.uuid))))
+					if (!(users.find((user) => (user.uuid === socket.data.uuid))))
 						users.push({ uuid: socket.data.uuid });
 			}
-			this.server.emit('listUsersConnected', { users: users });
-			this.server.emit('playing', { users: await this.RoomService.getInGamePlayers() });
+			await this.server.emit('listUsersConnected', { users: users });
+			await this.server.emit('playing', { users: await this.RoomService.getInGamePlayers() });
 		}
 		return;
 	}
@@ -39,7 +41,7 @@ export class AppGateway {
 	async joinGame(@MessageBody() data: any, @ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
 		let myUser = await this.UsersService.findUserByUuid(client.data.uuid);
 		if (myUser)
-			this.server.emit('playing', { users: await this.RoomService.getInGamePlayers() });
+			await this.server.emit('playing', { users: await this.RoomService.getInGamePlayers() });
 		return;
 	}
 
@@ -47,7 +49,7 @@ export class AppGateway {
 	async leaveGame(@MessageBody() data: any, @ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
 		let myUser = await this.UsersService.findUserByUuid(client.data.uuid);
 		if (myUser)
-			this.server.emit('notPlaying', { users: await this.RoomService.getInGamePlayers() });
+			await this.server.emit('notPlaying', { users: await this.RoomService.getInGamePlayers() });
 		return;
 	}
 
@@ -55,7 +57,7 @@ export class AppGateway {
 	async handleDisconnect(@ConnectedSocket() client: Socket): Promise<void> {
 		if (client.data.uuid)
 			if (await this.UsersService.findUserByUuid(client.data.uuid)) {
-				this.server.emit('disconnectFromServer', { uuid: client.data.uuid });
+				await this.server.emit('disconnectFromServer', { uuid: client.data.uuid });
 				client.data.uuid = "";
 			}
 	}
@@ -64,7 +66,7 @@ export class AppGateway {
 	async handleLogout(@ConnectedSocket() client: Socket): Promise<void> {
 		if (client.data.uuid)
 			if (await this.UsersService.findUserByUuid(client.data.uuid)) {
-				this.server.emit('disconnectFromServer', { uuid: client.data.uuid });
+				await this.server.emit('disconnectFromServer', { uuid: client.data.uuid });
 				client.data.uuid = "";
 			}
 	}

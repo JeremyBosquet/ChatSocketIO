@@ -75,9 +75,13 @@ function App() {
 				await instance.get(`user`)
 					.then((res) => {
 						if (res.data.User) {
-							socketSocial?.close();
-							const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
-							dispatch(setSocketSocial(newSocketSocial));
+							if (!socketSocial)
+							{
+								socketSocial?.close();
+								const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
+								newSocketSocial?.emit("connected", { uuid: res.data.User.uuid });
+								dispatch(setSocketSocial(newSocketSocial));
+							}
 							dispatch(setUser(res.data.User));
 							ListFriends();
 						}
@@ -88,10 +92,7 @@ function App() {
 	}, []);
 
 	useEffect(() => {
-		if (user && user.uuid) {
-			socketSocial?.emit("connected", { uuid: user.uuid });
-		}
-		else if (user)
+		if (user && !socketSocial)
 		{
 			socketSocial?.close();
 			const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
@@ -209,7 +210,10 @@ function App() {
 
 	async function filterBlockedUsers(data: any) {
 		if (data.users)
+		{
+			listUsers = [];
 			listUsers = [...data.users];
+		}
 		if (localStorage.getItem("token"))
 		{
 			if (blockList) {
@@ -232,11 +236,13 @@ function App() {
 	}
 	socketSocial?.removeListener("listUsersConnected");
 	socketSocial?.on('listUsersConnected', (data: any) => {
+		console.log("listUsersConnected", data.users);
 		callFilter(data, false);
 	})
 
 	socketSocial?.removeListener("disconnectFromServer");
 	socketSocial?.on('disconnectFromServer', (data: any) => {
+		console.log("disconnectFromServer", data.uuid);
 		callFilter(data, true);
 	})
 

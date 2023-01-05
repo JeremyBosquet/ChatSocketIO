@@ -53,18 +53,40 @@ export class RoomGateway {
     return direction;
   }
 
-  newDirection(oldDirection: number, ratioBetweenBallAndBoard: number): number {
-    let newDirection = Math.PI - oldDirection;
-    if (newDirection < 0) newDirection += 2 * Math.PI;
-    if (newDirection > 2 * Math.PI) newDirection -= 2 * Math.PI;
-    if (newDirection > Math.PI / 2 - Math.PI / 8 && newDirection < Math.PI / 2 + Math.PI / 8) newDirection = Math.PI / 2 + Math.PI / 8;
-    if (newDirection > 3 * Math.PI / 2 - Math.PI / 8 && newDirection < 3 * Math.PI / 2 + Math.PI / 8) newDirection = 3 * Math.PI / 2 + Math.PI / 8;
-    if (newDirection > Math.PI - Math.PI / 8 && newDirection < Math.PI + Math.PI / 8) newDirection = Math.PI + Math.PI / 8;
-    
+  newDirection(oldDirection :number, ratioBetweenBallAndBoard: number, side: number): number {
+    console.log('newDirection');
     if (ratioBetweenBallAndBoard == 0) {
-      return -oldDirection;
+      // Ball hit the top or the bottom, just change direction
+      return Math.random() < 0.5 ? 1 : -1;
+    } else {
+      // Ball hit one of the boards
+      if (side == 0) {
+        // Left board
+        if (ratioBetweenBallAndBoard < 1/3) {
+          // Redirection to the top right between 25 and 75 degrees
+          return Math.random() * Math.PI / 4 + Math.PI / 8;
+        } else if (ratioBetweenBallAndBoard < 2/3) {
+          // Redirection to the right between 25 and 285 degrees
+          return Math.random() * Math.PI / 2 + Math.PI / 4;
+        } else {
+          // Redirection to the bottom right between 285 and 345 degrees
+          return Math.random() * Math.PI / 4 + 7 * Math.PI / 8;
+        }
+      }
+      else {
+        // Right board
+        if (ratioBetweenBallAndBoard < 1/3) {
+          // Redirection to the top left between 25 and 75 degrees
+          return Math.random() * Math.PI / 4 + 3 * Math.PI / 8;
+        } else if (ratioBetweenBallAndBoard < 2/3) {
+          // Redirection to the left between 25 and 285 degrees
+          return Math.random() * Math.PI / 2 + 3 * Math.PI / 4;
+        } else {
+          // Redirection to the bottom left between 285 and 345 degrees
+          return Math.random() * Math.PI / 4 + 5 * Math.PI / 8;
+        }
+      }
     }
-    return -newDirection;
   }
 
   checkHitBox(itemX: number, itemY: number, itemWidth: number, itemHeight: number, x: number, y: number): boolean {
@@ -140,7 +162,7 @@ export class RoomGateway {
             ballInterval[room.id] = Date.now();
           } else {
             if (this.checkHitBox(room.playerA.x, room.playerA.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
-              room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerA.y) / room.settings.boardHeight);
+              room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerA.y) / room.settings.boardHeight, 0);
               room.ball.speed += 0.1;
               let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45);
               let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45);
@@ -155,7 +177,7 @@ export class RoomGateway {
               room.ball.y = y;
             }
             else if (this.checkHitBox(room.playerB.x, room.playerB.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
-              room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerB.y) / room.settings.boardHeight);
+              room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerB.y) / room.settings.boardHeight, 1);
               room.ball.speed += 0.1;
               let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45);
               let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45);
@@ -170,7 +192,7 @@ export class RoomGateway {
               room.ball.y = y;
             }
             else if (this.checkHitBox(0, -50, 100, 51, room.ball.x, room.ball.y)) {
-              room.ball.direction = this.newDirection(room.ball.direction, 0);
+              room.ball.direction = this.newDirection(room.ball.direction, 0, -1);
               let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
               let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
               let antiLoop = 0;
@@ -187,7 +209,7 @@ export class RoomGateway {
               room.ball.y = y;
             }
             else if (this.checkHitBox(0, 99, 100, 51, room.ball.x, room.ball.y)) {
-              room.ball.direction = this.newDirection(room.ball.direction, 0);
+              room.ball.direction = this.newDirection(room.ball.direction, 0, -1);
               let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
               let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
               let antiLoop = 0;

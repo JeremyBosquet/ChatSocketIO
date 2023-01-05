@@ -86,6 +86,10 @@
 			}
 		}
 
+		.manageChangePasswordInput {
+			width: calc(100% - 20px);
+		}
+
 		.manageChangePasswordSelect,
 		.manageChangeButton {
 			height: 44px;

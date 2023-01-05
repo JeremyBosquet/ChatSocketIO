@@ -92,6 +92,7 @@ function GamePlay(props: props) {
 		random = Math.random() * 1000;
 		random = Math.floor(random);
 	}, []);
+
 	const _ImageA = new Image();
 	const _ImageB = new Image();
 	(props.room?.playerA.name === props.playerName ? _ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random : _ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random);

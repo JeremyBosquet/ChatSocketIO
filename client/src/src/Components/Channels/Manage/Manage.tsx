@@ -93,7 +93,7 @@ function Manage(props: props) {
 						{
 							props.channel.visibility === "protected" && visibility !== "protected" ?
 								<div>
-									<input className="manageChangePasswordInput" name="oldPassword" type="text" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)} required></input>
+									<input className="manageChangePasswordInput" name="oldPassword" type="password" placeholder='Old password' value={oldPassword} onChange={e => setOldPassword(e.target.value)} required></input>
 								</div>
 								: null
 						}

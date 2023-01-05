@@ -47,8 +47,8 @@ export class RoomGateway {
 
 	generateDirection(): number {
 		let direction = Math.random() * Math.PI;
-		if (direction > Math.PI / 2 - Math.PI / 8 && direction < Math.PI / 2 + Math.PI / 8) direction = Math.PI / 2 + Math.PI / 8;
-		if (direction > 3 * Math.PI / 2 - Math.PI / 8 && direction < 3 * Math.PI / 2 + Math.PI / 8) direction = 3 * Math.PI / 2 + Math.PI / 8;
+		if (direction > Math.PI * 0.5 - Math.PI / 8 && direction < Math.PI * 0.5 + Math.PI / 8) direction = Math.PI * 0.5 + Math.PI / 8;
+		if (direction > 3 * Math.PI * 0.5 - Math.PI / 8 && direction < 3 * Math.PI * 0.5 + Math.PI / 8) direction = 3 * Math.PI * 0.5 + Math.PI / 8;
 		if (direction > Math.PI - Math.PI / 8 && direction < Math.PI + Math.PI / 8) direction = Math.PI + Math.PI / 8;
 		return direction;
 	}
@@ -87,7 +87,7 @@ export class RoomGateway {
 		return false;
 	}
 
-	@Interval(1000 / 180)
+	@Interval(1000 / 60)
 	async update() {
 		const rooms = await this.roomService.getRooms();
 		if (!rooms) return;
@@ -101,7 +101,7 @@ export class RoomGateway {
 				}
 				if (Date.now() - lastTime > 1000) {
 					lastTime = Date.now();
-					this.server.in('room-' + room.id).emit('roomTimeout', { time: Math.floor((room.lastActivity - Date.now() + 20000) / 1000) });
+					this.server.in('room-' + room.id).emit('roomTimeout', { time: Math.floor((room.lastActivity - Date.now() + 20000) * 0.010) });
 				}
 			}
 			else if (room && room?.status == 'playing' && room?.settings) {
@@ -154,77 +154,77 @@ export class RoomGateway {
 						this.server.emit('roomUpdated-' + room.id, room);
 						ballInterval[room.id] = Date.now();
 					} else {
-						if (this.checkHitBox(room.playerA.x, room.playerA.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
-							room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerA.y) / room.settings.boardHeight, 0);
-							room.ball.speed += 0.1;
-							let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45);
-							let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45);
-							let antiLoop = 0;
-							while (x < room.ball.x && antiLoop <= 15) {
-								room.ball.direction = room.ball.direction + 0.1;
-								antiLoop++;
-								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.45;
-								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.45;
-							}
-							room.ball.x = x;
-							room.ball.y = y;
-						}
-						else if (this.checkHitBox(room.playerB.x, room.playerB.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
-							room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerB.y) / room.settings.boardHeight, 1);
-							room.ball.speed += 0.1;
-							let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45);
-							let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45);
-							let antiLoop = 0;
-							while (x > room.ball.x && antiLoop <= 15) {
-								antiLoop++;
-								room.ball.direction = room.ball.direction - 0.1;
-								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.45;
-								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.45;
-							}
-							room.ball.x = x;
-							room.ball.y = y;
-						}
-						else if (this.checkHitBox(0, -50, 100, 51, room.ball.x, room.ball.y)) {
-							room.ball.direction = this.newDirection(room.ball.direction, 0, -1);
-							let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
-							let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
-							let antiLoop = 0;
-							while ((this.checkHitBox(0, -50, 100, 51, x, y)) && antiLoop <= 15) {
-								antiLoop++;
-								if (room.ball.direction < 0)
-									room.ball.direction = room.ball.direction + 0.35;
-								else
-									room.ball.direction = room.ball.direction - 0.35;
-								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
-								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
-							}
-							room.ball.x = x;
-							room.ball.y = y;
-						}
-						else if (this.checkHitBox(0, 99, 100, 51, room.ball.x, room.ball.y)) {
-							room.ball.direction = this.newDirection(room.ball.direction, 0, -1);
-							let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
-							let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
-							let antiLoop = 0;
-							while ((this.checkHitBox(0, 99, 100, 51, x, y)) && antiLoop <= 15) {
-								room.ball.direction = room.ball.direction + 0.35;
-								antiLoop++;
-								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
-								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
-							}
-							room.ball.x = x;
-							room.ball.y = y;
-						}
-						else {
+						//if (this.checkHitBox(room.playerA.x, room.playerA.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
+						//	room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerA.y) / room.settings.boardHeight, 0);
+						//	if (room.ball.speed < 7)
+						//		room.ball.speed += 0.1;
+						//	let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45);
+						//	let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45);
+						//	let antiLoop = 0;
+						//	while (x < room.ball.x && antiLoop <= 15) {
+						//		room.ball.direction = room.ball.direction + 0.1;
+						//		antiLoop++;
+						//		x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.45;
+						//		y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.45;
+						//	}
+						//	room.ball.x = x;
+						//	room.ball.y = y;
+						//}
+						//else if (this.checkHitBox(room.playerB.x, room.playerB.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
+						//	room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerB.y) / room.settings.boardHeight, 1);
+						//	if (room.ball.speed < 7)
+						//		room.ball.speed += 0.1;
+						//	let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45);
+						//	let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45);
+						//	let antiLoop = 0;
+						//	while (x > room.ball.x && antiLoop <= 15) {
+						//		antiLoop++;
+						//		room.ball.direction = room.ball.direction - 0.1;
+						//		x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.45;
+						//		y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.45;
+						//	}
+						//	room.ball.x = x;
+						//	room.ball.y = y;
+						//}
+						//else if (this.checkHitBox(0, -50, 100, 51, room.ball.x, room.ball.y)) {
+						//	room.ball.direction = this.newDirection(room.ball.direction, 0, -1);
+						//	let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
+						//	let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
+						//	let antiLoop = 0;
+						//	while ((this.checkHitBox(0, -50, 100, 51, x, y)) && antiLoop <= 15) {
+						//		antiLoop++;
+						//		if (room.ball.direction < 0)
+						//			room.ball.direction = room.ball.direction + 0.35;
+						//		else
+						//			room.ball.direction = room.ball.direction - 0.35;
+						//		x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
+						//		y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
+						//	}
+						//	room.ball.x = x;
+						//	room.ball.y = y;
+						//}
+						//else if (this.checkHitBox(0, 99, 100, 51, room.ball.x, room.ball.y)) {
+						//	room.ball.direction = this.newDirection(room.ball.direction, 0, -1);
+						//	let x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
+						//	let y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
+						//	let antiLoop = 0;
+						//	while ((this.checkHitBox(0, 99, 100, 51, x, y)) && antiLoop <= 15) {
+						//		room.ball.direction = room.ball.direction + 0.35;
+						//		antiLoop++;
+						//		x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.35;
+						//		y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.35;
+						//	}
+						//	room.ball.x = x;
+						//	room.ball.y = y;
+						//}
+						//else {
 							room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 							room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
-						}
+						//}
 						this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, timestamp: Date.now() });
 					}
 				}
 				room.lastActivity = Date.now();
-				if (room.ball.speed > 7)
-					room.ball.speed = 7;
 				this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
 			}
 		}
@@ -631,13 +631,13 @@ export class RoomGateway {
 				_room.settings.ballRadius = 1;
 				_room.settings.boardWidth = 1.5;
 				_room.settings.boardHeight = 15;
-				_room.ball.speed = _room.settings.defaultSpeed / 2/* 10*/;
-				_room.settings.defaultSpeed = _room.settings.defaultSpeed / 2/*/ 10*/;
+				_room.ball.speed = _room.settings.defaultSpeed / 5/* 10*/;
+				_room.settings.defaultSpeed = _room.settings.defaultSpeed / 5/*/ 10*/;
 				_room.status = 'playing';
 				_room.playerA.x = boardAX;
-				_room.playerA.y = 50 - (_room.settings.boardHeight / 2);
+				_room.playerA.y = 50 - (_room.settings.boardHeight * 0.5);
 				_room.playerB.x = 100 - boardBX;
-				_room.playerB.y = 50 - (_room.settings.boardHeight / 2);
+				_room.playerB.y = 50 - (_room.settings.boardHeight * 0.5);
 				this.server.emit('roomStarted', _room);
 				ballInterval[room.id] = Date.now();
 				room.lastActivity += 5000;

@@ -106,24 +106,24 @@ function GameSpectate(props: props) {
 	const [windowsHeight, setWindowsHeight] = useState(_t);
 	const [boardWidth, setBoardWidth] = useState<number>(
 		props.room?.settings.boardWidth
-			? (props.room?.settings.boardWidth / 100) * windowsWidth
+			? (props.room?.settings.boardWidth * 0.01) * windowsWidth
 			: 100
 	);
 	const [boardHeight, setBoardHeight] = useState<number>(
 		props.room?.settings.boardHeight
-			? (props.room?.settings.boardHeight / 100) * windowsHeight
+			? (props.room?.settings.boardHeight * 0.01) * windowsHeight
 			: 100
 	);
 	const [ball, setBall] = useState<ICanvasBall>({
 		id: "ball",
 		x: props.room?.ball.x
-			? (props.room?.ball.x / 100) * windowsWidth
-			: windowsWidth / 2,
+			? (props.room?.ball.x * 0.01) * windowsWidth
+			: windowsWidth * 0.5,
 		y: props.room?.ball.y
-			? (props.room?.ball.y / 100) * windowsHeight
-			: windowsHeight / 2,
+			? (props.room?.ball.y * 0.01) * windowsHeight
+			: windowsHeight * 0.5,
 		radius: props.room?.settings.ballRadius
-			? (props.room?.settings.ballRadius / 100) * windowsHeight
+			? (props.room?.settings.ballRadius * 0.01) * windowsHeight
 			: 100,
 		percentX: 50,
 		percentY: 50,
@@ -132,16 +132,16 @@ function GameSpectate(props: props) {
 		id: "playerA",
 		x: boardAX * windowsWidth,
 		y: props.room?.playerA?.y
-			? (props.room?.playerA?.y / 100) * windowsHeight
-			: windowsHeight / 2 - boardHeight / 2,
+			? (props.room?.playerA?.y * 0.01) * windowsHeight
+			: windowsHeight * 0.5 - boardHeight * 0.5,
 		percentY: 50,
 	});
 	const [playerB, setPlayerB] = useState<ICanvasBoard>({
 		id: "playerB",
 		x: (windowsWidth - boardBX * windowsWidth),
 		y: props.room?.playerB?.y
-			? (props.room?.playerB?.y / 100) * windowsHeight
-			: windowsHeight / 2 - boardHeight / 2,
+			? (props.room?.playerB?.y * 0.01) * windowsHeight
+			: windowsHeight * 0.5 - boardHeight * 0.5,
 		percentY: 50,
 	});
 
@@ -163,7 +163,7 @@ function GameSpectate(props: props) {
 			contextRef.current.fillStyle = primeColor;
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
 			contextRef.current.fillStyle = secondColor;
-			contextRef.current.fillRect(Math.floor(windowsWidth / 2 - 2), 0, 4, windowsHeight);
+			contextRef.current.fillRect(Math.floor(windowsWidth * 0.5 - 2), 0, 4, windowsHeight);
 			contextRef.current.fillStyle = secondColor;
 
 			let display = 50;
@@ -172,13 +172,13 @@ function GameSpectate(props: props) {
 				mult = 0.9;
 				contextRef.current.font = "20px Arial";
 				if (props.room?.scoreA)
-					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth / 2 - 35), 35);
+					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth * 0.5 - 35), 35);
 				else
-					contextRef.current.fillText("0", Math.floor(windowsWidth / 2 - 20), 25);
+					contextRef.current.fillText("0", Math.floor(windowsWidth * 0.5 - 20), 25);
 				if (props.room?.scoreB)
-					contextRef.current.fillText(props.room?.scoreB.toString(), Math.floor(windowsWidth / 2 + 20), 35);
+					contextRef.current.fillText(props.room?.scoreB.toString(), Math.floor(windowsWidth * 0.5 + 20), 35);
 				else
-					contextRef.current.fillText("0", Math.floor(windowsWidth / 2 + 10), 25);
+					contextRef.current.fillText("0", Math.floor(windowsWidth * 0.5 + 10), 25);
 
 			}
 			else {
@@ -186,17 +186,17 @@ function GameSpectate(props: props) {
 				contextRef.current.font = "30px Arial";
 				
 				if (_ImageA)
-					contextRef.current.drawImage(_ImageA, Math.floor(windowsWidth / 2 - 100), 0, display, display);
+					contextRef.current.drawImage(_ImageA, Math.floor(windowsWidth * 0.5 - 100), 0, display, display);
 				if (_ImageB)
-					contextRef.current.drawImage(_ImageB, Math.floor(windowsWidth / 2 + 50), 0, display, display);
+					contextRef.current.drawImage(_ImageB, Math.floor(windowsWidth * 0.5 + 50), 0, display, display);
 				if (props.room?.scoreA)
-					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth / 2 - 35), 35);
+					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth * 0.5 - 35), 35);
 				else
-					contextRef.current.fillText("0", windowsWidth / 2 - 35, 35);
+					contextRef.current.fillText("0", windowsWidth * 0.5 - 35, 35);
 				if (props.room?.scoreB)
-					contextRef.current.fillText(props.room?.scoreB.toString(), Math.floor(windowsWidth / 2 + 20), 35);
+					contextRef.current.fillText(props.room?.scoreB.toString(), Math.floor(windowsWidth * 0.5 + 20), 35);
 				else
-					contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
+					contextRef.current.fillText("0", windowsWidth * 0.5 + 20, 35);
 			}
 			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(Math.floor(playerA.x), Math.floor(playerA.y), Math.floor(boardWidth), Math.floor(boardHeight));
@@ -204,7 +204,7 @@ function GameSpectate(props: props) {
 			contextRef.current.fillRect(Math.floor(playerB.x), Math.floor(playerB.y), Math.floor(boardWidth), Math.floor(boardHeight));
 			contextRef.current.beginPath();
 			contextRef.current.arc(Math.floor(ball.x), Math.floor(ball.y), Math.floor(ball.radius), 0, 2 * Math.PI);
-			if (ball.x < windowsWidth / 2 + 2 && ball.x > windowsWidth / 2 - 2)
+			if (ball.x < windowsWidth * 0.5 + 2 && ball.x > windowsWidth * 0.5 - 2)
 				contextRef.current.fillStyle = "gray";
 			else
 				contextRef.current.fillStyle = secondColor;
@@ -232,22 +232,22 @@ function GameSpectate(props: props) {
 		setWindowsWidth((16 * t) / 9);
 		setBoardWidth(
 			props.room?.settings.boardWidth
-				? (props.room?.settings.boardWidth / 100) * windowsWidth
+				? (props.room?.settings.boardWidth * 0.01) * windowsWidth
 				: 100
 		);
 		setBoardHeight(
 			props.room?.settings.boardHeight
-				? (props.room?.settings.boardHeight / 100) * windowsHeight
+				? (props.room?.settings.boardHeight * 0.01) * windowsHeight
 				: 100
 		);
 		setBall({
 			...ball,
 			id: "ball",
 			radius: props.room?.settings.ballRadius
-				? (props.room?.settings.ballRadius / 100) * windowsHeight
+				? (props.room?.settings.ballRadius * 0.01) * windowsHeight
 				: 100,
-			x: (ball.percentX / 100) * windowsWidth,
-			y: (ball.percentY / 100) * windowsHeight,
+			x: (ball.percentX * 0.01) * windowsWidth,
+			y: (ball.percentY * 0.01) * windowsHeight,
 			percentX: ball.percentX,
 			percentY: ball.percentY,
 		});
@@ -255,14 +255,14 @@ function GameSpectate(props: props) {
 			...playerA,
 			id: "playerA",
 			x: (boardAX * windowsWidth),
-			y: (playerA.percentY / 100) * windowsHeight,
+			y: (playerA.percentY * 0.01) * windowsHeight,
 			percentY: playerA.percentY,
 		});
 		setPlayerB({
 			...playerB,
 			id: "playerB",
 			x: (windowsWidth - boardBX * windowsWidth),
-			y: (playerB.percentY / 100) * windowsHeight,
+			y: (playerB.percentY * 0.01) * windowsHeight,
 			percentY: playerB.percentY,
 		});
 		updateDisplay();
@@ -277,7 +277,7 @@ function GameSpectate(props: props) {
 					...playerA,
 					id: "playerA",
 					x: boardAX * windowsWidth,
-					y: (data.y / 100) * windowsHeight,
+					y: (data.y * 0.01) * windowsHeight,
 					percentY: data.y,
 				});
 			} else if ((data.player === "playerB")) {
@@ -285,7 +285,7 @@ function GameSpectate(props: props) {
 					...playerB,
 					id: "playerB",
 					x: windowsWidth - boardBX * windowsWidth,
-					y: (data.y / 100) * windowsHeight,
+					y: (data.y * 0.01) * windowsHeight,
 					percentY: data.y,
 				});
 			}
@@ -299,8 +299,8 @@ function GameSpectate(props: props) {
 		setBall({
 			...ball,
 			id: "ball",
-			x: (data?.x / 100) * windowsWidth,
-			y: (data?.y / 100) * windowsHeight,
+			x: (data?.x * 0.01) * windowsWidth,
+			y: (data?.y * 0.01) * windowsHeight,
 			percentX: data?.x,
 			percentY: data?.y,
 		});

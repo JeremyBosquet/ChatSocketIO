@@ -6,50 +6,50 @@ export function createNotification(type: string, message: string) {
 	switch (type) {
 		case "info":
 			toast.info(message, {
-				position: "top-right",
-				autoClose: 6000,
+				position: "bottom-right",
+				autoClose: 3000,
 				hideProgressBar: false,
 				closeOnClick: true,
-				pauseOnHover: true,
+				pauseOnHover: false,
 				draggable: true,
 				progress: undefined,
-				theme: "light",
+				theme: "dark",
 			});
 			break;
 		case "success":
 			toast.success(message, {
-				position: "top-right",
-				autoClose: 6000,
+				position: "bottom-right",
+				autoClose: 3000,
 				hideProgressBar: false,
 				closeOnClick: true,
-				pauseOnHover: true,
+				pauseOnHover: false,
 				draggable: true,
 				progress: undefined,
-				theme: "light",
+				theme: "dark",
 			});
 			break;
 		case "warning":
 			toast.warn(message, {
-				position: "top-right",
-				autoClose: 6000,
+				position: "bottom-right",
+				autoClose: 3000,
 				hideProgressBar: false,
 				closeOnClick: true,
-				pauseOnHover: true,
+				pauseOnHover: false,
 				draggable: true,
 				progress: undefined,
-				theme: "light",
+				theme: "dark",
 			});
 			break;
 		case "error":
 			toast.error(message, {
-				position: "top-right",
-				autoClose: 6000,
+				position: "bottom-right",
+				autoClose: 3000,
 				hideProgressBar: false,
 				closeOnClick: true,
-				pauseOnHover: true,
+				pauseOnHover: false,
 				draggable: true,
 				progress: undefined,
-				theme: "light",
+				theme: "dark",
 			});
 			break;
 	}

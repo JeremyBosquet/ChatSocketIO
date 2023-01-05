@@ -101,6 +101,7 @@ export class RoomGateway {
     //else
     //  this.server.emit('uwu', {x:-1 , y:-1, direction: direction})
     const rooms = await this.roomService.getRooms();
+    if (!rooms) return;
     for (let i = 0; i < rooms.length; i++) {
       const room = rooms[i];
 

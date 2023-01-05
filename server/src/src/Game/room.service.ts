@@ -76,14 +76,20 @@ export class RoomService {
       return _roomList;
     }
     else {
-      const _roomList = await (  await this.roomRepository.find()).filter((room) => room.status == 'playing');
+      const _roomList = await (this.roomRepository.findBy({ status: 'playing' }));
       return _roomList;
     }
   }
 
   async getRooms(): Promise<Room[]> {
-    if (roomList.length > 0) return roomList;
-    else return await this.roomRepository.find();
+    if (roomList && roomList?.length > 0) return roomList;
+    else {
+      const save = await this.roomRepository.find();
+      for (let i = 0; i < save.length; i++) {
+        roomList.push(save[i]);
+      }
+    }
+    return roomList;
   }
   async createRoom(room: Room): Promise<Room> {
     room.ball = {

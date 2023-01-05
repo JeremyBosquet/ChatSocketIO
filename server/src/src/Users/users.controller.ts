@@ -126,20 +126,20 @@ export class UsersController {
 	async CompareToken(@Req() req: any, @Res() res: any) {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
-			const tokenCrypted = req.headers.authorization.split(' ')[1];
-			for (let i = 0; i < User.isLoggedIn.length; i++) {
-				if (await bcrypt.compare(tokenCrypted, User.isLoggedIn[i].token)) {
+			// const tokenCrypted = req.headers.authorization.split(' ')[1];
+			// for (let i = 0; i < User.isLoggedIn.length; i++) {
+			// 	if (await bcrypt.compare(tokenCrypted, User.isLoggedIn[i].token)) {
 					return res.status(HttpStatus.OK).json({
 						statusCode: HttpStatus.OK,
 						message: 'succes'
 					});
-				}
-			}
-			return res.status(HttpStatus.FORBIDDEN).json({
-				statusCode: HttpStatus.FORBIDDEN,
-				message: 'Token invalid',
-				error: 'FORBIDDEN',
-			});
+			// 	}
+			// }
+			// return res.status(HttpStatus.FORBIDDEN).json({
+			// 	statusCode: HttpStatus.FORBIDDEN,
+			// 	message: 'Token invalid',
+			// 	error: 'FORBIDDEN',
+			// });
 
 		}
 		return res.status(HttpStatus.NOT_FOUND).json({
@@ -154,20 +154,20 @@ export class UsersController {
 	async CompareTokenTwoAuth(@Req() req: any, @Res() res: any) {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
-			const tokenCrypted = req.headers.authorization.split(' ')[1];
-			for (let i = 0; i < User.isLoggedIn.length; i++) {
-				if (await bcrypt.compare(tokenCrypted, User.isLoggedIn[i].token)) {
+			// const tokenCrypted = req.headers.authorization.split(' ')[1];
+			// for (let i = 0; i < User.isLoggedIn.length; i++) {
+			// 	if (await bcrypt.compare(tokenCrypted, User.isLoggedIn[i].token)) {
 					return res.status(HttpStatus.OK).json({
 						statusCode: HttpStatus.OK,
 						message: 'succes'
 					});
-				}
-			}
-			return res.status(HttpStatus.FORBIDDEN).json({
-				statusCode: HttpStatus.FORBIDDEN,
-				message: 'Token invalid',
-				error: 'FORBIDDEN',
-			});
+			// 	}
+			// }
+			// return res.status(HttpStatus.FORBIDDEN).json({
+			// 	statusCode: HttpStatus.FORBIDDEN,
+			// 	message: 'Token invalid',
+			// 	error: 'FORBIDDEN',
+			// });
 
 		}
 		return res.status(HttpStatus.NOT_FOUND).json({

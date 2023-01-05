@@ -43,11 +43,11 @@ export class UserModel {
 	twoFactorAuthenticationSecret: string;
 
 	@Column({ default: false })
-	@Expose()
+	@Exclude()
 	isSecondFactorAuthenticated: boolean;
 
 	@Column({ default: false })
-	@Expose()
+	@Exclude()
 	public isTwoFactorAuthenticationEnabled: boolean;
 
 	@Column({ nullable: true, type: 'jsonb' })

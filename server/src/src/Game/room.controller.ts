@@ -15,7 +15,7 @@ export class RoomController {
   }
 
   @Get('getGameOfUser/:uuid')
-  @UseGuards(JwtTwoFactorGuard)
+  //@UseGuards(JwtTwoFactorGuard)
   async getGameOfUser(@Res() res, @Param(ValidationPipe) param: uuidDto) {
     const channels = await this.roomService.getGameOfUser(param.uuid);
     res.json(channels);

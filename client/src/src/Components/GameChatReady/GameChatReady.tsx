@@ -297,7 +297,7 @@ function GameChatReady(props: props) {
 							{settingsBis?.difficulty ? (
 								<p>{settingsBis.difficulty}</p>
 							) : (
-								<p>Easy1</p>
+								<p>easy</p>
 							)}
 						</div>
 						<div className="line"></div>

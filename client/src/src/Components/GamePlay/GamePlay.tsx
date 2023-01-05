@@ -388,6 +388,10 @@ function GamePlay(props: props) {
 		}, 1000 / 60);
 		return () => clearInterval(interval);
 	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, _ImageA, _ImageB]);
+	
+	useEffect(() => {
+		console.log("useEffect");
+	}, [windowsWidth, windowsHeight]);
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

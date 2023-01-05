@@ -162,8 +162,7 @@ function GamePlay(props: props) {
 			let primeColor;
 			let secondColor;
 
-			if (props.room?.settings.background === "inverted")
-			{
+			if (props.room?.settings.background === "inverted") {
 				primeColor = "white";
 				secondColor = "black";
 			}
@@ -196,7 +195,7 @@ function GamePlay(props: props) {
 			else {
 				mult = 0.5;
 				contextRef.current.font = "30px Arial";
-				
+
 				if (_ImageA)
 					contextRef.current.drawImage(_ImageA, Math.floor(windowsWidth / 2 - 100), 0, display, display);
 				if (_ImageB)
@@ -258,41 +257,48 @@ function GamePlay(props: props) {
 				percentX: ball.percentX,
 				percentY: ball.percentY,
 			});
-			const _player = { id: "", x: 0, y: 0 };
-			if (props.room?.playerA.name === props.playerName) {
-				_player.id = playerA.id;
-				_player.x = playerA.x;
-				_player.y = playerA.y;
-			} else {
-				_player.id = playerB.id;
-				_player.x = playerB.x;
-				_player.y = playerB.y;
-			}
-			if (!e?.clientY) return;
-			const _height = e?.clientY;
-			_player.y =
-				(((_height - boardHeight / 2) * 100) / window.innerHeight) *
-				(windowsHeight / 100);
-			if (_player.y < 0) _player.y = 0;
-			if (_player.y + boardHeight > windowsHeight)
-				_player.y = windowsHeight - boardHeight;
+			// Emit the ball position and setPlayerA / setPlayerB when the mouse is inside the canvas area
+			// Move only the player when the mouse is inside the canvas area
+			if (e?.clientY) {
+				const y = e?.clientY;
+				// Check if the mouse is inside the canvas area
+				if (canvasRef.current?.getBoundingClientRect()) {
+					if (y < window.pageYOffset + canvasRef.current.getBoundingClientRect().top) return;
+					if (y > canvasRef.current.clientHeight + window.pageYOffset + canvasRef.current.getBoundingClientRect().top) return;
+					const _player = { id: "", x: 0, y: 0 };
+					if (props.room?.playerA.name === props.playerName) {
+						_player.id = playerA.id;
+						_player.x = playerA.x;
+						_player.y = playerA.y;
+					} else {
+						_player.id = playerB.id;
+						_player.x = playerB.x;
+						_player.y = playerB.y;
+					}
+					_player.y = (e?.pageY - window.pageYOffset - canvasRef.current.getBoundingClientRect().top) / canvasRef.current.clientHeight;
+					_player.y = _player.y * windowsHeight;
+					if (_player.y < 0) _player.y = 0;
+					if (_player.y + boardHeight > windowsHeight)
+						_player.y = windowsHeight - boardHeight;
 
-			props.socket?.emit("playerMove", {
-				id: _player.id,
-				x: (100 * _player.x) / windowsWidth,
-				y: (100 * _player.y) / windowsHeight,
-				timestamp: Date.now(),
-			});
-			if (props.room?.playerA.name === props.playerName) {
-				setPlayerA({ ...playerA, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: boardAX * windowsWidth });
-				setPlayerB({ ...playerB, x: (windowsWidth - boardBX * windowsWidth) });
-			}
-			else {
-				setPlayerA({ ...playerA, x: boardAX * windowsWidth });
-				setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
+					props.socket?.emit("playerMove", {
+						id: _player.id,
+						y: (100 * _player.y) / windowsHeight,
+					});
+					if (props.room?.playerA.name === props.playerName) {
+						setPlayerA({ ...playerA, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: boardAX * windowsWidth });
+						setPlayerB({ ...playerB, x: (windowsWidth - boardBX * windowsWidth) });
+					}
+					else {
+						setPlayerA({ ...playerA, x: boardAX * windowsWidth });
+						setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
+					}
+				}
 			}
 			updateDisplay();
 		}
+
+
 
 	useEventListener("mousemove", mousemove);
 	function handleResize() {
@@ -385,7 +391,7 @@ function GamePlay(props: props) {
 		}, 1000 / 60);
 		return () => clearInterval(interval);
 	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, _ImageA, _ImageB]);
-	
+
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>
@@ -394,7 +400,7 @@ function GamePlay(props: props) {
 			</Helmet>
 			<GameBoard socket={props.socket} room={props.room} />
 			<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
-			</div>
+		</div>
 	);
 }
 

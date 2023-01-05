@@ -558,7 +558,6 @@ export class RoomGateway {
 		if (client.data?.roomId) {
 			if (
 				data?.id &&
-				data?.x != undefined &&
 				data?.y != undefined
 			) {
 				if ('playerA' === data.id) {

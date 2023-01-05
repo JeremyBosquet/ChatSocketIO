@@ -8,6 +8,9 @@ import instance from "../../API/Instance";
 import { Helmet } from "react-helmet";
 import { BsArrowRightCircleFill } from 'react-icons/bs'
 import "./TwoAuth.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { getSocketSocial, setSocketSocial } from "../../Redux/userSlice";
+import { io } from "socket.io-client";
 
 function TwoAuth() {
 	KillSocket("all");
@@ -15,13 +18,15 @@ function TwoAuth() {
 	let booleffect = false;
 	const [print, setPrint] = useState<boolean>();
 	const [authCode, setAuthCode] = useState<string>();
-	const token = localStorage.getItem("token");
 
 	const [booleffect2, setbooleffect2] = useState<boolean>(true);
 
 	const [User, setUser] = useState<any>();
 	const [IsTwoAuthActivated, setActivated] = useState<boolean>(false);
 	const [IsTwoAuthConnected, setConnected] = useState<boolean>(false);
+
+	const dispatch = useDispatch();
+	const socketSocial = useSelector(getSocketSocial);
 
 	async function GetLoggedInfo() {
 		if (localStorage.getItem("token")) {
@@ -57,7 +62,7 @@ function TwoAuth() {
 			{ twoFactorAuthenticationCode: authCode },
 			{
 				headers: {
-					Authorization: "Bearer " + token,
+					Authorization: "Bearer " + localStorage.getItem("token"),
 				},
 			}
 		)
@@ -71,11 +76,18 @@ function TwoAuth() {
 		if (IsTwoAuthConnected) {
 			await instance.get(`user`, {
 				headers: {
-					Authorization: "Bearer " + token,
+					Authorization: "Bearer " + localStorage.getItem("token"),
 				},
 			})
 				.then((res) => {
-					setUser(JSON.stringify(res.data.User));
+					setUser(res.data.User);
+					if (!socketSocial)
+					{
+						socketSocial?.close();
+						const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
+						newSocketSocial?.emit("connected", { uuid: res.data.User.uuid });
+						dispatch(setSocketSocial(newSocketSocial));
+					}
 				});
 		}
 	};

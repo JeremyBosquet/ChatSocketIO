@@ -25,7 +25,6 @@ export class AppGateway {
 
 			let users = []
 			for (const socket of sockets) {
-				console.log(socket.data)
 				if (socket.data.uuid)
 					if (!(users.find((user) => (user.uuid === socket.data.uuid))))
 						users.push({ uuid: socket.data.uuid });

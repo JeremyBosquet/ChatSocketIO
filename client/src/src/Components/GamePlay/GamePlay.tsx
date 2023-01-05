@@ -290,11 +290,7 @@ function GamePlay(props: props) {
 			else {
 				setPlayerA({ ...playerA, x: boardAX * windowsWidth });
 				setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
-			}			
-			//props.socket?.emit("uwu", {
-			//	x: (100 * e.clientX) / windowsWidth,
-			//	y: (100 * e.clientY) / windowsHeight,
-			//});
+			}
 			updateDisplay();
 		}
 
@@ -383,10 +379,6 @@ function GamePlay(props: props) {
 		});
 		updateDisplay();
 	});
-	//console.log("render", canvasRef);
-	//useEffect(() => {
-	//	updateDisplay();
-	//}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, imageA, imageB]);
 	useEffect(() => {
 		const interval = setInterval(() => {
 			updateDisplay();
@@ -394,9 +386,6 @@ function GamePlay(props: props) {
 		return () => clearInterval(interval);
 	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, _ImageA, _ImageB]);
 	
-	useEffect(() => {
-		console.log("useEffect");
-	}, [windowsWidth, windowsHeight]);
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

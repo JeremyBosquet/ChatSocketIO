@@ -79,7 +79,6 @@ function App() {
 							{
 								socketSocial?.close();
 								const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
-								console.log("here")
 								newSocketSocial?.emit("connected", { uuid: res.data.User.uuid });
 								dispatch(setSocketSocial(newSocketSocial));
 							}
@@ -227,13 +226,11 @@ function App() {
 	}
 	socketSocial?.removeListener("listUsersConnected");
 	socketSocial?.on('listUsersConnected', (data: any) => {
-		console.log("listUsersConnected", data.users);
 		callFilter(data, false);
 	})
 
 	socketSocial?.removeListener("disconnectFromServer");
 	socketSocial?.on('disconnectFromServer', (data: any) => {
-		console.log("disconnectFromServer", data.uuid);
 		callFilter(data, true);
 	})
 

@@ -43,7 +43,6 @@ function GetToken() {
 					{
 						socketSocial?.close();
 						const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
-						console.log("here")
 						newSocketSocial?.emit("connected", { uuid: res.data.User.uuid });
 						dispatch(setSocketSocial(newSocketSocial));
 					}

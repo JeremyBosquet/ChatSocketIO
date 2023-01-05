@@ -130,7 +130,7 @@ function GameSpectate(props: props) {
 	});
 	const [playerA, setPlayerA] = useState<ICanvasBoard>({
 		id: "playerA",
-		x: 0.01 * windowsWidth,
+		x: boardAX * windowsWidth,
 		y: props.room?.playerA?.y
 			? (props.room?.playerA?.y / 100) * windowsHeight
 			: windowsHeight / 2 - boardHeight / 2,
@@ -138,13 +138,12 @@ function GameSpectate(props: props) {
 	});
 	const [playerB, setPlayerB] = useState<ICanvasBoard>({
 		id: "playerB",
-		x: (windowsWidth - 0.015 * windowsWidth),
+		x: (windowsWidth - boardBX * windowsWidth),
 		y: props.room?.playerB?.y
 			? (props.room?.playerB?.y / 100) * windowsHeight
 			: windowsHeight / 2 - boardHeight / 2,
 		percentY: 50,
 	});
-	const [timeouts, setTimeouts] = useState<Number>(30);
 
 	function updateDisplay(): void {
 		if (contextRef.current) {
@@ -277,7 +276,7 @@ function GameSpectate(props: props) {
 				setPlayerA({
 					...playerA,
 					id: "playerA",
-					x: 0.01 * windowsWidth,
+					x: boardAX * windowsWidth,
 					y: (data.y / 100) * windowsHeight,
 					percentY: data.y,
 				});
@@ -285,7 +284,7 @@ function GameSpectate(props: props) {
 				setPlayerB({
 					...playerB,
 					id: "playerB",
-					x: windowsWidth - 0.015 * windowsWidth,
+					x: windowsWidth - boardBX * windowsWidth,
 					y: (data.y / 100) * windowsHeight,
 					percentY: data.y,
 				});

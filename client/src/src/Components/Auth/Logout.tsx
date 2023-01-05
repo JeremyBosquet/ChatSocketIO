@@ -19,11 +19,11 @@ function Logout() {
 				socketSocial?.disconnect();
 				localStorage.clear();
 				dispatch(setUser(undefined))
-				createNotification("success", "User disconnected");
+				createNotification("success", "You have been disconnected");
 				navigate("/");
 			})
 			.catch(() => {
-				createNotification("error", "couldn't disconnect user");
+				createNotification("error", "couldn't disconnect");
 				navigate("/");
 			});
 	}

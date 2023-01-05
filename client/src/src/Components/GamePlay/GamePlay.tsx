@@ -265,7 +265,6 @@ function GamePlay(props: props) {
 				percentX: ball.percentX,
 				percentY: ball.percentY,
 			});
-<<<<<<< HEAD
 			// Emit the ball position and setPlayerA / setPlayerB when the mouse is inside the canvas area
 			// Move only the player when the mouse is inside the canvas area
 			if (e?.clientY) {
@@ -303,39 +302,6 @@ function GamePlay(props: props) {
 						setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
 					}
 				}
-=======
-			const _player = { id: "", x: 0, y: 0 };
-			if (props.room?.playerA.name === props.playerName) {
-				_player.id = playerA.id;
-				_player.x = playerA.x;
-				_player.y = playerA.y;
-			} else {
-				_player.id = playerB.id;
-				_player.x = playerB.x;
-				_player.y = playerB.y;
-			}
-			if (!e?.clientY) return;
-			const _height = e?.clientY;
-			_player.y = (((_height - boardHeight * 0.5) * 100) / window.innerHeight) * (windowsHeight * 0.01);
-			if (_player.y < 0) _player.y = 0;
-			if (_player.y + boardHeight > windowsHeight)
-				_player.y = windowsHeight - boardHeight;
-			if (lastY == _player.y) return ;
-			
-			props.socket?.emit("playerMove", {
-				id: _player.id,
-				x: (100 * _player.x) / windowsWidth,
-				y: (100 * _player.y) / windowsHeight,
-				timestamp: Date.now(),
-			});
-			if (props.room?.playerA.name === props.playerName) {
-				setPlayerA({ ...playerA, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: boardAX * windowsWidth });
-				setPlayerB({ ...playerB, x: (windowsWidth - boardBX * windowsWidth) });
-			}
-			else {
-				setPlayerA({ ...playerA, x: boardAX * windowsWidth });
-				setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
->>>>>>> 6eed0ebeeb429c2d97d93a364c8d1943ded8e492
 			}
 			updateDisplay();
 		}

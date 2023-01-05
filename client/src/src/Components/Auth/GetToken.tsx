@@ -1,9 +1,10 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { io } from "socket.io-client";
 import instance from "../../API/Instance";
-import { setUser } from "../../Redux/userSlice";
+import { getSocketSocial, setSocketSocial, setUser } from "../../Redux/userSlice";
 import { createNotification } from "../notif/Notif";
 
 function GetToken() {
@@ -16,6 +17,7 @@ function GetToken() {
 	const [firstrender, setFirstRender] = useState<boolean>(false);
 
 	const dispatch = useDispatch();
+	const socketSocial = useSelector(getSocketSocial);
 
 	async function GetLoggedInfo() {
 		if (localStorage.getItem("token")) {
@@ -32,6 +34,22 @@ function GetToken() {
 		}
 		if (!firstrender)
 			setFirstRender(true)
+	}
+	const userSet = async () => {
+		await instance.get(`user`)
+			.then((res) => {
+				if (res.data.User) {
+					if (!socketSocial)
+					{
+						socketSocial?.close();
+						const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
+						console.log("here")
+						newSocketSocial?.emit("connected", { uuid: res.data.User.uuid });
+						dispatch(setSocketSocial(newSocketSocial));
+					}
+				}
+			});
+		navigate("/");
 	}
 	async function AuthCall() {
 		const queryParams = new URLSearchParams(window.location.search);
@@ -56,7 +74,7 @@ function GetToken() {
 			if (IsTwoAuthActivated)
 				navigate("/twoauth");
 			else
-				navigate("/");
+				userSet();
 		}
 		else
 			GetLoggedInfo();

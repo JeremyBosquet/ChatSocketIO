@@ -223,10 +223,10 @@ export class RoomGateway {
 					}
 				}
 				room.lastActivity = Date.now();
-				if (room.ball.speed > 8)
-					room.ball.speed = 8;
-				room.playerA.y = room.ball.y - settings.boardHeight / 2;
-				room.playerB.y = room.ball.y - settings.boardHeight / 2;
+				if (room.ball.speed > 7)
+					room.ball.speed = 7;
+				room.playerA.y = room.ball.y - settings.boardHeight / 1.5;
+				room.playerB.y = room.ball.y - settings.boardHeight / 3.5;
 				this.server.in('room-' + room.id).emit('playerMovement', { player: "playerA", x: boardAX, y: room.playerA.y });
 				this.server.in('room-' + room.id).emit('playerMovement', { player: "playerB", x: boardAX, y: room.playerB.y });
 				this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity, playerA: room.playerA, playerB: room.playerB });

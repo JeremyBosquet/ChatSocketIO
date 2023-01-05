@@ -93,7 +93,7 @@ function App() {
 	}, []);
 
 	useEffect(() => {
-		if (user && !socketSocial)
+		if (user)
 		{
 			console.log(user);
 			socketSocial?.close();

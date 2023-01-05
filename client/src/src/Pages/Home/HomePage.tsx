@@ -160,16 +160,8 @@ function HomePage() {
 					dispatch(setUserUsername(res.data.User.username));
 					dispatch(setUserImg(import.meta.env.VITE_URL_API + ":7000/" + res.data.User.image));
 					setTrueUsername(res.data.User.trueUsername);
-					instance.get(`room/getGameOfUser/` + res.data.User.uuid).then((res) => {
-						if (res.data && res.data.length)
-							dispatch(setHistoryList(res.data));
-						else if (res.data)
-							dispatch(setHistoryList([]));
-					});
-					instance.get(`user/Ranking`).then((res) => {
-						if (res.data && res.data.Rank)
-							dispatch(setRanking(res.data.Rank));
-					});
+					reloadHistoryAndRank(res.data.User.uuid);
+					getMyExp(res.data.User.uuid, setMyProfileExp);
 				}).catch(() => {
 					setUser(undefined);
 				});
@@ -179,13 +171,8 @@ function HomePage() {
 		setbooleffect2(false);
 	}
 
-	async function reloadHistoryAndRank() {
-		await instance.get(`room/getGameOfUser/` + User.uuid,
-			{
-				headers: {
-					Authorization: "Bearer " + localStorage.getItem("token"),
-				},
-			}).then((res) => {
+	async function reloadHistoryAndRank(uuid : string) {
+		await instance.get(`room/getGameOfUser/` + uuid).then((res) => {
 				if (res.data && res.data.length)
 					dispatch(setHistoryList(res.data));
 				else if (res.data)
@@ -203,13 +190,13 @@ function HomePage() {
 
 	useEffect(() => {
 		if (User)
-			reloadHistoryAndRank();
+			reloadHistoryAndRank(User.uuid);
 	}, [playing]);
 
 	useEffect(() => {
 		if (User)
 			getMyExp(User.uuid, setMyProfileExp);
-	}, [User, booleffect2, playing, display]);
+	}, [playing]);
 	return (
 		<>
 			{!booleffect2 && !ready && !playing? (

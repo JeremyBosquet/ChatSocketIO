@@ -17,12 +17,16 @@ function NavBar() {
 	let location = useLocation();
 	const [socialOpened, setSocialOpened] = useState<boolean>(false);
 	const [settingsOpened, setSettingsOpened] = useState<boolean>(false);
+	const [socialHasOpened, setSocialHasOpened] = useState<boolean>(false);
+	const [settingsHasOpened, setSettingsHasOpened] = useState<boolean>(false);
 	const socketGame = useSelector(getSockeGame);
 	const socketSpectate = useSelector(getSockeSpectate);
 	const socketChatGame = useSelector(getSockeGameChat);
 	const dispatch = useDispatch();
 
 	function openSocial() {
+		if (!socialHasOpened)
+			setSocialHasOpened(true);
 		if (socialOpened)
 			setSocialOpened(false);
 		else
@@ -41,6 +45,8 @@ function NavBar() {
 	}
 
 	function openSettings() {
+		if (!settingsHasOpened)
+			setSettingsHasOpened(true);
 		if (settingsOpened)
 			setSettingsOpened(false);
 		else
@@ -122,7 +128,7 @@ function NavBar() {
 							<AiOutlineClose />
 						</span>
 					</button>
-					<Social />
+					{socialHasOpened ? <Social /> : null}
 				</div>
 				<div id="mySidenavSettings" className="sidenavSettings">
 					<button className="closebtn" onClick={() => openSettings()}>
@@ -130,7 +136,7 @@ function NavBar() {
 							<AiOutlineClose />
 						</span>
 					</button>
-					<Settings />
+					{settingsHasOpened ? <Settings /> : null}
 				</div>
 			</>
 		</div>

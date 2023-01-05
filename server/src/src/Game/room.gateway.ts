@@ -62,23 +62,9 @@ export class RoomGateway {
     if (newDirection > Math.PI - Math.PI / 8 && newDirection < Math.PI + Math.PI / 8) newDirection = Math.PI + Math.PI / 8;
     
     if (ratioBetweenBallAndBoard == 0) {
-      newDirection = (-oldDirection);
-      if (newDirection < 0) newDirection += 2 * Math.PI;
-      if (newDirection > 2 * Math.PI) newDirection -= 2 * Math.PI;
-      if (newDirection > Math.PI / 2 - Math.PI / 8 && newDirection < Math.PI / 2 + Math.PI / 8) newDirection = Math.PI / 2 + Math.PI / 8;
-      if (newDirection > 3 * Math.PI / 2 - Math.PI / 8 && newDirection < 3 * Math.PI / 2 + Math.PI / 8) newDirection = 3 * Math.PI / 2 + Math.PI / 8;
-      if (newDirection > Math.PI - Math.PI / 8 && newDirection < Math.PI + Math.PI / 8) newDirection = Math.PI + Math.PI / 8;  
+      return -oldDirection;
     }
-    else {
-      newDirection = (newDirection + Math.PI / 2 * ratioBetweenBallAndBoard) % (2 * Math.PI);
-      if (newDirection < 0) newDirection += 2 * Math.PI;
-      if (newDirection > 2 * Math.PI) newDirection -= 2 * Math.PI;
-      if (newDirection > Math.PI / 2 - Math.PI / 8 && newDirection < Math.PI / 2 + Math.PI / 8) newDirection = Math.PI / 2 + Math.PI / 8;
-      if (newDirection > 3 * Math.PI / 2 - Math.PI / 8 && newDirection < 3 * Math.PI / 2 + Math.PI / 8) newDirection = 3 * Math.PI / 2 + Math.PI / 8;
-      if (newDirection > Math.PI - Math.PI / 8 && newDirection < Math.PI + Math.PI / 8) newDirection = Math.PI + Math.PI / 8;
-      
-    }
-    return newDirection;
+    return -newDirection;
   }
 
   checkHitBox(itemX: number, itemY: number, itemWidth: number, itemHeight: number, x: number, y: number): boolean {
@@ -88,18 +74,6 @@ export class RoomGateway {
 
   @Interval(1000 / 180)
   async update() {
-    //x += Math.cos(direction) * 1;
-    //y += Math.sin(direction) * 1;
-    //if (x < 0 || x > 500 || y < 0 || y > 500) {
-    //  if (x > 500) direction = Math.PI - direction;
-    //  if (y > 500) direction = 2 * Math.PI - direction;
-    //  if (x < 0) direction = Math.PI - direction;
-    //  if (y < 0) direction = 2 * Math.PI - direction;
-    //
-    //  this.server.emit('uwu', {x:x , y:y, direction: direction})
-    //}
-    //else
-    //  this.server.emit('uwu', {x:-1 , y:-1, direction: direction})
     const rooms = await this.roomService.getRooms();
     if (!rooms) return;
     for (let i = 0; i < rooms.length; i++) {

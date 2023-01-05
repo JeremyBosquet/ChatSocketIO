@@ -61,7 +61,6 @@ function Social() {
 
 	async function ListRequest() {
 		await instance.get(`user/ListFriendRequest`).then((res) => {
-			console.log(res.data.usernameList);
 			dispatch(setRequestList(res.data.usernameList));
 		});
 	}

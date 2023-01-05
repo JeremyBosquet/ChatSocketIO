@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createNotification } from "../../Components/notif/Notif";
 import { useDispatch, useSelector } from 'react-redux';
@@ -210,7 +210,6 @@ function HomePage() {
 		if (User)
 			getMyExp(User.uuid, setMyProfileExp);
 	}, [User, booleffect2, playing, display]);
-
 	return (
 		<>
 			{!booleffect2 && !ready && !playing? (

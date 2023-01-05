@@ -160,8 +160,7 @@ function GamePlay(props: props) {
 			let primeColor;
 			let secondColor;
 
-			if (props.room?.settings.background === "inverted")
-			{
+			if (props.room?.settings.background === "inverted") {
 				primeColor = "white";
 				secondColor = "black";
 			}
@@ -169,9 +168,9 @@ function GamePlay(props: props) {
 				primeColor = "black";
 				secondColor = "white";
 			}
-
-			//contextRef.current.fillStyle = primeColor
-			//contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
+			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
+			contextRef.current.fillStyle = primeColor;
+			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
 			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
 			contextRef.current.fillStyle = secondColor;
@@ -217,6 +216,7 @@ function GamePlay(props: props) {
 				contextRef.current.fillStyle = "gray";
 			else
 				contextRef.current.fillStyle = secondColor;
+
 			contextRef.current.fill();
 		}
 	}
@@ -370,7 +370,7 @@ function GamePlay(props: props) {
 			percentY: data?.y,
 		});
 	});
-
+	//console.log("render", canvasRef);
 	useEffect(() => {
 		updateDisplay();
 	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, imageA, imageB]);
@@ -381,8 +381,8 @@ function GamePlay(props: props) {
 				<title>Game - transcendence </title>
 			</Helmet>
 			<GameBoard socket={props.socket} room={props.room} />
-			{<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
-			}</div>
+			<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
+		</div>
 	);
 }
 

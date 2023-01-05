@@ -35,6 +35,10 @@ let boardAX = 3;
 let boardBX = 3;
 const ballInterval = [];
 
+let x = 100;
+let y = 350;
+let direction = 0;
+
 @WebSocketGateway(7002, { cors: '*:*' })
 export class RoomGateway {
   constructor(private roomService: RoomService, private usersService: UsersService) { }
@@ -50,20 +54,30 @@ export class RoomGateway {
   }
 
   newDirection(oldDirection: number, ratioBetweenBallAndBoard: number): number {
-    if (oldDirection < 0) oldDirection += 2 * Math.PI;
-    if (oldDirection > 2 * Math.PI) oldDirection -= 2 * Math.PI;
     let newDirection = Math.PI - oldDirection;
-    if (ratioBetweenBallAndBoard == 0) {
-      newDirection = (-oldDirection);
-    }
-    else {
-      newDirection = (newDirection + Math.PI / 2 * ratioBetweenBallAndBoard) % (2 * Math.PI);
-    }
     if (newDirection < 0) newDirection += 2 * Math.PI;
     if (newDirection > 2 * Math.PI) newDirection -= 2 * Math.PI;
     if (newDirection > Math.PI / 2 - Math.PI / 8 && newDirection < Math.PI / 2 + Math.PI / 8) newDirection = Math.PI / 2 + Math.PI / 8;
     if (newDirection > 3 * Math.PI / 2 - Math.PI / 8 && newDirection < 3 * Math.PI / 2 + Math.PI / 8) newDirection = 3 * Math.PI / 2 + Math.PI / 8;
     if (newDirection > Math.PI - Math.PI / 8 && newDirection < Math.PI + Math.PI / 8) newDirection = Math.PI + Math.PI / 8;
+    
+    if (ratioBetweenBallAndBoard == 0) {
+      newDirection = (-oldDirection);
+      if (newDirection < 0) newDirection += 2 * Math.PI;
+      if (newDirection > 2 * Math.PI) newDirection -= 2 * Math.PI;
+      if (newDirection > Math.PI / 2 - Math.PI / 8 && newDirection < Math.PI / 2 + Math.PI / 8) newDirection = Math.PI / 2 + Math.PI / 8;
+      if (newDirection > 3 * Math.PI / 2 - Math.PI / 8 && newDirection < 3 * Math.PI / 2 + Math.PI / 8) newDirection = 3 * Math.PI / 2 + Math.PI / 8;
+      if (newDirection > Math.PI - Math.PI / 8 && newDirection < Math.PI + Math.PI / 8) newDirection = Math.PI + Math.PI / 8;  
+    }
+    else {
+      newDirection = (newDirection + Math.PI / 2 * ratioBetweenBallAndBoard) % (2 * Math.PI);
+      if (newDirection < 0) newDirection += 2 * Math.PI;
+      if (newDirection > 2 * Math.PI) newDirection -= 2 * Math.PI;
+      if (newDirection > Math.PI / 2 - Math.PI / 8 && newDirection < Math.PI / 2 + Math.PI / 8) newDirection = Math.PI / 2 + Math.PI / 8;
+      if (newDirection > 3 * Math.PI / 2 - Math.PI / 8 && newDirection < 3 * Math.PI / 2 + Math.PI / 8) newDirection = 3 * Math.PI / 2 + Math.PI / 8;
+      if (newDirection > Math.PI - Math.PI / 8 && newDirection < Math.PI + Math.PI / 8) newDirection = Math.PI + Math.PI / 8;
+      
+    }
     return newDirection;
   }
 
@@ -74,6 +88,18 @@ export class RoomGateway {
 
   @Interval(1000 / 180)
   async update() {
+    //x += Math.cos(direction) * 1;
+    //y += Math.sin(direction) * 1;
+    //if (x < 0 || x > 500 || y < 0 || y > 500) {
+    //  if (x > 500) direction = Math.PI - direction;
+    //  if (y > 500) direction = 2 * Math.PI - direction;
+    //  if (x < 0) direction = Math.PI - direction;
+    //  if (y < 0) direction = 2 * Math.PI - direction;
+    //
+    //  this.server.emit('uwu', {x:x , y:y, direction: direction})
+    //}
+    //else
+    //  this.server.emit('uwu', {x:-1 , y:-1, direction: direction})
     const rooms = await this.roomService.getRooms();
     for (let i = 0; i < rooms.length; i++) {
       const room = rooms[i];

@@ -34,7 +34,7 @@ export class UserModel {
 	image: string;
 
 	@Column()
-	@Expose()
+	@Exclude()
 	id: number;
 
 
@@ -79,6 +79,6 @@ export class UserModel {
 	blockedby: Ifriends[];
 
 	@Column({ type: "decimal", precision: 10, scale: 2, default: 0.00 })
-	@Expose()
+	@Exclude()
 	exp: number;
 }

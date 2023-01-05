@@ -169,47 +169,47 @@ function GamePlay(props: props) {
 				secondColor = "white";
 			}
 			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
-			contextRef.current.fillStyle = primeColor;
-			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
-			contextRef.current.fillStyle = secondColor;
-			contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
-			contextRef.current.fillStyle = secondColor;
-
-			let display = 50;
-			if (window.innerWidth < 500) {
-				display = 30;
-				mult = 0.9;
-				contextRef.current.font = "20px Arial";
-				if (props.room?.scoreA)
-					contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
-				else
-					contextRef.current.fillText("0", windowsWidth / 2 - 20, 25);
-				if (props.room?.scoreB)
-					contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
-				else
-					contextRef.current.fillText("0", windowsWidth / 2 + 10, 25);
-
-			}
-			else {
-				mult = 0.5;
-				contextRef.current.font = "30px Arial";
-				if (imageA)
-					contextRef.current.drawImage(imageA, windowsWidth / 2 - 100, 0, display, display);
-				if (imageB)
-					contextRef.current.drawImage(imageB, windowsWidth / 2 + 50, 0, display, display);
-				if (props.room?.scoreA)
-					contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
-				else
-					contextRef.current.fillText("0", windowsWidth / 2 - 35, 35);
-				if (props.room?.scoreB)
-					contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
-				else
-					contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
-			}
-			contextRef.current.fillStyle = secondColor;
-			contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
-			contextRef.current.fillStyle = secondColor;
-			contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
+			//contextRef.current.fillStyle = primeColor;
+			//contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
+			//contextRef.current.fillStyle = secondColor;
+			//contextRef.current.fillRect(windowsWidth / 2 - 2, 0, 4, windowsHeight);
+			//contextRef.current.fillStyle = secondColor;
+//
+			//let display = 50;
+			//if (window.innerWidth < 500) {
+			//	display = 30;
+			//	mult = 0.9;
+			//	contextRef.current.font = "20px Arial";
+			//	if (props.room?.scoreA)
+			//		contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
+			//	else
+			//		contextRef.current.fillText("0", windowsWidth / 2 - 20, 25);
+			//	if (props.room?.scoreB)
+			//		contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
+			//	else
+			//		contextRef.current.fillText("0", windowsWidth / 2 + 10, 25);
+//
+			//}
+			//else {
+			//	mult = 0.5;
+			//	contextRef.current.font = "30px Arial";
+			//	if (imageA)
+			//		contextRef.current.drawImage(imageA, windowsWidth / 2 - 100, 0, display, display);
+			//	if (imageB)
+			//		contextRef.current.drawImage(imageB, windowsWidth / 2 + 50, 0, display, display);
+			//	if (props.room?.scoreA)
+			//		contextRef.current.fillText(props.room?.scoreA.toString(), windowsWidth / 2 - 35, 35);
+			//	else
+			//		contextRef.current.fillText("0", windowsWidth / 2 - 35, 35);
+			//	if (props.room?.scoreB)
+			//		contextRef.current.fillText(props.room?.scoreB.toString(), windowsWidth / 2 + 20, 35);
+			//	else
+			//		contextRef.current.fillText("0", windowsWidth / 2 + 20, 35);
+			//}
+			//contextRef.current.fillStyle = secondColor;
+			//contextRef.current.fillRect(playerA.x, playerA.y, boardWidth, boardHeight);
+			//contextRef.current.fillStyle = secondColor;
+			//contextRef.current.fillRect(playerB.x, playerB.y, boardWidth, boardHeight);
 			contextRef.current.beginPath();
 			contextRef.current.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
 			if (ball.x < windowsWidth / 2 + 2 && ball.x > windowsWidth / 2 - 2)

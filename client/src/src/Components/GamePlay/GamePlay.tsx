@@ -288,6 +288,7 @@ function GamePlay(props: props) {
 				setPlayerA({ ...playerA, x: boardAX * windowsWidth });
 				setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
 			}
+			updateDisplay();
 		}
 
 	useEventListener("mousemove", mousemove);
@@ -334,6 +335,7 @@ function GamePlay(props: props) {
 			y: (playerB.percentY / 100) * windowsHeight,
 			percentY: playerB.percentY,
 		});
+		updateDisplay();
 	}
 	useEventListener("resize", handleResize);
 
@@ -358,6 +360,7 @@ function GamePlay(props: props) {
 				});
 			}
 		}
+		updateDisplay();
 	});
 	props.socket?.removeListener("ballMovement");
 	props.socket?.on("ballMovement", (data: any) => {
@@ -371,10 +374,17 @@ function GamePlay(props: props) {
 			percentX: data?.x,
 			percentY: data?.y,
 		});
+		updateDisplay();
 	});
 	//console.log("render", canvasRef);
+	//useEffect(() => {
+	//	updateDisplay();
+	//}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, imageA, imageB]);
 	useEffect(() => {
-		updateDisplay();
+		const interval = setInterval(() => {
+			updateDisplay();
+		}, 1000 / 60);
+		return () => clearInterval(interval);
 	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, imageA, imageB]);
 	return (
 		<div id="gameMain" className="cursor">

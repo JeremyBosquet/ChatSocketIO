@@ -92,18 +92,6 @@ function App() {
 		}
 	}, []);
 
-	useEffect(() => {
-		if (user)
-		{
-			console.log(user);
-			socketSocial?.close();
-			const newSocketSocial = io(import.meta.env.VITE_URL_API + ':7003');
-			console.log("here2")
-			newSocketSocial?.emit("connected", { uuid: user.uuid });
-			dispatch(setSocketSocial(newSocketSocial));
-		}
-	}, [user]);
-
 	socketSocial?.removeListener("newFriend");
 	socketSocial?.on("newFriend", (data: any) => {
 		if (user && data.uuid === user.uuid && data?.username) {

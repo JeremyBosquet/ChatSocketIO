@@ -112,6 +112,17 @@ export class UsersService {
 		return find;
 	}
 
+	async compareToken(isLoggedIn: any[], req: any) {
+		const Token = req.headers.authorization.substr(7);
+		const matchingToken = isLoggedIn.find(tokenObject => {
+			return bcrypt.compare(Token, tokenObject.token);
+		});
+		if (matchingToken) {
+			return true;
+		}
+		return false;
+	}
+
 	async findFriendByUuid(Useruuid: string, uuid: string) {
 		if (!uuid)
 			return;
@@ -688,7 +699,7 @@ export class UsersService {
 
 	async findUserByUsername(username: string, Useruuid: string) {
 		if (!username || !Useruuid)
-			return ;
+			return;
 		const find = await this.userRepository.findOneBy({ trueUsername: username });
 		if (find) {
 			for (let i = 0; i < find.blocked.length; i++)

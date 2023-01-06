@@ -36,11 +36,7 @@ export class UsersController {
 	async getUser(@Req() req: any, @Res() res: any) {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
-			const Token = req.headers.authorization.substr(7);
-			const matchingToken = User.isLoggedIn.find(tokenObject => {
-				return bcrypt.compare(Token, tokenObject.token);
-			});
-			if (matchingToken) {
+			if (await this.userService.compareToken(User.isLoggedIn, req)) {
 				return res.status(HttpStatus.OK).json({
 					statusCode: HttpStatus.OK,
 					message: 'succes',
@@ -51,7 +47,7 @@ export class UsersController {
 			}
 			return res.status(HttpStatus.UNAUTHORIZED).json({
 				statusCode: HttpStatus.UNAUTHORIZED,
-				message: 'token invalid',
+				message: 'Unauthorized',
 				error: 'UNAUTHORIZED',
 			});
 		}
@@ -134,11 +130,7 @@ export class UsersController {
 	async CompareToken(@Req() req: any, @Res() res: any) {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
-			const Token = req.headers.authorization.substr(7);
-			const matchingToken = User.isLoggedIn.find(tokenObject => {
-				return bcrypt.compare(Token, tokenObject.token);
-			});
-			if (matchingToken) {
+			if (await this.userService.compareToken(User.isLoggedIn, req)) {
 				return res.status(HttpStatus.OK).json({
 					statusCode: HttpStatus.OK,
 					message: 'succes'
@@ -146,7 +138,7 @@ export class UsersController {
 			}
 			return res.status(HttpStatus.UNAUTHORIZED).json({
 				statusCode: HttpStatus.UNAUTHORIZED,
-				message: 'Token invalid',
+				message: 'Unauthorized',
 				error: 'UNAUTHORIZED',
 			});
 		}
@@ -162,11 +154,7 @@ export class UsersController {
 	async CompareTokenTwoAuth(@Req() req: any, @Res() res: any) {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
-			const Token = req.headers.authorization.substr(7);
-			const matchingToken = User.isLoggedIn.find(tokenObject => {
-				return bcrypt.compare(Token, tokenObject.token);
-			});
-			if (matchingToken) {
+			if (await this.userService.compareToken(User.isLoggedIn, req)) {
 				return res.status(HttpStatus.OK).json({
 					statusCode: HttpStatus.OK,
 					message: 'succes'
@@ -174,7 +162,7 @@ export class UsersController {
 			}
 			return res.status(HttpStatus.UNAUTHORIZED).json({
 				statusCode: HttpStatus.UNAUTHORIZED,
-				message: 'Token invalid',
+				message: 'Unauthorized',
 				error: 'UNAUTHORIZED',
 			});
 		}
@@ -307,10 +295,15 @@ export class UsersController {
 	@Post('AddFriend')
 	@UseGuards(JwtTwoFactorGuard)
 	async AddFriendByUuid(@Req() req: any, @Res() res: any, @Body() body: any) {
-		// const Jwt = this.jwtService.decode(req.headers.authorization.);
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const FriendUuid = body['uuid'];
 		if (User && FriendUuid) {
+			if (!(await this.userService.compareToken(User.isLoggedIn, req)))
+				return res.status (HttpStatus.UNAUTHORIZED).json({
+					statusCode: HttpStatus.UNAUTHORIZED,
+					message: 'Unauthorized',
+					error: 'UNAUTHORIZED',
+			});				
 			const add = await this.userService.addUserByUuid(FriendUuid, User);
 			if (add) {
 				switch (add) {
@@ -378,6 +371,12 @@ export class UsersController {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const FriendUuid = body['uuid'];
 		if (User && FriendUuid) {
+			if (!(await this.userService.compareToken(User.isLoggedIn, req)))
+				return res.status (HttpStatus.UNAUTHORIZED).json({
+					statusCode: HttpStatus.UNAUTHORIZED,
+					message: 'Unauthorized',
+					error: 'UNAUTHORIZED',
+			});	
 			const add = await this.userService.acceptUserByUuid(FriendUuid, User);
 			if (add) {
 				switch (add) {
@@ -429,6 +428,12 @@ export class UsersController {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const RemoveUuid = body['uuid'];
 		if (User && RemoveUuid) {
+			if (!(await this.userService.compareToken(User.isLoggedIn, req)))
+				return res.status (HttpStatus.UNAUTHORIZED).json({
+					statusCode: HttpStatus.UNAUTHORIZED,
+					message: 'Unauthorized',
+					error: 'UNAUTHORIZED',
+			});	
 			const remove = await this.userService.removeFriendByUuid(
 				RemoveUuid,
 				User,
@@ -489,6 +494,12 @@ export class UsersController {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const RemoveUuid = body['uuid'];
 		if (User && RemoveUuid) {
+			if (!(await this.userService.compareToken(User.isLoggedIn, req)))
+				return res.status (HttpStatus.UNAUTHORIZED).json({
+					statusCode: HttpStatus.UNAUTHORIZED,
+					message: 'Unauthorized',
+					error: 'UNAUTHORIZED',
+			});	
 			const remove = await this.userService.cancelFriendAddByUuid(
 				RemoveUuid,
 				User,
@@ -549,6 +560,12 @@ export class UsersController {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const RemoveUuid = body['uuid'];
 		if (User && RemoveUuid) {
+			if (!(await this.userService.compareToken(User.isLoggedIn, req)))
+				return res.status (HttpStatus.UNAUTHORIZED).json({
+					statusCode: HttpStatus.UNAUTHORIZED,
+					message: 'Unauthorized',
+					error: 'UNAUTHORIZED',
+			});	
 			const remove = await this.userService.refuseFriendAddByUuid(
 				RemoveUuid,
 				User,
@@ -606,6 +623,12 @@ export class UsersController {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const BlockUuid = body['uuid'];
 		if (User && BlockUuid) {
+			if (!(await this.userService.compareToken(User.isLoggedIn, req)))
+				return res.status (HttpStatus.UNAUTHORIZED).json({
+					statusCode: HttpStatus.UNAUTHORIZED,
+					message: 'Unauthorized',
+					error: 'UNAUTHORIZED',
+			});	
 			const block = await this.userService.blockUserByUuid(BlockUuid, User);
 			if (block) {
 				switch (block) {
@@ -653,6 +676,12 @@ export class UsersController {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const UnblockUuid = body['uuid'];
 		if (User && UnblockUuid) {
+			if (!(await this.userService.compareToken(User.isLoggedIn, req)))
+				return res.status (HttpStatus.UNAUTHORIZED).json({
+					statusCode: HttpStatus.UNAUTHORIZED,
+					message: 'Unauthorized',
+					error: 'UNAUTHORIZED',
+			});	
 			const block = await this.userService.unblockUserByUuid(UnblockUuid, User);
 			if (block) {
 				switch (block) {
@@ -865,6 +894,12 @@ export class UsersController {
 			return Boolean(str.match(/^[A-Za-z0-9]*$/));
 		}
 		if (User) {
+			if (!(await this.userService.compareToken(User.isLoggedIn, req)))
+				return res.status (HttpStatus.UNAUTHORIZED).json({
+					statusCode: HttpStatus.UNAUTHORIZED,
+					message: 'Unauthorized',
+					error: 'UNAUTHORIZED',
+			});	
 			const newName = Name['newName'];
 			if (
 				!Name ||
@@ -959,6 +994,12 @@ export class UsersController {
 			});
 		}
 		if (User) {
+			if (!(await this.userService.compareToken(User.isLoggedIn, req)))
+				return res.status (HttpStatus.UNAUTHORIZED).json({
+					statusCode: HttpStatus.UNAUTHORIZED,
+					message: 'Unauthorized',
+					error: 'UNAUTHORIZED',
+			});	
 			const nb = (await this.userService.ChangeAvatar(User.uuid, file.buffer, file.mimetype));
 			if (!nb) {
 				return res.status(HttpStatus.NOT_FOUND).json({

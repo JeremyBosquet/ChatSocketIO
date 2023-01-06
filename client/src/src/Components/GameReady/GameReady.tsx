@@ -111,7 +111,6 @@ function GameReady(props: props) {
 	});
 	socket?.on("roomTimeout", (data: any) => {
 		setTimeouts(data.time);
-		console.log(data.time);
 	});
 	socket?.on("configurationUpdated", (data: IRoom) => {
 		if (data.playerA?.id === tmpUser?.id) setSettingsBis(data.configurationB);

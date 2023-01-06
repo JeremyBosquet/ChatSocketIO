@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import GameBoard from "../GameBoard/GameBoard";
 import "./GamePlay.scss";
@@ -159,8 +159,15 @@ function GamePlay(props: props) {
 	const [count, setCount] = useState<number>(0);
 	const [time, setTime] = useState<number>(Date.now());
 	const [fps, setFps] = useState<number>(0);
-	const updateDisplay = useCallback(() => {
+	function updateDisplay(): void {
 		if (contextRef.current) {
+			setCount(count +1);
+			if (Date.now() - time > 1000) {
+				console.log(count);
+				setFps(count);
+				setCount(0);
+				setTime(Date.now());
+			}
 			let primeColor;
 			let secondColor;
 
@@ -233,7 +240,6 @@ function GamePlay(props: props) {
 			contextRef.current.closePath();
 		}
 	}
-	, [count, time, fps]);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
@@ -393,7 +399,17 @@ function GamePlay(props: props) {
 		});
 		updateDisplay();
 	});
-	//console.log("render");
+	const otherCanvasRef = useRef<HTMLCanvasElement>(null);
+	const otherContextRef = useRef<CanvasRenderingContext2D | null>(null);
+
+	useEffect(() => {
+		const canvas = otherCanvasRef.current;
+		const context = canvas?.getContext("2d");
+		if (context) {
+			otherContextRef.current = context;
+		}
+	}, []);
+
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

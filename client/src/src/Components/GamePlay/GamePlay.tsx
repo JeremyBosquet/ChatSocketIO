@@ -93,10 +93,10 @@ function GamePlay(props: props) {
 		random = Math.floor(random);
 	}, []);
 
-	const _ImageA = new Image();
-	const _ImageB = new Image();
-	(props.room?.playerA.name === props.playerName ? _ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random : _ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random);
-	(props.room?.playerB.name === props.playerName ? _ImageB.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id + "#" + random : _ImageB.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id + "#" + random);
+	//const _ImageA = new Image();
+	//const _ImageB = new Image();
+	//(props.room?.playerA.name === props.playerName ? _ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random : _ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random);
+	//(props.room?.playerB.name === props.playerName ? _ImageB.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id + "#" + random : _ImageB.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id + "#" + random);
 
 	let mult = 0.5;
 	if (window.innerWidth < 500)
@@ -399,16 +399,10 @@ function GamePlay(props: props) {
 		});
 		updateDisplay();
 	});
-	const otherCanvasRef = useRef<HTMLCanvasElement>(null);
-	const otherContextRef = useRef<CanvasRenderingContext2D | null>(null);
-
-	useEffect(() => {
-		const canvas = otherCanvasRef.current;
-		const context = canvas?.getContext("2d");
-		if (context) {
-			otherContextRef.current = context;
-		}
-	}, []);
+	props.socket?.removeListener("roomUpdated"); // To add on spectate
+	props.socket?.on("roomUpdated", (data: any) => {
+		updateDisplay();
+	});
 
 	return (
 		<div id="gameMain" className="cursor">

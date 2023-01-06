@@ -402,8 +402,6 @@ function GamePlay(props: props) {
 		}, 1000 / 60);
 		return () => clearInterval(interval);
 	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB]);
-	
-
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

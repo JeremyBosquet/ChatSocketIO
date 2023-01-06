@@ -410,6 +410,9 @@ export class ChannelController {
         if (!userToKick)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         
+        if (admin.role === "admin" && userToKick.role === "owner" || userToKick.role === "admin")
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+
         channel.users = channel.users.filter((user : any) => user.id !== body.target);
 
         await this.chatService.updateChannel(channel.id, channel);
@@ -442,6 +445,9 @@ export class ChannelController {
         if (!userToBan)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         
+        if (admin.role === "admin" && userToBan.role === "owner" || userToBan.role === "admin")
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            
         channel.users = channel.users.filter((user: any) => user.id !== body.target);
         if (body.isPermanent)
             body.time = "-1";
@@ -477,6 +483,9 @@ export class ChannelController {
         if (!userToMute)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         
+        if (admin.role === "admin" && userToMute.role === "owner" || userToMute.role === "admin")
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+
         if (body.isPermanent)
             body.time = "-1";
         channel.mutes.push({id: body.target, time: body.time, permanent: body.isPermanent});
@@ -511,6 +520,9 @@ export class ChannelController {
         if (!userToUnmute)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
 
+        if (admin.role === "admin" && userToUnmute.role === "owner" || userToUnmute.role === "admin")
+            return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
+            
         channel.mutes = channel.mutes.filter((user : any) => user.id !== body.target);
         await this.chatService.updateChannel(channel.id, channel);
 

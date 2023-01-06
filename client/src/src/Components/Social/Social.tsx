@@ -14,6 +14,8 @@ import Decline from '../Popup/Decline/Decline';
 import Cancel from '../Popup/Cancel/Cancel';
 import IsOnline from '../Utils/IsOnline';
 import instance from '../../API/Instance';
+import DM from '../Channels/ChatChannel/Player/DM/DM';
+import Dm from '../Popup/Dm/Dm';
 
 function Social() {
 	let navigate = useNavigate();
@@ -154,6 +156,7 @@ function Social() {
 																				</div>
 																				<div className='buttons'>
 																					<Show trueUsername={user.trueUsername} />
+																					<Dm user={user} />
 																					<BlockOrUnblock UserUuid={user.uuid} User={User} />
 																				</div>
 																				<div>
@@ -216,6 +219,7 @@ function Social() {
 																				<div className='buttons'>
 																					<AddOrRemove User={User} UserUuid={user.uuid} />
 																					<Show trueUsername={user.trueUsername} />
+																					<Dm user={user} />
 																					<BlockOrUnblock UserUuid={user.uuid} User={User} />
 																				</div>
 																			</div>
@@ -254,6 +258,7 @@ function Social() {
 																					<div className='buttons'>
 																						<Show trueUsername={user.trueUsername} />
 																						<BlockOrUnblock UserUuid={user.uuid} User={User} />
+																						<Dm user={user} />
 																						<Accept User={User} UserUuid={user.uuid} UserImg={user?.image} />
 																						<Decline User={User} UserUuid={user.uuid} />
 																					</div>

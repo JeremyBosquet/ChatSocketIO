@@ -280,38 +280,56 @@ export class UsersService {
 	}
 
 	async addUserByUuid(uuid: string, User: UserModel) {
-		if (!uuid) return 0;
-
+		if (!uuid)
+			return 0;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
-		if (!find) return 0;
-
-		if (uuid === User.uuid) return 2;
-
-		if (
-			find.blocked.some((user) => user.uuid === User.uuid) ||
-			find.blockedby.some((user) => user.uuid === User.uuid) ||
-			User.blocked.some((user) => user.uuid === uuid) ||
-			User.blockedby.some((user) => user.uuid === uuid)
-		) return 5;
-
-		if (User.friends?.some((friend) => friend.uuid === uuid)) return 3;
-
-		if (find.friendRequest?.some((request) => request.uuid === User.uuid)) return 4;
-
-		if (find.friendsNotacceptedYet?.some((request) => request.uuid === User.uuid)) return 6;
-
-		const askFriendFind: Ifriends = { uuid: User.uuid };
-		await this.userRepository.update(uuid, {
-			friendRequest: [...(find.friendRequest ?? []), askFriendFind],
-		});
-
-		const askFriendUser: Ifriends = { uuid: uuid };
-		await this.userRepository.update(User.uuid, {
-			friendsNotacceptedYet: [...(User.friendsNotacceptedYet ?? []), askFriendUser],
-		});
-
-
-		return 1;
+		if (find) {
+			if (uuid === User.uuid) return 2;
+			if (
+				find.blocked.filter((user) => user.uuid === User.uuid).length ||
+				find.blockedby.filter((user) => user.uuid === User.uuid).length ||
+				User.blocked.filter((user) => user.uuid === uuid).length ||
+				User.blockedby.filter((user) => user.uuid === uuid).length
+			)
+				return 5;
+			if (User.friends) {
+				for (let i = 0; User.friends[i]; i++) {
+					if (User.friends[i].uuid === uuid) return 3;
+				}
+			}
+			if (find.friendRequest) {
+				for (let i = 0; find.friendRequest[i]; i++) {
+					if (find.friendRequest[i].uuid === User.uuid) return 4;
+				}
+			}
+			if (find.friendsNotacceptedYet) {
+				for (let i = 0; find.friendsNotacceptedYet[i]; i++) {
+					if (find.friendsNotacceptedYet[i].uuid === User.uuid) return 6;
+				}
+			}
+			let newList: Ifriends[] = [];
+			const askFriend: Ifriends = {
+				uuid: User.uuid,
+			};
+			if (!find.friendRequest) newList.push(askFriend);
+			else {
+				newList = find.friendRequest;
+				newList.push(askFriend);
+			}
+			await this.userRepository.update(uuid, { friendRequest: newList });
+			newList = [];
+			askFriend.uuid = uuid;
+			if (!User.friendsNotacceptedYet) newList.push(askFriend);
+			else {
+				newList = User.friendsNotacceptedYet;
+				newList.push(askFriend);
+			}
+			await this.userRepository.update(User.uuid, {
+				friendsNotacceptedYet: newList,
+			});
+			return 1;
+		}
+		return 0;
 	}
 
 

@@ -20,11 +20,13 @@ function SendMessage(props: props) {
 			return;
 
 		if (message.length > 2000) {
-			setMessage("");
-			createNotification("error", "Message too long (max 2000 characters)")
+			createNotification("error", "Message too long (" + message.length + "/2000 characters)")
 			return;
 		}
 		
+		if (message.trim().length === 0)
+			return;
+
 		if (props.blocked)
 			createNotification("error", "You are blocked or you have blocked this player.");
 

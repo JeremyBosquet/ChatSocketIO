@@ -23,6 +23,9 @@ function SendMessage(props: props) {
 			createNotification("error", "Message too long (" + message.length + "/2000 characters)")
 			return;
 		}
+
+		if (message.trim().length === 0)
+			return;
 		
 		socket?.emit('message', { userId: props.user.uuid, message: message, channelId: props.channelId, type: "message" });
 		setMessage("");

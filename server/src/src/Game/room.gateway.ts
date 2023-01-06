@@ -32,12 +32,8 @@ const roomList = [];
 let lastTime = Date.now();
 
 let boardAX = 3;
-let boardBX = 3;
+let boardBX = 3 + 1.5;
 const ballInterval = [];
-
-let x = 100;
-let y = 350;
-let direction = 0;
 
 @WebSocketGateway(7002, { cors: '*:*' })
 export class RoomGateway {

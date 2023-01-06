@@ -86,7 +86,7 @@ function GamePlay(props: props) {
 	const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
 	let boardAX = 0.025;
-	let boardBX = 0.025;
+	let boardBX = 0.04;
 
 	useEffect(() => {
 		random = Math.random() * 1000;
@@ -156,18 +156,18 @@ function GamePlay(props: props) {
 			socketSocial?.emit("leaveGame");
 		};
 	}, [socketSocial]);
-	const [count, setCount] = useState<number>(0);
-	const [time, setTime] = useState<number>(Date.now());
-	const [fps, setFps] = useState<number>(0);
+	//const [count, setCount] = useState<number>(0);
+	//const [time, setTime] = useState<number>(Date.now());
+	//const [fps, setFps] = useState<number>(0);
 	function updateDisplay(): void {
 		if (contextRef.current) {
-			setCount(count +1);
-			if (Date.now() - time > 1000) {
-				console.log(count);
-				setFps(count);
-				setCount(0);
-				setTime(Date.now());
-			}
+			//setCount(count +1);
+			//if (Date.now() - time > 1000) {
+			//	console.log(count);
+			//	setFps(count);
+			//	setCount(0);
+			//	setTime(Date.now());
+			//}
 			let primeColor;
 			let secondColor;
 
@@ -272,11 +272,8 @@ function GamePlay(props: props) {
 				percentX: ball.percentX,
 				percentY: ball.percentY,
 			});
-			// Emit the ball position and setPlayerA / setPlayerB when the mouse is inside the canvas area
-			// Move only the player when the mouse is inside the canvas area
 			if (e?.clientY) {
 				const y = e?.clientY;
-				// Check if the mouse is inside the canvas area
 				if (canvasRef.current?.getBoundingClientRect() && props.room?.settings.ballRadius != undefined) {
 					if (y < window.pageYOffset + canvasRef.current.getBoundingClientRect().top) return;
 					if (y > canvasRef.current.clientHeight + window.pageYOffset + canvasRef.current.getBoundingClientRect().top) return;
@@ -399,10 +396,13 @@ function GamePlay(props: props) {
 		});
 		updateDisplay();
 	});
-	props.socket?.removeListener("roomUpdated"); // To add on spectate
-	props.socket?.on("roomUpdated", (data: any) => {
-		updateDisplay();
-	});
+	useEffect(() => {
+		const interval = setInterval(() => {
+			updateDisplay();
+		}, 1000 / 60);
+		return () => clearInterval(interval);
+	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB]);
+	
 
 	return (
 		<div id="gameMain" className="cursor">
@@ -411,7 +411,7 @@ function GamePlay(props: props) {
 				<title>Game - transcendence </title>
 			</Helmet>
 			<GameBoard socket={props.socket} room={props.room} />
-			{fps}
+			{/*fps*/}
 			<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
 		</div>
 	);

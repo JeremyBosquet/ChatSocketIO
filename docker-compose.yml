@@ -39,7 +39,8 @@ services:
     networks:
       - transcendence-network
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     build:
       context: ./server
       args:
@@ -60,6 +61,11 @@ services:
       - "7004:7004"
     restart: always
   db:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     container_name: db
     build:
       context: ./db

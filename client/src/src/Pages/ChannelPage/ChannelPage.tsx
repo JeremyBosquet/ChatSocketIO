@@ -261,6 +261,7 @@ function ChannelPage() {
 						<Helmet>
 							<meta charSet="utf-8" />
 							<title> Channel - transcendence </title>
+							<link rel="icon" type="image/png" href="/logo.png" />
 						</Helmet>
 						<div className='container'>
 							{logged === false ?

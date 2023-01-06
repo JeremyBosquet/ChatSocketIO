@@ -86,6 +86,7 @@ function Profile() {
 						<Helmet>
 							<meta charSet="utf-8" />
 							<title> Profile - transcendence </title>
+							<link rel="icon" type="image/png" href="/logo.png" />
 						</Helmet>
 						<NavBar />
 						<div id="userProfile">

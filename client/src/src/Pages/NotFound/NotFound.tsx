@@ -16,6 +16,7 @@ function NotFound() {
 			<Helmet>
 				<meta charSet="utf-8" />
 				<title> 404 - transcendence </title>
+				<link rel="icon" type="image/png" href="/logo.png" />
 			</Helmet>
 			<img src={"/404.png"} alt="404"></img>
 			<button onClick={() => navigate("/")}> Home </button>

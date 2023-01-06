@@ -155,6 +155,7 @@ function DMChannel(props: props) {
 								<Helmet>
 									<meta charSet="utf-8" />
 									<title>{name} - transcendence </title>
+									<link rel="icon" type="image/png" href="/logo.png" />
 								</Helmet>
 								<p>{name}</p>
 								<IoMdLock className='channelIcon' />

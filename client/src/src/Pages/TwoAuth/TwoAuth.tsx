@@ -106,6 +106,7 @@ function TwoAuth() {
 			<Helmet>
 				<meta charSet="utf-8" />
 				<title> Two-Factor Auth - transcendence </title>
+				<link rel="icon" type="image/png" href="/logo.png" />
 			</Helmet>
 			{print ? (
 				<>

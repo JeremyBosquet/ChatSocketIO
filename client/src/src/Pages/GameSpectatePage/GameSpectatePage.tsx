@@ -183,6 +183,7 @@ function GameSpectatePage() {
 				<Helmet>
 					<meta charSet="utf-8" />
 					<title> Spectate - transcendence </title>
+					<link rel="icon" type="image/png" href="/logo.png" />
 				</Helmet>
 				{!roomId ? (
 					<div className='container'>

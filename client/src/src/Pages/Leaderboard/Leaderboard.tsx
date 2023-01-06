@@ -25,6 +25,7 @@ const Leaderboard = () => {
 				<Helmet>
 					<meta charSet="utf-8" />
 					<title> Leaderboard - transcendence </title>
+					<link rel="icon" type="image/png" href="/logo.png" />
 				</Helmet>
 				{leaderboard.length > 2 ?
 					<div className="topLeadersList">

@@ -255,6 +255,7 @@ function DMPage() {
 						<Helmet>
 							<meta charSet="utf-8" />
 							<title> Dm - transcendence </title>
+							<link rel="icon" type="image/png" href="/logo.png" />
 						</Helmet>
 						<div className='container'>
 

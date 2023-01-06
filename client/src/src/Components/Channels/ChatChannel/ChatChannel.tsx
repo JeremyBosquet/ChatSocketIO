@@ -181,6 +181,7 @@ function ChatChannel(props: props) {
 							<Helmet>
 								<meta charSet="utf-8" />
 								<title> {channel.name} - transcendence </title>
+								<link rel="icon" type="image/png" href="/logo.png" />
 							</Helmet>
 							<div className='ChatChannelInfos'>
 								<p>{channel.name}</p>

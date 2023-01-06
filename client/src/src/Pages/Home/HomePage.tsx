@@ -209,6 +209,7 @@ function HomePage() {
 								<Helmet>
 									<meta charSet="utf-8" />
 									<title> Login - transcendence </title>
+									<link rel="icon" type="image/png" href="/logo.png" />
 								</Helmet>
 								<h1 id="loginTitle"> transcendence </h1>
 								<button id="login" onClick={() => navigate("/login")}>
@@ -223,6 +224,7 @@ function HomePage() {
 										<Helmet>
 											<meta charSet="utf-8" />
 											<title> Home - transcendence </title>
+											<link rel="icon" type="image/png" href="/logo.png" />
 										</Helmet>
 										<img
 											src={userImg}

@@ -323,6 +323,7 @@ function GameSpectate(props: props) {
 			<Helmet>
 				<meta charSet="utf-8" />
 				<title> Spectating - transcendence </title>
+				<link rel="icon" type="image/png" href="/logo.png" />
 			</Helmet>
 			<GameBoard socket={props.socket} room={props.room} />
 			<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />

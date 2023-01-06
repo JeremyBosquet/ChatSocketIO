@@ -1,21 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Interval } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
-import { InformationEvent } from 'http';
-//import { Interval } from '@nestjs/schedule';
 import { UsersService } from 'src/Users/users.service';
 import { In, Repository } from 'typeorm';
 import { Room } from './Entities/room.entity';
-import { IInGame } from './Interfaces/InGame';
 import { SendGameHistoryDto } from './room.dto';
-import { RoomGateway } from './room.gateway';
-
-let lastTime = Date.now();
-let averageTime = 0;
-const lasttimestamp = [];
 
 const roomList = [];
+
 @Injectable()
 export class RoomService {
   async clearDatabase() {
@@ -53,6 +45,20 @@ export class RoomService {
       }
     }
     return listb;
+  }
+
+  async getWaitingRooms(): Promise<Room[]> {
+    let _index: number;
+    if (roomList.length > 0) {
+      const _roomList = roomList.filter((room) => room.status == 'waiting');
+      return _roomList;
+    }
+    else {
+      const rooms = await this.roomRepository.find({
+        where: { status: In(['waiting']) },
+      });
+      return rooms;
+    }
   }
 
   async updateRoom(roomId: string, data: any): Promise<any> {

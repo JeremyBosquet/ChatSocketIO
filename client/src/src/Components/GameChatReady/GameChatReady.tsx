@@ -147,6 +147,7 @@ function GameChatReady(props: props) {
 					<Helmet>
 						<meta charSet="utf-8" />
 						<title> Searching - transcendence </title>
+						<link rel="icon" type="image/png" href="/logo.png" />
 					</Helmet>
 					<ScaleLoader
 						className="loading-spinner"
@@ -181,6 +182,7 @@ function GameChatReady(props: props) {
 					<Helmet>
 						<meta charSet="utf-8" />
 						<title> Configuring - transcendence </title>
+						<link rel="icon" type="image/png" href="/logo.png" />
 					</Helmet>
 					<div className="game-config">
 						<p>Configuring the game...</p>

@@ -156,18 +156,18 @@ function GamePlay(props: props) {
 			socketSocial?.emit("leaveGame");
 		};
 	}, [socketSocial]);
-	const [count, setCount] = useState<number>(0);
-	const [time, setTime] = useState<number>(Date.now());
-	const [fps, setFps] = useState<number>(0);
+	//const [count, setCount] = useState<number>(0);
+	//const [time, setTime] = useState<number>(Date.now());
+	//const [fps, setFps] = useState<number>(0);
 	function updateDisplay(): void {
 		if (contextRef.current) {
-			setCount(count +1);
-			if (Date.now() - time > 1000) {
-				console.log(count);
-				setFps(count);
-				setCount(0);
-				setTime(Date.now());
-			}
+			//setCount(count +1);
+			//if (Date.now() - time > 1000) {
+			//	console.log(count);
+			//	setFps(count);
+			//	setCount(0);
+			//	setTime(Date.now());
+			//}
 			let primeColor;
 			let secondColor;
 
@@ -411,7 +411,7 @@ function GamePlay(props: props) {
 				<title>Game - transcendence </title>
 			</Helmet>
 			<GameBoard socket={props.socket} room={props.room} />
-			{fps}
+			{/*fps*/}
 			<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
 		</div>
 	);

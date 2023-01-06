@@ -147,11 +147,17 @@ function GameSpectate(props: props) {
 
 	function updateDisplay(): void {
 		if (contextRef.current) {
+			//setCount(count +1);
+			//if (Date.now() - time > 1000) {
+			//	console.log(count);
+			//	setFps(count);
+			//	setCount(0);
+			//	setTime(Date.now());
+			//}
 			let primeColor;
 			let secondColor;
 
-			if (props.room?.settings.background === "inverted")
-			{
+			if (props.room?.settings.background === "inverted") {
 				primeColor = "white";
 				secondColor = "black";
 			}
@@ -159,7 +165,8 @@ function GameSpectate(props: props) {
 				primeColor = "black";
 				secondColor = "white";
 			}
-			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
+			//contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
+			contextRef.current.beginPath();
 			contextRef.current.fillStyle = primeColor;
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
 			contextRef.current.fillStyle = secondColor;
@@ -185,10 +192,10 @@ function GameSpectate(props: props) {
 				mult = 0.5;
 				contextRef.current.font = "30px Arial";
 				
-				if (_ImageA)
-					contextRef.current.drawImage(_ImageA, Math.floor(windowsWidth * 0.5 - 100), 0, display, display);
-				if (_ImageB)
-					contextRef.current.drawImage(_ImageB, Math.floor(windowsWidth * 0.5 + 50), 0, display, display);
+				//if (_ImageA)
+				//	contextRef.current.drawImage(_ImageA, Math.floor(windowsWidth * 0.5 - 100), 0, display, display);
+				//if (_ImageB)
+				//	contextRef.current.drawImage(_ImageB, Math.floor(windowsWidth * 0.5 + 50), 0, display, display);
 				if (props.room?.scoreA)
 					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth * 0.5 - 35), 35);
 				else
@@ -203,6 +210,12 @@ function GameSpectate(props: props) {
 			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(Math.floor(playerB.x), Math.floor(playerB.y), Math.floor(boardWidth), Math.floor(boardHeight));
 			contextRef.current.beginPath();
+			contextRef.current.lineJoin = "round";
+			contextRef.current.lineWidth = 2;
+			contextRef.current.strokeStyle = secondColor;
+			
+			
+			
 			contextRef.current.arc(Math.floor(ball.x), Math.floor(ball.y), Math.floor(ball.radius), 0, 2 * Math.PI);
 			if (ball.x < windowsWidth * 0.5 + 2 && ball.x > windowsWidth * 0.5 - 2)
 				contextRef.current.fillStyle = "gray";

@@ -83,16 +83,16 @@ function GameSpectate(props: props) {
 	const contextRef = useRef<CanvasRenderingContext2D | null>(null);
 
 	let boardAX = 0.025;
-	let boardBX = 0.025;
+	let boardBX = 0.04;
 
 	useEffect(() => {
 		random = Math.random() * 1000;
 		random = Math.floor(random);
 	}, []);
-	const _ImageA = new Image();
-	const _ImageB = new Image();
-	_ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id  + "#" + random;
-	_ImageB.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id  + "#" + random;
+	//const _ImageA = new Image();
+	//const _ImageB = new Image();
+	//_ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id  + "#" + random;
+	//_ImageB.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id  + "#" + random;
 
 	let mult = 0.5;
 	if (window.innerWidth < 500)
@@ -329,7 +329,7 @@ function GameSpectate(props: props) {
 			updateDisplay();
 		}, 1000 / 60);
 		return () => clearInterval(interval);
-	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, _ImageA, _ImageB]);
+	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB]);
 	
 	return (
 		<div id="gameMain" className="cursor">

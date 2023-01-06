@@ -151,9 +151,15 @@ function GamePlay(props: props) {
 
 	const socketSocial = useSelector(getSocketSocial);
 	useEffect(() => {
-		socketSocial?.emit("joinGame");
-		return () => {
+		if (props.room?.id)
+			socketSocial?.emit("joinGame", {id:props.room.id});
+		else
 			socketSocial?.emit("leaveGame");
+		return () => {
+			if (props.room?.id)
+				socketSocial?.emit("joinGame", {id:props.room.id});
+			else
+				socketSocial?.emit("leaveGame");
 		};
 	}, [socketSocial]);
 	//const [count, setCount] = useState<number>(0);
@@ -205,7 +211,7 @@ function GamePlay(props: props) {
 			else {
 				mult = 0.5;
 				contextRef.current.font = "30px Arial";
-				
+
 				//if (_ImageA)
 				//	contextRef.current.drawImage(_ImageA, Math.floor(windowsWidth * 0.5 - 100), 0, display, display);
 				//if (_ImageB)
@@ -227,9 +233,9 @@ function GamePlay(props: props) {
 			contextRef.current.lineJoin = "round";
 			contextRef.current.lineWidth = 2;
 			contextRef.current.strokeStyle = secondColor;
-			
-			
-			
+
+
+
 			contextRef.current.arc(Math.floor(ball.x), Math.floor(ball.y), Math.floor(ball.radius), 0, 2 * Math.PI);
 			if (ball.x < windowsWidth * 0.5 + 2 && ball.x > windowsWidth * 0.5 - 2)
 				contextRef.current.fillStyle = "gray";
@@ -277,7 +283,7 @@ function GamePlay(props: props) {
 				if (canvasRef.current?.getBoundingClientRect() && props.room?.settings.ballRadius != undefined) {
 					if (y < window.pageYOffset + canvasRef.current.getBoundingClientRect().top) return;
 					if (y > canvasRef.current.clientHeight + window.pageYOffset + canvasRef.current.getBoundingClientRect().top) return;
-					const _player = { id: "", y: 0};
+					const _player = { id: "", y: 0 };
 					if (props.room?.playerA.name === props.playerName) {
 						_player.id = playerA.id;
 						_player.y = playerA.y;

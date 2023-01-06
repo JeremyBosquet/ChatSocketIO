@@ -87,7 +87,7 @@ export class RoomGateway {
 		return false;
 	}
 
-	@Interval(1000 / 60)
+	@Interval(1000 / 	)
 	async update() {
 		const rooms = await this.roomService.getRooms();
 		if (!rooms) return;

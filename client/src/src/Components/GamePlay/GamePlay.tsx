@@ -171,6 +171,7 @@ function GamePlay(props: props) {
 				secondColor = "white";
 			}
 			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
+			contextRef.current.beginPath();
 			contextRef.current.fillStyle = primeColor;
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
 			contextRef.current.fillStyle = secondColor;

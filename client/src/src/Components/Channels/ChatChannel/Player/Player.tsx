@@ -171,8 +171,7 @@ function Player(props: props) {
 					<>
 						<span ref={topAnchor}>
 							<TbDotsVertical 
-								onPointerEnter={ !mobileMode ? () => setIsOpen(true) : () => {}}
-								onClick={ mobileMode ? () => setIsOpen((isOpen) => !isOpen) : () => {}}
+								onClick={() => setIsOpen((isOpen) => !isOpen)}
 								className="playerDots"/>
 						</span>
 							<ControlledMenu

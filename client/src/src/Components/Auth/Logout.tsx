@@ -17,7 +17,7 @@ function Logout() {
 		await instance.get(`logout`)
 			.then(() => {
 				socketSocial?.disconnect();
-				localStorage.clear();
+				localStorage.removeItem("token");
 				dispatch(setUser(undefined))
 				createNotification("success", "You have been disconnected");
 				navigate("/");

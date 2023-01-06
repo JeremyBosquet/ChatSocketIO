@@ -34,15 +34,25 @@ export class UsersController {
 	@Get()
 	@UseGuards(JwtTwoFactorGuard)
 	async getUser(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
-			return res.status(HttpStatus.OK).json({
-				statusCode: HttpStatus.OK,
-				message: 'succes',
-				User: plainToClass(SendUserDto, User, {
-					excludeExtraneousValues: true,
-				}),
+			const Token = req.headers.authorization.substr(7);
+			const matchingToken = User.isLoggedIn.find(tokenObject => {
+				return bcrypt.compare(Token, tokenObject.token);
+			});
+			if (matchingToken) {
+				return res.status(HttpStatus.OK).json({
+					statusCode: HttpStatus.OK,
+					message: 'succes',
+					User: plainToClass(SendUserDto, User, {
+						excludeExtraneousValues: true,
+					}),
+				});
+			}
+			return res.status(HttpStatus.UNAUTHORIZED).json({
+				statusCode: HttpStatus.UNAUTHORIZED,
+				message: 'token invalid',
+				error: 'UNAUTHORIZED',
 			});
 		}
 		return res.status(HttpStatus.NOT_FOUND).json({
@@ -78,8 +88,7 @@ export class UsersController {
 	@Get('getExp/:uuid')
 	@UseGuards(JwtTwoFactorGuard)
 	async getExp(@Req() req: any, @Res() res: any, @Param(ValidationPipe) param: FriendsDto,) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			const exp = await this.userService.getExp(param.uuid);
 			if (exp !== undefined)
@@ -104,8 +113,7 @@ export class UsersController {
 	@Get('getLoggedInfo')
 	@UseGuards(JwtAuthGuard)
 	async getLoggedInfo(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			return res.status(HttpStatus.OK).json({
 				statusCode: HttpStatus.OK,
@@ -126,21 +134,21 @@ export class UsersController {
 	async CompareToken(@Req() req: any, @Res() res: any) {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
-			// const tokenCrypted = req.headers.authorization.split(' ')[1];
-			// for (let i = 0; i < User.isLoggedIn.length; i++) {
-			// 	if (await bcrypt.compare(tokenCrypted, User.isLoggedIn[i].token)) {
-					return res.status(HttpStatus.OK).json({
-						statusCode: HttpStatus.OK,
-						message: 'succes'
-					});
-			// 	}
-			// }
-			// return res.status(HttpStatus.FORBIDDEN).json({
-			// 	statusCode: HttpStatus.FORBIDDEN,
-			// 	message: 'Token invalid',
-			// 	error: 'FORBIDDEN',
-			// });
-
+			const Token = req.headers.authorization.substr(7);
+			const matchingToken = User.isLoggedIn.find(tokenObject => {
+				return bcrypt.compare(Token, tokenObject.token);
+			});
+			if (matchingToken) {
+				return res.status(HttpStatus.OK).json({
+					statusCode: HttpStatus.OK,
+					message: 'succes'
+				});
+			}
+			return res.status(HttpStatus.UNAUTHORIZED).json({
+				statusCode: HttpStatus.UNAUTHORIZED,
+				message: 'Token invalid',
+				error: 'UNAUTHORIZED',
+			});
 		}
 		return res.status(HttpStatus.NOT_FOUND).json({
 			statusCode: HttpStatus.NOT_FOUND,
@@ -154,21 +162,21 @@ export class UsersController {
 	async CompareTokenTwoAuth(@Req() req: any, @Res() res: any) {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
-			// const tokenCrypted = req.headers.authorization.split(' ')[1];
-			// for (let i = 0; i < User.isLoggedIn.length; i++) {
-			// 	if (await bcrypt.compare(tokenCrypted, User.isLoggedIn[i].token)) {
-					return res.status(HttpStatus.OK).json({
-						statusCode: HttpStatus.OK,
-						message: 'succes'
-					});
-			// 	}
-			// }
-			// return res.status(HttpStatus.FORBIDDEN).json({
-			// 	statusCode: HttpStatus.FORBIDDEN,
-			// 	message: 'Token invalid',
-			// 	error: 'FORBIDDEN',
-			// });
-
+			const Token = req.headers.authorization.substr(7);
+			const matchingToken = User.isLoggedIn.find(tokenObject => {
+				return bcrypt.compare(Token, tokenObject.token);
+			});
+			if (matchingToken) {
+				return res.status(HttpStatus.OK).json({
+					statusCode: HttpStatus.OK,
+					message: 'succes'
+				});
+			}
+			return res.status(HttpStatus.UNAUTHORIZED).json({
+				statusCode: HttpStatus.UNAUTHORIZED,
+				message: 'Token invalid',
+				error: 'UNAUTHORIZED',
+			});
 		}
 		return res.status(HttpStatus.NOT_FOUND).json({
 			statusCode: HttpStatus.NOT_FOUND,
@@ -184,8 +192,7 @@ export class UsersController {
 		@Res() res: any,
 		@Param(ValidationPipe) param: SearchDto,
 	) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		function onlyLettersAndNumbers(str: string) {
 			return Boolean(str.match(/^[A-Za-z0-9]*$/));
 		}
@@ -222,8 +229,7 @@ export class UsersController {
 		@Req() req: any,
 		@Res() res: any,
 		@Param(ValidationPipe) param: SearchDto,) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			function onlyLettersAndNumbers(str: string) {
 				return Boolean(str.match(/^[A-Za-z0-9]*$/));
@@ -275,8 +281,7 @@ export class UsersController {
 		@Res() res: any,
 		@Param(ValidationPipe) param: FriendsDto,
 	) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			const find = await this.userService.IsFriendByUuid(param.uuid, User.uuid);
 			if (find) {
@@ -370,8 +375,7 @@ export class UsersController {
 	@Post('AcceptFriend')
 	@UseGuards(JwtTwoFactorGuard)
 	async acceptUserByUuid(@Req() req: any, @Res() res: any, @Body() body: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const FriendUuid = body['uuid'];
 		if (User && FriendUuid) {
 			const add = await this.userService.acceptUserByUuid(FriendUuid, User);
@@ -422,8 +426,7 @@ export class UsersController {
 		@Res() res: any,
 		@Body() body: any,
 	) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const RemoveUuid = body['uuid'];
 		if (User && RemoveUuid) {
 			const remove = await this.userService.removeFriendByUuid(
@@ -483,8 +486,7 @@ export class UsersController {
 		@Res() res: any,
 		@Body() body: any,
 	) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const RemoveUuid = body['uuid'];
 		if (User && RemoveUuid) {
 			const remove = await this.userService.cancelFriendAddByUuid(
@@ -544,8 +546,7 @@ export class UsersController {
 		@Res() res: any,
 		@Body() body: any,
 	) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const RemoveUuid = body['uuid'];
 		if (User && RemoveUuid) {
 			const remove = await this.userService.refuseFriendAddByUuid(
@@ -602,8 +603,7 @@ export class UsersController {
 	@Post('BlockUser')
 	@UseGuards(JwtTwoFactorGuard)
 	async blockUserByUuid(@Req() req: any, @Res() res: any, @Body() body: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const BlockUuid = body['uuid'];
 		if (User && BlockUuid) {
 			const block = await this.userService.blockUserByUuid(BlockUuid, User);
@@ -650,8 +650,7 @@ export class UsersController {
 	@Post('UnblockUser')
 	@UseGuards(JwtTwoFactorGuard)
 	async unblockUserByUuid(@Req() req: any, @Res() res: any, @Body() body: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		const UnblockUuid = body['uuid'];
 		if (User && UnblockUuid) {
 			const block = await this.userService.unblockUserByUuid(UnblockUuid, User);
@@ -698,8 +697,7 @@ export class UsersController {
 	@Get('ListFriends')
 	@UseGuards(JwtTwoFactorGuard)
 	async ListFriendsWithUuid(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			const add = await this.userService.ListFriendsWithUuid(User.uuid);
 			const friends = await this.userService.GetProfilesWithUuidTab(add);
@@ -719,8 +717,7 @@ export class UsersController {
 	@Get('ListFriendRequested')
 	@UseGuards(JwtTwoFactorGuard)
 	async ListFriendsRequestedWithUuid(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			const add = await this.userService.ListFriendsRequestedWithUuid(
 				User.uuid,
@@ -741,8 +738,7 @@ export class UsersController {
 	@Get('ListFriendRequest')
 	@UseGuards(JwtTwoFactorGuard)
 	async ListFriendsRequestWithUuid(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			const uuidList = await this.userService.ListFriendsRequestWithUuid(
 				User.uuid,
@@ -765,8 +761,7 @@ export class UsersController {
 	@Get('ListUsersBlocked')
 	@UseGuards(JwtTwoFactorGuard)
 	async ListBlockedWithUuid(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			const add = await this.userService.ListBlockedWithUuid(User.uuid);
 			return res.status(HttpStatus.OK).json({
@@ -785,8 +780,7 @@ export class UsersController {
 	@Get('ListBlockedBy')
 	@UseGuards(JwtTwoFactorGuard)
 	async ListBlockedByWithUuid(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			const add = await this.userService.ListBlockedByWithUuid(User.uuid);
 			return res.status(HttpStatus.OK).json({
@@ -805,8 +799,7 @@ export class UsersController {
 	@Get('Leaderboard')
 	@UseGuards(JwtTwoFactorGuard)
 	async Leaderboard(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			const add = await this.userService.Leaderboard();
 			return res.status(HttpStatus.OK).json({
@@ -825,8 +818,7 @@ export class UsersController {
 	@Get('Ranking')
 	@UseGuards(JwtTwoFactorGuard)
 	async Ranking(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			const add = await this.userService.Ranking(User.uuid);
 			return res.status(HttpStatus.OK).json({
@@ -845,8 +837,7 @@ export class UsersController {
 	@Get('RankingByUuid/:uuid')
 	@UseGuards(JwtTwoFactorGuard)
 	async RankingByUuid(@Req() req: any, @Res() res: any, @Param(ValidationPipe) param: FriendsDto) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			const add = await this.userService.Ranking(param.uuid);
 			return res.status(HttpStatus.OK).json({
@@ -869,8 +860,7 @@ export class UsersController {
 		@Res() res: any,
 		@Body() Name: SearchDto,
 	) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		function onlyLettersAndNumbers(str: string) {
 			return Boolean(str.match(/^[A-Za-z0-9]*$/));
 		}
@@ -933,8 +923,7 @@ export class UsersController {
 	}),
 	)
 	async ChangeAvatar(@UploadedFile() file: Express.Multer.File, @Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (!file)
 			return res.status(HttpStatus.BAD_REQUEST).json({
 				statusCode: HttpStatus.BAD_REQUEST,
@@ -1004,8 +993,7 @@ export class UsersController {
 		@Req() req: any,
 		@Param(ValidationPipe) param: FriendsDto,
 	) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User && param.uuid) {
 			const UserUuid = await this.userService.findFriendByUuid(User.uuid, param.uuid);
 			if (UserUuid) {

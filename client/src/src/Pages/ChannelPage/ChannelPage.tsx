@@ -109,6 +109,7 @@ function ChannelPage() {
 				.catch((err) => {
 					setUser(undefined);
 					createNotification("error", "User not found");
+					localStorage.removeItem("token");
 					navigate("/");
 				});
 		}
@@ -170,7 +171,8 @@ function ChannelPage() {
 		}
 	});
 
-	socketGame?.emit("gameAskInvite", { id: user.uuid });
+	if (user)
+		socketGame?.emit("gameAskInvite", { id: user.uuid });
 	socketGame?.on("gameFetchInvite", (data: any) => {
 		if (data?.target && data?.room && data?.switch == true) {
 

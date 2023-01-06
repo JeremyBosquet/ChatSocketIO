@@ -16,8 +16,7 @@ export class ChatController {
     @Get('user/:id')
     @UseGuards(JwtTwoFactorGuard)
     async getUser(@Param() param: any, @Req() req, @Res() res) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {

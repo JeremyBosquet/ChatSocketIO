@@ -25,8 +25,7 @@ export class TwoFactorAuthenticationController {
   @Post('generate')
   @UseGuards(JwtAuthGuard)
   async register(@Res() res: Response, @Req() req: any) {
-    const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-    const User = await this.userService.findUserByUuid(Jwt['uuid']);
+	const User = await this.userService.findUserByUuid(req.user.uuid);
     if (User) {
       const { otpauthUrl } = await this.twoFactorAuthenticationService.generateTwoFactorAuthenticationSecret(User.uuid, User.trueUsername);
       return this.twoFactorAuthenticationService.pipeQrCodeStream(
@@ -48,8 +47,7 @@ export class TwoFactorAuthenticationController {
     @Body() body: string,
     @Res() res: any,
   ) {
-    const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-    const User = await this.userService.findUserByUuid(Jwt['uuid']);
+    const User = await this.userService.findUserByUuid(req.user.uuid);
     if (User) {
       if (
         !body['twoFactorAuthenticationCode'] ||
@@ -93,8 +91,7 @@ export class TwoFactorAuthenticationController {
     @Body() body: string,
     @Res() res: any,
   ) {
-    const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-    const User = await this.userService.findUserByUuid(Jwt['uuid']);
+    const User = await this.userService.findUserByUuid(req.user.uuid);
     if (User) {
       if (
         !body['twoFactorAuthenticationCode'] ||
@@ -134,8 +131,7 @@ export class TwoFactorAuthenticationController {
   @Post('authenticate')
   @UseGuards(JwtAuthGuard)
   async authenticate(@Req() req: any, @Body() body: string, @Res() res: any) {
-    const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-    const User = await this.userService.findUserByUuid(Jwt['uuid']);
+    const User = await this.userService.findUserByUuid(req.user.uuid);
     if (User) {
       if (
         !body['twoFactorAuthenticationCode'] ||

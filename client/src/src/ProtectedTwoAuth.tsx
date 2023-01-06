@@ -18,10 +18,13 @@ const ProtectedTwoAuth = ({ children }: { children: any }) => {
 					.then((res) => {
 						setIsLoggedIn(true);
 					})
-					.catch(() => {
-						setIsLoggedIn(false);
-						localStorage.removeItem("token");
-						dispatch(setUser(undefined));
+					.catch((err) => {
+						if (err.code != "ECONNABORTED")
+						{
+							setIsLoggedIn(false);
+							localStorage.removeItem("token");
+							dispatch(setUser(undefined));
+						}
 					});
 			}
 			setMounted(true);

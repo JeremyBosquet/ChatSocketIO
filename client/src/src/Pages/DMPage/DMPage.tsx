@@ -114,7 +114,9 @@ function DMPage() {
 					dispatch(setLogged(true));
 				})
 				.catch(() => {
+					setUser(undefined);
 					createNotification("error", "User not found");
+					localStorage.removeItem("token");
 					navigate("/");
 				});
 		}
@@ -165,7 +167,8 @@ function DMPage() {
 		}
 	});
 
-	socketGame?.emit("gameAskInvite", { id: user.uuid });
+	if (user)
+		socketGame?.emit("gameAskInvite", { id: user.uuid });
 	socketGame?.on("gameFetchInvite", (data: any) => {
 		if (data?.target && data?.room && data?.switch == true) {
 			if (data?.target === user.uuid) {

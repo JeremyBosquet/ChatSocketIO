@@ -177,10 +177,12 @@ function HomePage() {
 					dispatch(setHistoryList(res.data));
 				else if (res.data)
 					dispatch(setHistoryList([]));
+			}).catch(() => {
 			});
 		await instance.get(`user/Ranking`).then((res) => {
 			if (res.data && res.data.Rank)
 				dispatch(setRanking(res.data.Rank));
+		}).catch(() => {
 		});
 	}
 
@@ -191,12 +193,12 @@ function HomePage() {
 	useEffect(() => {
 		if (User)
 			reloadHistoryAndRank(User.uuid);
-	}, [playing]);
+	}, [playing, ready, display]);
 
 	useEffect(() => {
 		if (User)
 			getMyExp(User.uuid, setMyProfileExp);
-	}, [playing]);
+	}, [playing, ready, display]);
 	return (
 		<>
 			{!booleffect2 && !ready && !playing? (

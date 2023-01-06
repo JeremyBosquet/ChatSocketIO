@@ -34,7 +34,7 @@ function JoinProtected(props: props) {
 						</div>
 						<div className="joinDuration" onSubmit={(e) => props.handleJoin(e, props.channelId)}>
 							<form className="joinForm">
-								<input className="joinInput" placeholder="Password" value={props.password} onChange={e => props.setPassword(e.target.value)}></input>
+								<input className="joinInput" type="password" placeholder="Password" value={props.password} onChange={e => props.setPassword(e.target.value)}></input>
 								<button className="joinButton" type="submit">Join</button>
 							</form>
 						</div>

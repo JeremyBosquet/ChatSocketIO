@@ -17,8 +17,7 @@ export class ChannelController {
     @Post('channel')
     @UseGuards(JwtTwoFactorGuard)
     async createChannel(@Req() req: any, @Res() res: any, @Body(ValidationPipe) body: CreateChannelDTO) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -53,8 +52,7 @@ export class ChannelController {
     @Post('channel/join')
     @UseGuards(JwtTwoFactorGuard)
     async joinChannel(@Req() req: any, @Res() res: any, @Body(ValidationPipe) body : JoinChannelDTO) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -111,8 +109,7 @@ export class ChannelController {
     @Post('channel/join/code')
     @UseGuards(JwtTwoFactorGuard)
     async joinChannelWithCode(@Req() req : any, @Res() res: any, @Body(ValidationPipe) body : JoinChannelCodeDTO) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -161,8 +158,7 @@ export class ChannelController {
     @Post('channel/leave')
     @UseGuards(JwtTwoFactorGuard)
     async leaveChannel(@Req() req : any, @Res() res: any, @Body(ValidationPipe) body: LeaveChannelDTO) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -203,8 +199,7 @@ export class ChannelController {
     @Post('channel/edit') //Edit channel password
     @UseGuards(JwtTwoFactorGuard)
     async editChannel(@Req() req: any, @Res() res: any, @Body(ValidationPipe) body : editChannelPasswordDTO) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -284,8 +279,7 @@ export class ChannelController {
     @Get('channel/:channelId') //Get channel by id
     @UseGuards(JwtTwoFactorGuard)
     async getChannel(@Param(ValidationPipe) param: ChannelIdDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -300,8 +294,7 @@ export class ChannelController {
     @Get('channels/byname/:channelContain') // Get all channels contains :channelContain where :userId is in
     @UseGuards(JwtTwoFactorGuard)
     async getChannelsWhereUserByName(@Param(ValidationPipe) param: ChannelsWhereUserDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -316,8 +309,7 @@ export class ChannelController {
     @Get('channels/user') // Get channels where user is in
     @UseGuards(JwtTwoFactorGuard)
     async getChannelsWhereUser(@Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -332,8 +324,7 @@ export class ChannelController {
     @Get('channels/users/:channelId') // Get users in channel
     @UseGuards(JwtTwoFactorGuard)
     async getChannelsWhereUsers(@Param(ValidationPipe) param: ChannelIdDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -348,8 +339,7 @@ export class ChannelController {
     @Get('messages/:channelId') // Get messages from 
     @UseGuards(JwtTwoFactorGuard)
     async getMessagesFromChannel(@Param(ValidationPipe) params: GetMessagesDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -378,8 +368,7 @@ export class ChannelController {
     @Get('mutes/:channelId') // Get mutes from channel 
     @UseGuards(JwtTwoFactorGuard)
     async getMutedUsers(@Param(ValidationPipe) params: ChannelIdDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -398,8 +387,7 @@ export class ChannelController {
     @Post('channel/kick') //Kick player from channel
     @UseGuards(JwtTwoFactorGuard)
     async kick(@Body(ValidationPipe) body: KickPlayerDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -432,8 +420,7 @@ export class ChannelController {
     @Post('channel/ban') //Ban player from channel
     @UseGuards(JwtTwoFactorGuard)
     async ban(@Body(ValidationPipe) body: BanPlayerDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -468,8 +455,7 @@ export class ChannelController {
     @Post('channel/mute') //mute player from channel
     @UseGuards(JwtTwoFactorGuard)
     async mute(@Body(ValidationPipe) body: MutePlayerDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -503,8 +489,7 @@ export class ChannelController {
     @Post('channel/unmute') //mute player from channel
     @UseGuards(JwtTwoFactorGuard)
     async unmute(@Body(ValidationPipe) body: UnmutePlayerDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -536,8 +521,7 @@ export class ChannelController {
     @Post('channel/setadmin') //set player to admin from channel
     @UseGuards(JwtTwoFactorGuard)
     async setAdmin(@Body(ValidationPipe) body: setAdminDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {
@@ -572,8 +556,7 @@ export class ChannelController {
     @Post('channel/unsetadmin') //set player to admin from channel
     @UseGuards(JwtTwoFactorGuard)
     async unsetAdmin(@Body(ValidationPipe) body: setAdminDTO, @Req() req: any, @Res() res: any) {
-        const Jwt = this.jwtService.decode(req.headers.authorization.split(" ")[1]);
-        const User = await this.userService.findUserByUuid(Jwt["uuid"]);
+        const User = await this.userService.findUserByUuid(req.user.uuid);
         
         if (!User)
         {

@@ -50,6 +50,7 @@ function App() {
 			async function ListFriends() {
 				await instance.get(`user/ListFriends`).then((res) => {
 					dispatch(setFriendList(res.data.friendList));
+				}).catch(() => {
 				});
 
 				await instance.get(`user/ListBlockedBy`).then((res) => {
@@ -59,6 +60,7 @@ function App() {
 					}
 					else
 						dispatch(setBlockedByList([]));
+				}).catch(() => {
 				});
 
 				await instance.get(`user/ListUsersBlocked`).then((res) => {
@@ -68,6 +70,7 @@ function App() {
 					}
 					else
 						dispatch(setBlockList([]));
+				}).catch(() => {
 				});
 			}
 
@@ -85,6 +88,8 @@ function App() {
 							dispatch(setUser(res.data.User));
 							ListFriends();
 						}
+					}).catch(() => {
+						setUser(undefined);
 					});
 			}
 			socketSet();
@@ -101,6 +106,7 @@ function App() {
 					dispatch(setRequestList(requestTab));
 				else
 					dispatch(setRequestList([]));
+			}).catch(() => {
 			});
 		}
 	});
@@ -114,6 +120,7 @@ function App() {
 				let friendList = res.data.friendList;
 				if (friendList)
 					dispatch(setFriendList(friendList));
+			}).catch(() => {
 			});
 		}
 	});
@@ -128,6 +135,7 @@ function App() {
 				let friendList = res.data.friendList;
 				if (friendList)
 					dispatch(setFriendList(res.data.friendList));
+			}).catch(() => {
 			});
 		}
 	});
@@ -144,6 +152,7 @@ function App() {
 					dispatch(setBlockedByList(blockedByList));
 					return;
 				}
+			}).catch(() => {
 			});
 			dispatch(setBlockedByList([]));
 		}
@@ -161,6 +170,7 @@ function App() {
 					dispatch(setBlockedByList(blockedByList));
 					return;
 				}
+			}).catch(() => {
 			});
 			dispatch(setBlockedByList([]));
 		}
@@ -178,6 +188,7 @@ function App() {
 					dispatch(setRequestList(requestTab));
 				else
 					dispatch(setRequestList([]));
+			}).catch(() => {
 			});
 		}
 	});
@@ -194,6 +205,7 @@ function App() {
 					dispatch(setRequestedList(requestedTab));
 				else
 					dispatch(setRequestedList([]));
+			}).catch(() => {
 			});
 		}
 	});

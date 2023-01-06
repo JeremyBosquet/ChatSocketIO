@@ -58,7 +58,6 @@ function Join(props: props) {
 				props.channelVisibility === "protected" ?
 					<>
 						<JoinProtected channelId={props.channelId} handleJoin={handleJoin} password={password} setPassword={setPassword} joinMenu={joinMenu} setJoinMenu={setJoinMenu}/>
-						{/* <button className='joinChannelButton' onClick={e => handleJoin(props.channelId)}>Join</button> */}
 					</>
 					:
 					<>

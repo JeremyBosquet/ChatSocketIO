@@ -92,8 +92,7 @@ export class AppController {
 	@Get('logout')
 	@UseGuards(JwtTwoFactorGuard)
 	async logOut(@Req() req: any, @Res() res: any) {
-		const Jwt = this.jwtService.decode(req.headers.authorization.split(' ')[1]);
-		const User = await this.userService.findUserByUuid(Jwt['uuid']);
+		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			this.userService.IsntAuthenticated(User.uuid);
 			this.userService.IsntLoggedIn(User.uuid, req.headers.authorization.split(' ')[1]);

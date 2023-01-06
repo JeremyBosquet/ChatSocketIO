@@ -87,7 +87,7 @@ export class RoomGateway {
 		return false;
 	}
 
-	@Interval(1000 / 	)
+	@Interval(1000 / 60)
 	async update() {
 		const rooms = await this.roomService.getRooms();
 		if (!rooms) return;
@@ -101,7 +101,7 @@ export class RoomGateway {
 				}
 				if (Date.now() - lastTime > 1000) {
 					lastTime = Date.now();
-					this.server.in('room-' + room.id).emit('roomTimeout', { time: Math.floor((room.lastActivity - Date.now() + 20000) * 0.010) });
+					this.server.in('room-' + room.id).emit('roomTimeout', { time: Math.floor((room.lastActivity - Date.now() + 20000) * 0.001) });
 				}
 			}
 			else if (room && room?.status == 'playing' && room?.settings) {
@@ -157,7 +157,7 @@ export class RoomGateway {
 						if (this.checkHitBox(room.playerA.x, room.playerA.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
 							room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerA.y) / room.settings.boardHeight, 0);
 							if (room.ball.speed < 7)
-								room.ball.speed += 0.1;
+								room.ball.speed += 0.2;
 							let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45);
 							let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45);
 							let antiLoop = 0;
@@ -173,7 +173,7 @@ export class RoomGateway {
 						else if (this.checkHitBox(room.playerB.x, room.playerB.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
 							room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerB.y) / room.settings.boardHeight, 1);
 							if (room.ball.speed < 7)
-								room.ball.speed += 0.1;
+								room.ball.speed += 0.2;
 							let x = room.ball.x + (Math.cos(room.ball.direction) * room.ball.speed * 0.45);
 							let y = room.ball.y + (Math.sin(room.ball.direction) * room.ball.speed * 0.45);
 							let antiLoop = 0;
@@ -630,7 +630,7 @@ export class RoomGateway {
 				_room.ball.direction = _room.settings.defaultDirection;
 				_room.settings.ballRadius = 1;
 				_room.settings.boardWidth = 1.5;
-				_room.settings.boardHeight = 15;
+				_room.settings.boardHeight = 500; //15
 				_room.ball.speed = _room.settings.defaultSpeed/* 10*/;
 				_room.settings.defaultSpeed = _room.settings.defaultSpeed/*/ 10*/;
 				_room.status = 'playing';

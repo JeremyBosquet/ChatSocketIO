@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import GameBoard from "../GameBoard/GameBoard";
 import "./GamePlay.scss";
@@ -156,8 +156,10 @@ function GamePlay(props: props) {
 			socketSocial?.emit("leaveGame");
 		};
 	}, [socketSocial]);
-
-	function updateDisplay(): void {
+	const [count, setCount] = useState<number>(0);
+	const [time, setTime] = useState<number>(Date.now());
+	const [fps, setFps] = useState<number>(0);
+	const updateDisplay = useCallback(() => {
 		if (contextRef.current) {
 			let primeColor;
 			let secondColor;
@@ -170,7 +172,7 @@ function GamePlay(props: props) {
 				primeColor = "black";
 				secondColor = "white";
 			}
-			contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
+			//contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
 			contextRef.current.beginPath();
 			contextRef.current.fillStyle = primeColor;
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
@@ -215,6 +217,12 @@ function GamePlay(props: props) {
 			contextRef.current.fillStyle = secondColor;
 			contextRef.current.fillRect(Math.floor(playerB.x), Math.floor(playerB.y), Math.floor(boardWidth), Math.floor(boardHeight));
 			contextRef.current.beginPath();
+			contextRef.current.lineJoin = "round";
+			contextRef.current.lineWidth = 2;
+			contextRef.current.strokeStyle = secondColor;
+			
+			
+			
 			contextRef.current.arc(Math.floor(ball.x), Math.floor(ball.y), Math.floor(ball.radius), 0, 2 * Math.PI);
 			if (ball.x < windowsWidth * 0.5 + 2 && ball.x > windowsWidth * 0.5 - 2)
 				contextRef.current.fillStyle = "gray";
@@ -225,6 +233,7 @@ function GamePlay(props: props) {
 			contextRef.current.closePath();
 		}
 	}
+	, [count, time, fps]);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
@@ -234,7 +243,6 @@ function GamePlay(props: props) {
 			updateDisplay();
 		}
 	}, []);
-	let lastY = -1;
 	const mousemove =
 		(e: any) => {
 			setBoardWidth(
@@ -385,13 +393,7 @@ function GamePlay(props: props) {
 		});
 		updateDisplay();
 	});
-	useEffect(() => {
-		const interval = setInterval(() => {
-			updateDisplay();
-		}, 1000 / 60);
-		return () => clearInterval(interval);
-	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, _ImageA, _ImageB]);
-
+	//console.log("render");
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>
@@ -399,6 +401,7 @@ function GamePlay(props: props) {
 				<title>Game - transcendence </title>
 			</Helmet>
 			<GameBoard socket={props.socket} room={props.room} />
+			{fps}
 			<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
 		</div>
 	);

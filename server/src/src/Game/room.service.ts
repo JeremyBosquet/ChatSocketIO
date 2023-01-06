@@ -21,7 +21,7 @@ export class RoomService {
   async clearDatabase() {
     const list = await this.roomRepository.find();
     for (let i = 0; i < list.length; i++) {
-      if (list[i].status != 'finished' || list[i].status != 'destroy') {
+      if (list[i].status != 'finished' && list[i].status != 'destroy') {
         await this.roomRepository.remove(list[i]);
       }
     }

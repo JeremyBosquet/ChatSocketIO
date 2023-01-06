@@ -19,14 +19,16 @@ const Protected = ({ children }: { children: any }) => {
 						setIsLoggedIn(true);
 					})
 					.catch((err) => {
-						setIsLoggedIn(false);
-						localStorage.removeItem("token");
-						dispatch(setUser(undefined));
+						if (err.code != "ECONNABORTED")
+						{
+							setIsLoggedIn(false);
+							localStorage.removeItem("token");
+							dispatch(setUser(undefined));
+						}
 					});
 			}
 			setMounted(true);
 		}
-		//setMounted(false);
 		checkAuth();
 	}, [location.pathname]);
 

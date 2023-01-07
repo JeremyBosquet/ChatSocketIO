@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import Block from "./Block/Block";
 import AddRemoveFriend from "./AddRemoveFriend/AddRemoveFriend";
 import { TbDotsVertical } from "react-icons/tb";
+import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
 
 interface IInvites {
 	requestFrom: string;
@@ -192,22 +193,28 @@ function Player(props: props) {
 											props.user.role !== 'admin' &&
 											props.user.role !== 'owner') ?
 											<>
-												<Ban user={props.user} />
-												<Kick user={props.user} />
+												<div>
+													<Ban user={props.user} />
+													<Kick user={props.user} />
+												</div>
 												<Mute user={props.user} mutedUsers={props.mutedUsers} />
 											</>
 											: (me.role === "owner") ?
 												<>
-													<Ban user={props.user} />
-													<Kick user={props.user} />
-													<Mute user={props.user} mutedUsers={props.mutedUsers} />
+													<div className="playerGroupItem">
+														<Ban user={props.user} />
+														<Kick user={props.user} />
+														<Mute user={props.user} mutedUsers={props.mutedUsers} />
+													</div>
 													<Admin user={props.user} users={props.users} setUsers={props.setUsers} />
 												</>
 												: null
 										}
-										<DM user={props.user} />
+										<div className="playerGroupItem">
+											<DM user={props.user} />
+											<Link to={"/profile/" + props.user.trueUsername} className="actionButton removeSize">Profile</Link>
+										</div>
 										{connected && !blocked && !blockedBy && !hasInvited(props.user?.uuid) ? <InviteGame user={props.user} /> : null}
-										<Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
 										<Block user={props.user} />
 										<AddRemoveFriend user={props.user} />
 									</div>

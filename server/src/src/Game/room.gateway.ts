@@ -429,11 +429,9 @@ export class RoomGateway {
 							await this.roomService.updateRoom(_room.id, { status: 'destroy' });
 						} else if (
 							_room.nbPlayers ==
-							1 && _room.id != room.id/*&& _room?.playerA?.id != otherPlayer.id && _room?.playerB?.id != otherPlayer.id*/ // Re add ca
+							1 && _room.id != room.id && _room?.playerA?.id != otherPlayer.id && _room?.playerB?.id != otherPlayer.id
 						) {
-							// Search otherPlayer socket
-							const clients = await this.server.fetchSockets();
-							// Search inside clients
+							const clients = await this.server.in('room-' + room.id).fetchSockets(); // verif
 							for (let j = 0; j < clients.length; j++) {
 								const _client = clients[j];
 								if (_client.data.playerId == otherPlayer.id) {
@@ -539,7 +537,7 @@ export class RoomGateway {
 					otherPlayer = room.playerA;
 				}
 				if (room?.playerA?.id == client.data.playerId) room.playerA = null;
-				else if (room?.playerB?.id == client.data.playerId) room.playerB = null; 
+				else if (room?.playerB?.id == client.data.playerId) room.playerB = null;
 				else {
 					return;
 				}
@@ -596,11 +594,9 @@ export class RoomGateway {
 									await this.roomService.updateRoom(_room.id, { status: 'destroy' });
 								} else if (
 									_room.nbPlayers ==
-									1 && _room.id != room.id/*&& _room?.playerA?.id != otherPlayer.id && _room?.playerB?.id != otherPlayer.id*/ // Re add ca
+									1 && _room.id != room.id && _room?.playerA?.id != otherPlayer.id && _room?.playerB?.id != otherPlayer.id 
 								) {
-									// Search otherPlayer socket
-									const clients = await this.server.fetchSockets();
-									// Search inside clients
+									const clients = await this.server.in('room-' + room.id).fetchSockets(); // verif
 									for (let j = 0; j < clients.length; j++) {
 										const _client = clients[j];
 										if (_client.data.playerId == otherPlayer.id) {
@@ -718,7 +714,7 @@ export class RoomGateway {
 				_room.ball.direction = _room.settings.defaultDirection;
 				_room.settings.ballRadius = 1;
 				_room.settings.boardWidth = 1.5;
-				_room.settings.boardHeight = 15; //15
+				_room.settings.boardHeight = 1500; //15
 				_room.ball.speed = _room.settings.defaultSpeed/* 10*/;
 				_room.settings.defaultSpeed = _room.settings.defaultSpeed/*/ 10*/;
 				_room.status = 'playing';

@@ -2,11 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { Socket } from "socket.io-client";
 import GameBoard from "../GameBoard/GameBoard";
 import "./GamePlay.scss";
-import useImage from 'use-image';
 import useEventListener from "@use-it/event-listener";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { getSocketSocial } from "../../Redux/userSlice";
+import { Stage, Sprite, Graphics } from '@inlet/react-pixi'
 
 interface props {
 	socket: Socket | undefined;
@@ -387,7 +387,7 @@ function GamePlay(props: props) {
 		});
 		updateDisplay();
 	});
-	
+
 	useEffect(() => {
 		const interval = setInterval(() => {
 			updateDisplay();
@@ -395,6 +395,13 @@ function GamePlay(props: props) {
 		return () => clearInterval(interval);
 	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB]);
 
+	const draw = React.useCallback(g => {
+		g.clear()
+		g.lineStyle(0)
+		g.beginFill(0x000000, 1)
+		g.drawCircle(ball.x, ball.y, 5)
+		g.endFill()
+	  }, [ball])
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>
@@ -402,7 +409,8 @@ function GamePlay(props: props) {
 				<title>Game - transcendence </title>
 			</Helmet>
 			<GameBoard socket={props.socket} room={props.room} />
-			<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
+			{<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
+	}
 		</div>
 	);
 }

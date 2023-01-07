@@ -156,7 +156,6 @@ export class ChatGateway {
         const message = data.type === "kick" ? "You have been kicked from the channel" : "You have been banned from the channel";
         this.server.in(data.channelId).emit('updateAllPlayers', await this.chatService.getUsersInfosInChannel(data.channelId));
         
-        // Remove the id of the room from the user socket who has been kicked
         const sockets = await this.server.in(data.channelId).fetchSockets()
         for (const socket of sockets) {
             if (socket.data.userId === data.target) {

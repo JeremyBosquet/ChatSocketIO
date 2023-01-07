@@ -146,73 +146,78 @@ function Player(props: props) {
 	}, [window.innerWidth])
 	
 	return (
-		<div className='player' key={props.user?.uuid} >
-			<div style={{ display: "flex" }}>
-				{connected && !blocked && !blockedBy ? 
-					(
-						isInGame ?
-							<span className="inGame"></span> 
-						:	
-							<span className="connected"></span> 
-					)
-				: 
-					<span className="disconnected"></span>}
-				<p style={{ maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis" }}>{usernameTrunc(props.user?.username)}</p>
-			</div>
-			<div className="playerGroupActions">
+		<>
+			<div className='player' key={props.user?.uuid} >
+				<div style={{ display: "flex" }}>
+					{connected && !blocked && !blockedBy ? 
+						(
+							isInGame ?
+								<span className="inGame"></span> 
+							:	
+								<span className="connected"></span> 
+						)
+					: 
+						<span className="disconnected"></span>}
+					<p style={{ maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis" }}>{usernameTrunc(props.user?.username)}</p>
+				</div>
 				{
 					me?.uuid !== props.user?.uuid && hasInvited(props.user?.uuid) ?
 						<button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button>
-						:
-					null
+					:
+						null
 				}
-				{
-					props.user?.uuid === me.uuid ? null :
-					<>
-						<span ref={topAnchor}>
-							<TbDotsVertical 
-								onClick={() => setIsOpen((isOpen) => !isOpen)}
-								className="playerDots"/>
-						</span>
-							<ControlledMenu
-								className="playerActions"
-								onKeyDown={(e: any) => e.stopPropagation()}
-								state={isOpen ? "open" : "closed"}
-								position={"anchor"}
-								align={"center"}
-								direction={"right"}
-								onScroll={() => setIsOpen(false)}
-								reposition="initial"
-								anchorRef={topAnchor}
-
-							>
-								{(me.role === "admin" &&
-									props.user.role !== 'admin' &&
-									props.user.role !== 'owner') ?
-									<>
-										<Ban user={props.user} />
-										<Kick user={props.user} />
-										<Mute user={props.user} mutedUsers={props.mutedUsers} />
-									</>
-									: (me.role === "owner") ?
-										<>
-											<Ban user={props.user} />
-											<Kick user={props.user} />
-											<Mute user={props.user} mutedUsers={props.mutedUsers} />
-											<Admin user={props.user} users={props.users} setUsers={props.setUsers} />
-										</>
-										: null
-								}
-								<DM user={props.user} />
-								{connected && !blocked && !blockedBy && !hasInvited(props.user?.uuid) ? <InviteGame user={props.user} /> : null}
-								<Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
-								<Block user={props.user} />
-								<AddRemoveFriend user={props.user} />
-						</ControlledMenu>
-					</>
+				{ me?.uuid !== props.user?.uuid ?
+					<span ref={topAnchor} >
+						{
+							isOpen ?
+								<MdOutlineKeyboardArrowUp 
+									onClick={() => setIsOpen((isOpen) => !isOpen) }
+									className="playerDots"/>
+							: 
+								<MdOutlineKeyboardArrowDown
+									onClick={() => setIsOpen((isOpen) => !isOpen) }	
+									className="playerDots"/>
+						}
+					</span>
+					: null
 				}
 			</div>
-		</div>
+				{ isOpen ?
+					<div className="playerGroupActions">
+						{
+							props.user?.uuid === me.uuid ? null :
+								<>
+									<div className="playerActions">
+										{(me.role === "admin" &&
+											props.user.role !== 'admin' &&
+											props.user.role !== 'owner') ?
+											<>
+												<Ban user={props.user} />
+												<Kick user={props.user} />
+												<Mute user={props.user} mutedUsers={props.mutedUsers} />
+											</>
+											: (me.role === "owner") ?
+												<>
+													<Ban user={props.user} />
+													<Kick user={props.user} />
+													<Mute user={props.user} mutedUsers={props.mutedUsers} />
+													<Admin user={props.user} users={props.users} setUsers={props.setUsers} />
+												</>
+												: null
+										}
+										<DM user={props.user} />
+										{connected && !blocked && !blockedBy && !hasInvited(props.user?.uuid) ? <InviteGame user={props.user} /> : null}
+										<Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
+										<Block user={props.user} />
+										<AddRemoveFriend user={props.user} />
+									</div>
+
+								</>
+						}
+					</div>
+					: null
+				}
+		</>
 	);
 }
 

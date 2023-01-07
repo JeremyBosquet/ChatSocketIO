@@ -162,18 +162,8 @@ function GamePlay(props: props) {
 				socketSocial?.emit("leaveGame");
 		};
 	}, [socketSocial]);
-	//const [count, setCount] = useState<number>(0);
-	//const [time, setTime] = useState<number>(Date.now());
-	//const [fps, setFps] = useState<number>(0);
 	function updateDisplay(): void {
 		if (contextRef.current) {
-			//setCount(count +1);
-			//if (Date.now() - time > 1000) {
-			//	console.log(count);
-			//	setFps(count);
-			//	setCount(0);
-			//	setTime(Date.now());
-			//}
 			let primeColor;
 			let secondColor;
 
@@ -185,7 +175,6 @@ function GamePlay(props: props) {
 				primeColor = "black";
 				secondColor = "white";
 			}
-			//contextRef.current.clearRect(0, 0, windowsWidth, windowsHeight);
 			contextRef.current.beginPath();
 			contextRef.current.fillStyle = primeColor;
 			contextRef.current.fillRect(0, 0, windowsWidth, windowsHeight);
@@ -212,10 +201,6 @@ function GamePlay(props: props) {
 				mult = 0.5;
 				contextRef.current.font = "30px Arial";
 
-				//if (_ImageA)
-				//	contextRef.current.drawImage(_ImageA, Math.floor(windowsWidth * 0.5 - 100), 0, display, display);
-				//if (_ImageB)
-				//	contextRef.current.drawImage(_ImageB, Math.floor(windowsWidth * 0.5 + 50), 0, display, display);
 				if (props.room?.scoreA)
 					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth * 0.5 - 35), 35);
 				else
@@ -402,12 +387,14 @@ function GamePlay(props: props) {
 		});
 		updateDisplay();
 	});
+	
 	useEffect(() => {
 		const interval = setInterval(() => {
 			updateDisplay();
 		}, 1000 / 60);
 		return () => clearInterval(interval);
 	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB]);
+
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>
@@ -415,7 +402,6 @@ function GamePlay(props: props) {
 				<title>Game - transcendence </title>
 			</Helmet>
 			<GameBoard socket={props.socket} room={props.room} />
-			{/*fps*/}
 			<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
 		</div>
 	);

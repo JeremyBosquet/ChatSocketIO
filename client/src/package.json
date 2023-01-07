@@ -23,6 +23,7 @@
     "helmet": "^6.0.1",
     "konva": "^8.3.14",
     "node-sass-chokidar": "^2.0.0",
+    "rc-menu": "^9.8.1",
     "react": "^18.2.0",
     "react-calendar": "^4.0.0",
     "react-clock": "^4.0.0",

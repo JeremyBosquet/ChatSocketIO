@@ -199,11 +199,11 @@ function GamePlay(props: props) {
 				mult = 0.9;
 				contextRef.current.font = "20px Arial";
 				if (props.room?.scoreA)
-					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth * 0.5 - 35), 35);
+					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth * 0.5 - 35), 25);
 				else
 					contextRef.current.fillText("0", Math.floor(windowsWidth * 0.5 - 20), 25);
 				if (props.room?.scoreB)
-					contextRef.current.fillText(props.room?.scoreB.toString(), Math.floor(windowsWidth * 0.5 + 20), 35);
+					contextRef.current.fillText(props.room?.scoreB.toString(), Math.floor(windowsWidth * 0.5 + 35), 25);
 				else
 					contextRef.current.fillText("0", Math.floor(windowsWidth * 0.5 + 10), 25);
 

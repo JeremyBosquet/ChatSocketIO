@@ -175,17 +175,16 @@ function Player(props: props) {
 								className="playerDots"/>
 						</span>
 							<ControlledMenu
-								viewScroll="close"
 								className="playerActions"
 								onKeyDown={(e: any) => e.stopPropagation()}
 								state={isOpen ? "open" : "closed"}
-								position={mobileMode ? "anchor" : "auto"}
-								direction={mobileMode ? "top" : "bottom"}
-								onMouseLeave={() => {
-									setIsOpen(false)
-								}}
+								position={"anchor"}
+								align={"center"}
+								direction={"right"}
 								onScroll={() => setIsOpen(false)}
+								reposition="initial"
 								anchorRef={topAnchor}
+
 							>
 								{(me.role === "admin" &&
 									props.user.role !== 'admin' &&

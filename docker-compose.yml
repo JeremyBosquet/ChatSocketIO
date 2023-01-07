@@ -3,23 +3,6 @@ version: "3.5"
 networks:
   transcendence-network:
 
-volumes:
-  back:
-    driver: local
-    name: back
-    driver_opts:
-      type: none
-      o: bind
-      device: ./server/data
-  front:
-    driver: local
-    name: front
-    driver_opts:
-      type: none
-      o: bind
-      device: ./client/data
-
-
 services:
   front:
     container_name: front
@@ -62,7 +45,7 @@ services:
     restart: always
   db:
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       interval: 10s
       timeout: 5s
       retries: 5

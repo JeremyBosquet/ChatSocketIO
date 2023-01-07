@@ -10,6 +10,9 @@ import AddRemoveFriend from "./AddRemoveFriend/AddRemoveFriend";
 import InviteGame from "./InviteGame/InviteGame";
 import { getSockeGameChat } from "../../../../Redux/gameSlice";
 import { TbDotsVertical } from "react-icons/tb";
+import Menu, { MenuItem } from 'rc-menu';
+import './Player.scss'
+import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
 
 interface IInvites {
 	requestFrom: string;
@@ -130,48 +133,52 @@ function Player(props: props) {
 	}, [window.innerWidth])
 
 	return (
-		<div className='player' key={props.user?.uuid}>
-			<div style={{ display: "flex" }}>
-				{connected && !blocked && !blockedBy ? <span className="connected"></span> : <span className="disconnected"></span>}
-				<p style={{ maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis" }}>{usernameTrunc(props.user?.username)}</p>
-			</div>
-			<div className="playerGroupActions">
+		<>
+			<div className='player' key={props.user?.uuid}>
+				<div style={{ display: "flex" }}>
+					{connected && !blocked && !blockedBy ? <span className="connected"></span> : <span className="disconnected"></span>}
+					<p style={{ maxWidth: "auto", overflow: "hidden", textOverflow: "ellipsis" }}>{usernameTrunc(props.user?.username)}</p>
+				</div>
 				{
 					me?.uuid !== props.user?.uuid && hasInvited(props.user?.uuid) ?
 						<button className='playerAcceptInvitation' onClick={() => handleAcceptInvitation(props.user?.uuid)}>Accept invitation</button>
-						:
+					:
 						null
 				}
-				{
-					props.user?.uuid === me.uuid ? null :
-						<>
-							<span ref={topAnchor}>
-								<TbDotsVertical 
+				{ me?.uuid !== props.user?.uuid ?
+					<span ref={topAnchor} >
+						{
+							isOpen ?
+								<MdOutlineKeyboardArrowUp 
 									onClick={() => setIsOpen((isOpen) => !isOpen) }
 									className="playerDots"/>
-							</span>
-							<ControlledMenu
-								viewScroll="close"
-								className="playerActions"
-								onKeyDown={(e: any) => e.stopPropagation()}
-								state={isOpen ? "open" : "closed"}
-								position={mobileMode ? "anchor" : "auto"}
-								direction={mobileMode ? "top" : "bottom"}
-								onMouseLeave={() => {
-									setIsOpen(false)
-								}}
-								onScroll={() => setIsOpen(false)}
-								anchorRef={topAnchor}
-							>
-								{connected && !blocked && !blockedBy && !hasInvited(props.user?.uuid) ? <InviteGame user={props.user} /> : null}
-								<Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
-								<Block user={props.user} />
-								<AddRemoveFriend user={props.user} />
-							</ControlledMenu>
-						</>
+							: 
+								<MdOutlineKeyboardArrowDown
+									onClick={() => setIsOpen((isOpen) => !isOpen) }	
+									className="playerDots"/>
+						}
+					</span>
+					: null
 				}
 			</div>
-		</div>
+				{ isOpen ?
+					<div className="playerGroupActions">
+						{
+							props.user?.uuid === me.uuid ? null :
+								<>
+									<div className="playerActionsDM">
+										{connected && !blocked && !blockedBy && !hasInvited(props.user?.uuid) ? <InviteGame user={props.user} /> : null}
+										<Link to={"/profile/" + props.user.trueUsername} className="actionButton">Profile</Link>
+										<Block user={props.user} />
+										<AddRemoveFriend user={props.user} />
+									</div>
+
+								</>
+						}
+					</div>
+					: null
+				}
+		</>
 	);
 }
 

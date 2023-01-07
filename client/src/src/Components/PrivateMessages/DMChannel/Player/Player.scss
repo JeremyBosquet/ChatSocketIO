@@ -32,47 +32,51 @@
 		position: fixed !important;
 	}
 
-	.playerAcceptInvitation {
-		height: 40px;
-		width: 100px;
-		font-size: 16px;
-		background-color: #454ADE;
+}
+.playerAcceptInvitation {
+	height: 40px;
+	width: 100px;
+	font-size: 16px;
+	background-color: #454ADE;
+	color: white;
+	border: 1px solid white;
+	border-radius: 5px;
+	cursor: pointer;
+
+	&:hover {
+		background-color: #3238df;
 		color: white;
 		border: 1px solid white;
-		border-radius: 5px;
+		transition-duration: 0.3s;
+	}
+}
+
+.playerActionsDM {
+	display: flex;
+	flex-direction: column;
+
+	.actionButton {
+		text-align: center;
+		font-size: 20px;
+		text-decoration: none;
+		margin: 0;
+		padding: 10px 0px;
+		background-color: #2B2B2B;
+		// border-bottom: 1px solid #666666;
+		border: 1px solid #181818;
+		color: #b3b2b2;
+		transition-duration: 0.2s;
+		padding: 10px;
 		cursor: pointer;
 
+		// &:nth-child(2) {
+		// 	border-top: 1px solid #666666;
+		// }
+
 		&:hover {
-			background-color: #3238df;
-			color: white;
-			border: 1px solid white;
-			transition-duration: 0.3s;
-		}
-	}
-
-	.playerActions {
-		.actionButton {
-			font-size: 20px;
-			text-decoration: none;
-			margin: 0;
-			padding: 10px 0px;
-			background-color: #2B2B2B;
-			border: 1px solid #666666;
-			border-top: none;
-			color: #b3b2b2;
 			transition-duration: 0.2s;
-			padding: 10px;
-			cursor: pointer;
-
-			&:nth-child(2) {
-				border-top: 1px solid #666666;
-			}
-
-			&:hover {
-				transition-duration: 0.2s;
-				background-color: #1F1F1F;
-				color: #b3b2b2;
-			}
+			background-color: #1F1F1F;
+			color: #b3b2b2;
 		}
 	}
 }

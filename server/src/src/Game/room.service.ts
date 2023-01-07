@@ -47,20 +47,6 @@ export class RoomService {
 		return listb;
 	}
 
-	async getWaitingRooms(): Promise<Room[]> {
-		let _index: number;
-		if (roomList.length > 0) {
-			const _roomList = roomList.filter((room) => room.status == 'waiting');
-			return _roomList;
-		}
-		else {
-			const rooms = await this.roomRepository.find({
-				where: { status: In(['waiting']) },
-			});
-			return rooms;
-		}
-	}
-
 	async updateRoom(roomId: string, data: any): Promise<any> {
 		let _index: number;
 		if ((_index = roomList.findIndex((_room) => _room.id == roomId)) != 1)
@@ -113,6 +99,16 @@ export class RoomService {
 		}
 		return roomList;
 	}
+	async getWaitingRooms(): Promise<Room[]> {
+		if (roomList && roomList?.length > 0) return roomList.filter((room) => room.status == 'waiting');
+		else {
+			const save = await this.roomRepository.find();
+			for (let i = 0; i < save.length; i++) {
+				roomList.push(save[i]);
+			}
+		}
+		return roomList.filter((room) => room.status == 'waiting');
+	}
 	async createRoom(room: Room): Promise<Room> {
 		room.ball = {
 			x: 50,
@@ -136,10 +132,10 @@ export class RoomService {
 		playerName: string,
 	): Promise<Room> {
 
-		if (room.playerA !== null && room.playerA.id === playerId)
-			throw new Error("Player already in a room");
-		else if (room.playerB !== null && room.playerB.id === playerId)
-			throw new Error("Player already in a room");
+		//if (room.playerA !== null && room.playerA.id === playerId)
+		//	throw new Error("Player already in a room");
+		//else if (room.playerB !== null && room.playerB.id === playerId)
+		//	throw new Error("Player already in a room");
 		if (room.playerA === null)
 			room.playerA = {
 				id: playerId,

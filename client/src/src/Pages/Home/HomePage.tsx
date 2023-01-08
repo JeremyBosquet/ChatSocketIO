@@ -8,7 +8,7 @@ import NavBar from "../../Components/Nav/NavBar";
 import { getMyExp } from '../../Components/Utils/getExp'
 import { whoWon } from "../../Components/Utils/whoWon";
 import KillSocket from "../../Components/KillSocket/KillSocket";
-import { getHistoryList, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList, setRanking, getRanking } from "../../Redux/userSlice";
+import { getHistoryList, getUserImg, getUserUsername, setUserUsername, setUserImg, setHistoryList, setRanking, getRanking, getUser, setUser } from "../../Redux/userSlice";
 import io from "socket.io-client";
 import GameReady from "../../Components/GameReady/GameReady";
 import GamePlay from "../../Components/GamePlay/GamePlay";
@@ -18,14 +18,14 @@ import instance from "../../API/Instance";
 import { Helmet } from "react-helmet";
 import { GiRank3 } from "react-icons/gi";
 import { Link } from "react-router-dom";
-import Protected from "../../Protected";
 import { IRoom } from "../../Components/GamePlay/Interfarces/GameInterace";
 
 function HomePage() {
 	const navigate = useNavigate();
 	const [booleffect2, setbooleffect2] = useState<boolean>(true);
 
-	const [User, setUser] = useState<any>();
+	// const [User, setUser] = useState<any>();
+
 	const [trueUsername, setTrueUsername] = useState<string>("");
 	const [myProfileExp, setMyProfileExp] = useState<any>();
 	const socketGame = useSelector(getSockeGame);
@@ -45,6 +45,7 @@ function HomePage() {
 	const userUsername: string = useSelector(getUserUsername);
 	const myHistoryList: any[] = useSelector(getHistoryList);
 	const Rank: number = useSelector(getRanking);
+	const User = useSelector(getUser);
 	useEffect(() => {
 		if (socketGame)
 			socketGame?.close();
@@ -110,18 +111,18 @@ function HomePage() {
 		if (localStorage.getItem("token")) {
 			await instance.get(`user`)
 				.then((res) => {
-					setUser(res.data.User);
+					dispatch(setUser(res.data.User));
 					dispatch(setUserUsername(res.data.User.username));
 					dispatch(setUserImg(import.meta.env.VITE_URL_API + ":7000/" + res.data.User.image));
 					setTrueUsername(res.data.User.trueUsername);
 					reloadHistoryAndRank(res.data.User.uuid);
 					getMyExp(res.data.User.uuid, setMyProfileExp);
 				}).catch(() => {
-					setUser(undefined);
+					dispatch(setUser(undefined));
 				});
 		}
 		else
-			setUser(undefined);
+			dispatch(setUser(undefined));
 		setbooleffect2(false);
 	}
 

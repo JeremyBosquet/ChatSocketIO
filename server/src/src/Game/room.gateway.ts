@@ -148,6 +148,7 @@ export class RoomGateway {
 							}
 							room.ball.x = x;
 							room.ball.y = y;
+							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 						}
 						else if (this.checkHitBox(room.playerB.x, room.playerB.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
 							room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerB.y) / room.settings.boardHeight, 1);
@@ -164,6 +165,7 @@ export class RoomGateway {
 							}
 							room.ball.x = x;
 							room.ball.y = y;
+							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 						}
 						else if (this.checkHitBox(0, -50, 100, 51, room.ball.x, room.ball.y)) {
 							room.ball.direction = this.newDirection(room.ball.direction, 0, -1);
@@ -181,6 +183,7 @@ export class RoomGateway {
 							}
 							room.ball.x = x;
 							room.ball.y = y;
+							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 						}
 						else if (this.checkHitBox(0, 99, 100, 51, room.ball.x, room.ball.y)) {
 							room.ball.direction = this.newDirection(room.ball.direction, 0, -1);
@@ -195,12 +198,13 @@ export class RoomGateway {
 							}
 							room.ball.x = x;
 							room.ball.y = y;
+							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 						}
 						else {
 							room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 							room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
 						}
-						this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, timestamp: Date.now() });
+						//this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 					}
 				}
 				room.lastActivity = Date.now();
@@ -216,18 +220,18 @@ export class RoomGateway {
 	): Promise<void> {
 		if (data?.roomId) {
 			const room = await this.roomService.getRoom(data.roomId);
-			if (room) {
+			if (room && room.playerA?.id && room.playerB?.id) {
 				await client.join('room-' + room.id);
 				client.data.roomId = data.roomId;
 				client.data.playerId = data.playerId;
 				client.data.playerName = (await this.usersService.findUserByUuid(data.id))?.username;
-				room.playerA.name = (await this.usersService.findUserByUuid(room.playerA.id))?.username;
-				room.playerB.name = (await this.usersService.findUserByUuid(room.playerB.id))?.username;
+				room.playerA.name = (await this.usersService.findUserByUuid(room.playerA?.id))?.username;
+				room.playerB.name = (await this.usersService.findUserByUuid(room.playerB?.id))?.username;
 				this.server.in('room-' + room.id).emit('gameInit', room);
 			} else {
 				this.server
 					.in(client.id)
-					.emit('errorRoomNotFound', client.data?.playerId);
+					.emit('errorRoomNotFound', room);
 			}
 		}
 	}
@@ -355,6 +359,7 @@ export class RoomGateway {
 		const data = tmp?.tmpUser;
 		let otherPlayer = null;
 		const room = await this.roomService.getRoom(tmp?.room?.id);
+		let roomStatus = room?.status;
 		if (data?.id && data?.name && room) {
 			if (room.status.startsWith('waiting|')) {
 				const playerA = room.status.split('|')[1];
@@ -398,7 +403,7 @@ export class RoomGateway {
 			await this.roomService.save(room);
 			if (room.nbPlayers == 0)
 				await this.roomService.updateRoom(room.id, { status: 'destroy' });
-			else if (otherPlayer.id) {
+			else if (otherPlayer?.id && roomStatus == 'configuring') {
 				const _rooms = await this.roomService.getWaitingRooms();
 				let _roomFound = false;
 				for (let i = 0; i < _rooms.length; i++) {
@@ -450,6 +455,7 @@ export class RoomGateway {
 		if (client.data.roomId !== undefined) {
 			let otherPlayer = null;
 			const room = await this.roomService.getRoom(client.data.roomId);
+			let roomStatus = room?.status;
 			if (room && room?.id && room?.nbPlayers !== null && room.status != 'finished') {
 				const playerA = room.status.split('|')[1];
 				const playerB = room.status.split('|')[2];
@@ -563,7 +569,7 @@ export class RoomGateway {
 						await this.roomService.updateRoom(room.id, { status: 'destroy' });
 						room.status = 'destroy'
 					}
-					else if (otherPlayer.id) {
+					else if (otherPlayer?.id && roomStatus == 'configuring') {
 						const _rooms = await this.roomService.getWaitingRooms();
 						let _roomFound = false;
 						for (let i = 0; i < _rooms.length; i++) {

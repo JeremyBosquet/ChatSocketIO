@@ -49,12 +49,12 @@ function GameSpectatePage() {
 		socket?.on("roomStarted", (room: IRoom) => {
 			setRooms([...rooms, room]);
 		});
-	}, [socket]);
+	}, [socket, rooms]);
 	useEffect(() => {
 		socket?.on("roomFinished", (room: IRoom) => {
 			setRooms((rooms) => rooms.filter((r) => r.id !== room.id));
 		});
-	}, [socket]);
+	}, [socket, rooms]);
 	useEffect(() => {
 		if (socket && roomId && display && roomId.length > 0) {
 			socket.removeListener("gameEnd");
@@ -64,6 +64,8 @@ function GameSpectatePage() {
 			socket.removeListener("errorRoomNotFound");
 			socket?.emit("joinRoomSpectate", { roomId: roomId, id: user?.uuid });
 			socket?.on("errorRoomNotFound", (room: IRoom) => {
+				if (room)
+					setRooms((rooms) => rooms.filter((r) => r.id !== room.id));
 				navigate("/game/spectate");
 			});
 			socket.on("gameInit", (room: IRoom) => {
@@ -75,12 +77,14 @@ function GameSpectatePage() {
 				else if (data.scoreB === 10)
 					createNotification("success", (room?.playerB?.name != undefined ? room?.playerB.name : "PlayerB") + " won the game");
 				setDisplay(false);
+				setRooms((rooms) => rooms.filter((r) => r.id !== data.id));
 				setRoom(undefined);
 				navigate("/game/spectate");
 			});
 			socket.on("gameForceEnd", (data: IRoom) => {
-				createNotification("info", "The opponent has left the game");
+				createNotification("info", "The game was stopped because one of the players left the game");
 				setDisplay(false);
+				setRooms((rooms) => rooms.filter((r) => r.id !== data.id));
 				setRoom(undefined);
 				navigate("/game/spectate");
 			});
@@ -89,18 +93,17 @@ function GameSpectatePage() {
 					setRoom({ ...room, scoreA: data.scoreA, scoreB: data.scoreB });
 			});
 		}
-	}, [socket, roomId, display]);
+	}, [socket, roomId, display, room, user]);
 
 	useEffect(() => {
 		const checkId = async () => {
 			if (roomId) {
 				const result = await instance.get(`room/checkGame/` + roomId).then((res) => {
 					setDisplay(true);
-					console.log(res);
 				})
 				.catch((err) => {
-					navigate("/game/spectate");
 					setDisplay(false);
+					navigate("/game/spectate");
 				});
 			}
 		};
@@ -108,25 +111,10 @@ function GameSpectatePage() {
 	}, [roomId]);
 
 	useEffect(() => {
-		const getUserInfos = async () => {
-			await instance
-				.get(`user`, {
-					headers: {
-						Authorization: "Bearer " + localStorage.getItem("token"),
-					},
-				})
-				.then((res) => {
-					dispatch(setUser(res.data.User));
-				})
-				.catch((err) => {
-					setUser(undefined);
-					createNotification("error", "User not found");
-					navigate("/");
-				});
-		}
-
-		if (localStorage.getItem("token"))
-			getUserInfos();
+		const interval = setInterval(() => {
+			getRooms(null);
+		}, 5000);
+		return () => clearInterval(interval);
 	}, []);
 
 	return (

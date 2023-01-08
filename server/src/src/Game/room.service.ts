@@ -26,20 +26,18 @@ export class RoomService {
 		this.clearDatabase();
 	}
 	async getInGamePlayers(): Promise<any> {
-		let lista = await this.roomRepository.find({
-			where: { status: In(['playing']) },
-		});
+		let lista = await this.roomRepository.findBy({ status: In(['playing']) });
 		let listb = [];
 		for (let i = 0; i < lista.length; i++) {
 			if (lista[i].playerA !== null) {
 				if (listb.findIndex((player) => player.id == lista[i].playerA.id) == -1) {
-					const temp = { uuid: lista[i].playerA.id };
+					const temp = { uuid: lista[i].playerA.id, gameId: lista[i].id };
 					listb.push(temp);
 				}
 			}
 			if (lista[i].playerB !== null) {
 				if (listb.findIndex((player) => player.id == lista[i].playerB.id) == -1) {
-					const temp = { uuid: lista[i].playerB.id };
+					const temp = { uuid: lista[i].playerB.id, gameId: lista[i].id };
 					listb.push(temp);
 				}
 			}
@@ -63,7 +61,7 @@ export class RoomService {
 			const _roomList = roomList.filter((room) => room.status == 'playing');
 			for (let i = 0; i < _roomList.length; i++) {
 				if (_roomList[i].playerA.name == undefined) {
-					const user = await this.userService.findUserByUuid(_roomList[i].playerB.id);
+					const user = await this.userService.findUserByUuid(_roomList[i].playerA.id);
 					_roomList[i].playerA.name = user.username;
 				}
 				if (_roomList[i].playerB.name == undefined) {
@@ -77,7 +75,7 @@ export class RoomService {
 			const _roomList = await (this.roomRepository.findBy({ status: 'playing' }));
 			for (let i = 0; i < _roomList.length; i++) {
 				if (_roomList[i].playerA.name == undefined) {
-					const user = await this.userService.findUserByUuid(_roomList[i].playerB.id);
+					const user = await this.userService.findUserByUuid(_roomList[i].playerA.id);
 					_roomList[i].playerA.name = user.username;
 				}
 				if (_roomList[i].playerB.name == undefined) {

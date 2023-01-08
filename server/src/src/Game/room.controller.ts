@@ -15,7 +15,7 @@ export class RoomController {
   }
 
   @Get('getGameOfUser/:uuid')
-  //@UseGuards(JwtTwoFactorGuard)
+  @UseGuards(JwtTwoFactorGuard)
   async getGameOfUser(@Res() res, @Param(ValidationPipe) param: uuidDto) {
     const channels = await this.roomService.getGameOfUser(param.uuid);
     res.json(channels);
@@ -25,7 +25,7 @@ export class RoomController {
   @UseGuards(JwtTwoFactorGuard)
   async checkgame(@Res() res, @Param(ValidationPipe) param: uuidDto) {
     const room = await this.roomService.getRoom(param.uuid);
-    if (room?.status === 'playing') {
+    if (room && room?.status === 'playing') {
       return res.status(HttpStatus.OK).json(room);
     }
     return res.status(HttpStatus.NOT_FOUND).json({

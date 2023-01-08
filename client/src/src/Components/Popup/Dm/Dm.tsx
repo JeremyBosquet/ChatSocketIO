@@ -13,13 +13,9 @@ interface props {
 function Dm(props: props) {
 
 	const me = useSelector(getUser);
-	const params = useParams();
 	const navigate = useNavigate();
 
 	const handleDM = async (targetId: string) => {
-		if (!params.id)
-			navigate('/chat/channel');
-
 		await instance.post(`chat/dm/`, {
 			user1: me.uuid,
 			user2: targetId,

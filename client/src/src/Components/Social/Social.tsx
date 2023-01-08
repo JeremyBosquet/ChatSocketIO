@@ -16,6 +16,7 @@ import IsOnline from '../Utils/IsOnline';
 import instance from '../../API/Instance';
 import DM from '../Channels/ChatChannel/Player/DM/DM';
 import Dm from '../Popup/Dm/Dm';
+import Spectate from '../Popup/Spectate/Spectate';
 
 function Social() {
 	let navigate = useNavigate();
@@ -220,6 +221,7 @@ function Social() {
 																					<AddOrRemove User={User} UserUuid={user.uuid} />
 																					<Show trueUsername={user.trueUsername} />
 																					<Dm user={user} />
+																					<Spectate uuid={user.uuid} />
 																					<BlockOrUnblock UserUuid={user.uuid} User={User} />
 																				</div>
 																			</div>

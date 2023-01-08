@@ -38,7 +38,7 @@ function GameChatReady(props: props) {
 	socket?.removeListener("roomTimeout");
 	socket?.removeListener("roomDestroyed");
 	socket?.on("roomDestroyed", (data: any) => {
-		createNotification("info", "One of the players left the room");
+		createNotification("info", "One of the players hasn't confirmed the configuration");
 		socket?.emit("cancelSearching", { tmpUser, room });
 		setSearchingDisplay(false);
 		setSearching(false);

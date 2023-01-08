@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { getSockeGameChat } from "../../Redux/gameSlice";
 import instance from "../../API/Instance";
 import { Helmet } from "react-helmet";
+import { IConfiguration, IRoom } from "../GamePlay/Interfarces/GameInterace";
 
 interface props {
 	socket: Socket | undefined;
@@ -17,51 +18,6 @@ interface props {
 	setPlayerName: (playerName: string) => void;
 	room: IRoom;
 	quitGame: () => void;
-}
-
-interface IPlayer {
-	id: string;
-	name: string;
-	status: string;
-	x: number;
-	y: number;
-}
-
-interface IRoom {
-	id: string;
-	name: string;
-	nbPlayers: number;
-	owner: string;
-	status: string;
-	createdAt: string;
-	playerA: IPlayer;
-	playerB: IPlayer;
-	scoreA: number;
-	scoreB: number;
-	ball: IBall;
-	settings: ISettings;
-	configurationA: IConfiguration;
-	configurationB: IConfiguration;
-}
-
-interface ISettings {
-	defaultSpeed: number;
-	defaultDirection: number;
-	boardWidth: number;
-	boardHeight: number;
-	ballRadius: number;
-	background: string;
-}
-interface IConfiguration {
-	difficulty: string;
-	background: string;
-	confirmed: boolean;
-}
-interface IBall {
-	x: number;
-	y: number;
-	speed: number;
-	direction: number;
 }
 
 function GameChatReady(props: props) {

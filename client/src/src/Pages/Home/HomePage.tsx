@@ -19,53 +19,7 @@ import { Helmet } from "react-helmet";
 import { GiRank3 } from "react-icons/gi";
 import { Link } from "react-router-dom";
 import Protected from "../../Protected";
-
-interface IPlayer {
-	id: string;
-	name: string;
-	status: string;
-	x: number;
-	y: number;
-}
-
-interface IBall {
-	x: number;
-	y: number;
-	speed: number;
-	direction: number;
-}
-
-interface IRoom {
-	id: string;
-	name: string;
-	nbPlayers: number;
-	owner: string;
-	status: string;
-	createdAt: string;
-	playerA: IPlayer;
-	playerB: IPlayer;
-	scoreA: number;
-	scoreB: number;
-	ball: IBall;
-	settings: ISettings;
-	configurationA: IConfiguration;
-	configurationB: IConfiguration;
-}
-
-interface IConfiguration {
-	difficulty: string;
-	background: string;
-	confirmed: boolean;
-}
-
-interface ISettings {
-	defaultSpeed: number;
-	defaultDirection: number;
-	boardWidth: number;
-	boardHeight: number;
-	ballRadius: number;
-	background: string;
-}
+import { IRoom } from "../../Components/GamePlay/Interfarces/GameInterace";
 
 function HomePage() {
 	const navigate = useNavigate();

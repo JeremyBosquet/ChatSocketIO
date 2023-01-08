@@ -11,58 +11,14 @@ import instance from "../../API/Instance";
 import { Helmet } from "react-helmet";
 import { Link, useNavigate } from "react-router-dom";
 import { ImFileText2 } from "react-icons/im";
-import { setUser } from "../../Redux/userSlice";
+import { IConfiguration, IRoom } from "../GamePlay/Interfarces/GameInterace";
+
 interface props {
 	socket: Socket | undefined;
 	setReady: (ready: boolean) => void;
 	setPlayerId: (playerId: string) => void;
 	setPlayerName: (playerName: string) => void;
 	setDisplay: (display: boolean) => void;
-}
-
-interface IPlayer {
-	id: string;
-	name: string;
-	status: string;
-	x: number;
-	y: number;
-}
-
-interface IRoom {
-	id: string;
-	name: string;
-	nbPlayers: number;
-	owner: string;
-	status: string;
-	createdAt: string;
-	playerA: IPlayer;
-	playerB: IPlayer;
-	scoreA: number;
-	scoreB: number;
-	ball: IBall;
-	settings: ISettings;
-	configurationA: IConfiguration;
-	configurationB: IConfiguration;
-}
-
-interface ISettings {
-	defaultSpeed: number;
-	defaultDirection: number;
-	boardWidth: number;
-	boardHeight: number;
-	ballRadius: number;
-	background: string;
-}
-interface IConfiguration {
-	difficulty: string;
-	background: string;
-	confirmed: boolean;
-}
-interface IBall {
-	x: number;
-	y: number;
-	speed: number;
-	direction: number;
 }
 
 function GameReady(props: props) {

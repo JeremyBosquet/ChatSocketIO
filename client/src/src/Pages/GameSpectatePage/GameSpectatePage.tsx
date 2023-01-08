@@ -14,54 +14,7 @@ import { getUser, setUser } from "../../Redux/userSlice";
 import instance from "../../API/Instance";
 import './GameSpectatePage.scss'
 import { Helmet } from "react-helmet";
-
-interface IPlayer {
-	id: string;
-	name: string;
-	status: string;
-	x: number;
-	y: number;
-}
-
-interface IBall {
-	x: number;
-	y: number;
-	speed: number;
-	direction: number;
-}
-
-interface IRoom {
-	id: string;
-	name: string;
-	nbPlayers: number;
-	owner: string;
-	status: string;
-	createdAt: string;
-	playerA: IPlayer;
-	playerB: IPlayer;
-	scoreA: number;
-	scoreB: number;
-	ball: IBall;
-	settings: ISettings;
-	configurationA: IConfiguration;
-	configurationB: IConfiguration;
-	lastActivity: number;
-}
-
-interface IConfiguration {
-	difficulty: string;
-	background: string;
-	confirmed: boolean;
-}
-
-interface ISettings {
-	defaultSpeed: number;
-	defaultDirection: number;
-	boardWidth: number;
-	boardHeight: number;
-	ballRadius: number;
-	background: string;
-}
+import { IRoom } from "../../Components/GamePlay/Interfarces/GameInterace";
 
 function GameSpectatePage() {
 	const [rooms, setRooms] = useState<IRoom[]>([]);

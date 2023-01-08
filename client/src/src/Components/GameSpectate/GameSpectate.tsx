@@ -5,73 +5,12 @@ import useEventListener from "@use-it/event-listener";
 import useImage from "use-image";
 import { Helmet } from "react-helmet";
 import GameBoard from "../GameBoard/GameBoard";
+import { ICanvasBall, ICanvasBoard, IRoom } from "../GamePlay/Interfarces/GameInterace";
 
 interface props {
 	socket: Socket | undefined;
 	room: IRoom | undefined;
 	setRoom: any;
-}
-
-interface IPlayer {
-	id: string;
-	name: string;
-	status: string;
-	x: number;
-	y: number;
-}
-
-interface IRoom {
-	id: string;
-	name: string;
-	nbPlayers: number;
-	owner: string;
-	status: string;
-	createdAt: string;
-	playerA: IPlayer;
-	playerB: IPlayer;
-	scoreA: number;
-	scoreB: number;
-	ball: IBall;
-	settings: ISettings;
-	configurationA: IConfiguration;
-	configurationB: IConfiguration;
-}
-
-interface IConfiguration {
-	difficulty: string;
-	background: string;
-}
-
-interface ISettings {
-	defaultSpeed: number;
-	defaultDirection: number;
-	boardWidth: number;
-	boardHeight: number;
-	ballRadius: number;
-	background: string;
-}
-
-interface ICanvasBoard {
-	x: number;
-	y: number;
-	id: string;
-	percentY: number;
-}
-
-interface IBall {
-	x: number;
-	y: number;
-	speed: number;
-	direction: number;
-}
-
-interface ICanvasBall {
-	x: number;
-	y: number;
-	id: string;
-	radius: number;
-	percentX: number;
-	percentY: number;
 }
 
 let random = Math.random() * 1000;

@@ -16,59 +16,7 @@ import { getSockeGameChat, setSocketGameChat } from '../../Redux/gameSlice';
 import { io } from 'socket.io-client';
 import GamePlay from '../../Components/GamePlay/GamePlay';
 import GameChatReady from '../../Components/GameChatReady/GameChatReady';
-
-
-interface IPlayer {
-	id: string;
-	name: string;
-	status: string;
-	x: number;
-	y: number;
-}
-
-interface IBall {
-	x: number;
-	y: number;
-	speed: number;
-	direction: number;
-}
-
-interface IRoom {
-	id: string;
-	name: string;
-	nbPlayers: number;
-	owner: string;
-	status: string;
-	createdAt: string;
-	scoreA: number;
-	scoreB: number;
-	playerA: IPlayer;
-	playerB: IPlayer;
-	ball: IBall;
-	settings: ISettings;
-	configurationA: IConfiguration;
-	configurationB: IConfiguration;
-}
-
-interface IConfiguration {
-	difficulty: string;
-	background: string;
-	confirmed: boolean;
-}
-
-interface ISettings {
-	defaultSpeed: number;
-	defaultDirection: number;
-	boardWidth: number;
-	boardHeight: number;
-	ballRadius: number;
-	background: string;
-}
-
-interface IInvites {
-	requestFrom: string;
-	roomId: string;
-}
+import { IInvites, IRoom } from '../../Components/GamePlay/Interfarces/GameInterace';
 
 function DMPage() {
 	const logged = useSelector(getLogged);

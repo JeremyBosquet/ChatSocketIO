@@ -6,75 +6,13 @@ import useEventListener from "@use-it/event-listener";
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
 import { getSocketSocial } from "../../Redux/userSlice";
-import { Stage, Sprite, Graphics } from '@inlet/react-pixi'
+import { ICanvasBall, ICanvasBoard, IRoom } from "./Interfarces/GameInterace";
 
 interface props {
 	socket: Socket | undefined;
 	room: IRoom | undefined;
 	playerId: string;
 	playerName: string;
-}
-
-interface IPlayer {
-	id: string;
-	name: string;
-	status: string;
-	x: number;
-	y: number;
-}
-
-interface IRoom {
-	id: string;
-	name: string;
-	nbPlayers: number;
-	owner: string;
-	status: string;
-	createdAt: string;
-	playerA: IPlayer;
-	playerB: IPlayer;
-	scoreA: number;
-	scoreB: number;
-	ball: IBall;
-	settings: ISettings;
-	configurationA: IConfiguration;
-	configurationB: IConfiguration;
-}
-
-interface IConfiguration {
-	difficulty: string;
-	background: string;
-}
-
-interface ISettings {
-	defaultSpeed: number;
-	defaultDirection: number;
-	boardWidth: number;
-	boardHeight: number;
-	ballRadius: number;
-	background: string;
-}
-
-interface ICanvasBoard {
-	x: number;
-	y: number;
-	id: string;
-	percentY: number;
-}
-
-interface IBall {
-	x: number;
-	y: number;
-	speed: number;
-	direction: number;
-}
-
-interface ICanvasBall {
-	x: number;
-	y: number;
-	id: string;
-	radius: number;
-	percentX: number;
-	percentY: number;
 }
 
 let random = Math.random() * 1000;
@@ -92,11 +30,6 @@ function GamePlay(props: props) {
 		random = Math.random() * 1000;
 		random = Math.floor(random);
 	}, []);
-
-	//const _ImageA = new Image();
-	//const _ImageB = new Image();
-	//(props.room?.playerA.name === props.playerName ? _ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random : _ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id + "#" + random);
-	//(props.room?.playerB.name === props.playerName ? _ImageB.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id + "#" + random : _ImageB.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id + "#" + random);
 
 	let mult = 0.5;
 	if (window.innerWidth < 500)
@@ -387,7 +320,6 @@ function GamePlay(props: props) {
 		});
 		updateDisplay();
 	});
-
 	useEffect(() => {
 		const interval = setInterval(() => {
 			updateDisplay();
@@ -395,13 +327,6 @@ function GamePlay(props: props) {
 		return () => clearInterval(interval);
 	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB]);
 
-	const draw = React.useCallback(g => {
-		g.clear()
-		g.lineStyle(0)
-		g.beginFill(0x000000, 1)
-		g.drawCircle(ball.x, ball.y, 5)
-		g.endFill()
-	  }, [ball])
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

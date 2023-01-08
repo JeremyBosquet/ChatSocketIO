@@ -1,4 +1,5 @@
 import React from "react";
+import { ISettings } from "../GamePlay/Interfarces/GameInterace";
 
 interface props {
 	id: string;
@@ -8,13 +9,6 @@ interface props {
 	status: string;
 	createdAt: string;
 	settings: ISettings;
-}
-
-interface ISettings {
-	defaultSpeed: number;
-	boardWidth: number;
-	boardHeight: number;
-	ballRadius: number;
 }
 
 function RoomInfo(props: props) {

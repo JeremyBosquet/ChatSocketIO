@@ -4,7 +4,6 @@ import {
 	SubscribeMessage,
 	WebSocketGateway,
 	WebSocketServer,
-	WsResponse,
 } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { RoomService } from './room.service';
@@ -35,7 +34,8 @@ const ballInterval = [];
 
 @WebSocketGateway(7002, { cors: '*:*' })
 export class RoomGateway {
-	constructor(private roomService: RoomService, private usersService: UsersService) { }
+	
+	constructor(private roomService: RoomService, private usersService: UsersService) {}
 	@WebSocketServer()
 	server;
 

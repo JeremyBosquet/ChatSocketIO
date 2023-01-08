@@ -11,25 +11,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { UsersService } from '../Users/users.service';
 import { Interval } from '@nestjs/schedule';
 
-interface Irooms {
-	id: string;
-	name: string;
-	owner: string;
-	nbPlayers: number;
-	status: string;
-	createdAt: string;
-}
-
-interface Iready {
-	roomId: string;
-	playerId: string;
-	playerName: string;
-}
-
 let lastTime = Date.now();
 
 let boardAX = 3;
 let boardBX = 3 + 1.5;
+
 const ballInterval = [];
 
 @WebSocketGateway(7002, { cors: '*:*' })
@@ -221,13 +207,6 @@ export class RoomGateway {
 				this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
 			}
 		}
-	}
-
-
-	@SubscribeMessage('roomCreated')
-	async handleConnect(@MessageBody() data: Irooms[]): Promise<void> {
-		const rooms = await this.roomService.getRooms();
-		this.server.emit('roomCreated', rooms);
 	}
 
 	@SubscribeMessage('joinRoomSpectate')

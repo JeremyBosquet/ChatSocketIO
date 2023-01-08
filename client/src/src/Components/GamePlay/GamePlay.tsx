@@ -22,7 +22,7 @@ let lastTimestamp = 0;
 function GamePlay(props: props) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const contextRef = useRef<CanvasRenderingContext2D | null>(null);
-
+ 
 	let boardAX = 0.025;
 	let boardBX = 0.04;
 
@@ -85,12 +85,12 @@ function GamePlay(props: props) {
 	const socketSocial = useSelector(getSocketSocial);
 	useEffect(() => {
 		if (props.room?.id)
-			socketSocial?.emit("joinGame", {id:props.room.id});
+			socketSocial?.emit("joinGame", { id: props.room.id });
 		else
 			socketSocial?.emit("leaveGame");
 		return () => {
 			if (props.room?.id)
-				socketSocial?.emit("joinGame", {id:props.room.id});
+				socketSocial?.emit("joinGame", { id: props.room.id });
 			else
 				socketSocial?.emit("leaveGame");
 		};
@@ -335,7 +335,7 @@ function GamePlay(props: props) {
 			</Helmet>
 			<GameBoard socket={props.socket} room={props.room} />
 			{<canvas ref={canvasRef} width={windowsWidth} height={windowsHeight} />
-	}
+			}
 		</div>
 	);
 }

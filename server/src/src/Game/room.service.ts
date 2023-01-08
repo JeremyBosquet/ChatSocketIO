@@ -99,6 +99,7 @@ export class RoomService {
 		}
 		return roomList;
 	}
+
 	async getWaitingRooms(): Promise<Room[]> {
 		if (roomList && roomList?.length > 0) return roomList.filter((room) => room.status == 'waiting');
 		else {
@@ -109,6 +110,7 @@ export class RoomService {
 		}
 		return roomList.filter((room) => room.status == 'waiting');
 	}
+
 	async createRoom(room: Room): Promise<Room> {
 		room.ball = {
 			x: 50,

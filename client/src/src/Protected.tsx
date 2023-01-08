@@ -14,9 +14,10 @@ const Protected = ({ children }: { children: any }) => {
 	useEffect(() => {
 		const checkAuth = async () => {
 			if (localStorage.getItem("token")) {
-				await instance.get(`user/CompareToken`)
+				await instance.get(`user`)
 					.then((res) => {
 						setIsLoggedIn(true);
+						dispatch(setUser(res.data.User));
 					})
 					.catch((err) => {
 						if (err.code != "ECONNABORTED")

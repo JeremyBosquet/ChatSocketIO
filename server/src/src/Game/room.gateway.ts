@@ -699,7 +699,7 @@ export class RoomGateway {
 				_room.ball.direction = _room.settings.defaultDirection;
 				_room.settings.ballRadius = 1;
 				_room.settings.boardWidth = 1.5;
-				_room.settings.boardHeight = 1500; //15
+				_room.settings.boardHeight = 15; //15
 				_room.ball.speed = _room.settings.defaultSpeed/* 10*/;
 				_room.settings.defaultSpeed = _room.settings.defaultSpeed/*/ 10*/;
 				_room.status = 'playing';

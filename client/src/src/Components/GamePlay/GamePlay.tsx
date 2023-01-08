@@ -57,6 +57,7 @@ function GamePlay(props: props) {
 			: 100,
 		percentX: 50,
 		percentY: 50,
+		isReal: false,
 	});
 	let playerA = ({
 		id: "playerA",
@@ -82,7 +83,7 @@ function GamePlay(props: props) {
 			socketSocial?.emit("leaveGame");
 		};
 	}, [socketSocial]);
-	
+
 	function updateDisplay(): void {
 		if (contextRef.current) {
 			let primeColor;
@@ -311,6 +312,7 @@ function GamePlay(props: props) {
 			y: (data?.y * 0.01) * windowsHeight,
 			percentX: data?.x,
 			percentY: data?.y,
+			isReal: true,
 		});
 		direction = (data?.direction);
 		speed = (data?.speed);
@@ -320,16 +322,16 @@ function GamePlay(props: props) {
 	//let lastTimestamp = Date.now();
 	//let count = 0;
 
-	let fps = 60;
+	let fps = 60; // link au back
 	let now;
 	let then = Date.now();
 	let interval = 1000/fps;
 	let delta;
+	let test : any;
 	function update() {
-		// Move the ball for 1000 / 60
 		now = Date.now();
 		delta = now - then;
-		if (delta > interval) {
+		if (delta > interval && ball.isReal) {
 			then = now - (delta % interval);
 			ball.percentX += Math.cos(direction) * speed * 0.2;
 			ball.percentY += Math.sin(direction) * speed * 0.2;
@@ -347,10 +349,17 @@ function GamePlay(props: props) {
 			}
 			updateDisplay();
 		}
-		requestAnimationFrame(update);
+		test = requestAnimationFrame(update);
 	}
-	requestAnimationFrame(update);
-
+	//cancelAnimationFrame(test);
+	useEffect(() => {
+		let tet : any;
+		tet = requestAnimationFrame(update);
+		return () => {
+			cancelAnimationFrame(tet);
+		};
+	}, []);
+	
 	console.log("render page");
 	return (
 		<div id="gameMain" className="cursor">

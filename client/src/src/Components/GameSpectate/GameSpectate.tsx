@@ -13,8 +13,6 @@ interface props {
 	setRoom: any;
 }
 
-let random = Math.random() * 1000;
-random = Math.floor(random);
 let lastTimestamp = 0;
 
 function GameSpectate(props: props) {
@@ -23,15 +21,6 @@ function GameSpectate(props: props) {
 
 	let boardAX = 0.025;
 	let boardBX = 0.04;
-
-	useEffect(() => {
-		random = Math.random() * 1000;
-		random = Math.floor(random);
-	}, []);
-	//const _ImageA = new Image();
-	//const _ImageB = new Image();
-	//_ImageA.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerA.id  + "#" + random;
-	//_ImageB.src = import.meta.env.VITE_URL_API + ":7000/api/user/getProfilePicture/" + props.room?.playerB.id  + "#" + random;
 
 	let mult = 0.5;
 	if (window.innerWidth < 500)

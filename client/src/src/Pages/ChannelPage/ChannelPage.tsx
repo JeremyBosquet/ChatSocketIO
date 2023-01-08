@@ -38,7 +38,6 @@ function ChannelPage() {
 	const [inviteGames, setInviteGames] = useState<IInvites[]>([]);
 	const [searchChannel, setSearchChannel] = useState<string>("");
 	const [channelsFind, setChannelsFind] = useState<[]>([]);
-
 	const channels = useSelector(getChannels);
 
 	KillSocket("game");

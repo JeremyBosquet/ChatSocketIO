@@ -24,7 +24,9 @@ function Manage(props: props) {
 
 	const dispatch = useDispatch();
 
-	const handleChange = async () => {
+	const handleChange = async (e: any) => {
+		e.preventDefault();
+
 		if (props.channel.visibility === "protected") {
 			if (!oldPassword) {
 				createNotification('error', 'You must enter the old password.');
@@ -107,10 +109,9 @@ function Manage(props: props) {
 								</div>
 								:
 								null
-						}
+							}
+							<button type="submit" className="manageChangeButton">Change</button>
 					</form>
-
-					<button className="manageChangeButton" onClick={handleChange}>Change</button>
 				</div>
 			</div>
 		</div>

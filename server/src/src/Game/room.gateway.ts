@@ -145,8 +145,7 @@ export class RoomGateway {
 								antiLoop++;
 								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.2;
-							}							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
-
+							}
 							room.ball.x = x;
 							room.ball.y = y;
 						}
@@ -162,8 +161,7 @@ export class RoomGateway {
 								room.ball.direction = room.ball.direction - 0.1;
 								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.2;
-							}							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
-
+							}
 							room.ball.x = x;
 							room.ball.y = y;
 						}
@@ -180,8 +178,7 @@ export class RoomGateway {
 									room.ball.direction = room.ball.direction - 0.35;
 								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.2;
-							}							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
-
+							}
 							room.ball.x = x;
 							room.ball.y = y;
 						}
@@ -195,8 +192,7 @@ export class RoomGateway {
 								antiLoop++;
 								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.2;
-							}							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
-
+							}
 							room.ball.x = x;
 							room.ball.y = y;
 						}
@@ -204,8 +200,7 @@ export class RoomGateway {
 							room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 							room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
 						}
-						//if (Math.floor(Math.random() * 10) == 5)
-						//	this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
+						this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 					}
 				}
 				room.lastActivity = Date.now();
@@ -286,7 +281,7 @@ export class RoomGateway {
 							await this.roomService.updateRoom(room.id, { status: 'destroy' });
 						} else if (
 							room.nbPlayers ==
-							1 /*&& room?.playerA?.id != data?.id && room?.playerB?.id != data?.id*/ // Re add ca
+							1 && room?.playerA?.id != data?.id && room?.playerB?.id != data?.id
 						) {
 							await client.join('room-' + room.id);
 							client.data.roomId = room.id;
@@ -700,7 +695,7 @@ export class RoomGateway {
 				_room.ball.direction = _room.settings.defaultDirection;
 				_room.settings.ballRadius = 1;
 				_room.settings.boardWidth = 1.5;
-				_room.settings.boardHeight = 1500; //15
+				_room.settings.boardHeight = 15; //15
 				_room.ball.speed = _room.settings.defaultSpeed/* 10*/;
 				_room.settings.defaultSpeed = _room.settings.defaultSpeed/*/ 10*/;
 				_room.status = 'playing';

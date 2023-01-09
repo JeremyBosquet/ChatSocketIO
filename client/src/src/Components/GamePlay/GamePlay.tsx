@@ -15,6 +15,8 @@ interface props {
 	playerName: string;
 }
 
+let random = Math.random() * 1000;
+random = Math.floor(random);
 let lastTimestamp = 0;
 
 function GamePlay(props: props) {
@@ -24,6 +26,11 @@ function GamePlay(props: props) {
 	let boardAX = 0.025;
 	let boardBX = 0.04;
 
+	useEffect(() => {
+		random = Math.random() * 1000;
+		random = Math.floor(random);
+	}, []);
+
 	let mult = 0.5;
 	if (window.innerWidth < 500)
 		mult = 0.9;
@@ -32,19 +39,19 @@ function GamePlay(props: props) {
 	if (_r < 16 / 9) {
 		_t = (window.innerWidth * mult) * (9 / 16);
 	}
-	let windowsWidth = (16 * _t) / 9;
-	let windowsHeight = (_t);
-	let boardWidth = (
+	const [windowsWidth, setWindowsWidth] = useState((16 * _t) / 9);
+	const [windowsHeight, setWindowsHeight] = useState(_t);
+	const [boardWidth, setBoardWidth] = useState<number>(
 		props.room?.settings.boardWidth
 			? (props.room?.settings.boardWidth * 0.01) * windowsWidth
 			: 100
 	);
-	let boardHeight = (
+	const [boardHeight, setBoardHeight] = useState<number>(
 		props.room?.settings.boardHeight
 			? (props.room?.settings.boardHeight * 0.01) * windowsHeight
 			: 100
 	);
-	const [ball, setBall] = useState({
+	const [ball, setBall] = useState<ICanvasBall>({
 		id: "ball",
 		x: props.room?.ball.x
 			? (props.room?.ball.x * 0.01) * windowsWidth
@@ -57,9 +64,8 @@ function GamePlay(props: props) {
 			: 100,
 		percentX: 50,
 		percentY: 50,
-		isReal: false,
 	});
-	let playerA = ({
+	const [playerA, setPlayerA] = useState<ICanvasBoard>({
 		id: "playerA",
 		x: boardAX * windowsWidth,
 		y: props.room?.playerA.y
@@ -67,7 +73,7 @@ function GamePlay(props: props) {
 			: windowsHeight * 0.5 - boardHeight * 0.5,
 		percentY: 50,
 	});
-	let playerB = ({
+	const [playerB, setPlayerB] = useState<ICanvasBoard>({
 		id: "playerB",
 		x: (windowsWidth - boardBX * windowsWidth),
 		y: props.room?.playerB.y
@@ -78,12 +84,17 @@ function GamePlay(props: props) {
 
 	const socketSocial = useSelector(getSocketSocial);
 	useEffect(() => {
-		socketSocial?.emit("joinGame");
-		return () => {
+		if (props.room?.id)
+			socketSocial?.emit("joinGame", { id: props.room.id });
+		else
 			socketSocial?.emit("leaveGame");
+		return () => {
+			if (props.room?.id)
+				socketSocial?.emit("joinGame", { id: props.room.id });
+			else
+				socketSocial?.emit("leaveGame");
 		};
 	}, [socketSocial]);
-
 	function updateDisplay(): void {
 		if (contextRef.current) {
 			let primeColor;
@@ -164,17 +175,17 @@ function GamePlay(props: props) {
 	}, []);
 	const mousemove =
 		(e: any) => {
-			boardWidth = (
+			setBoardWidth(
 				props.room?.settings.boardWidth
 					? (props.room?.settings.boardWidth * 0.01) * windowsWidth
 					: 100
 			);
-			boardHeight = (
+			setBoardHeight(
 				props.room?.settings.boardHeight
 					? (props.room?.settings.boardHeight * 0.01) * windowsHeight
 					: 100
 			);
-			setBall  ({
+			setBall({
 				...ball,
 				id: "ball",
 				radius: props.room?.settings.ballRadius
@@ -210,12 +221,12 @@ function GamePlay(props: props) {
 						y: (100 * _player.y) / windowsHeight,
 					});
 					if (props.room?.playerA.name === props.playerName) {
-						playerA = ({ ...playerA, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: boardAX * windowsWidth });
-						playerB = ({ ...playerB, x: (windowsWidth - boardBX * windowsWidth) });
+						setPlayerA({ ...playerA, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: boardAX * windowsWidth });
+						setPlayerB({ ...playerB, x: (windowsWidth - boardBX * windowsWidth) });
 					}
 					else {
-						playerA = ({ ...playerA, x: boardAX * windowsWidth });
-						playerB = ({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
+						setPlayerA({ ...playerA, x: boardAX * windowsWidth });
+						setPlayerB({ ...playerB, y: _player.y, percentY: ((100 * _player.y) / windowsHeight), x: (windowsWidth - boardBX * windowsWidth) });
 					}
 				}
 			}
@@ -231,19 +242,19 @@ function GamePlay(props: props) {
 		if (r < 16 / 9) {
 			t = (window.innerWidth * mult) * (9 / 16);
 		}
-		windowsHeight = (t);
-		windowsWidth = ((16 * t) / 9);
-		boardWidth = (
+		setWindowsHeight(t);
+		setWindowsWidth((16 * t) / 9);
+		setBoardWidth(
 			props.room?.settings.boardWidth
 				? (props.room?.settings.boardWidth * 0.01) * windowsWidth
 				: 100
 		);
-		boardHeight = (
+		setBoardHeight(
 			props.room?.settings.boardHeight
 				? (props.room?.settings.boardHeight * 0.01) * windowsHeight
 				: 100
 		);
-		setBall ({
+		setBall({
 			...ball,
 			id: "ball",
 			radius: props.room?.settings.ballRadius
@@ -254,25 +265,20 @@ function GamePlay(props: props) {
 			percentX: ball.percentX,
 			percentY: ball.percentY,
 		});
-		playerA = ({
+		setPlayerA({
 			...playerA,
 			id: "playerA",
 			x: (boardAX * windowsWidth),
 			y: (playerA.percentY * 0.01) * windowsHeight,
 			percentY: playerA.percentY,
 		});
-		playerB = ({
+		setPlayerB({
 			...playerB,
 			id: "playerB",
 			x: (windowsWidth - boardBX * windowsWidth),
 			y: (playerB.percentY * 0.01) * windowsHeight,
 			percentY: playerB.percentY,
 		});
-		// change canvas size
-		if (canvasRef.current) {
-			canvasRef.current.width = windowsWidth;
-			canvasRef.current.height = windowsHeight;
-		}
 		updateDisplay();
 	}
 	useEventListener("resize", handleResize);
@@ -281,7 +287,7 @@ function GamePlay(props: props) {
 	props.socket?.on("playerMovement", (data: any) => {
 		if (data.player && data.x != undefined && data.y != undefined) {
 			if (data.player === "playerA") {
-				playerA = ({
+				setPlayerA({
 					...playerA,
 					id: "playerA",
 					x: boardAX * windowsWidth,
@@ -289,7 +295,7 @@ function GamePlay(props: props) {
 					percentY: data.y,
 				});
 			} else if ((data.player === "playerB")) {
-				playerB = ({
+				setPlayerB({
 					...playerB,
 					id: "playerB",
 					x: windowsWidth - boardBX * windowsWidth,
@@ -300,69 +306,26 @@ function GamePlay(props: props) {
 		}
 		updateDisplay();
 	});
-	const [direction, setDirection] = useState(1);
-	const [speed, setSpeed] = useState(1);
-
 	props.socket?.removeListener("ballMovement");
 	props.socket?.on("ballMovement", (data: any) => {
-		setBall ({
+		if (lastTimestamp > data.timestamp) return;
+		lastTimestamp = data.timestamp;
+		setBall({
 			...ball,
 			id: "ball",
 			x: (data?.x * 0.01) * windowsWidth,
 			y: (data?.y * 0.01) * windowsHeight,
 			percentX: data?.x,
 			percentY: data?.y,
-			isReal: true,
 		});
-		setDirection  (data?.direction);
-		setSpeed (data?.speed);
-		//updateDisplay();
+		updateDisplay();
 	});
-	//let fps = 0;
-	//let lastTimestamp = Date.now();
-	//let count = 0;
-
-	let fps = 60; // link au back
-	let now;
-	let then = Date.now();
-	let interval = 1000/fps;
-	let delta;
-	let test : any;
-	let id = Math.floor(Math.random() * 100);
-	function update() {
-		now = Date.now();
-		delta = now - then;
-		if (delta > interval && ball.isReal) {
-			console.log("update", id);
-			then = now - (delta % interval);
-			ball.percentX += Math.cos(direction) * speed * 0.2;
-			ball.percentY += Math.sin(direction) * speed * 0.2;
-			ball.x = (ball.percentX * 0.01) * windowsWidth;
-			ball.y = (ball.percentY * 0.01) * windowsHeight;
-			// if ball is out of bounds reset it for dev
-			// for prod if it's top or bottom change direction
-			if (ball.x < 0 || ball.x > windowsWidth) {
-				ball.x = (50 * 0.01) * windowsWidth;
-				ball.percentX = 50;
-			}
-			if (ball.y < 0 || ball.y > windowsHeight) {
-				ball.y = (50 * 0.01) * windowsHeight;
-				ball.percentY = 50;
-			}
-			updateDisplay();
-		}
-	}
 	useEffect(() => {
-		let interval : any;
-		interval = setInterval(() => {
-			update();
-		}
-		, 1000 / fps);
+		const interval = setInterval(() => {
+			updateDisplay();
+		}, 1000 / 60);
 		return () => clearInterval(interval);
-
-	}, [test, ball, speed, direction]);
-
-	console.log("render page");
+	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB]);
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

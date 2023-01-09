@@ -7,7 +7,8 @@ const initialState = {
     channels: [],
     dms: [],
     refreshChannel: false,
-    mode: "channel"
+    mode: "channel",
+    user: undefined
 };
 
 export const chatSlice = createSlice({
@@ -26,15 +27,19 @@ export const chatSlice = createSlice({
     },
     setMode: (state, action) => {
       state.mode = action.payload
+    },
+    setUserChat: (state, action) => {
+      state.user = action.payload
     }
   },
 });
 
-export const { setSocket, setChannels, setDMs, setMode } = chatSlice.actions;
+export const { setSocket, setChannels, setDMs, setMode, setUserChat } = chatSlice.actions;
 
 export const getSocket = (state : any) => state.chat.socket;
 export const getChannels = (state : any) => state.chat.channels;
 export const getDMs = (state : any) => state.chat.dms;
 export const getMode = (state : any) => state.chat.mode;
+export const getUserChat = (state : any) => state.chat.user;
 
 export default chatSlice.reducer;

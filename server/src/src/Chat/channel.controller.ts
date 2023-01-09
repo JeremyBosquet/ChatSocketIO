@@ -187,10 +187,12 @@ export class ChannelController {
                 }
                 if (Object.keys(channel.users).length == 0)
                     await this.chatService.deleteChannel(body.channelId);
-                else
-                    await this.chatService.updateChannel(body.channelId, channel);
-                    return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Leave successfully"});
+                else {
+                    const newChannel = await this.chatService.setNewOwner(channel);
+                    await this.chatService.updateChannel(body.channelId, newChannel);
                 }
+                return res.status(HttpStatus.OK).json({statusCode: HttpStatus.OK, message: "Leave successfully"});
+            }
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "Channel not found", error: "Not found"});
         }
         return res.status(HttpStatus.BAD_REQUEST).json({statusCode: HttpStatus.BAD_REQUEST, message: "Bad request", error: "Bad request"});
@@ -410,7 +412,7 @@ export class ChannelController {
         if (!userToKick)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         
-        if (admin.role === "admin" && userToKick.role === "owner" || userToKick.role === "admin")
+        if (admin.role === "admin" && (userToKick.role === "owner" || userToKick.role === "admin"))
             return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
 
         channel.users = channel.users.filter((user : any) => user.id !== body.target);
@@ -445,7 +447,7 @@ export class ChannelController {
         if (!userToBan)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         
-        if (admin.role === "admin" && userToBan.role === "owner" || userToBan.role === "admin")
+        if (admin.role === "admin" && (userToBan.role === "owner" || userToBan.role === "admin"))
             return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
             
         channel.users = channel.users.filter((user: any) => user.id !== body.target);
@@ -483,7 +485,7 @@ export class ChannelController {
         if (!userToMute)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
         
-        if (admin.role === "admin" && userToMute.role === "owner" || userToMute.role === "admin")
+        if (admin.role === "admin" && (userToMute.role === "owner" || userToMute.role === "admin"))
             return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
 
         if (body.isPermanent)
@@ -520,7 +522,7 @@ export class ChannelController {
         if (!userToUnmute)
             return res.status(HttpStatus.NOT_FOUND).json({statusCode: HttpStatus.NOT_FOUND, message: "User not found", error: "Not found"});
 
-        if (admin.role === "admin" && userToUnmute.role === "owner" || userToUnmute.role === "admin")
+        if (admin.role === "admin" && (userToUnmute.role === "owner" || userToUnmute.role === "admin"))
             return res.status(HttpStatus.UNAUTHORIZED).json({statusCode: HttpStatus.UNAUTHORIZED, message: "User not permitted", error: "Unauthorized"});
             
         channel.mutes = channel.mutes.filter((user : any) => user.id !== body.target);

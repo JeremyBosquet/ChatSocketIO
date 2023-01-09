@@ -17,6 +17,7 @@ import Block from "./Block/Block";
 import AddRemoveFriend from "./AddRemoveFriend/AddRemoveFriend";
 import { TbDotsVertical } from "react-icons/tb";
 import { MdOutlineKeyboardArrowDown, MdOutlineKeyboardArrowUp } from "react-icons/md";
+import { getUserChat } from "../../../../Redux/chatSlice";
 
 interface IInvites {
 	requestFrom: string;
@@ -35,7 +36,7 @@ function Player(props: props) {
 	const [mobileMode, setMobileMode] = useState<boolean>(false);
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const [connected, setConnected] = useState<boolean>(false);
-	const me = useSelector(getUser);
+	const me = useSelector(getUserChat);
 	const socketGame = useSelector(getSockeGameChat);
 	const blockList = useSelector(getBlockList);
 	const blockedByList = useSelector(getBlockedByList);

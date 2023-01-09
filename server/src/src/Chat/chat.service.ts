@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { UserModel } from "src/typeorm";
 import { Repository } from "typeorm";
 import { Channel } from "./Entities/channel.entity";
+import { ChannelsWhereUserDTO } from "./Interfaces/ChannelDTO";
 // import { User } from "./Entities/user.entity";
 import { IChat } from "./Interfaces/Chat";
 
@@ -97,6 +98,19 @@ export class ChatService {
 		}
 
 		return users;
+	}
+
+	async setNewOwner(channel: any) {
+		if (channel.users.length > 0) {
+			const admins = channel.users.filter(user => user.role === "admin");
+
+			if (admins.length > 0)
+				channel.users.find((user: any) => user.id === admins[0].id).role = "owner";
+			else
+				channel.users.find((user: any) => user.id === channel.users[0].id).role = "owner";
+		}
+
+		return channel;
 	}
 
 

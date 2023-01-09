@@ -6,8 +6,7 @@ import Player from './Player/Player';
 import Messages from './Messages/Messages';
 import { Imessage } from './interfaces/messages';
 import { useDispatch, useSelector } from 'react-redux';
-import { getChannels, getSocket, setChannels } from '../../../Redux/chatSlice';
-import { getUser, setUser } from '../../../Redux/userSlice';
+import { getChannels, getSocket, getUserChat, setChannels, setUserChat } from '../../../Redux/chatSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 import { MdPublic } from 'react-icons/md';
@@ -17,6 +16,7 @@ import './ChatChannel.scss'
 import instance from '../../../API/Instance';
 import { Helmet } from "react-helmet";
 import { IoEyeSharp } from 'react-icons/io5';
+import { getUser } from '../../../Redux/userSlice';
 
 interface Ichannel {
 	id: string;
@@ -44,6 +44,7 @@ function ChatChannel(props: props) {
 
 	const selectedChannel = params.id || "";
 	const user = useSelector(getUser);
+	const userChat = useSelector(getUserChat);
 	const socket = useSelector(getSocket);
 
 	const dispatch = useDispatch();
@@ -78,7 +79,7 @@ function ChatChannel(props: props) {
 				if (channel) {
 					setChannel(channel);
 					setUsers(channel.users);
-					dispatch(setUser({ ...user, role: channel.users.find((u: IuserDb) => u.uuid === user.uuid)?.role }));
+					dispatch(setUserChat({ ...user, role: channel.users.find((u: IuserDb) => u.uuid === user.uuid)?.role }));
 				}
 			}
 			if (selectedChannel !== undefined) {
@@ -148,24 +149,25 @@ function ChatChannel(props: props) {
 			socket.on('kickFromChannel', (data: { target: string, channelId: string, message: string }) => {
 				socket?.emit('leavePermanant', { userId: user.uuid, channelId: data.channelId });
 				getUsersChannel();
-				if (params.id === data.channelId)
+				
+				if (params.id && data.channelId && params.id === data.channelId)
+					navigate('/chat/channel');
+				else if (!params.id || !data.channelId)
 					navigate('/chat/channel');
 			});
 
 			socket.removeListener('adminFromServer');
 			socket.on('adminFromServer', (data: { target: string, channelId: string, message: string, role: string }) => {
 				if (data.target === user.uuid) {
-					dispatch(setUser(({ ...user, role: data.role })));
+					dispatch(setUserChat(({ ...user, role: data.role })));
 				}
 				if (params.id === data.channelId) {
-					if (user?.role === "admin") {
-						setUsers(users => users.map((user: IuserDb) => {
-							if (user.uuid === data.target)
-								return ({ ...user, role: data.role });
+					setUsers(users => users.map((user: IuserDb) => {
+						if (user.uuid === data.target)
+							return ({ ...user, role: data.role });
 
-							return user;
-						}));
-					}
+						return user;
+					}));
 				}
 			});
 		}
@@ -204,7 +206,7 @@ function ChatChannel(props: props) {
 											:
 											(channel.visibility)}
 							</div>
-							<Messages userId={user.uuid} messages={messages} users={users} setUsers={setUsers} setMessages={setMessages} />
+							<Messages userId={userChat.uuid} messages={messages} users={users} setUsers={setUsers} setMessages={setMessages} />
 							<div className='sendMessage'>
 								<SendMessage channelId={selectedChannel} user={user} />
 							</div>

@@ -14,7 +14,7 @@ import GamePlay from '../../Components/GamePlay/GamePlay';
 import GameChatReady from '../../Components/GameChatReady/GameChatReady';
 import KillSocket from '../../Components/KillSocket/KillSocket';
 import Channel from '../../Components/Channels/Channel/Channel';
-import { getChannels, setChannels } from '../../Redux/chatSlice';
+import { getChannels, getUserChat, setChannels, setUserChat } from '../../Redux/chatSlice';
 import { IoArrowBackOutline } from 'react-icons/io5';
 import FormCreateChannel from '../../Components/FormCreateChannel/FormCreateChannel';
 import Search from '../../Components/Channels/Search/Search';
@@ -26,6 +26,7 @@ function ChannelPage() {
 	const params = useParams();
 	const logged = useSelector(getLogged);
 	const user = useSelector(getUser);
+	const userChat = useSelector(getUserChat);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const socketGame = useSelector(getSockeGameChat);
@@ -52,10 +53,12 @@ function ChannelPage() {
 			})
 				.then((res) => {
 					dispatch(setUser(res.data.User));
+					dispatch(setUserChat(res.data.User));
 					dispatch(setLogged(true));
 				})
 				.catch((err) => {
 					setUser(undefined);
+					setUserChat(undefined);
 					createNotification("error", "User not found");
 					localStorage.removeItem("token");
 					navigate("/");

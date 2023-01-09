@@ -87,10 +87,10 @@ export class RoomGateway {
 			else if (room && room?.status == 'playing' && room?.settings) {
 				const settings = room.settings;
 				if (ballInterval[room.id] > 0) {
-					this.server.in('room-' + room.id).emit('roomTimer', {playerA: room.playerA.y, playerB: room.playerB.y})
+					//this.server.in('room-' + room.id).emit('roomTimer', {playerA: room.playerA.y, playerB: room.playerB.y})
 					if (Date.now() - ballInterval[room.id] > 2000) {
 						ballInterval[room.id] = 0;
-						this.server.in('room-' + room.id).emit("endTimer",  { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
+						//this.server.in('room-' + room.id).emit("endTimer",  { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 						//this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 					}
 				}
@@ -129,10 +129,10 @@ export class RoomGateway {
 						room.ball.direction = this.generateDirection();
 						room.ball.x = 50;
 						room.ball.y = 50;
-						room.playerA.y = 50 - (room.settings.boardHeight * 0.5);
-						room.playerB.y = 50 - (room.settings.boardHeight * 0.5);
+						//room.playerA.y = 50 - (room.settings.boardHeight * 0.5);
+						//room.playerB.y = 50 - (room.settings.boardHeight * 0.5);
 						room.ball.speed = room.settings.defaultSpeed;
-						this.roomService.updateRoom(room.id, { ball: room.ball, playerA: room.playerA, playerB: room.playerB });
+						this.roomService.updateRoom(room.id, { ball: room.ball/*, playerA: room.playerA, playerB: room.playerB */});
 						this.server.in('room-' + room.id).emit('roomTimer', {playerA: room.playerA.y, playerB: room.playerB.y});
 						this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, timestamp: Date.now() });
 						this.server.in('room-' + room.id).emit('roomUpdated', room);
@@ -153,11 +153,8 @@ export class RoomGateway {
 								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.2;
 							}
-							//this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 							room.ball.x = x;
 							room.ball.y = y;
-							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
-							
 						}
 						else if (this.checkHitBox(room.playerB.x, room.playerB.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
 							room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerB.y) / room.settings.boardHeight, 1);
@@ -172,11 +169,8 @@ export class RoomGateway {
 								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.2;
 							}
-							//this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 							room.ball.x = x;
 							room.ball.y = y;
-							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
-							
 						}
 						else if (this.checkHitBox(0, -50, 100, 51, room.ball.x, room.ball.y)) {
 							room.ball.direction = this.newDirection(room.ball.direction, 0, -1);
@@ -192,11 +186,8 @@ export class RoomGateway {
 								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.2;
 							}
-							//this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 							room.ball.x = x;
 							room.ball.y = y;
-							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
-							
 						}
 						else if (this.checkHitBox(0, 99, 100, 51, room.ball.x, room.ball.y)) {
 							room.ball.direction = this.newDirection(room.ball.direction, 0, -1);
@@ -209,19 +200,14 @@ export class RoomGateway {
 								x = room.ball.x + Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 								y = room.ball.y + Math.sin(room.ball.direction) * room.ball.speed * 0.2;
 							}
-							//this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
-							
 							room.ball.x = x;
 							room.ball.y = y;
-							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
-							
 						}
 						else {
 							room.ball.x += Math.cos(room.ball.direction) * room.ball.speed * 0.2;
 							room.ball.y += Math.sin(room.ball.direction) * room.ball.speed * 0.2;
 						}
-						if (synchro < Date.now() - 1000)
-							this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
+						this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, direction: room.ball.direction, speed: room.ball.speed });
 					}
 				}
 				room.lastActivity = Date.now();

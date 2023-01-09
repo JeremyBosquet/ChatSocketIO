@@ -60,7 +60,7 @@ function GameSpectate(props: props) {
 		y: props.room?.playerA?.y
 			? (props.room?.playerA?.y * 0.01) * windowsHeight
 			: windowsHeight * 0.5 - boardHeight * 0.5,
-		percentY: 50,
+		percentY: 50 - (boardHeight / 2),
 	});
 	const [playerB, setPlayerB] = useState<ICanvasBoard>({
 		id: "playerB",
@@ -68,7 +68,7 @@ function GameSpectate(props: props) {
 		y: props.room?.playerB?.y
 			? (props.room?.playerB?.y * 0.01) * windowsHeight
 			: windowsHeight * 0.5 - boardHeight * 0.5,
-		percentY: 50,
+		percentY: 50 - (boardHeight / 2),
 	});
 
 	function updateDisplay(): void {

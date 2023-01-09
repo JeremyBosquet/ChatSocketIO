@@ -1,4 +1,3 @@
-
 import React from "react";
 import instance from "../../API/Instance";
 
@@ -13,10 +12,15 @@ export async function getExp(uuid: string, setProfileExp: any) {
 				setProfileExp(res.data.Exp);
 				let elem = document.getElementsByClassName('exp');
 				let cut: number;
-				if (res.data.Exp.length == 4)
-					cut = res.data.Exp.slice(2);
+				if (res.data.Exp === "21.00")
+					cut = 100;
 				else
-					cut = res.data.Exp.slice(3);
+				{
+					if (res.data.Exp.length == 4)
+						cut = res.data.Exp.slice(2);
+					else
+						cut = res.data.Exp.slice(3);
+				}
 				for (let i = 0; elem[i]; i++) {
 					(elem[i] as HTMLElement).style.setProperty('--expAmount', cut.toString() + '%');
 				}
@@ -42,10 +46,15 @@ export async function getExpProfile(uuid: string, setProfileExp: any) {
 				setProfileExp(res.data.Exp);
 				let elem = document.getElementsByClassName('Exp');
 				let cut: number;
-				if (res.data.Exp.length == 4)
-					cut = res.data.Exp.slice(2);
+				if (res.data.Exp === "21.00")
+					cut = 100;
 				else
-					cut = res.data.Exp.slice(3);
+				{
+					if (res.data.Exp.length == 4)
+						cut = res.data.Exp.slice(2);
+					else
+						cut = res.data.Exp.slice(3);
+				}
 				cut *= 0.8;
 				for (let i = 0; elem[i]; i++) {
 					(elem[i] as HTMLElement).style.setProperty('--expAmount', cut.toString() + '%');
@@ -72,10 +81,15 @@ export async function getMyExp(uuid: string, setProfileExp: any) {
 				setProfileExp(res.data.Exp);
 				let elem = document.getElementsByClassName('myExp');
 				let cut: number;
-				if (res.data.Exp.length == 4)
-					cut = res.data.Exp.slice(2);
+				if (res.data.Exp === "21.00")
+					cut = 100;
 				else
-					cut = res.data.Exp.slice(3);
+				{
+					if (res.data.Exp.length == 4)
+						cut = res.data.Exp.slice(2);
+					else
+						cut = res.data.Exp.slice(3);
+				}
 				for (let i = 0; elem[i]; i++) {
 
 					(elem[i] as HTMLElement).style.setProperty('--expAmount', cut.toString() + '%');

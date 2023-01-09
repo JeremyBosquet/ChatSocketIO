@@ -8,7 +8,7 @@ import { createNotification } from '../../Components/notif/Notif';
 import DM from '../../Components/PrivateMessages/DM/DM';
 import PrivateMessages from '../../Components/PrivateMessages/PrivateMessages';
 import { getLogged, getUser, setLogged, setUser } from '../../Redux/userSlice';
-import { getDMs, setDMs } from '../../Redux/chatSlice';
+import { getDMs, setDMs, setUserChat } from '../../Redux/chatSlice';
 import './DMPage.scss'
 import instance from '../../API/Instance';
 import { Helmet } from "react-helmet";
@@ -59,10 +59,12 @@ function DMPage() {
 			await instance.get(`user`)
 				.then((res) => {
 					dispatch(setUser(res.data.User));
+					dispatch(setUserChat(res.data.User));
 					dispatch(setLogged(true));
 				})
 				.catch(() => {
 					setUser(undefined);
+					dispatch(setUserChat(undefined));
 					createNotification("error", "User not found");
 					localStorage.removeItem("token");
 					navigate("/");

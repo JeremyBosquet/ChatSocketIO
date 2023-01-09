@@ -8,7 +8,7 @@ import { Imessage } from './interfaces/messages';
 import './DMChannel.scss'
 import { useDispatch, useSelector } from 'react-redux';
 import { getSocket, getUserChat, setChannels } from '../../../Redux/chatSlice';
-import { getBlockedByList, getBlockList } from '../../../Redux/userSlice';
+import { getBlockedByList, getBlockList, getUser } from '../../../Redux/userSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import React from 'react';
 import { IoMdLock } from 'react-icons/io';
@@ -38,7 +38,7 @@ function DMChannel(props: props) {
 
 	const socket = useSelector(getSocket);
 	const selectedChannelDM = params.id || "";
-	const user = useSelector(getUserChat);
+	const user = useSelector(getUser);
 	const navigate = useNavigate();
 
 	const dispatch = useDispatch();

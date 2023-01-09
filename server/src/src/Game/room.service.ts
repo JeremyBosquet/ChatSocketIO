@@ -132,10 +132,10 @@ export class RoomService {
 		playerName: string,
 	): Promise<Room> {
 
-		if (room.playerA !== null && room.playerA.id === playerId)
-			throw new Error("Player already in a room");
-		else if (room.playerB !== null && room.playerB.id === playerId)
-			throw new Error("Player already in a room");
+		//if (room.playerA !== null && room.playerA.id === playerId)
+		//	throw new Error("Player already in a room");
+		//else if (room.playerB !== null && room.playerB.id === playerId)
+		//	throw new Error("Player already in a room");
 		if (room.playerA === null)
 			room.playerA = {
 				id: playerId,

@@ -148,12 +148,12 @@ function HomePage() {
 	useEffect(() => {
 		if (User)
 			reloadHistoryAndRank(User.uuid);
-	}, [playing, ready, display]);
+	}, [playing, ready, display, User]);
 
 	useEffect(() => {
 		if (User)
 			getMyExp(User.uuid, setMyProfileExp);
-	}, [playing, ready, display]);
+	}, [playing, ready, display, User]);
 	return (
 		<>
 			{!booleffect2 && !ready && !playing? (

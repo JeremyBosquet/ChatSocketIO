@@ -220,7 +220,7 @@ export class UsersController {
 		const User = await this.userService.findUserByUuid(req.user.uuid);
 		if (User) {
 			function onlyLettersAndNumbers(str: string) {
-				return Boolean(str.match(/^[A-Za-z0-9]*$/));
+				return Boolean(str.match(/^[A-Za-z0-9-]*$/));
 			}
 			let find = undefined;
 			if (onlyLettersAndNumbers(param.username))

@@ -149,7 +149,12 @@ export class UsersService {
 	}
 
 	async Leaderboard() {
-		const find = (await this.userRepository.find()).sort((a, b) => b.exp - a.exp);
+		const find = (await this.userRepository.find()).sort((a, b) => {
+			if (b.exp === a.exp) {
+			  return a.trueUsername.localeCompare(b.trueUsername);
+			}
+			return b.exp - a.exp;
+		  });		  
 		if (find)
 			return find;
 		return [];

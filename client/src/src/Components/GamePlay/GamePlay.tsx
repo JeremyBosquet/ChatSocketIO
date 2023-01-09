@@ -44,7 +44,7 @@ function GamePlay(props: props) {
 			? (props.room?.settings.boardHeight * 0.01) * windowsHeight
 			: 100
 	);
-	let ball = ({
+	const [ball, setBall] = useState({
 		id: "ball",
 		x: props.room?.ball.x
 			? (props.room?.ball.x * 0.01) * windowsWidth
@@ -174,7 +174,7 @@ function GamePlay(props: props) {
 					? (props.room?.settings.boardHeight * 0.01) * windowsHeight
 					: 100
 			);
-			ball = ({
+			setBall  ({
 				...ball,
 				id: "ball",
 				radius: props.room?.settings.ballRadius
@@ -243,7 +243,7 @@ function GamePlay(props: props) {
 				? (props.room?.settings.boardHeight * 0.01) * windowsHeight
 				: 100
 		);
-		ball = ({
+		setBall ({
 			...ball,
 			id: "ball",
 			radius: props.room?.settings.ballRadius
@@ -300,12 +300,12 @@ function GamePlay(props: props) {
 		}
 		updateDisplay();
 	});
-	let direction = (1);
-	let speed = (1);
+	const [direction, setDirection] = useState(1);
+	const [speed, setSpeed] = useState(1);
 
 	props.socket?.removeListener("ballMovement");
 	props.socket?.on("ballMovement", (data: any) => {
-		ball = ({
+		setBall ({
 			...ball,
 			id: "ball",
 			x: (data?.x * 0.01) * windowsWidth,
@@ -314,8 +314,8 @@ function GamePlay(props: props) {
 			percentY: data?.y,
 			isReal: true,
 		});
-		direction = (data?.direction);
-		speed = (data?.speed);
+		setDirection  (data?.direction);
+		setSpeed (data?.speed);
 		//updateDisplay();
 	});
 	//let fps = 0;
@@ -328,10 +328,12 @@ function GamePlay(props: props) {
 	let interval = 1000/fps;
 	let delta;
 	let test : any;
+	let id = Math.floor(Math.random() * 100);
 	function update() {
 		now = Date.now();
 		delta = now - then;
 		if (delta > interval && ball.isReal) {
+			console.log("update", id);
 			then = now - (delta % interval);
 			ball.percentX += Math.cos(direction) * speed * 0.2;
 			ball.percentY += Math.sin(direction) * speed * 0.2;
@@ -349,17 +351,17 @@ function GamePlay(props: props) {
 			}
 			updateDisplay();
 		}
-		test = requestAnimationFrame(update);
 	}
-	//cancelAnimationFrame(test);
 	useEffect(() => {
-		let tet : any;
-		tet = requestAnimationFrame(update);
-		return () => {
-			cancelAnimationFrame(tet);
-		};
-	}, []);
-	
+		let interval : any;
+		interval = setInterval(() => {
+			update();
+		}
+		, 1000 / fps);
+		return () => clearInterval(interval);
+
+	}, [test, ball, speed, direction]);
+
 	console.log("render page");
 	return (
 		<div id="gameMain" className="cursor">

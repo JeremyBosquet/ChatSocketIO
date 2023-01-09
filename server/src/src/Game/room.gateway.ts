@@ -133,12 +133,12 @@ export class RoomGateway {
 						//room.playerB.y = 50 - (room.settings.boardHeight * 0.5);
 						room.ball.speed = room.settings.defaultSpeed;
 						this.roomService.updateRoom(room.id, { ball: room.ball/*, playerA: room.playerA, playerB: room.playerB */});
-						this.server.in('room-' + room.id).emit('roomTimer', {playerA: room.playerA.y, playerB: room.playerB.y});
+						//this.server.in('room-' + room.id).emit('roomTimer', {playerA: room.playerA.y, playerB: room.playerB.y});
 						this.server.in('room-' + room.id).emit('ballMovement', { x: room.ball.x, y: room.ball.y, timestamp: Date.now() });
 						this.server.in('room-' + room.id).emit('roomUpdated', room);
 						this.server.emit('roomUpdated-' + room.id, room);
 						ballInterval[room.id] = Date.now();
-						this.server.in('room-' + room.id).emit('roomTimer', {playerA: room.playerA.y, playerB: room.playerB.y});
+						//this.server.in('room-' + room.id).emit('roomTimer', {playerA: room.playerA.y, playerB: room.playerB.y});
 					} else {
 						if (this.checkHitBox(room.playerA.x, room.playerA.y, room.settings.boardWidth, room.settings.boardHeight, room.ball.x, room.ball.y)) {
 							room.ball.direction = this.newDirection(room.ball.direction, (room.ball.y - room.playerA.y) / room.settings.boardHeight, 0);
@@ -292,8 +292,8 @@ export class RoomGateway {
 							await this.roomService.updateRoom(room.id, { status: 'destroy' });
 						} else if (
 							room.nbPlayers ==
-							1/* && room?.playerA?.id != data?.id && room?.playerB?.id != data?.id
-						*/) {
+							1 && room?.playerA?.id != data?.id && room?.playerB?.id != data?.id
+						) {
 							await client.join('room-' + room.id);
 							client.data.roomId = room.id;
 							client.data.playerId = data.id;

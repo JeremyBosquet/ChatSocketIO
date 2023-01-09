@@ -430,6 +430,14 @@ export class RoomGateway {
 								await this.roomService.updateRoom(room.id, { status: 'destroy' });
 								const __room = await this.roomService.getRoom(_room.id);
 								__room.status = 'configuring';
+								__room.settings = {
+									boardWidth: 1,
+									boardHeight: 10,
+									ballRadius: 1,
+									defaultSpeed: 0.2,
+									defaultDirection: Math.random() * 2 * Math.PI,
+									background: null,
+								}
 								__room.lastActivity = Date.now();
 								await this.server
 									.in('room-' + _room.id)
@@ -596,6 +604,14 @@ export class RoomGateway {
 										await this.roomService.updateRoom(room.id, { status: 'destroy' });
 										const __room = await this.roomService.getRoom(_room.id);
 										__room.status = 'configuring';
+										__room.settings = {
+											boardWidth: 1,
+											boardHeight: 10,
+											ballRadius: 1,
+											defaultSpeed: 0.2,
+											defaultDirection: Math.random() * 2 * Math.PI,
+											background: null,
+										}
 										__room.lastActivity = Date.now();
 										await this.server
 											.in('room-' + _room.id)

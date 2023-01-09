@@ -51,6 +51,8 @@ function GameChatReady(props: props) {
 		setTimeouts(data.time);
 	});
 	socket?.on("configuring", (data: IRoom) => {
+		setSettingsBis({ difficulty: "easy", background: "basic", confirmed: false });
+		setSettings({ difficulty: "easy", background: "basic", confirmed: false });
 		setSearchingDisplay(false);
 		setConfiguringDisplay(true);
 	});

@@ -45,8 +45,8 @@ function GamePlay(props: props) {
 			? (props.room?.settings.boardHeight * 0.01) * windowsHeight
 			: 100
 	);
-	const [_a, set_a] = useState(props.room?.ball.direction);
-	const [_b, set_b] = useState(props.room?.ball.speed);
+	const [_a, set_a] = useState(5000);
+	const [_b, set_b] = useState(5000);
 	const [_c, set_c] = useState<boolean>(false);
 	let ball = ({
 		id: "ball",
@@ -189,6 +189,7 @@ function GamePlay(props: props) {
 			updateDisplay();
 		}
 	}, []);
+
 	const mousemove =
 		(e: any) => {
 			if (timer === 0) return ;
@@ -329,8 +330,8 @@ function GamePlay(props: props) {
 	});
 
 
-	let direction = _a ? _a : 0;
-	let speed = _b ? _b : 0;
+	let direction = _a ? _a : 5000;
+	let speed = _b ? _b : 5000;
 
 	props.socket?.removeListener("ballMovement");
 	props.socket?.on("ballMovement", (data: any) => {
@@ -347,17 +348,17 @@ function GamePlay(props: props) {
 		speed = (data?.speed);
 	});
 
-	const frameRate = 60;
-
-	const frameDuration = 1000 / frameRate;
+	const frameDuration = 1000 / 60;
 
 	let animationId: number;
-	const id = Math.random()
+
 	let lastTime = performance.now();
 	function update(currentTime: number) {
 		const elapsedTime = currentTime - lastTime;
 		const nbFrame = Math.floor(elapsedTime / frameDuration);
-		for (let i = 0; i < nbFrame; i++) {
+
+
+		//for (let i = 0; i < nbFrame; i++) {
 			ball.percentX += Math.cos(direction) * speed * 0.2;
 			ball.percentY += Math.sin(direction) * speed * 0.2;
 			ball.x = (ball.percentX * 0.01) * windowsWidth;
@@ -368,12 +369,11 @@ function GamePlay(props: props) {
 			if (ball.y < -100 || ball.y > windowsHeight + 100) {
 				return ;
 			}
-		}
+			updateDisplay();
+		//	}
 		lastTime = currentTime - (elapsedTime % frameDuration);
-		updateDisplay();
 		animationId = requestAnimationFrame(update);
 	}
-	//requestAnimationFrame(update);
 	useEffect(() => {
 		animationId = requestAnimationFrame(update);
 		return () =>{ cancelAnimationFrame(animationId)

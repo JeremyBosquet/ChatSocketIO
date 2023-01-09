@@ -221,8 +221,10 @@ export class RoomGateway {
 				client.data.roomId = data.roomId;
 				client.data.playerId = data.playerId;
 				client.data.playerName = (await this.usersService.findUserByUuid(data.id))?.username;
-				room.playerA.name = (await this.usersService.findUserByUuid(room.playerA?.id))?.username;
-				room.playerB.name = (await this.usersService.findUserByUuid(room.playerB?.id))?.username;
+				if (room?.playerA && room.playerA?.id)
+					room.playerA.name = (await this.usersService.findUserByUuid(room.playerA?.id))?.username;
+				if (room?.playerB && room.playerB?.id)
+					room.playerB.name = (await this.usersService.findUserByUuid(room.playerB?.id))?.username;
 				this.server.in('room-' + room.id).emit('gameInit', room);
 			} else {
 				this.server

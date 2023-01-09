@@ -15,21 +15,12 @@ interface props {
 	playerName: string;
 }
 
-let random = Math.random() * 1000;
-random = Math.floor(random);
-let lastTimestamp = 0;
-
 function GamePlay(props: props) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const contextRef = useRef<CanvasRenderingContext2D | null>(null);
  
 	let boardAX = 0.025;
 	let boardBX = 0.04;
-
-	useEffect(() => {
-		random = Math.random() * 1000;
-		random = Math.floor(random);
-	}, []);
 
 	let mult = 0.5;
 	if (window.innerWidth < 500)
@@ -84,17 +75,12 @@ function GamePlay(props: props) {
 
 	const socketSocial = useSelector(getSocketSocial);
 	useEffect(() => {
-		if (props.room?.id)
-			socketSocial?.emit("joinGame", { id: props.room.id });
-		else
-			socketSocial?.emit("leaveGame");
+			socketSocial?.emit("joinGame");
 		return () => {
-			if (props.room?.id)
-				socketSocial?.emit("joinGame", { id: props.room.id });
-			else
-				socketSocial?.emit("leaveGame");
+			socketSocial?.emit("leaveGame");
 		};
 	}, [socketSocial]);
+
 	function updateDisplay(): void {
 		if (contextRef.current) {
 			let primeColor;
@@ -152,14 +138,11 @@ function GamePlay(props: props) {
 			contextRef.current.lineWidth = 2;
 			contextRef.current.strokeStyle = secondColor;
 
-
-
 			contextRef.current.arc(Math.floor(ball.x), Math.floor(ball.y), Math.floor(ball.radius), 0, 2 * Math.PI);
 			if (ball.x < windowsWidth * 0.5 + 2 && ball.x > windowsWidth * 0.5 - 2)
 				contextRef.current.fillStyle = "gray";
 			else
 				contextRef.current.fillStyle = secondColor;
-
 			contextRef.current.fill();
 			contextRef.current.closePath();
 		}
@@ -170,7 +153,6 @@ function GamePlay(props: props) {
 		const context = canvas?.getContext("2d");
 		if (context) {
 			contextRef.current = context;
-			updateDisplay();
 		}
 	}, []);
 	const mousemove =
@@ -308,8 +290,6 @@ function GamePlay(props: props) {
 	});
 	props.socket?.removeListener("ballMovement");
 	props.socket?.on("ballMovement", (data: any) => {
-		if (lastTimestamp > data.timestamp) return;
-		lastTimestamp = data.timestamp;
 		setBall({
 			...ball,
 			id: "ball",
@@ -325,7 +305,7 @@ function GamePlay(props: props) {
 			updateDisplay();
 		}, 1000 / 60);
 		return () => clearInterval(interval);
-	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB]);
+	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, props.room, contextRef, canvasRef]);
 	return (
 		<div id="gameMain" className="cursor">
 			<Helmet>

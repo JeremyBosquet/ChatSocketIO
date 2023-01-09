@@ -8,6 +8,7 @@ import {BiMessageDetail} from 'react-icons/bi';
 
 interface props {
 	user: any;
+	myUuid: string;
 }
 
 function Dm(props: props) {
@@ -17,7 +18,7 @@ function Dm(props: props) {
 
 	const handleDM = async (targetId: string) => {
 		await instance.post(`chat/dm/`, {
-			user1: me.uuid,
+			user1: props?.myUuid,
 			user2: targetId,
 		}).then(res => {
 			if (res.data.id)
@@ -26,7 +27,7 @@ function Dm(props: props) {
 	}
 
 	return (
-		<button title="Dm user" onClick={() => handleDM(props.user.uuid)}><BiMessageDetail/></button>
+		<button title="Dm user" onClick={() => handleDM(props?.user.uuid)}><BiMessageDetail/></button>
 	);
 }
 

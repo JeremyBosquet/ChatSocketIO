@@ -157,7 +157,7 @@ function Social() {
 																				</div>
 																				<div className='buttons'>
 																					<Show trueUsername={user.trueUsername} />
-																					<Dm user={user} />
+																					<Dm user={user} myUuid={User.uuid} />
 																					<BlockOrUnblock UserUuid={user.uuid} User={User} />
 																				</div>
 																				<div>
@@ -220,7 +220,7 @@ function Social() {
 																				<div className='buttons'>
 																					<AddOrRemove User={User} UserUuid={user.uuid} />
 																					<Show trueUsername={user.trueUsername} />
-																					<Dm user={user} />
+																					<Dm user={user} myUuid={User.uuid}/>
 																					<Spectate uuid={user.uuid} />
 																					<BlockOrUnblock UserUuid={user.uuid} User={User} />
 																				</div>
@@ -260,7 +260,7 @@ function Social() {
 																					<div className='buttons'>
 																						<Show trueUsername={user.trueUsername} />
 																						<BlockOrUnblock UserUuid={user.uuid} User={User} />
-																						<Dm user={user} />
+																						<Dm user={user} myUuid={User.uuid}/>
 																						<Accept User={User} UserUuid={user.uuid} UserImg={user?.image} />
 																						<Decline User={User} UserUuid={user.uuid} />
 																					</div>

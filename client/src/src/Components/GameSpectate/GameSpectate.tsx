@@ -13,8 +13,6 @@ interface props {
 	setRoom: any;
 }
 
-let lastTimestamp = 0;
-
 function GameSpectate(props: props) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const contextRef = useRef<CanvasRenderingContext2D | null>(null);
@@ -101,11 +99,11 @@ function GameSpectate(props: props) {
 				if (props.room?.scoreA)
 					contextRef.current.fillText(props.room?.scoreA.toString(), Math.floor(windowsWidth * 0.5 - 35), 35);
 				else
-					contextRef.current.fillText("0", Math.floor(windowsWidth * 0.5 - 20), 25);
+					contextRef.current.fillText("0", Math.floor(windowsWidth * 0.5 - 20), 35);
 				if (props.room?.scoreB)
 					contextRef.current.fillText(props.room?.scoreB.toString(), Math.floor(windowsWidth * 0.5 + 20), 35);
 				else
-					contextRef.current.fillText("0", Math.floor(windowsWidth * 0.5 + 10), 25);
+					contextRef.current.fillText("0", Math.floor(windowsWidth * 0.5 + 10), 35);
 
 			}
 			else {
@@ -129,8 +127,6 @@ function GameSpectate(props: props) {
 			contextRef.current.lineJoin = "round";
 			contextRef.current.lineWidth = 2;
 			contextRef.current.strokeStyle = secondColor;
-			
-			
 			
 			contextRef.current.arc(Math.floor(ball.x), Math.floor(ball.y), Math.floor(ball.radius), 0, 2 * Math.PI);
 			if (ball.x < windowsWidth * 0.5 + 2 && ball.x > windowsWidth * 0.5 - 2)
@@ -223,8 +219,6 @@ function GameSpectate(props: props) {
 	});
 	props.socket?.removeListener("ballMovement");
 	props.socket?.on("ballMovement", (data: any) => {
-		if (lastTimestamp >= data.timestamp) return;
-		lastTimestamp = data.timestamp;
 		setBall({
 			...ball,
 			id: "ball",
@@ -245,7 +239,7 @@ function GameSpectate(props: props) {
 			updateDisplay();
 		}, 1000 / 60);
 		return () => clearInterval(interval);
-	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB]);
+	}, [windowsWidth, windowsHeight, boardWidth, boardHeight, ball, playerA, playerB, props.room, contextRef, canvasRef]);
 	
 	return (
 		<div id="gameMain" className="cursor">

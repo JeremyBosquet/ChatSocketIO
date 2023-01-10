@@ -130,16 +130,14 @@ function Social() {
 										<div>
 											<div id='listSearchParent'>
 												<h3> Search Friends </h3>
-												<form >
-													<input
-														type="text"
-														id="friendusername"
-														name="friendusername"
-														required
-														maxLength={16}
-														onChange={e => SearchFriend(e.target.value)}
-													/>
-												</form>
+												<input
+													type="text"
+													id="friendusername"
+													name="friendusername"
+													required
+													maxLength={16}
+													onChange={e => SearchFriend(e.target.value)}
+												/>
 												<div className='box'>
 													{
 														searchList.length ?

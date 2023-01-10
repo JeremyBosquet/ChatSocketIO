@@ -76,11 +76,7 @@ function AddRemoveFriend(props: props) {
 
 	async function getUserData(uuid: string) {
 		let userData: any = [];
-		await instance.get(`findUser/` + uuid, {
-			headers: {
-				Authorization: "Bearer " + localStorage.getItem("token"),
-			},
-		})
+		await instance.get(`user/findUser/` + uuid)
 			.then((res) => {
 				if (res.data.User)
 					userData = res.data.User;
@@ -93,7 +89,7 @@ function AddRemoveFriend(props: props) {
 
 		const test: any[] = requestList.filter((friend: any) => friend.uuid === uuid)
 		if (test.length) {
-			const acceptThisUser = await getUserData(test[0]?.uuid);
+			const acceptThisUser = await getUserData(uuid);
 			await instance.post(`user/AcceptFriend`, { uuid: uuid }, {
 				headers: ({
 					Authorization: 'Bearer ' + localStorage.getItem('token'),

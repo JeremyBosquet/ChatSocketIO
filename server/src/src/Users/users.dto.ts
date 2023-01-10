@@ -2,6 +2,7 @@ import {
 	IsBoolean,
 	IsNotEmpty,
 	IsString,
+	IsUUID,
 	Length,
 } from 'class-validator';
 import { Expose } from 'class-transformer';
@@ -39,7 +40,7 @@ export class SendUserDto {
 
 export class FriendsDto {
 	@IsNotEmpty()
-	@IsString()
+	@IsUUID()
 	@Expose()
 	uuid: string;
 }

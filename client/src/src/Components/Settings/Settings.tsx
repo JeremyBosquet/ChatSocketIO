@@ -126,6 +126,12 @@ function Settings() {
 	};
 
 	const AvatarFile = async (event: any) => {
+		const size  = Number((event.target.files[0].size / 1024 / 1024).toFixed(2));
+		if (size > 10)
+		{
+			createNotification("error", "File too big , try uploading an image of less than 10Mb");
+			return;
+		}
 		setChangeavatar(event.target.files[0]);
 		setFileName(event.target.files[0]?.name);
 	}

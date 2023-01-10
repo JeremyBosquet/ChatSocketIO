@@ -214,8 +214,8 @@ export class RoomGateway {
 				this.roomService.updateRoom(room.id, { ball: room.ball, lastActivity: room.lastActivity });
 			}
 		}
-		if (synchro < Date.now() - 1000)
-			synchro = Date.now();
+		//if (synchro < Date.now() - 1000)
+		//	synchro = Date.now();
 	}
 
 	@SubscribeMessage('joinRoomSpectate')

@@ -23,3 +23,15 @@
      ██║███████╗███████╗██║   ╚██████╔╝██║ ╚████║██╗██║     ██║  ██║
      ╚═╝╚══════╝╚══════╝╚═╝    ╚═════╝ ╚═╝  ╚═══╝╚═╝╚═╝     ╚═╝  ╚═╝
 ```
+
+.env
+```env
+URL=http://ip
+USER=
+PASSWORD=
+DBNAME=
+FORTYTWO_CLIENT_ID=
+FORTYTWO_CLIENT_SECRET=
+JWT_SECRET=
+TWO_FACTOR_AUTHENTICATION_APP_NAME=
+```

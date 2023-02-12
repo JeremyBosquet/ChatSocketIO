@@ -69,11 +69,11 @@ export class DMsService {
     async getUsersInfosInDm(dmId: string): Promise<any> {
       const dm = await this.dmsRepository.findOneBy({id: dmId});
 
-      let users = [];
+      const users = [];
       if (dm?.users) {
         for (const user of dm.users) {
-          let userInfos : any = await this.getUser(user.id);
-          let filteredUserInfos = {
+          const userInfos : any = await this.getUser(user.id);
+          const filteredUserInfos = {
             uuid: userInfos.uuid,
             username: userInfos.username,
             image: userInfos.image,
@@ -86,7 +86,7 @@ export class DMsService {
       return users;
     }
 
-    async userIsInChannel(dmId: string, userId: string): Promise<Boolean> {
+    async userIsInChannel(dmId: string, userId: string): Promise<boolean> {
       const dm = await this.dmsRepository.findOneBy({id: dmId});
 
       const checkUserIsIn = async (dm: any) => {

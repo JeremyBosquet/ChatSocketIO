@@ -32,7 +32,7 @@ export class ChatGateway {
     async handleDisconnect(@ConnectedSocket() client: Socket) : Promise<void> {
         const sockets = await this.server.in(client.data.channelId).fetchSockets()
 
-        let users = [];
+        const users = [];
         for (const socket of sockets) {
             users.push({id: socket.id, userId: socket.data.userId, username: socket.data.username, channelId: client.data.room});
         }
@@ -55,7 +55,7 @@ export class ChatGateway {
         client.leave(client.data.channelId);
         this.server.emit('leaveFromServer', {channelId: client.data.channelId, userId: client.data.userId});
         const s = await this.server.in(client.data.channelId).fetchSockets()
-        let u = [];
+        const u = [];
         for (const socket of s) {
             u.push({id: socket.id, userId: socket.data.userId, username: socket.data.username, channelId: client.data.room});
         }
@@ -73,7 +73,7 @@ export class ChatGateway {
         this.server.emit('joinFromServer', data);
         const sockets = await this.server.in(data.channelId).fetchSockets()
 
-        let users = [];
+        const users = [];
         for (const socket of sockets) {
             users.push({id: socket.id, userId: socket.data.userId, username: socket.data.username, channelId: client.data.room});
         }
@@ -91,7 +91,7 @@ export class ChatGateway {
 
         const sockets = await this.server.in(data.channelId).fetchSockets()
 
-        let users = [];
+        const users = [];
         for (const socket of sockets) {
             users.push({id: socket.id, userId: socket.data.userId, username: socket.data.username, channelId: client.data.room});
         }
@@ -107,7 +107,7 @@ export class ChatGateway {
             client.data.channelId = "";
             const sockets = await this.server.in(data.channelId).fetchSockets()
 
-            let users = [];
+            const users = [];
             for (const socket of sockets) {
                 users.push({id: socket.id, userId: socket.data.userId, username: socket.data.username, channelId: client.data.room});
             }
@@ -125,7 +125,7 @@ export class ChatGateway {
 
     @SubscribeMessage('message')
     async handleMessage(@MessageBody() data: IChatReceive, @ConnectedSocket() client: Socket): Promise<void> {
-        let chat : IChat = {
+        const chat : IChat = {
             id: data.id,
             userId: data.userId,
             message: data.message,

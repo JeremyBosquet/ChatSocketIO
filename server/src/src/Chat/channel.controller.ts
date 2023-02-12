@@ -80,7 +80,7 @@ export class ChannelController {
                     } else if (channel.visibility === "private") 
                         return res.status(HttpStatus.FORBIDDEN).json({statusCode: HttpStatus.FORBIDDEN, message: "Wrong request", error: "Forbidden"});
 
-                let user = {"id": User.uuid, "role": "default"}
+                const user = {"id": User.uuid, "role": "default"}
                 if (channel.users)
                 {
                     if (checkIfUserAlreadyIn(channel) === true)
@@ -129,7 +129,7 @@ export class ChannelController {
             const channel = await this.chatService.getBrutChannelWithCode(body.code);
             if (channel)
             {   
-                let user = {"id": User.uuid, "role": "default"}
+                const user = {"id": User.uuid, "role": "default"}
                 if (channel.users)
                 {
                     if (checkIfUserAlreadyIn(channel) === true)

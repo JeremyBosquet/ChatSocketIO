@@ -66,7 +66,7 @@ export class UsersService {
 					if (await bcrypt.compare(find.isLoggedIn[i].token, token))
 						return;
 			}
-			let newTab = find.isLoggedIn;
+			const newTab = find.isLoggedIn;
 			const hashed = await bcrypt.hash(token, 10);
 			newTab.push({ token: hashed, CreatedAt: new Date() });
 			return this.userRepository.update(
@@ -83,7 +83,7 @@ export class UsersService {
 			return;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find && find.isLoggedIn) {
-			let newTab = find.isLoggedIn;
+			const newTab = find.isLoggedIn;
 			for (let i = 0; i < newTab.length; i++)
 				if (await bcrypt.compare(token, find.isLoggedIn[i].token))
 					newTab.splice(i, 1);
@@ -212,7 +212,7 @@ export class UsersService {
 			return null;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
-			let usernameList: any[] = [];
+			const usernameList: any[] = [];
 			for (let i = 0; i < find.friendRequest.length; i++) {
 				usernameList.push(
 					plainToClass(
@@ -259,7 +259,7 @@ export class UsersService {
 			return 0;
 		const find = await this.userRepository.findOneBy({ uuid: uuid });
 		if (find) {
-			let oldexp = find.exp;
+			const oldexp = find.exp;
 			if (Number(oldexp)) {
 				exp = exp - (Math.floor(Number(oldexp)) * 2 * 0.01);
 				if (exp < 0)
@@ -404,7 +404,7 @@ export class UsersService {
 				}
 			}
 			let newList: Ifriends[] = [];
-			let blockUser: Ifriends = {
+			const blockUser: Ifriends = {
 				uuid: User.uuid,
 			};
 			if (!find.blockedby) newList.push(blockUser);
@@ -653,7 +653,7 @@ export class UsersService {
 			if (User.blocked) {
 				for (let i = 0; User.blocked[i]; i++) {
 					if (User.blocked[i].uuid === uuid) {
-						let blockedList: Ifriends[] = User.blocked;
+						const blockedList: Ifriends[] = User.blocked;
 						blockedList.splice(i, 1);
 						await this.userRepository.update(User.uuid, {
 							blocked: blockedList,
@@ -668,7 +668,7 @@ export class UsersService {
 			if (find.blockedby) {
 				for (let i = 0; find.blockedby[i]; i++) {
 					if (find.blockedby[i].uuid === User.uuid) {
-						let blockedByList: Ifriends[] = find.blockedby;
+						const blockedByList: Ifriends[] = find.blockedby;
 						blockedByList.splice(i, 1);
 						await this.userRepository.update(uuid, {
 							blockedby: blockedByList,

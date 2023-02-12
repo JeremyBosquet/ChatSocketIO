@@ -85,7 +85,7 @@ export class ChatService {
 	async getUsersInfosInChannel(channelId: string): Promise<any> {
 		const channel = await this.channelRepository.findOneBy({ id: channelId });
 
-		let users = [];
+		const users = [];
 		if (channel?.users) {
 			for (const user of channel.users) {
 				let userInfos: any = await this.getUser(user.id);
@@ -125,7 +125,7 @@ export class ChatService {
 	async getUser(userId: string): Promise<UserModel> {
 		const user = await this.userRepository.findOneBy({ uuid: userId });
 		if (user) {
-			let userInfos: any = {
+			const userInfos: any = {
 				uuid: user.uuid,
 				username: user.username,
 				trueUsername: user.trueUsername,
@@ -159,7 +159,7 @@ export class ChatService {
 		return [];
 	}
 
-	async userIsInChannel(channelId: string, userId: string): Promise<Boolean> {
+	async userIsInChannel(channelId: string, userId: string): Promise<boolean> {
 		const channel = await this.channelRepository.findOneBy({ id: channelId });
 
 		const checkUserIsIn = async (channel: any) => {
@@ -172,7 +172,7 @@ export class ChatService {
 		return (channel && checkUserIsIn(channel));
 	}
 
-	async userIsBanned(channelId: string, userId: string): Promise<Boolean> {
+	async userIsBanned(channelId: string, userId: string): Promise<boolean> {
 		const channel = await this.channelRepository.findOneBy({ id: channelId });
 
 		if (channel?.bans.filter(ban => ban.id === userId).length > 0) {
@@ -189,7 +189,7 @@ export class ChatService {
 		return false;
 	}
 
-	async userIsMuted(channelId: string, userId: string): Promise<Boolean> {
+	async userIsMuted(channelId: string, userId: string): Promise<boolean> {
 		const channel = await this.channelRepository.findOneBy({ id: channelId });
 
 		if (channel?.mutes.filter(mute => mute.id === userId).length > 0) {
@@ -206,10 +206,10 @@ export class ChatService {
 		return false;
 	}
 
-	async generateCode(): Promise<Number> {
-		let min = 100000;
-		let max = 999999;
-		let code = Math.floor(Math.random() * (max - min + 1)) + min;
+	async generateCode(): Promise<number> {
+		const min = 100000;
+		const max = 999999;
+		const code = Math.floor(Math.random() * (max - min + 1)) + min;
 		const channel = await this.channelRepository.findOneBy({ code: code.toString() });
 		if (channel)
 			return await this.generateCode();

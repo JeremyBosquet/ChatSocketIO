@@ -70,8 +70,8 @@ export class AppService {
 					where: { username: customUsername },
 				});
 			}
-			let newList: Ifriends[] = [];
-			let isLoggedIn: ILogStatus[] = [];
+			const newList: Ifriends[] = [];
+			const isLoggedIn: ILogStatus[] = [];
 			const form: UserModel = {
 				createdAt: new Date(Date.now()),
 				id: user.id,

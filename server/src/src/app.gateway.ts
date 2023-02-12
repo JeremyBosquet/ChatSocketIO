@@ -18,12 +18,12 @@ export class AppGateway {
 
 	@SubscribeMessage('connected')
 	async connected(@MessageBody() data: any, @ConnectedSocket() client: Socket): Promise<WsResponse<any>> {
-		let myUser = await this.UsersService.findUserByUuid(data.uuid);
+		const myUser = await this.UsersService.findUserByUuid(data.uuid);
 		if (myUser) {
 			client.data.uuid = data.uuid;
 			const sockets = await this.server.fetchSockets()
 
-			let users = []
+			const users = []
 			for (const socket of sockets) {
 				if (socket.data.uuid)
 					if (!(users.find((user) => (user.uuid === socket.data.uuid))))
@@ -37,7 +37,7 @@ export class AppGateway {
 
 	@SubscribeMessage('joinGame')
 	async joinGame(@MessageBody() data: any, @ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
-		let myUser = await this.UsersService.findUserByUuid(client.data.uuid);
+		const myUser = await this.UsersService.findUserByUuid(client.data.uuid);
 		if (myUser)
 			await this.server.emit('playing', { users: await this.RoomService.getInGamePlayers() });
 		return;
@@ -45,7 +45,7 @@ export class AppGateway {
 
 	@SubscribeMessage('leaveGame')
 	async leaveGame(@MessageBody() data: any, @ConnectedSocket() client: Socket,): Promise<WsResponse<any>> {
-		let myUser = await this.UsersService.findUserByUuid(client.data.uuid);
+		const myUser = await this.UsersService.findUserByUuid(client.data.uuid);
 		if (myUser)
 			await this.server.emit('notPlaying', { users: await this.RoomService.getInGamePlayers() });
 		return;

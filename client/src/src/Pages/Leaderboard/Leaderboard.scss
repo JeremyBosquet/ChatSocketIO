@@ -15,12 +15,9 @@
 
 .LeaderboardPage {
 	.container {
-		margin: auto;
 		font-family: 'Amatic SC';
 		margin: auto;
-		padding: 1rem;
 		border-radius: 5px;
-		box-shadow: 7px 9px 7px #00000052;
 
 
 		background-color: #2C2C2C;
@@ -47,7 +44,7 @@
 
 		.image {
 			object-fit: cover;
-			;
+			
 		}
 
 		.topLeadersList {
@@ -144,7 +141,7 @@
 			align-items: center;
 			min-height: 42px;
 			text-align: center;
-			margin: 0px 0px 10px 0px;
+			margin: 0px 0px 10px;
 			border-radius: 5px;
 
 			span:nth-child(1) {

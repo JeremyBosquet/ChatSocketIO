@@ -24,7 +24,7 @@ export class ChatController {
             return ;
         }
 
-        let user = await this.chatService.getUser(param.id);
+        const user = await this.chatService.getUser(param.id);
         let data = {};
 
         if (!user)

@@ -13,10 +13,10 @@ import { Interval } from '@nestjs/schedule';
 
 let lastTime = Date.now();
 
-let boardAX = 3;
-let boardBX = 3 + 1.5;
+const boardAX = 3;
+const boardBX = 3 + 1.5;
 
-let synchro = Date.now();
+const synchro = Date.now();
 
 const ballInterval = [];
 
@@ -366,7 +366,7 @@ export class RoomGateway {
 		const data = tmp?.tmpUser;
 		let otherPlayer = null;
 		const room = await this.roomService.getRoom(tmp?.room?.id);
-		let roomStatus = room?.status;
+		const roomStatus = room?.status;
 		if (data?.id && data?.name && room) {
 			if (room.status.startsWith('waiting|')) {
 				const playerA = room.status.split('|')[1];
@@ -470,7 +470,7 @@ export class RoomGateway {
 		if (client.data.roomId !== undefined) {
 			let otherPlayer = null;
 			const room = await this.roomService.getRoom(client.data.roomId);
-			let roomStatus = room?.status;
+			const roomStatus = room?.status;
 			if (room && room?.id && room?.nbPlayers !== null && room.status != 'finished') {
 				const playerA = room.status.split('|')[1];
 				const playerB = room.status.split('|')[2];

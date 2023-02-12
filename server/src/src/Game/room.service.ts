@@ -26,8 +26,8 @@ export class RoomService {
 		this.clearDatabase();
 	}
 	async getInGamePlayers(): Promise<any> {
-		let lista = await this.roomRepository.findBy({ status: In(['playing']) });
-		let listb = [];
+		const lista = await this.roomRepository.findBy({ status: In(['playing']) });
+		const listb = [];
 		for (let i = 0; i < lista.length; i++) {
 			if (lista[i].playerA !== null) {
 				if (listb.findIndex((player) => player.id == lista[i].playerA.id) == -1) {
